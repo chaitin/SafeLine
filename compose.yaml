@@ -1,0 +1,94 @@
+networks:
+  safeline-ce:
+    name: safeline-ce
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - gateway: 169.254.0.1
+        subnet: 169.254.0.0/24
+    driver_opts:
+      com.docker.network.bridge.name: safeline-ce
+
+services:
+  postgres:
+    container_name: safeline-postgres
+    restart: always
+    image: postgres:15.2
+    volumes:
+    - ${HOST_RESOURCES_DIR}/postgres/data:/var/lib/postgresql/data
+    environment:
+    - POSTGRES_USER=safeline-ce
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      safeline-ce:
+        ipv4_address: 169.254.0.2
+    cap_drop:
+    - net_raw
+    command: [postgres, -c, max_connections=200]
+  management:
+    container_name: safeline-mgt-api
+    restart: always
+    image: chaitinops/safeline-mgt-api:${IMAGE_TAG}
+    volumes:
+    - ${HOST_RESOURCES_DIR}/management:/resources/management
+    - ${HOST_RESOURCES_DIR}/nginx:/resources/nginx
+    - ${HOST_LOGS_DIR}:/logs
+    - /etc/localtime:/etc/localtime:ro
+    ports:
+    - 9443:1443
+    environment:
+    - MANAGEMENT_RESOURCES_DIR=/resources/management
+    - NGINX_RESOURCES_DIR=/resources/nginx
+    - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@127.0.0.1/safeline-ce
+    - MANAGEMENT_LOGS_DIR=/logs/management
+    networks:
+      safeline-ce:
+        ipv4_address: 169.254.0.4
+    cap_drop:
+    - net_raw
+  detector:
+    container_name: safeline-detector
+    restart: always
+    image: chaitinops/safeline-detector:${IMAGE_TAG}
+    volumes:
+    - ${HOST_RESOURCES_DIR}/detector:/resources/detector
+    - ${HOST_LOGS_DIR}/detector:/logs/detector
+    environment:
+    - LOG_DIR=/logs/detector
+    networks:
+      safeline-ce:
+        ipv4_address: 169.254.0.5
+    cap_drop:
+    - net_raw
+  mario:
+    container_name: safeline-mario
+    restart: always
+    image: chaitinops/safeline-mario:${IMAGE_TAG}
+    volumes:
+    - ${HOST_RESOURCES_DIR}/mario:/resources/mario
+    - ${HOST_LOGS_DIR}/mario:/logs/mario
+    environment:
+    - LOG_DIR=/logs/mario
+    - GOGC=100
+    - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@169.254.0.2/safeline-ce
+    networks:
+      safeline-ce:
+        ipv4_address: 169.254.0.6
+    cap_drop:
+    - net_raw
+  tengine:
+    container_name: safeline-tengine
+    restart: always
+    image: chaitinops/safeline-tengine:${IMAGE_TAG}
+    volumes:
+    - ${HOST_RESOURCES_DIR}/nginx:/etc/nginx
+    - ${HOST_RESOURCES_DIR}/management:/resources/management
+    - ${HOST_RESOURCES_DIR}/detector:/resources/detector
+    - ${HOST_LOGS_DIR}/nginx:/var/log/nginx
+    - /etc/localtime:/etc/localtime:ro
+    - ${HOST_RESOURCES_DIR}/cache:/usr/local/nginx/cache
+    - /etc/resolv.conf:/etc/resolv.conf
+    ulimits:
+      nofile: 131072
+    network_mode: host
