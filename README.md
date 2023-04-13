@@ -85,4 +85,4 @@ Q: 添加站点后，执行 `curl -H "Host: <域名>" http://<WAF IP>:<端口>` 
 ## ✨ CTStack
 <img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/CT%20Stack-2.png" width="30%" />
 
-雷池 SafeLine 现已加入 [CTStack](https://stack.chaitin.com/tool/detail?id=174) 社区
+雷池 SafeLine 现已加入 [CTStack](https://stack.chaitin.com/tool/detail?id=717) 社区
