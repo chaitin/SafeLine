@@ -19,7 +19,7 @@ A simple and easy to use WAF tool. Built on [Chaitin Technology](https://www.cha
 
 ## ✨ Demo
 
-### 🔥🔥🔥 Online Demo: https://47.104.188.110:9443/
+### 🔥🔥🔥 Online Demo: https://demo.waf-ce.chaitin.cn:9443/
 
 There is a simple http server, listened on `http://127.0.0.1:8889`, can be used as for testing.
 
