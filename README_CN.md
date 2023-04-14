@@ -40,7 +40,7 @@ docker compose version
 ```shell
 # 下载安装脚本文件
 git clone git@github.com:chaitin/safeline.git
-# or use `wget https://github.com/chaitin/safeline/releases/download/v1.0.1/safeline.zip -O safeline.zip && unzip safeline.zip`
+# or use `wget https://github.com/chaitin/safeline/releases/download/v1.0.3/safeline.zip -O safeline.zip && unzip safeline.zip`
 
 # 首次部署需执行 `./safeline-ce.sh` 生成初始化配置，默认安装在 `/data/safeline-ce/` 目录下
 cd safeline

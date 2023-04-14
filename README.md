@@ -40,7 +40,7 @@ docker compose version
 ```shell
 # download startup script
 git clone git@github.com:chaitin/safeline.git
-# or use `wget https://github.com/chaitin/safeline/releases/download/v1.0.1/safeline.zip -O safeline.zip && unzip safeline.zip`
+# or use `wget https://github.com/chaitin/safeline/releases/download/v1.0.3/safeline.zip -O safeline.zip && unzip safeline.zip`
 
 # execute `./safeline-ce.sh` to generate the initial env params. WAF will be installed by default in the `/data/safeline-ce/` directory
 cd safeline
