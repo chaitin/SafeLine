@@ -13,9 +13,9 @@
   <img src="https://img.shields.io/github/stars/chaitin/safeline?style=social">
 </p>
 
-A simple and easy to use WAF tool. Built on [Chaitin Technology](https://www.chaitin.cn/en/)'s ace 🤖️Intelligent Semantic Analysis algorithm🤖️, designed for the community.
-
 <p align="center"> English | <a href="README_CN.md">中文文档</a> </p>
+
+A simple and easy to use WAF tool. Built on [Chaitin Technology](https://www.chaitin.cn/en/)'s ace 🤖️Intelligent Semantic Analysis algorithm🤖️, designed for the community.
 
 ## ✨ Demo
 
