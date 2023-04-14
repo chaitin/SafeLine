@@ -9,7 +9,6 @@
   <img src="https://img.shields.io/github/release/chaitin/safeline.svg?color=blue" />
   <img src="https://img.shields.io/github/release-date/chaitin/safeline.svg?color=blue&label=update" />
   <img src="https://img.shields.io/docker/v/chaitin/safeline-mgt-api?color=blue">
-  <img src="https://img.shields.io/github/license/chaitin/safeline?color=blue">
   <img src="https://img.shields.io/github/stars/chaitin/safeline?style=social">
 </p>
 
