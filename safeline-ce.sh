@@ -41,3 +41,6 @@ COMPOSE_FILE=compose.yaml" > $env_file
 fi
 
 mkdir -p $installer_path
+
+echo "Success!"
+echo "Start safeline-ce with `docker compose up -d`"
