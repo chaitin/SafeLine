@@ -87,7 +87,7 @@ Q: 添加站点后，执行 `curl -H "Host: <域名>" http://<WAF IP>:<端口>` 
 1. 您可以通过 GitHub Issue 直接进行 Bug 反馈和功能建议。
 2. 扫描下方二维码可以加入雷池社区版用户讨论群进行详细讨论
 
-<img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_wx_light.jpg" width="30%" />
+<img src="https://waf-ce.chaitin.cn/assets/safeline_wx_light2.jpg" width="30%" />
 <img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_qq_light.jpg" width="30%" />
 
 ## ✨ CTStack

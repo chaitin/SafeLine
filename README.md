@@ -82,7 +82,7 @@ Try these:
 1. You can make bug feedback and feature suggestions directly through GitHub Issues.
 2. By scanning the QR code below (use wechat or qq), you can join the discussion group of SafeLine users for detailed discussions.
 
-<img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_wx_light.jpg" width="30%" />
+<img src="https://waf-ce.chaitin.cn/assets/safeline_wx_light2.jpg" width="30%" />
 <img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_qq_light.jpg" width="30%" />
 
 ## ✨ CTStack
