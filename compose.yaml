@@ -29,7 +29,7 @@ services:
   management:
     container_name: safeline-mgt-api
     restart: always
-    image: chaitinops/safeline-mgt-api:${IMAGE_TAG}
+    image: chaitin/safeline-mgt-api:${IMAGE_TAG}
     volumes:
     - ${HOST_RESOURCES_DIR}/management:/resources/management
     - ${HOST_RESOURCES_DIR}/nginx:/resources/nginx
@@ -50,7 +50,7 @@ services:
   detector:
     container_name: safeline-detector
     restart: always
-    image: chaitinops/safeline-detector:${IMAGE_TAG}
+    image: chaitin/safeline-detector:${IMAGE_TAG}
     volumes:
     - ${HOST_RESOURCES_DIR}/detector:/resources/detector
     - ${HOST_LOGS_DIR}/detector:/logs/detector
@@ -64,7 +64,7 @@ services:
   mario:
     container_name: safeline-mario
     restart: always
-    image: chaitinops/safeline-mario:${IMAGE_TAG}
+    image: chaitin/safeline-mario:${IMAGE_TAG}
     volumes:
     - ${HOST_RESOURCES_DIR}/mario:/resources/mario
     - ${HOST_LOGS_DIR}/mario:/logs/mario
@@ -80,7 +80,7 @@ services:
   tengine:
     container_name: safeline-tengine
     restart: always
-    image: chaitinops/safeline-tengine:${IMAGE_TAG}
+    image: chaitin/safeline-tengine:${IMAGE_TAG}
     volumes:
     - ${HOST_RESOURCES_DIR}/nginx:/etc/nginx
     - ${HOST_RESOURCES_DIR}/management:/resources/management
