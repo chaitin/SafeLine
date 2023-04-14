@@ -19,11 +19,13 @@ A simple and easy to use WAF tool. Built on [Chaitin Technology](https://www.cha
 
 ## ✨ Demo
 
+### 🔥🔥🔥 Online Demo: https://47.104.188.110:9443/
+
+There is a simple http server, listened on `http://127.0.0.1:8889`, can be used as for testing.
+
 ![](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_detect_log.gif)
 
 ![](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_website.gif)
-
-🔥 online demo: `https://47.104.188.110:9443/`. There is a simple http server, listened on http://127.0.0.1:8889, can be used as for testing.
 
 ## 🚀 Installation
 
