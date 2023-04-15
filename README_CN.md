@@ -29,21 +29,17 @@
 ## 🚀 安装
 
 ### 1. 确保机器上正确安装 [Docker](https://docs.docker.com/engine/install/) 和 [Compose V2](https://docs.docker.com/compose/install/)
-```
-docker info
-docker compose version
+```shell
+docker info # >= 20.10.6
+docker compose version # >= 2.0.0
 ```
 
-### 2. 安装产品镜像
+### 2. 部署安装
 
 ```shell
-# 下载安装脚本文件
-git clone git@github.com:chaitin/safeline.git
-# or use `wget https://github.com/chaitin/safeline/releases/download/v1.0.2/safeline.zip -O safeline.zip && unzip safeline.zip`
-
-# 首次部署需执行 `./safeline-ce.sh` 生成初始化配置，默认安装在 `/data/safeline-ce/` 目录下
-cd safeline
-./safeline-ce.sh
+mkdir -p safeline && cd safeline
+# 下载并执行 setup
+curl -fLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 
 # 运行
 sudo docker compose up -d

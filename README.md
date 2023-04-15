@@ -29,21 +29,17 @@ There is a simple http server, listened on `http://127.0.0.1:8889`, can be used 
 ## 🚀 Installation
 
 ### 1. Make sure [Docker](https://docs.docker.com/engine/install/) and [Compose V2](https://docs.docker.com/compose/install/) are installed correctly on the machine 
-```
-docker info
-docker compose version
+```shell
+docker info # >= 20.10.6
+docker compose version # >= 2.0.0
 ```
 
-### 2. Download startup script
+### 2. Setup and deploy
 
 ```shell
-# download startup script
-git clone git@github.com:chaitin/safeline.git
-# or use `wget https://github.com/chaitin/safeline/releases/download/v1.0.2/safeline.zip -O safeline.zip && unzip safeline.zip`
-
-# execute `./safeline-ce.sh` to generate the initial env params. WAF will be installed by default in the `/data/safeline-ce/` directory
-cd safeline
-./safeline-ce.sh
+mkdir -p safeline && cd safeline
+# setup
+curl -fLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 
 # launch
 sudo docker compose up -d
