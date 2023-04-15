@@ -74,9 +74,12 @@ sudo docker compose up -d
 
 ## 📖 FAQ
 
-Q: 添加站点后，执行 `curl -H "Host: <域名>" http://<WAF IP>:<端口>` 无法访问到业务服务器。
+有任何问题请先查阅我们的 [FAQ 文档](FAQ.md)。
 
-—— A: 请检查雷池和业务服务器之间的网络连接
+比如：
+- [docker compose or docker-compose?](FAQ.md#docker-compose-还是-docker-compose)
+- [站点如何配置](FAQ.md#站点配置问题)
+- [配置完成之后，还是没有成功访问到上游服务器](FAQ.md#配置完成之后还是没有成功访问到上游服务器)
 
 ## 🏘️ 联系我们
 1. 您可以通过 GitHub Issue 直接进行 Bug 反馈和功能建议。

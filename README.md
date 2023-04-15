@@ -72,6 +72,15 @@ Try these:
 - `http://<IP or Domain>:<Port>/?id=1%20AND%201=1`
 - `http://<IP or Domain>:<Port>/?a=<script>alert(1)</script>`
 
+## 📖 FAQ
+
+Please refer to our [FAQ](FAQ.md) first if you have any questions.
+
+For examples:
+- [docker compose or docker-compose?](FAQ.md#docker-compose-or-docker-compose)
+- [website configurations](FAQ.md#站点配置问题)
+- [website not working / not correctly response](FAQ.md#配置完成之后还是没有成功访问到上游服务器)
+
 ## 🏘️ Contact Us
 
 1. You can make bug feedback and feature suggestions directly through GitHub Issues.
