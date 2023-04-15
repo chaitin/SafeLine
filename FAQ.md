@@ -16,19 +16,23 @@ refers also: [https://stackoverflow.com/questions/66514436/difference-between-do
 
 As shown, you shall start docker first. Try `systemctl start docker` or manually start your `Docker Desktop` for MacOS/Windows users.
 
-### `docker not found, unable to deploy`
+### docker not found, unable to deploy
 
 As shown, you shall install `docker` first. Try `curl -fLsS https://get.docker.com/ | sh` or [Install Docker Engine](https://docs.docker.com/engine/install/)
 
-### `docker compose v2 not found, unable to deploy`
+### docker compose v2 not found, unable to deploy
 
 As shown, you shall install `docker compose v2`. Try `[Install Docker Compose](https://docs.docker.com/compose/install/)`
 
-### `docker logs -f safeline-postgres`: `Operation not permitted`
+### safeline-postgres: Operation not permitted
+
+`docker logs -f safeline-postgres` with error `Operation not permitted`
 
 Upgrade your docker engine and retry.
 
-### `docker logs -f safeline-tengine`: `Address already in use`
+### safeline-tengine: Address already in use
+
+`docker logs -f safeline-tengine` with error `Address already in use`
 
 Port conflicts. Based on the port number in the error message, troubleshoot which service is occupying it and handle the conflict manually.
 
@@ -64,19 +68,23 @@ TOTP is calculated and verified according to time. So check your server time.
 
 As shown, you shall start docker first. Try `systemctl start docker` or manually start your docker desktop for MacOS/Windows users.
 
-### `docker not found, unable to deploy`
+### docker not found, unable to deploy
 
 如描述，你需要安装 `docker`。尝试 `curl -fLsS https://get.docker.com/ | sh` 或者 [Install Docker Engine](https://docs.docker.com/engine/install/)
 
-### `docker compose v2 not found, unable to deploy`
+### docker compose v2 not found, unable to deploy
 
 如描述，你需要安装 `docker compose v2`。尝试 `[Install Docker Compose](https://docs.docker.com/compose/install/)`
 
-### `docker logs -f safeline-tengine` 出现：`Address already in use`
+### safeline-tengine 出现 Address already in use
+
+`docker logs -f safeline-tengine` 容器日志中看到 `Address already in use` 信息。
 
 端口冲突，根据报错信息中的端口号，排查是哪个服务占用了，手动处理冲突。
 
-### `docker logs -f safeline-postgres` 出现：`Operation not permitted`
+### safeline-postgres 出现 Operation not permitted
+
+`docker logs -f safeline-postgres` 容器日志中看到 `Operation not permitted` 报错
 
 可能是您的 docker 版本过低，升级 docker 到最新版本尝试一下。
 
@@ -92,7 +100,7 @@ TOTP 是基于时间生成和校验的，请检查你的服务器时间是否同
 
 小明通过 `http://xiaoming.com:8888` 或者 `192.168.1.111:8888` 来访问自己的服务。
 
-### 我该如何配置？ / 域名填什么？ / 端口怎么写？ / 上游服务器是什么？
+### 我该如何配置？/ 域名填什么？/ 端口怎么写？/ 上游服务器是什么？
 
 目前社区版 SafeLine 支持的是反向代理的方式接入站点，也就是类似于一台 nginx 服务。这时候小明需要做的就是让流量先抵达 SafeLine，然后经过 SafeLine 检测之后，再转发给自己原先的业务。
 
