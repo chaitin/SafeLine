@@ -16,10 +16,10 @@ services:
     restart: always
     image: postgres:15.2
     volumes:
-    - ${HOST_RESOURCES_DIR}/postgres/data:/var/lib/postgresql/data
+    - ${PWD}/resources/postgres/data:/var/lib/postgresql/data
     environment:
     - POSTGRES_USER=safeline-ce
-    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?postgres password required}
     networks:
       safeline-ce:
         ipv4_address: 169.254.0.2
@@ -29,11 +29,11 @@ services:
   management:
     container_name: safeline-mgt-api
     restart: always
-    image: chaitin/safeline-mgt-api:${IMAGE_TAG}
+    image: chaitin/safeline-mgt-api:${IMAGE_TAG:?image tag required}
     volumes:
-    - ${HOST_RESOURCES_DIR}/management:/resources/management
-    - ${HOST_RESOURCES_DIR}/nginx:/resources/nginx
-    - ${HOST_LOGS_DIR}:/logs
+    - ${PWD}/resources/management:/resources/management
+    - ${PWD}/resources/nginx:/resources/nginx
+    - ${PWD}/logs:/logs
     - /etc/localtime:/etc/localtime:ro
     ports:
     - 9443:1443
@@ -52,8 +52,8 @@ services:
     restart: always
     image: chaitin/safeline-detector:${IMAGE_TAG}
     volumes:
-    - ${HOST_RESOURCES_DIR}/detector:/resources/detector
-    - ${HOST_LOGS_DIR}/detector:/logs/detector
+    - ${PWD}/resources/detector:/resources/detector
+    - ${PWD}/logs/detector:/logs/detector
     environment:
     - LOG_DIR=/logs/detector
     networks:
@@ -66,8 +66,8 @@ services:
     restart: always
     image: chaitin/safeline-mario:${IMAGE_TAG}
     volumes:
-    - ${HOST_RESOURCES_DIR}/mario:/resources/mario
-    - ${HOST_LOGS_DIR}/mario:/logs/mario
+    - ${PWD}/resources/mario:/resources/mario
+    - ${PWD}/logs/mario:/logs/mario
     environment:
     - LOG_DIR=/logs/mario
     - GOGC=100
@@ -82,12 +82,12 @@ services:
     restart: always
     image: chaitin/safeline-tengine:${IMAGE_TAG}
     volumes:
-    - ${HOST_RESOURCES_DIR}/nginx:/etc/nginx
-    - ${HOST_RESOURCES_DIR}/management:/resources/management
-    - ${HOST_RESOURCES_DIR}/detector:/resources/detector
-    - ${HOST_LOGS_DIR}/nginx:/var/log/nginx
+    - ${PWD}/resources/nginx:/etc/nginx
+    - ${PWD}/resources/management:/resources/management
+    - ${PWD}/resources/detector:/resources/detector
+    - ${PWD}/logs/nginx:/var/log/nginx
     - /etc/localtime:/etc/localtime:ro
-    - ${HOST_RESOURCES_DIR}/cache:/usr/local/nginx/cache
+    - ${PWD}/resources/cache:/usr/local/nginx/cache
     - /etc/resolv.conf:/etc/resolv.conf
     ulimits:
       nofile: 131072
