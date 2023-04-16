@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-xl">
+    <div class="container">
+        <a class="d-flex" href="{{ .Site.BaseURL }}">
+            <img src="/images/logo.png" style="width: 120px;" />
+            <img src="/images/safeline.png" style="width: 34px; margin-left: 24px;" />
+        </a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto mb-2 mb-xl-0">
+            {{ range .Site.Params.navBar }}
+            <li class="nav-item text-center">
+              <a {{ with .newTab }}target="_blank"{{ end }} class="nav-link text-primary px-4 {{.class}}" href="{{ .url }}">{{ .name }}</a>
+            </li>
+            {{ end }}
+          </ul>
+          <ul class="navbar-nav ms-xl-3 mb-2 mb-xl-0">
+            {{ with .Site.Params.navButton }}
+              <li class="nav-item">
+                <a target="_blank" class="btn btn-light text-primary px-4" href="{{ .url }}">{{ .name }}</a>
+              </li>
+            {{ end }}
+          </ul>
+      </div>
+    </div>
+  </nav>
+  

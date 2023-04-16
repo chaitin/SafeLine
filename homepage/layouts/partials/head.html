@@ -1,0 +1,21 @@
+<head>
+    <!-- Title -->
+    <title>{{ .Site.Title }} {{ with .Title }} | {{ . }} {{ end }}</title>
+  
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <meta name="description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{ else if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{end}}" />
+  
+    <link rel="icon" href="/images/safeline.png" />
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.min.js"></script>
+
+    {{ $style := resources.Get "scss/site.scss" | resources.ToCSS (dict "outputStyle" "compressed" "includePaths" (slice "assets")) | resources.ExecuteAsTemplate "main.scss" .}}
+    <style type="text/css" media="all">{{ $style.Content | safeCSS }}</style>
+    <link rel="stylesheet" href="/css/markdown.css" type="text/css" />
+  </head>
+  

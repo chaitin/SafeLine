@@ -1,0 +1,40 @@
+{{ define "main" }}
+
+{{- partial "header.html" . -}}
+<section class="postlist" style="height: 100%;">
+  <div class="sidebar" style="height: 100%; width: 240px;">
+    {{ range .Site.Pages.GroupByParam "category" }}
+    <ul>
+      <div class="menu-catory">{{ .Key }}</div>
+      {{ range .Pages.ByWeight }}
+      <li class="menu-list{{ if .Permalink | eq $.Page.Permalink}} active {{end}}">
+        <a href="{{ .Permalink }}">{{ .Title }}</a>
+      </li>
+      {{ end }}
+    </ul>
+    {{ end }}
+  </div>
+  <div class="postcontent">
+      <div class="container">
+        <div class="row postcontent-title">
+          <div class="col-12 ">{{ .Title }}</div>
+        </div>
+        <div class="row">
+          <div class="col-12 markdown-body">{{ .Content }}</div>
+        </div>
+      </div>
+  </div>
+</section>
+<style>
+  html,
+  body,
+  #content {
+    height: 100%;
+  }
+
+  .docs {
+    color: rgb(114, 103, 239) !important;
+  }
+</style>
+
+{{ end }}

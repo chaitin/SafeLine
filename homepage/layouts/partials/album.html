@@ -1,0 +1,36 @@
+<section class="section-album">
+    <div class="container">
+        <div class="album">
+            <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {{ range $id, $value := .images }}
+                    <button type="button" aria-label="{{ $value.name }}" data-bs-target="#carouselExampleCaptions"
+                        data-bs-slide-to="{{ $id }}" {{if $id | eq 0 }}aria-current="true" class="active" {{ end
+                        }}></button>
+                    {{ end }}
+                </div>
+                <div class="carousel-inner">
+                    {{ range $id, $value := .images }}
+                    <div class="carousel-item {{if $id | eq 0 }}active{{ end }}">
+                        <img src="{{ $value.url }}" class="d-block w-100">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>{{ $value.name }}</h5>
+                            <p>{{ $value.desc }}</p>
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

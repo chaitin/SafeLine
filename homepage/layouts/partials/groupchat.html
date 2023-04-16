@@ -1,0 +1,17 @@
+<section class="groupchat" id="groupchat">
+  <div class="container">
+    <div class="row justify-content-center">
+      {{ with .label }}
+      <h3 class="text-center text-primary groupchat-title display-4">{{ . }}</h3>
+      {{ end }}
+    </div>
+    <div class="row">
+      <div class="col-6 text-center">
+        <img src="{{ .wechat }}" style="height: 300px;" />
+      </div>
+      <div class="col-6 text-center">
+        <img src="{{ .qq }}" style="height: 300px;" />
+      </div>
+    </div>
+  </div>
+</section>
