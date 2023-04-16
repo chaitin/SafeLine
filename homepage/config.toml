@@ -1,0 +1,121 @@
+baseURL = '/'
+languageCode = 'en-us'
+title = '长亭雷池 Web 应用防火墙'
+
+[[params.navBar]]
+class  = "home"
+name   = "主页"
+url    = "/"
+newTab = false
+
+[[params.navBar]]
+class  = ""
+name   = "功能介绍"
+url    = "/#datasheet"
+newTab = false
+
+[[params.navBar]]
+class  = "docs"
+name   = "技术文档"
+url    = "/posts/introduction"
+newTab = false
+
+[[params.navBar]]
+class  = ""
+name   = "教学视频"
+url    = "https://space.bilibili.com/521870525"
+newTab = true
+
+[params.navButton]
+name   = "演示环境"
+url    = "https://demo.waf-ce.chaitin.cn:9443/"
+
+[params.product]
+enable = true
+name   = "雷池 Web 应用防火墙"
+image  = "images/safeline.png"
+slogan = "耗时近 10 年，长亭科技倾情打造，核心检测能力由 **智能语义分析算法** 驱动，专为社区而生，不让黑客越雷池半步。"
+
+[params.product.button.primary]
+icon   = ""
+label  = "免费使用"
+url    = "https://stack.chaitin.com/tool/detail?id=717"
+newTab = true
+
+[[params.product.button.secondary]]
+icon   = "images/github.png"
+label  = "GitHub"
+url    = "https://github.com/chaitin/safeline"
+newTab = true
+
+[[params.product.button.secondary]]
+icon   = "images/wechat-logo.png"
+label  = "讨论组"
+url    = "/#groupchat"
+newTab = false
+
+[params.groupchat]
+enable = true
+label  = "加入讨论组"
+wechat = "images/wechat.png"
+qq     = "images/qq.png"
+
+[params.album]
+enable = true
+label  = "轮播图"
+
+
+[[params.album.images]]
+name   = "攻击检测详情"
+desc   = "可详细展示 攻击目标、攻击源 IP、攻击载荷、原始报文等详细信息"
+url    = "images/album/2.png"
+
+
+[[params.album.images]]
+name   = "防护站点列表"
+desc   = ""
+url    = "images/album/1.png"
+
+[[params.album.images]]
+name   = "攻击检测列表"
+desc   = ""
+url    = "images/album/2.png"
+
+[[params.album.images]]
+name   = "攻击阻断页面"
+desc   = "检测到攻击时，将直接返回 403 错误，流量将被清洗，防止网站受损"
+url    = "images/album/block.png"
+
+[params.datasheet]
+enable = true
+label  = "版本对比"
+
+
+[params.footer]
+copyright = "© 2023 北京长亭未来科技有限公司京 ICP 备 19035216 号京公网安备 11010802020947 号"
+
+
+[[params.footer.links]]
+name = "北京长亭科技有限公司"
+url = "https://chaitin.cn/"
+
+[[params.footer.links]]
+name = "CTStack 安全社区"
+url = "https://stack.chaitin.cn/"
+
+[[params.footer.links]]
+name = "长亭百川云平台"
+url = "https://rivers.chaitin.cn/"
+
+[[params.footer.links]]
+name = "长亭 GitHub 主页"
+url = "https://github.com/chaitin"
+
+[[params.footer.links]]
+name = "长亭 B 站主页"
+url = "https://space.bilibili.com/521870525"
+
+
+[[params.footer.links]]
+name = "长亭合作伙伴论坛"
+url = "https://bbs.chaitin.cn/"

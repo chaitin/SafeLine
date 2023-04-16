@@ -1,0 +1,4 @@
+homepage/public/*
+homepage/resources/_gen/*
+homepage/.hugo_build.lock
+*.Zone.Identifier

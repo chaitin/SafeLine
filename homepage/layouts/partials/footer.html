@@ -1,0 +1,14 @@
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      {{ range .Site.Params.footer.links }}
+      <div class="col-3" style="padding-top: 10px; padding-bottom: 10px;">
+        <a target="_blank" class="small text-decoration-none" href="{{ .url }}">{{ .name }}</a>
+      </div>
+      {{ end }}
+    </div>
+    <div class="row" style="padding-top: 30px; padding-bottom: 20px;">
+      <p class="small text-center copyright">{{ .Site.Params.footer.copyright }}</p>
+    </div>
+  </div>
+</footer>
