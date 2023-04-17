@@ -40,7 +40,7 @@ docker compose version # >= 2.0.0
 ```shell
 mkdir -p safeline && cd safeline
 # 下载并执行 setup
-curl -fLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
+curl -kfLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 
 # 运行
 sudo docker compose up -d
