@@ -40,7 +40,7 @@ docker compose version # >= 2.0.0
 ```shell
 mkdir -p safeline && cd safeline
 # setup
-curl -fLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
+curl -kfLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 
 # launch
 sudo docker compose up -d
