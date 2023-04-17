@@ -2,7 +2,7 @@
 
 ## docker compose or docker-compose?
 
-tl;dr The `docker compose` (with a space), aka v1, is a newer project to migrate compose to Go. The original python project `docker-compose`, aka v1 has now been deprecated.
+tl;dr The `docker compose` (with a space), aka v2, is a newer project to migrate compose to Go. The original python project `docker-compose`, aka v1 has now been deprecated.
 
 refers also: [https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose](https://stackoverflow.com/a/66516826)
 
