@@ -36,6 +36,14 @@ Upgrade your docker engine and retry.
 
 Port conflicts. Based on the port number in the error message, troubleshoot which service is occupying it and handle the conflict manually.
 
+### How to customize safeline-ce installation path?
+
+With the latest `compose.yaml`, you can manually modify the `SAFELINE_DIR` variable in the `.env` file after `setup.sh`.
+
+### How to change the default port of SafeLine management, as for `:9443` is already in used by some other services?
+
+With the latest `compose.yaml`, you can add `MGT_PORT` variable in `.env` file.
+
 ## Login
 
 ### TOTP login failed with correct code
@@ -87,6 +95,14 @@ As shown, you shall start docker first. Try `systemctl start docker` or manually
 `docker logs -f safeline-postgres` 容器日志中看到 `Operation not permitted` 报错
 
 可能是您的 docker 版本过低，升级 docker 到最新版本尝试一下。
+
+### 如何自定义 SafeLine 安装路径？
+
+基于最新的 `compose.yaml`，你可以手动修改 `.env` 文件的 `SAFELINE_DIR` 变量。
+
+### 如何修改 SafeLine 后台管理的默认端口？本机 `:9443` 已经被别的服务占用了
+
+基于最新的 `compose.yaml`，你可以手动添加 `MGT_PORT` 变量到 `.env` 文件。
 
 ## 登录问题
 

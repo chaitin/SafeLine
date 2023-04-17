@@ -16,7 +16,7 @@ services:
     restart: always
     image: postgres:15.2
     volumes:
-    - ${PWD}/resources/postgres/data:/var/lib/postgresql/data
+    - ${SAFELINE_DIR}/resources/postgres/data:/var/lib/postgresql/data
     environment:
     - POSTGRES_USER=safeline-ce
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?postgres password required}
@@ -31,12 +31,12 @@ services:
     restart: always
     image: chaitin/safeline-mgt-api:${IMAGE_TAG:?image tag required}
     volumes:
-    - ${PWD}/resources/management:/resources/management
-    - ${PWD}/resources/nginx:/resources/nginx
-    - ${PWD}/logs:/logs
+    - ${SAFELINE_DIR}/resources/management:/resources/management
+    - ${SAFELINE_DIR}/resources/nginx:/resources/nginx
+    - ${SAFELINE_DIR}/logs:/logs
     - /etc/localtime:/etc/localtime:ro
     ports:
-    - 9443:1443
+    - ${MGT_PORT:-9443}:1443
     environment:
     - MANAGEMENT_RESOURCES_DIR=/resources/management
     - NGINX_RESOURCES_DIR=/resources/nginx
@@ -52,8 +52,8 @@ services:
     restart: always
     image: chaitin/safeline-detector:${IMAGE_TAG}
     volumes:
-    - ${PWD}/resources/detector:/resources/detector
-    - ${PWD}/logs/detector:/logs/detector
+    - ${SAFELINE_DIR}/resources/detector:/resources/detector
+    - ${SAFELINE_DIR}/logs/detector:/logs/detector
     environment:
     - LOG_DIR=/logs/detector
     networks:
@@ -66,8 +66,8 @@ services:
     restart: always
     image: chaitin/safeline-mario:${IMAGE_TAG}
     volumes:
-    - ${PWD}/resources/mario:/resources/mario
-    - ${PWD}/logs/mario:/logs/mario
+    - ${SAFELINE_DIR}/resources/mario:/resources/mario
+    - ${SAFELINE_DIR}/logs/mario:/logs/mario
     environment:
     - LOG_DIR=/logs/mario
     - GOGC=100
@@ -82,12 +82,12 @@ services:
     restart: always
     image: chaitin/safeline-tengine:${IMAGE_TAG}
     volumes:
-    - ${PWD}/resources/nginx:/etc/nginx
-    - ${PWD}/resources/management:/resources/management
-    - ${PWD}/resources/detector:/resources/detector
-    - ${PWD}/logs/nginx:/var/log/nginx
+    - ${SAFELINE_DIR}/resources/nginx:/etc/nginx
+    - ${SAFELINE_DIR}/resources/management:/resources/management
+    - ${SAFELINE_DIR}/resources/detector:/resources/detector
+    - ${SAFELINE_DIR}/logs/nginx:/var/log/nginx
     - /etc/localtime:/etc/localtime:ro
-    - ${PWD}/resources/cache:/usr/local/nginx/cache
+    - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
     - /etc/resolv.conf:/etc/resolv.conf
     ulimits:
       nofile: 131072
