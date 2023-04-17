@@ -12,6 +12,7 @@
   <img src="https://img.shields.io/github/stars/chaitin/safeline?style=social">
 </p>
 
+<p align="center"> <a href="https://waf-ce.chaitin.cn/">官方网站</a> </p>
 <p align="center"> 中文文档 | <a href="README.md">English</a> </p>
 
 一款简单、好用的 WAF 工具。基于[长亭科技](https://www.chaitin.cn)王牌的 🤖️智能语义分析算法🤖️ 打造，专为社区设计。
