@@ -31,7 +31,7 @@ fi
 
 COMPOSE_YAML="compose.yaml"
 if [[ ! -f ${COMPOSE_YAML} ]]; then
-    wget https://waf-ce.chaitin.cn/release/latest/compose.yaml -O ${COMPOSE_YAML}
+    wget https://waf-ce.chaitin.cn/release/latest/compose.yaml --no-check-certificate -O ${COMPOSE_YAML}
 fi
 
 ENV_FILE=".env"
