@@ -86,7 +86,6 @@ sudo docker compose up -d
 2. 扫描下方二维码可以加入雷池社区版用户讨论群进行详细讨论
 
 <img src="https://waf-ce.chaitin.cn/assets/safeline_wx_light2.jpg" width="30%" />
-<img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_qq_light.jpg" width="30%" />
 
 ## ✨ CTStack
 <img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/CT%20Stack-2.png" width="30%" />
