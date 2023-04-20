@@ -46,6 +46,20 @@ curl -kfLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 sudo docker compose up -d
 ```
 
+#### Upgrade
+
+**WARN: SafeLine will be restarted and your traffic will be unavailable for a short period of time. You may need to choose a proper time for upgration.**
+
+```
+# check `IMAGE_TAG`
+cat .env | grep IMAGE_TAG
+# set IMAGE_TAG to `latest` or some specific version like `1.1.0`
+sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" .env
+
+# replace with `docker-compose` if necessary.
+docker compose down && docker compose pull && docker compose up -d
+```
+
 ## 🕹️ Quick Start
 
 ### 1. Login
