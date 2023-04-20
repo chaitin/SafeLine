@@ -1,0 +1,25 @@
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="shortcut icon", href=require('./safeline.png').default)
+    title 请求存在威胁，已被拦截
+    each cssFile in htmlWebpackPlugin.files.css
+      style !{compilation.assets[cssFile.substr(htmlWebpackPlugin.files.publicPath.length)].source()}
+  body
+    .container
+      .content
+        img(src=require('./403.svg').default, alt='拦截', height='200px')
+        p.desc
+          | 请求存在威胁，已被拦截
+        p.timestamp#EventID
+        p.timestamp#TYPE
+        p.timestamp#time
+      .footer
+        p 安全检测能力由 
+          a.waflink(href="https://waf-ce.chaitin.cn") 
+            | 长亭雷池 WAF 
+          | 驱动
+    each jsFile in htmlWebpackPlugin.files.js
+      script(type="text/javascript") !{compilation.assets[jsFile.substr(htmlWebpackPlugin.files.publicPath.length)].source()}
