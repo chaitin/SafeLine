@@ -100,7 +100,7 @@ docker compose down && docker compose pull && docker compose up -d
 1. 您可以通过 GitHub Issue 直接进行 Bug 反馈和功能建议。
 2. 扫描下方二维码可以加入雷池社区版用户讨论群进行详细讨论
 
-<img src="https://waf-ce.chaitin.cn/assets/safeline_wx_light2.jpg" width="30%" />
+<img src="https://waf-ce.chaitin.cn/images/wechat-light.png" width="30%" />
 
 ## ✨ CTStack
 <img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/CT%20Stack-2.png" width="30%" />
