@@ -50,6 +50,14 @@ As shown, you shall start docker first. Try `systemctl start docker` or manually
 
 可能是您的 docker 版本过低，升级 docker 到最新版本尝试一下。
 
+### 如何自定义 SafeLine 安装路径？
+
+基于最新的 `compose.yaml`，你可以手动修改 `.env` 文件的 `SAFELINE_DIR` 变量。
+
+### 如何修改 SafeLine 后台管理的默认端口？本机 `:9443` 已经被别的服务占用了
+
+基于最新的 `compose.yaml`，你可以手动添加 `MGT_PORT` 变量到 `.env` 文件。
+
 ## 登录问题
 
 ### OTP 认证码登录失败
@@ -67,7 +75,6 @@ TOTP 是基于时间生成和校验的，请检查你的服务器时间是否同
 目前社区版 SafeLine 支持的是反向代理的方式接入站点，也就是类似于一台 nginx 服务。这时候小明需要做的就是让流量先抵达 SafeLine，然后经过 SafeLine 检测之后，再转发给自己原先的业务。
 
 小明只需要按照如下方式创建站点即可：
-
 - `xiaoming.com` 填入页面的「域名」
 - `:7777` 填入「端口」；或者别的任意非 `:8888`和 `:9443`（被 SafeLine 后台管理页面占用）端口
 - `http://192.168.1.111:8888` 填入「上游服务器」
@@ -103,7 +110,6 @@ TOTP 是基于时间生成和校验的，请检查你的服务器时间是否同
 有操作系统本身的防火墙，还有可能是云服务商的防火墙。根据实际情况逐项排查，配置开放端口的 TCP 访问。
 
 出现如下情况，可能就是被中间某防火墙拦截了：
-
 1. 在 `192.168.1.111` 上 curl -vv `127.0.0.1:7777` 能访问到业务，有 HTTP 返回码。
 2. 在本机 curl -vv `192.168.1.111:7777` 不通，没有 HTTP 响应；`telnet 192.168.1.111 7777` 返回 `Unable to connect to remote host: Connection refused`
 
@@ -111,12 +117,13 @@ TOTP 是基于时间生成和校验的，请检查你的服务器时间是否同
 
 小明的情况是 SafeLine 和业务在同一台机器，一般不会有不同机器之间的网络问题，但是也建议在 SafeLine 部署的机器上测试一下。如果是两台机器的情况下，需要考虑是否互相之间能正常通信。
 
-直接 `curl -vv http://xiaoming.com:8888` 测一下是否能访问到。如果不行，需要自行排查为什么 SafeLine 的机器没法访问到。
+直接 `curl -H "Host: <SafeLine-IP>" -vv http://xiaoming.com:8888` 测一下是否能访问到。如果不行，需要自行排查为什么 SafeLine 的机器没法访问到。
+
+注：这里需要 -H 指定 Host `Host: <SafeLine-IP>` 进行连通性测试。收到比较多的反馈，在 WAF 上直接配置上游服务器为 HTTPS 的域名，比如 `https://xiaoming.com`。实际场景是希望先测试 WAF 能力正常后再把域名解析切到 WAF 进行上线。这种本地测试的场景，需要修改本机 host，把 `xiaoming.com` 解析到 `SafeLine-IP`，否则可能会无法成功代理。因为 SafeLine 向上游服务器转发时，代理请求中的 Host 使用的是原始 HTTP 请求中的 Host，此时需要自行判断上游业务服务器能够正确处理该代理请求（例如上游业务服务器在 Host 没有匹配自己的站点名称时，是否能够处理）
 
 #### 5. 其他情况
 
 如果执行了 1-4：
-
 1. 确认有 nginx 进程监听了 SafeLine 机器的 `0.0.0.0:7777` 端口
 2. 确认 SafeLine tengine 无端口冲突报错
 3. 确认主机和云服务商的防火墙都没有限制 `:7777` 端口的 TCP 访问
