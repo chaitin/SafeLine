@@ -16,6 +16,7 @@ import {
   Toolbar,
   Typography,
   Button,
+  alpha,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 interface Props {
@@ -33,24 +34,6 @@ export default function DrawerAppBar(props: Props) {
   const router = useRouter();
   const { pathname, asPath } = router;
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const navItems = [
-    {
-      label: "主页",
-      handle: () => {
-        router.push("/");
-      },
-    },
-    {
-      label: "功能介绍",
-      handle: () => {},
-    },
-    {
-      label: "技术文档",
-      handle: () => {},
-    },
-  ];
-
-  const hash = useMemo(() => asPath.split("#")[1], [asPath]);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
@@ -101,15 +84,6 @@ export default function DrawerAppBar(props: Props) {
         <ListItem disablePadding>
           <ListItemButton
             sx={{ textAlign: "center" }}
-            component={Link}
-            href="/#datasheet"
-          >
-            <ListItemText primary="功能介绍" />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton
-            sx={{ textAlign: "center" }}
             selected={pathname.startsWith("/posts/")}
             component={Link}
             href="/posts/introduction/"
@@ -155,7 +129,9 @@ export default function DrawerAppBar(props: Props) {
       <AppBar
         component="nav"
         sx={{
-          backgroundColor: "background.paper",
+          backgroundColor: alpha("#0F1935", 0.18),
+          backdropFilter: "blur(16px)",
+          boxShadow: "none",
           color: "text.primary",
           pr: "0 !important",
         }}
@@ -189,7 +165,7 @@ export default function DrawerAppBar(props: Props) {
           <IconButton
             color="inherit"
             onClick={handleDrawerToggle}
-            sx={{ display: { sm: "none" } }}
+            sx={{ display: { sm: "none", color: "#fff" } }}
           >
             <MenuIcon />
           </IconButton>
@@ -199,39 +175,44 @@ export default function DrawerAppBar(props: Props) {
               ".MuiButtonBase-root": {
                 ml: "16px",
               },
+              "a.MuiBox-root": {
+                mr: 5,
+                "&:hover": {
+                  color: "primary.main",
+                },
+              },
             }}
           >
-            <Button
-              color={pathname === "/" ? "primary" : "inherit"}
+            <Box
+              sx={{
+                color: pathname === "/" ? "primary.main" : "#fff",
+              }}
               component={Link}
               href="/"
             >
               主页
-            </Button>
-            <Button
-              color="inherit"
-              // color={hash === "datasheet" ? "primary" : "inherit"}
-              component={Link}
-              href="/#datasheet"
-            >
-              功能介绍
-            </Button>
-            <Button
-              color={pathname.startsWith("/posts/") ? "primary" : "inherit"}
+            </Box>
+            <Box
+              sx={{
+                color: pathname.startsWith("/posts/") ? "primary.main" : "#fff",
+              }}
               component={Link}
               href="/posts/introduction/"
             >
               技术文档
-            </Button>
-            <Button
-              color="inherit"
+            </Box>
+            <Box
+              sx={{
+                color: "#fff",
+              }}
               component={Link}
               href="https://space.bilibili.com/521870525"
               target="_blank"
             >
               教学视频
-            </Button>
+            </Box>
             <Button
+              sx={{ ml: "0 !important" }}
               component={Link}
               variant="contained"
               href="https://demo.waf-ce.chaitin.cn:9443/"

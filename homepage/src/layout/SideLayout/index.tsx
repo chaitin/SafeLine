@@ -55,10 +55,12 @@ const SideLayout: FC<IProps> = ({ children }) => {
           top: 0,
           left: 0,
           width: 240,
-          pt: "120px",
+          pt: "100px",
           height: "100%",
-          backgroundColor: "background.paper",
+          backgroundColor: "#f8f9fc",
+          // boxShadow: "inset 0px 0px 16px 0px rgba(0, 145, 255, 1)",
           display: { xs: "none", sm: "block" },
+          borderRight: "1px solid hsla(210, 18%, 87%, 1)",
         }}
       >
         {MENU_LIST.map((menu) => (
@@ -89,10 +91,20 @@ const SideLayout: FC<IProps> = ({ children }) => {
         ))}
       </Box>
 
-      <AppBar sx={{ top: 72, display: { xs: "block", sm: "none" } }}>
+      <AppBar
+        sx={{
+          top: 72,
+          backgroundColor: "#fff",
+          display: {
+            xs: "block",
+            sm: "none",
+            boxShadow: "0 12px 25px -12px rgba(93,99,112, 0.2)",
+          },
+        }}
+      >
         <ListItem onClick={handleClick}>
           <ListItemIcon>{open ? <ExpandLess /> : <ExpandMore />}</ListItemIcon>
-          <ListItemText primary="目录" />
+          <ListItemText primary="目录" sx={{ color: "#000" }} />
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List
@@ -138,10 +150,13 @@ const SideLayout: FC<IProps> = ({ children }) => {
 
       <Box
         sx={{
-          p: { xs: 8, sm: 3 },
+          pt: { xs: 18, sm: 13 },
+          pb: 8,
+          px: 3,
           flexGrow: 1,
           height: "100%",
           marginLeft: { xs: 0, sm: "240px" },
+          backgroundColor: "#F8F9FC",
         }}
       >
         {children}
