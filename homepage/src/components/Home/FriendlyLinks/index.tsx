@@ -1,4 +1,4 @@
-import { Grid, Button } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 
 import Link from "next/link";
 
@@ -34,14 +34,21 @@ const FriendlyLinks = () => {
     <Grid container>
       {LINK_LIST.map((item) => (
         <Grid item xs={6} sm={4} md={3} key={item.name}>
-          <Button
-            color="inherit"
+          <Box
             component={Link}
             target="_blank"
             href={item.url}
+            sx={{
+              color: "rgba(0,0,0,0.7)",
+              fontSize: "14px",
+              lineHeight: "24px",
+              "&:hover": {
+                color: "primary.main",
+              },
+            }}
           >
             {item.name}
-          </Button>
+          </Box>
         </Grid>
       ))}
     </Grid>
