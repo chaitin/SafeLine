@@ -56,6 +56,10 @@ cat .env | grep IMAGE_TAG
 # set IMAGE_TAG to `latest` or some specific version like `1.1.0`
 sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" .env
 
+# check `compose.yaml`
+# image namespace has changed to `chaitin`
+sed -i "s/chaitinops/chaitin/g" compose.yaml
+
 # replace with `docker-compose` if necessary.
 docker compose down && docker compose pull && docker compose up -d
 ```
