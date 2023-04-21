@@ -8,30 +8,27 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 
+import { getPostsIds, getPostsData } from "@/utils/posts";
+
 export default function Posts({ article }: { article: string }) {
   return (
-    <Box id="markdown-body" className="markdown-body">
-      <ReactMarkdown
-        rehypePlugins={[rehypeRaw]}
-        remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
-      >
-        {article}
-      </ReactMarkdown>
-    </Box>
+    <SideLayout>
+      <Box id="markdown-body" className="markdown-body">
+        <ReactMarkdown
+          rehypePlugins={[rehypeRaw]}
+          remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
+        >
+          {article}
+        </ReactMarkdown>
+      </Box>
+    </SideLayout>
   );
 }
 
-Posts.getLayout = function getLayout(page: ReactElement) {
-  return <SideLayout>{page}</SideLayout>;
-};
-
 export async function getStaticPaths() {
+  const paths = getPostsIds();
   return {
-    paths: [
-      { params: { id: "introduction" } },
-      { params: { id: "install" } },
-      { params: { id: "faq" } },
-    ],
+    paths,
     fallback: false,
   };
 }
@@ -45,9 +42,12 @@ export const getStaticProps: GetStaticProps<{ article: string }> = async ({
     "utf8"
   );
 
+  // const postsData = getPostsData();
+
   return {
     props: {
       article: fileContents,
+      // postsData,
     },
   };
 };

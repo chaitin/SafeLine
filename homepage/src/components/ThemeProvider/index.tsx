@@ -17,7 +17,7 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // const [mode, setMode] = useLocalStorageState<ThemeMode>("themeMode", {
   //   defaultValue: "system",
   // });
-  const [mode, setMode] = useState<ThemeMode>("dark");
+  const [mode, setMode] = useState<ThemeMode>("light");
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   const theme = useMemo(() => {
@@ -48,6 +48,7 @@ const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     // @ts-ignore
     bodyStyle.backgroundColor = theme.palette.background.paper0;
     bodyStyle.color = theme.palette.text.primary;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
 
   return (
