@@ -24,7 +24,6 @@ const MainLayout: FC<IProps> = ({ children }) => {
       <Box
         sx={{
           position: "relative",
-          pt: "54px",
           flex: 1,
           display: "flex",
           flexDirection: "column",
@@ -32,7 +31,7 @@ const MainLayout: FC<IProps> = ({ children }) => {
         }}
       >
         <Header />
-        <Box component="main" sx={{ flexGrow: 1, p: "24px" }}>
+        <Box component="main" sx={{ flexGrow: 1 }}>
           {children}
         </Box>
       </Box>

@@ -1,209 +1,165 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Box,
-  Button,
-} from "@mui/material";
+import { Typography, Box, Button, alpha } from "@mui/material";
+import Title from "@/components/Home/Title";
+import FunctionTable from "./FunctionTable";
 import Link from "next/link";
-const Support = () => {
-  return <Box color="success.main">支持</Box>;
-};
-const NotSupport = () => {
-  return <Box color="error.main">不支持</Box>;
-};
-
-const SoonSupport = () => {
-  return <Box color="warning.main">即将支持</Box>;
-};
-
-const Unlimited = () => {
-  return <Box color="success.main">无限制</Box>;
-};
+const FREE_FUNCTION = [
+  "智能语义分析检测",
+  "反向代理接入",
+  "自定义黑白名单",
+  "精细化引擎调节",
+  "可视化安全分析",
+];
+const ENTERPRISE_FUNCTION = [
+  "智能语义分析检测",
+  "串行、旁路均可接入",
+  "集群式可扩展部署",
+  "CC 攻击防护",
+  "业务 API 智能建模",
+  "Bot 管理，恶意 Bot 防护",
+  "专业技术支持服务",
+  "漏洞应急服务",
+];
 
 const Version = () => {
-  const bodyCell = [
-    {
-      name: "智能语义分析引擎",
-      experience: <Support />,
-      basics: <Support />,
-    },
-    {
-      name: "可防护站点数量",
-      experience: <Unlimited />,
-      basics: <Unlimited />,
-    },
-    {
-      name: "自定义白名单",
-      experience: <Support />,
-      basics: <Support />,
-    },
-    {
-      name: "自定义黑名单",
-      experience: <Support />,
-      basics: <Support />,
-    },
-    {
-      name: "反向代理接入",
-      experience: <Support />,
-      basics: <Support />,
-    },
-    {
-      name: "软件形态",
-      experience: <Support />,
-      basics: <Support />,
-    },
-    {
-      name: "硬件形态",
-      experience: <NotSupport />,
-      basics: <Support />,
-    },
-    {
-      name: "智能业务建模",
-      experience: <NotSupport />,
-      basics: <Support />,
-    },
-    {
-      name: "动态防护",
-      experience: <NotSupport />,
-      basics: <Support />,
-    },
-    {
-      name: "分布式集群部署",
-      experience: <NotSupport />,
-      basics: <Support />,
-    },
-    {
-      name: "SDK 接入",
-      experience: <NotSupport />,
-      basics: <Support />,
-    },
-    {
-      name: "透明代理接入",
-      experience: <NotSupport />,
-      basics: <Support />,
-    },
-    {
-      name: "透明桥接接入",
-      experience: <NotSupport />,
-      basics: <Support />,
-    },
-    {
-      name: "旁路镜像接入",
-      experience: <NotSupport />,
-      basics: <Support />,
-    },
-    {
-      name: "",
-      experience: (
-        <Button
-          variant="contained"
-          component={Link}
-          href="https://stack.chaitin.com/tool/detail?id=717"
-          target="_blank"
-        >
-          免费使用
-        </Button>
-      ),
-      basics: (
-        <Button
-          variant="contained"
-          color="neutral"
-          component={Link}
-          href="https://stack.chaitin.com/tool/detail?id=717"
-          target="_blank"
-          sx={{ backgroundColor: "#fff", color: "#000" }}
-        >
-          立即咨询
-        </Button>
-      ),
-    },
-  ];
   return (
-    <TableContainer>
-      <Table
+    <>
+      <Box
         sx={{
-          ".MuiTableCell-root": {
-            pl: "8px !important",
-            pr: "8px !important",
-            backgroundColor: "background.paper",
-            borderRight: "1px solid",
-            borderColor: "divider",
-            "&:first-of-type": {
-              borderLeft: "1px solid",
-              borderColor: "divider",
-            },
-          },
-          ".MuiTableHead-root": {
-            ".MuiTableCell-root": {
-              height: "60px",
-              fontSize: "16px",
-              fontWeight: 700,
-              color: "text.primary",
-              borderTop: "1px solid",
-              borderColor: "divider",
-            },
-          },
+          display: "flex",
+          justifyContent: "center",
+          width: "100%",
+          flexWrap: "wrap",
         }}
       >
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell align="left">
+        <Box
+          sx={{
+            width: { xs: "100%", sm: 306 },
+            flexShrink: 0,
+            height: { xs: "auto", sm: 440 },
+            px: 3,
+            py: 2,
+            mb: { xs: 2, sm: 0 },
+            mr: { xs: 0, sm: "20px" },
+            border: "1px solid #eee",
+            borderRadius: "12px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundImage: "linear-gradient(to top,#C3CFE2,#EFF1F8)",
+            "&:hover": {
+              boxShadow:
+                "0 36px 70px -10px rgba(61,64,76,.15), 0 18px 20px -10px rgba(61,64,76,.05)",
+            },
+            // color: "#fff",
+          }}
+        >
+          <Typography variant="h5" sx={{ fontWeight: 500, fontSize: "18px" }}>
+            社区版
+          </Typography>
+          <Button
+            variant="contained"
+            component={Link}
+            target="_blank"
+            sx={{
+              width: 200,
+              my: 2,
+            }}
+            href="https://stack.chaitin.com/tool/detail?id=717"
+          >
+            免费使用
+          </Button>
+          <Box>
+            {FREE_FUNCTION.map((f) => (
               <Box
+                key={f}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
+                  py: 1,
+                  position: "relative",
+                  pl: 2,
+                  "&:before": {
+                    content: "' '",
+                    position: "absolute",
+                    left: 0,
+                    top: "16px",
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    backgroundColor: "success.main",
+                  },
                 }}
               >
-                社区版{" "}
-                <Box
-                  sx={{
-                    display: { xs: "none", sm: "block" },
-                    color: "primary.main",
-                  }}
-                >
-                  免费
-                </Box>
+                {f}
               </Box>
-            </TableCell>
-            <TableCell align="left">
+            ))}
+          </Box>
+        </Box>
+
+        <Box
+          sx={(theme) => ({
+            width: { xs: "100%", sm: 306 },
+            flexShrink: 0,
+            height: { xs: "auto", sm: 440 },
+            px: 3,
+            py: 2,
+            border: "1px solid",
+            borderColor: alpha(theme.palette.primary.main, 0.5),
+            borderRadius: "12px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            "&:hover": {
+              boxShadow:
+                "0 36px 70px -10px rgba(61,64,76,.15), 0 18px 20px -10px rgba(61,64,76,.05)",
+            },
+          })}
+        >
+          <Typography variant="h5" sx={{ fontWeight: 500, fontSize: "18px" }}>
+            商业版
+          </Typography>
+          <Button
+            variant="outlined"
+            sx={{
+              width: 200,
+              my: 2,
+              "&:hover": {
+                borderColor: "primary.main",
+                backgroundColor: "primary.main",
+                color: "#fff",
+              },
+            }}
+          >
+            立即咨询
+          </Button>
+          <Box>
+            {ENTERPRISE_FUNCTION.map((f) => (
               <Box
+                key={f}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
+                  py: 1,
+                  position: "relative",
+                  pl: 2,
+                  "&:before": {
+                    content: "' '",
+                    position: "absolute",
+                    left: 0,
+                    top: "16px",
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    backgroundColor: "success.main",
+                  },
                 }}
               >
-                企业版
-                <Box
-                  sx={{
-                    display: { xs: "none", sm: "block" },
-                  }}
-                >
-                  独立报价
-                </Box>
+                {f}
               </Box>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {bodyCell.map((item) => (
-            <TableRow key={item.name}>
-              <TableCell>{item.name}</TableCell>
-              <TableCell align="left">{item.experience}</TableCell>
-              <TableCell align="left">{item.basics}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            ))}
+          </Box>
+        </Box>
+      </Box>
+      <Title title="详细参数" sx={{ mt: "120px !important" }} />
+
+      <FunctionTable />
+    </>
   );
 };
 
