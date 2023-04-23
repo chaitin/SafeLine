@@ -8,38 +8,18 @@ import {
   Collapse,
   AppBar,
   List,
-  ListItemButton,
   ListItemIcon,
   ListItemText,
   ListSubheader,
   ListItem,
 } from "@mui/material";
-
-interface IProps {
+import { type GroupItem } from "@/utils/posts";
+interface SideLayoutProps {
+  list: GroupItem[];
   children?: React.ReactNode;
 }
 
-const MENU_LIST = [
-  {
-    group: "上手指南",
-    list: [
-      {
-        name: "产品介绍",
-        url: "/posts/introduction",
-      },
-      {
-        name: "快速部署",
-        url: "/posts/install",
-      },
-      {
-        name: "常见问题排查",
-        url: "/posts/faq",
-      },
-    ],
-  },
-];
-
-const SideLayout: FC<IProps> = ({ children }) => {
+const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
   const router = useRouter();
   const { asPath } = router;
   const [open, setOpen] = useState(false);
@@ -63,28 +43,32 @@ const SideLayout: FC<IProps> = ({ children }) => {
           borderRight: "1px solid hsla(210, 18%, 87%, 1)",
         }}
       >
-        {MENU_LIST.map((menu) => (
-          <Box sx={{ pl: "40px", lineHeight: "32px" }} key={menu.group}>
-            <Box sx={{ color: "text.auxiliary", mb: "6px" }}>{menu.group}</Box>
+        {list.map((menu) => (
+          <Box sx={{ pl: "40px", lineHeight: "32px" }} key={menu.category}>
+            <Box sx={{ color: "text.auxiliary", mb: "6px" }}>
+              {menu.category}
+            </Box>
             {menu.list.map((item) => (
               <Box
-                key={item.name}
+                key={item.title}
                 component={Link}
-                href={item.url}
+                href={`/posts/${item.id}`}
                 sx={{
                   fontSize: "16px",
                   display: "block",
                   textDecoration: "none",
-                  color: asPath.startsWith(item.url)
+                  color: asPath.startsWith(`/posts/${item.id}`)
                     ? "primary.main"
                     : "inherit",
-                  fontWeight: asPath.startsWith(item.url) ? 700 : 400,
+                  fontWeight: asPath.startsWith(`/posts/${item.id}`)
+                    ? 700
+                    : 400,
                   "&:hover": {
                     color: "primary.main",
                   },
                 }}
               >
-                {item.name}
+                {item.title}
               </Box>
             ))}
           </Box>
@@ -118,27 +102,29 @@ const SideLayout: FC<IProps> = ({ children }) => {
             }}
             subheader={<li />}
           >
-            {MENU_LIST.map((menu) => (
-              <li key={`section-${menu.group}`}>
+            {list.map((menu) => (
+              <li key={`section-${menu.category}`}>
                 <ul>
                   <ListSubheader sx={{ color: "text.auxiliary" }}>
-                    {menu.group}
+                    {menu.category}
                   </ListSubheader>
                   {menu.list.map((item) => (
                     <ListItem
-                      key={item.name}
+                      key={item.title}
                       onClick={() => {
-                        router.push(item.url);
+                        router.push(`/posts/${item.id}`);
                         handleClick();
                       }}
                       sx={{
-                        color: asPath.startsWith(item.url)
+                        color: asPath.startsWith(`/posts/${item.id}`)
                           ? "primary.main"
                           : "text.primary",
-                        fontWeight: asPath.startsWith(item.url) ? 700 : 400,
+                        fontWeight: asPath.startsWith(`/posts/${item.id}`)
+                          ? 700
+                          : 400,
                       }}
                     >
-                      <ListItemText primary={item.name} />
+                      <ListItemText primary={item.title} />
                     </ListItem>
                   ))}
                 </ul>

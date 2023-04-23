@@ -1,18 +1,15 @@
-<!-- ---
+---
 title: "产品介绍"
 category: "上手指南"
 weight: 1
-date: 2023-04-16T01:00:38+08:00
-draft: true
---- -->
-
+---
 # 产品介绍
 
 一款简单、好用的 WAF 工具。基于[长亭科技](https://www.chaitin.cn)王牌的 🤖️智能语义分析算法🤖️ 打造，专为社区设计。
 
 ## ✨ Demo
 
-### 🔥🔥🔥 体验地址：<a href="https://demo.waf-ce.chaitin.cn:9443/">https://demo.waf-ce.chaitin.cn:9443/</a>
+### 🔥🔥🔥 体验地址：[https://demo.waf-ce.chaitin.cn:9443/](https://demo.waf-ce.chaitin.cn:9443/)
 
 有一台运行在环境上 `http://127.0.0.1:8889` 的服务可以作为上游服务器测试使用。
 

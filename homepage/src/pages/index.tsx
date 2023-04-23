@@ -41,8 +41,8 @@ export default function Home() {
     <Box sx={{ backgroundColor: "#F8F9FC" }}>
       <Box sx={{ pt: 16, pb: 18, backgroundColor: "#0F1935", color: "#fff" }}>
         <Container maxWidth="lg">
-          <Grid container>
-            <Grid item container sx={{ flex: 1 }} xs={12} sm={8}>
+          <Box sx={{ display: { xs: "block", sm: "flex" }, flexWrap: "wrap" }}>
+            <Grid container sx={{ flex: 1 }}>
               <Grid item xs={12}>
                 <Typography variant="h3" sx={{ pb: 3 }}>
                   雷池 Web 应用防火墙{" "}
@@ -125,14 +125,12 @@ export default function Home() {
                 </Button>
               </Grid>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={4}
+            <Box
               sx={{
                 display: "flex",
                 justifyContent: { xs: "center", sm: "right" },
                 pt: { xs: 3, sm: 0 },
+                ml: { xs: 0, sm: 3 },
               }}
             >
               <Image
@@ -140,11 +138,10 @@ export default function Home() {
                 alt="Logo"
                 width={196}
                 height={196}
-                style={{ marginLeft: "24px" }}
                 priority
               />
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
         </Container>
       </Box>
       <Container sx={{ mt: -10, color: "#000", pb: 3 }}>

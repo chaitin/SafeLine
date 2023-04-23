@@ -1,11 +1,8 @@
-<!-- ---
+---
 title: "快速部署"
 category: "上手指南"
 weight: 2
-date: 2023-04-16T01:00:38+08:00
-draft: true
---- -->
-
+---
 ### 1. 确保机器上正确安装 [Docker](https://docs.docker.com/engine/install/) 和 [Compose V2](https://docs.docker.com/compose/install/)
 
 ```shell
