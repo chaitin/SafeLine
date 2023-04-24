@@ -59,43 +59,43 @@ const FEATURE_LIST = [
 
 const Features = () => {
   return (
-    <Grid
-      container
-      xs={12}
-      spacing={5}
+    <Box
       sx={{
         borderRadius: "12px",
         backgroundColor: "#fff",
         color: "#000",
         boxShadow: "0 12px 25px -12px rgba(93,99,112, 0.2)",
+        px: 5,
         pb: 5,
-        pr: 5,
-        ml: 0,
       }}
     >
-      {FEATURE_LIST.map((feature) => (
-        <Grid item xs={12} sm={6} key={feature.title}>
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: 500, fontSize: "18px", display: "flex" }}
-          >
-            <Image
-              src="/images/feature.svg"
-              alt="feature"
-              width={40}
-              height={40}
-              priority
-            />
-            <Box component="span" sx={{ mt: "5px" }}>
-              {feature.title}
+      <Grid container spacing={5}>
+        {FEATURE_LIST.map((feature) => (
+          <Grid item xs={12} sm={6} key={feature.title}>
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: 500, fontSize: "18px", display: "flex" }}
+            >
+              <Image
+                src="/images/feature.svg"
+                alt="feature"
+                width={40}
+                height={40}
+                priority
+              />
+              <Box component="span" sx={{ mt: "5px" }}>
+                {feature.title}
+              </Box>
+            </Typography>
+            <Box
+              sx={{ color: "rgba(0,0,0,.7)", whiteSpace: "pre-line", mt: 3 }}
+            >
+              {feature.content}
             </Box>
-          </Typography>
-          <Box sx={{ color: "rgba(0,0,0,.7)", whiteSpace: "pre-line", mt: 3 }}>
-            {feature.content}
-          </Box>
-        </Grid>
-      ))}
-    </Grid>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 };
 

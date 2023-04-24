@@ -1,29 +1,30 @@
-import path from "path";
-import { promises as fs } from "fs";
-import { GetStaticProps } from "next";
-import type { ReactElement } from "react";
+import { type GetStaticProps } from "next";
 import { Box } from "@mui/material";
 import SideLayout from "@/layout/SideLayout";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
 
-import { getPostsIds, getPostsData } from "@/utils/posts";
+import { MDXRemote, MDXRemoteProps } from "next-mdx-remote";
 
-export default function Posts({ article }: { article: string }) {
+import {
+  getPostsIds,
+  getPostsGroup,
+  getPostData,
+  type GroupItem,
+} from "@/utils/posts";
+
+interface PostsProps {
+  group: GroupItem[];
+  postData: MDXRemoteProps;
+}
+
+const Posts: React.FC<PostsProps> = ({ group, postData }) => {
   return (
-    <SideLayout>
+    <SideLayout list={group}>
       <Box id="markdown-body" className="markdown-body">
-        <ReactMarkdown
-          rehypePlugins={[rehypeRaw]}
-          remarkPlugins={[[remarkGfm, { singleTilde: false }]]}
-        >
-          {article}
-        </ReactMarkdown>
+        <MDXRemote {...postData} />
       </Box>
     </SideLayout>
   );
-}
+};
 
 export async function getStaticPaths() {
   const paths = getPostsIds();
@@ -33,21 +34,18 @@ export async function getStaticPaths() {
   };
 }
 
-export const getStaticProps: GetStaticProps<{ article: string }> = async ({
+export const getStaticProps: GetStaticProps<PostsProps> = async ({
   params,
 }) => {
-  const mdDir = path.join(process.cwd(), "./src/static/md/");
-  const fileContents = await fs.readFile(
-    path.join(mdDir, params?.id + ".md"),
-    "utf8"
-  );
+  const postData = await getPostData(params?.id as string);
 
-  // const postsData = getPostsData();
-
+  const group = getPostsGroup();
   return {
     props: {
-      article: fileContents,
-      // postsData,
+      group,
+      postData,
     },
   };
 };
+
+export default Posts;
