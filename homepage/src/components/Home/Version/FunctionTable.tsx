@@ -32,7 +32,7 @@ const Unlimited = () => {
 };
 
 const FunctionTable = () => {
-  const [open, setOpen] = useState<string[]>([]);
+  const [open, setOpen] = useState<string[]>(["基本功能", "高级防护能力", "部署形态", "流量接入方式"]);
 
   const cells = [
     {
@@ -145,7 +145,6 @@ const FunctionTable = () => {
     } else {
       setOpen((open) => [...open, id])
     }
-    // setOpen(!open);
   };
 
   return (
