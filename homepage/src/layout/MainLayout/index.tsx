@@ -12,10 +12,10 @@ const MainLayout: FC<IProps> = ({ children }) => {
   return (
     <>
       <Head>
-        <title>长亭雷池 WAF</title>
+        <title>长亭雷池 WAF 社区版</title>
         <meta
           name="description"
-          content="长亭雷池 Web 应用防火墙  | 长亭雷池 WAF"
+          content="长亭雷池 Web 应用防火墙 | 长亭雷池 WAF"
         />
         <meta name="keywords" content="WAF,雷池,长亭,社区版" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

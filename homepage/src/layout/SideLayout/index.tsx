@@ -28,14 +28,14 @@ const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
     setOpen(!open);
   };
   return (
-    <Box sx={{ display: { xs: "block", sm: "flex" } }}>
+    <Box sx={{ display: { xs: "block", sm: "flex" }, height:'100%' }}>
       <Box
         sx={{
           position: "fixed",
           top: 0,
           left: 0,
           width: 240,
-          pt: "100px",
+          pt: "80px",
           height: "100%",
           backgroundColor: "#f8f9fc",
           // boxShadow: "inset 0px 0px 16px 0px rgba(0, 145, 255, 1)",
@@ -45,7 +45,7 @@ const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
       >
         {list.map((menu) => (
           <Box sx={{ pl: "40px", lineHeight: "32px" }} key={menu.category}>
-            <Box sx={{ color: "text.auxiliary", mb: "6px" }}>
+            <Box sx={{ color: "text.auxiliary", mb: "6px", mt: "20px" }}>
               {menu.category}
             </Box>
             {menu.list.map((item) => (
