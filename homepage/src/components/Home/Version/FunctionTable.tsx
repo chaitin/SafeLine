@@ -32,7 +32,7 @@ const Unlimited = () => {
 };
 
 const FunctionTable = () => {
-  const [open, setOpen] = useState<string[]>([]);
+  const [open, setOpen] = useState<string[]>(["基本功能", "高级防护能力", "部署形态", "流量接入方式"]);
 
   const cells = [
     {
@@ -42,21 +42,22 @@ const FunctionTable = () => {
           name: "可视化 DashBoard",
           experience: <Support />,
           basics: <Support />,
-        },
-        {
-          name: "自定义规则",
+        }, {
+          name: "自定义黑白名单",
           experience: <Support />,
           basics: <Support />,
-        },
-        {
-          name: "可防护站点数量",
-          experience: <Unlimited />,
-          basics: <Unlimited />,
-        },
-        {
+        }, {
           name: "自定义防护策略",
           experience: <Support />,
           basics: <Support />,
+        }, {
+          name: "可防护站点数量",
+          experience: <Unlimited />,
+          basics: <Unlimited />,
+        }, {
+          name: "可支撑流量大小",
+          experience: <Unlimited />,
+          basics: <Unlimited />,
         }
       ]
     },
@@ -82,6 +83,10 @@ const FunctionTable = () => {
           basics: <Support />,
         }, {
           name: "Bot 管理",
+          experience: <NotSupport />,
+          basics: <Support />,
+        }, {
+          name: "拟态防护",
           experience: <NotSupport />,
           basics: <Support />,
         },
@@ -145,7 +150,6 @@ const FunctionTable = () => {
     } else {
       setOpen((open) => [...open, id])
     }
-    // setOpen(!open);
   };
 
   return (
@@ -159,7 +163,45 @@ const FunctionTable = () => {
               px: "12px",
             },
           }}
-        />
+        >
+          <TableHead>
+            <TableRow>
+              <TableCell sx={{ width: "33%" }} />
+              <TableCell align="center" sx={{ width: "33%", fontSize: "16px" }}>
+                <Box
+                  sx={(theme) => ({
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "40px",
+                    borderRadius: "4px",
+                    color: theme.palette.primary.main,
+                    backgroundColor: alpha(theme.palette.primary.main, 0.2),
+                  })}
+                >
+                  社区版
+                </Box>
+              </TableCell>
+              <TableCell align="left" sx={{ width: "33%", fontSize: "16px" }}>
+                <Box
+                  sx={(theme) => ({
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    color: theme.palette.primary.main,
+                    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                    height: "40px",
+                    borderRadius: "4px",
+                  })}
+                >
+                  企业版
+                </Box>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+        </Table>
       </TableContainer>
       {cells?.map(data =>
         <React.Fragment key={`sub-table-${data.title}`}>
