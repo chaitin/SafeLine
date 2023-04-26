@@ -43,12 +43,13 @@ const dealWithData: (data: MenuItem[]) => GroupItem[] = (data) => {
       cur?.list.push(ele);
     }
   });
+  let categorys = ["上手指南", "常见问题排查", "关于雷池"];
   return list.map((item) => {
     return {
       category: item.category,
       list: item.list.sort((a, b) => a.weight - b.weight),
     };
-  });
+  }).sort((a,b)=> categorys.indexOf(a.category) - categorys.indexOf(b.category));
 };
 
 export const getPostsGroup = () => {

@@ -86,7 +86,7 @@ export default function DrawerAppBar(props: Props) {
             sx={{ textAlign: "center" }}
             selected={pathname.startsWith("/posts/")}
             component={Link}
-            href="/posts/introduction/"
+            href="/posts/guide_introduction/"
           >
             <ListItemText primary="技术文档" />
           </ListItemButton>
@@ -197,7 +197,7 @@ export default function DrawerAppBar(props: Props) {
                 color: pathname.startsWith("/posts/") ? "primary.main" : "#fff",
               }}
               component={Link}
-              href="/posts/introduction/"
+              href="/posts/guide_introduction/"
             >
               技术文档
             </Box>
