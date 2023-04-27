@@ -31,6 +31,7 @@ const Version = () => {
           width: "100%",
           flexWrap: "wrap",
         }}
+        style={{marginTop: '48px'}}
       >
         <Box
           sx={{

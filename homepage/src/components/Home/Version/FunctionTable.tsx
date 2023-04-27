@@ -163,6 +163,7 @@ const FunctionTable = () => {
               px: "12px",
             },
           }}
+          style={{marginTop: '48px'}}
         >
           <TableHead>
             <TableRow>
