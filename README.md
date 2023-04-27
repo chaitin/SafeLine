@@ -50,15 +50,8 @@ sudo docker compose up -d
 
 **WARN: SafeLine will be restarted and your traffic will be unavailable for a short period of time. You may need to choose a proper time for upgration.**
 
-```
-# check `IMAGE_TAG`
-cat .env | grep IMAGE_TAG
-# set IMAGE_TAG to `latest` or some specific version like `1.1.0`
-sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" .env
-
-# check `compose.yaml`
-# image namespace has changed to `chaitin`
-sed -i "s/chaitinops/chaitin/g" compose.yaml
+```shell
+curl -kfLsS https://waf-ce.chaitin.cn/release/latest/upgrade.sh | bash
 
 # replace with `docker-compose` if necessary.
 docker compose down && docker compose pull && docker compose up -d
