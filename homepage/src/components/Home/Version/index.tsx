@@ -1,6 +1,7 @@
 import { Typography, Box, Button, alpha } from "@mui/material";
 import Title from "@/components/Home/Title";
 import FunctionTable from "./FunctionTable";
+import Consultation from "./Consultation";
 import Link from "next/link";
 const FREE_FUNCTION = [
   "智能语义分析检测",
@@ -116,20 +117,7 @@ const Version = () => {
           <Typography variant="h5" sx={{ fontWeight: 500, fontSize: "18px" }}>
             商业版
           </Typography>
-          <Button
-            variant="outlined"
-            sx={{
-              width: 200,
-              my: 2,
-              "&:hover": {
-                borderColor: "primary.main",
-                backgroundColor: "primary.main",
-                color: "#fff",
-              },
-            }}
-          >
-            立即咨询
-          </Button>
+          <Consultation />
           <Box>
             {ENTERPRISE_FUNCTION.map((f) => (
               <Box
