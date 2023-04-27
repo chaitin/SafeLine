@@ -17,6 +17,7 @@ services:
     image: postgres:15.2
     volumes:
     - ${SAFELINE_DIR}/resources/postgres/data:/var/lib/postgresql/data
+    - /etc/localtime:/etc/localtime:ro
     environment:
     - POSTGRES_USER=safeline-ce
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?postgres password required}
@@ -54,6 +55,7 @@ services:
     volumes:
     - ${SAFELINE_DIR}/resources/detector:/resources/detector
     - ${SAFELINE_DIR}/logs/detector:/logs/detector
+    - /etc/localtime:/etc/localtime:ro
     environment:
     - LOG_DIR=/logs/detector
     networks:
@@ -68,6 +70,7 @@ services:
     volumes:
     - ${SAFELINE_DIR}/resources/mario:/resources/mario
     - ${SAFELINE_DIR}/logs/mario:/logs/mario
+    - /etc/localtime:/etc/localtime:ro
     environment:
     - LOG_DIR=/logs/mario
     - GOGC=100
@@ -89,6 +92,8 @@ services:
     - /etc/localtime:/etc/localtime:ro
     - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
     - /etc/resolv.conf:/etc/resolv.conf
+    environment:
+    - MGT_ADDR=169.254.0.4:9002
     ulimits:
       nofile: 131072
     network_mode: host
