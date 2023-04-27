@@ -14,6 +14,7 @@
     "@emotion/styled": "^11.10.6",
     "@jsdevtools/rehype-toc": "^3.0.2",
     "@mui/icons-material": "^5.11.16",
+    "@mui/lab": "5.0.0-alpha.128",
     "@mui/material": "^5.12.0",
     "@types/node": "18.15.11",
     "@types/react": "18.0.35",
