@@ -11,6 +11,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const IMAGE_LIST = [
   {
+    name: "可视化仪表盘",
+    url: "/images/album/0.png",
+  },
+  {
     name: "登录页",
     url: "/images/album/5.png",
   },
@@ -178,7 +182,7 @@ export default function Home() {
           <Title title="产品展示" />
           <Box sx={{ boxShadow: "0 12px 25px -12px rgba(93,99,112, 0.2)" }}>
             <Carousel
-              interval={3000}
+              interval={2000}
               infiniteLoop
               autoPlay
               showStatus={false}
