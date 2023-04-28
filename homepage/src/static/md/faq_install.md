@@ -1,9 +1,10 @@
 ---
 title: "无法安装"
-category: "常见问题排查"
-weight: 1
+group:
+    title: "常见问题排查"
+    order: 2
+order: 1
 ---
-
 # 无法安装
 
 ## docker compose 还是 docker-compose？
@@ -55,5 +56,3 @@ As shown, you shall start docker first. Try `systemctl start docker` or manually
 ## 如何修改 SafeLine 后台管理的默认端口？本机 `:9443` 已经被别的服务占用了
 
 基于最新的 `compose.yaml`，你可以手动添加 `MGT_PORT` 变量到 `.env` 文件。
-
-

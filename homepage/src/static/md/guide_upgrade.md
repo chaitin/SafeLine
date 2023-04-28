@@ -1,7 +1,7 @@
 ---
 title: "升级雷池"
-category: "上手指南"
-weight: 6
+group: "上手指南"
+order: 6
 ---
 
 # 升级雷池

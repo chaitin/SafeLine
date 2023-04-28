@@ -1,7 +1,7 @@
 ---
 title: "测试防护效果"
-category: "上手指南"
-weight: 5
+group: "上手指南"
+order: 5
 ---
 
 # 测试防护效果
