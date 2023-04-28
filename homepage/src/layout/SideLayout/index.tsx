@@ -28,7 +28,7 @@ const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
     setOpen(!open);
   };
   return (
-    <Box sx={{ display: { xs: "block", sm: "flex" }, height:'100%' }}>
+    <Box sx={{ display: { xs: "block", sm: "flex" }, height: "100%" }}>
       <Box
         sx={{
           position: "fixed",
@@ -43,32 +43,30 @@ const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
           borderRight: "1px solid hsla(210, 18%, 87%, 1)",
         }}
       >
-        {list.map((menu) => (
-          <Box sx={{ pl: "40px", lineHeight: "32px" }} key={menu.category}>
+        {list.map((group) => (
+          <Box sx={{ pl: "40px", lineHeight: "32px" }} key={group.title}>
             <Box sx={{ color: "text.auxiliary", mb: "6px", mt: "20px" }}>
-              {menu.category}
+              {group.title}
             </Box>
-            {menu.list.map((item) => (
+            {group.list.map((nav) => (
               <Box
-                key={item.title}
+                key={nav.title}
                 component={Link}
-                href={`/posts/${item.id}`}
+                href={`/posts/${nav.id}`}
                 sx={{
                   fontSize: "16px",
                   display: "block",
                   textDecoration: "none",
-                  color: asPath.startsWith(`/posts/${item.id}`)
+                  color: asPath.startsWith(`/posts/${nav.id}`)
                     ? "primary.main"
                     : "inherit",
-                  fontWeight: asPath.startsWith(`/posts/${item.id}`)
-                    ? 700
-                    : 400,
+                  fontWeight: asPath.startsWith(`/posts/${nav.id}`) ? 700 : 400,
                   "&:hover": {
                     color: "primary.main",
                   },
                 }}
               >
-                {item.title}
+                {nav.title}
               </Box>
             ))}
           </Box>
@@ -102,29 +100,29 @@ const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
             }}
             subheader={<li />}
           >
-            {list.map((menu) => (
-              <li key={`section-${menu.category}`}>
+            {list.map((group) => (
+              <li key={`section-${group.title}`}>
                 <ul>
                   <ListSubheader sx={{ color: "text.auxiliary" }}>
-                    {menu.category}
+                    {group.title}
                   </ListSubheader>
-                  {menu.list.map((item) => (
+                  {group.list.map((nav) => (
                     <ListItem
-                      key={item.title}
+                      key={nav.title}
                       onClick={() => {
-                        router.push(`/posts/${item.id}`);
+                        router.push(`/posts/${nav.id}`);
                         handleClick();
                       }}
                       sx={{
-                        color: asPath.startsWith(`/posts/${item.id}`)
+                        color: asPath.startsWith(`/posts/${nav.id}`)
                           ? "primary.main"
                           : "text.primary",
-                        fontWeight: asPath.startsWith(`/posts/${item.id}`)
+                        fontWeight: asPath.startsWith(`/posts/${nav.id}`)
                           ? 700
                           : 400,
                       }}
                     >
-                      <ListItemText primary={item.title} />
+                      <ListItemText primary={nav.title} />
                     </ListItem>
                   ))}
                 </ul>

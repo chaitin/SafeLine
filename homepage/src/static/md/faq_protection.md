@@ -1,7 +1,7 @@
 ---
 title: "防护不生效"
-category: "常见问题排查"
-weight: 3
+group: "常见问题排查"
+order: 3
 ---
 
 # 防护不生效

@@ -1,7 +1,7 @@
 ---
 title: "配置问题"
-category: "常见问题排查"
-weight: 10
+group: "常见问题排查"
+order: 10
 ---
 
 # 配置问题
