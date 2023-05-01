@@ -1,7 +1,7 @@
 ---
 title: "登录雷池"
-category: "上手指南"
-weight: 3
+group: "上手指南"
+order: 3
 ---
 
 # 登录雷池

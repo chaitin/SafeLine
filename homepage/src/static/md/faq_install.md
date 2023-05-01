@@ -1,9 +1,10 @@
 ---
 title: "无法安装"
-category: "常见问题排查"
-weight: 1
+group:
+    title: "常见问题排查"
+    order: 2
+order: 1
 ---
-
 # 无法安装
 
 ## docker compose 还是 docker-compose？
@@ -17,9 +18,6 @@ weight: 1
 > For a smooth transition from legacy docker-compose 1.xx, please consider installing [compose-switch](https://github.com/docker/compose-switch) to translate `docker-compose ...` commands into Compose V2's `docker compose ....` . Also check V2's `--compatibility` flag.
 
 其他参考：[https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose](https://stackoverflow.com/a/66516826)
-
-
-
 
 ## ERROR: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 
@@ -54,5 +52,3 @@ As shown, you shall start docker first. Try `systemctl start docker` or manually
 ## 如何修改 SafeLine 后台管理的默认端口？本机 `:9443` 已经被别的服务占用了
 
 基于最新的 `compose.yaml`，你可以手动添加 `MGT_PORT` 变量到 `.env` 文件。
-
-

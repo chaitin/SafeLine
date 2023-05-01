@@ -16,44 +16,71 @@ export const getPostsIds = () => {
   }));
 };
 
-export interface MenuItem {
+type Group = string | { title: string; order?: number };
+export interface NavItem {
   title: string;
-  category: string;
-  weight: number;
+  group: Group;
+  order?: number;
   id: string;
 }
 
 export interface GroupItem {
-  category: string;
-  list: MenuItem[];
+  title: string;
+  order?: number;
+  list: NavItem[];
 }
 
-const dealWithData: (data: MenuItem[]) => GroupItem[] = (data) => {
-  let list: { category: string; list: MenuItem[] }[] = [];
-  let cache: { [key: string]: unknown } = {};
+export const sortComparer = <
+  T extends { order?: number; id?: string; title: string }
+>(
+  a: T,
+  b: T
+) => {
+  return (
+    ("order" in a && "order" in b ? a.order! - b.order! : 0) ||
+    ("id" in a && "id" in b ? a.id!.localeCompare(b.id!) : 0) ||
+    (a.title ? a.title.localeCompare(b.title) : -1)
+  );
+};
+
+const dealWithData: (data: NavItem[]) => GroupItem[] = (data) => {
+  let list: GroupItem[] = [];
+  let cache: { [key: string]: NavItem } = {};
   data.forEach((ele) => {
-    if (!cache[ele.category]) {
-      list.push({
-        category: ele.category,
+    let groupTitle: string, groupOrder: number | undefined;
+
+    if (typeof ele.group === "object") {
+      groupTitle = ele.group.title;
+      groupOrder = ele.group.order;
+    } else if (typeof ele.group === "string") {
+      groupTitle = ele.group;
+    }
+
+    if (!cache[groupTitle!]) {
+      let group: GroupItem = {
+        title: groupTitle!,
         list: [ele],
-      });
-      cache[ele.category] = ele;
+      };
+      if (groupOrder) group.order = groupOrder;
+      list.push(group);
+      cache[groupTitle!] = ele;
     } else {
-      const cur = list.find((item) => item.category === ele.category);
+      const cur = list.find((item) => item.title === groupTitle);
+      if (groupOrder && cur) {
+        cur.order = groupOrder;
+      }
       cur?.list.push(ele);
     }
   });
-  let categorys = ["上手指南", "常见问题排查", "关于雷池"];
-  return list.map((item) => {
-    return {
-      category: item.category,
-      list: item.list.sort((a, b) => a.weight - b.weight),
-    };
-  }).sort((a,b)=> categorys.indexOf(a.category) - categorys.indexOf(b.category));
+
+  return list.sort(sortComparer).map((group) => ({
+    ...group,
+    list: group.list.sort(sortComparer),
+  }));
 };
 
 export const getPostsGroup = () => {
-  const dataList: MenuItem[] = fileNames.map((fileName) => {
+  const dataList: NavItem[] = fileNames.map((fileName) => {
     // 去除文件名的md后缀，使其作为文章id使用
     const id = fileName.replace(/\.md$/, "");
 
@@ -65,10 +92,9 @@ export const getPostsGroup = () => {
 
     // 使用matter提取md文件元数据：{data:{//元数据},content:'内容'}
     const matterResult = matter(fileContents);
-
     return {
       id,
-      ...(matterResult.data as Omit<MenuItem, "id">),
+      ...(matterResult.data as Omit<NavItem, "id">),
     };
   });
   return dealWithData(dataList);

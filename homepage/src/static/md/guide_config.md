@@ -1,7 +1,7 @@
 ---
 title: "配置防护站点"
-category: "上手指南"
-weight: 4
+group: "上手指南"
+order: 4
 ---
 
 # 配置防护站点

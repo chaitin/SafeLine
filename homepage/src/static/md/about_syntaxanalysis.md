@@ -1,7 +1,6 @@
 ---
 title: "智能语义分析技术"
-category: "关于雷池"
-weight: 1
+group: "关于雷池"
+order: 2
 ---
-
 # 智能语义分析技术

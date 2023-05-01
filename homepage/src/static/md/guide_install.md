@@ -1,7 +1,7 @@
 ---
 title: "安装雷池"
-category: "上手指南"
-weight: 2
+group: "上手指南"
+order: 2
 ---
 
 # 安装雷池
