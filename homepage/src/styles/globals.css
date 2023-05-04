@@ -274,3 +274,79 @@ code {
   font-weight: normal;
   font-style: normal;
 } */
+
+
+.markdown-navigation {
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Helvetica", "Arial", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+  width: 100%;
+  overflow: hidden;
+  border-left: 2px solid #E9E9E9;
+  padding-left: 15px;
+}
+
+.markdown-navigation .title-anchor {
+  display: block;
+  color: #bbb;
+  transition: all 0.2s;
+  margin: 0.8em 0;
+  /* font-weight: lighter; */
+  line-height: 2em;
+  padding-right: 1.8em;
+  cursor: pointer;
+}
+
+.markdown-navigation .title-anchor:hover,
+.markdown-navigation .title-anchor.active {
+  background-color: #f8f8f8;
+  text-decoration: inherit;
+}
+
+.markdown-navigation .title-anchor.active {
+  color: #007fff;
+}
+
+.markdown-navigation .title-anchor small {
+  /* margin: 0 0.8em; */
+  margin-right: 0.8em;
+}
+
+.markdown-navigation .title-level1 {
+  display: none;
+  color: #000;
+  font-size: 1.2em;
+  padding-left: 0em;
+  font-weight: normal;
+}
+
+.markdown-navigation .title-level2 {
+  color: #000;
+  font-size: 1em;
+  /* padding-left: 2em; */
+  font-weight: normal;
+}
+
+.markdown-navigation .title-level3 {
+  color: #666;
+  font-size: 0.8em;
+  /* padding-left: 3em; */
+  font-weight: normal;
+}
+
+.markdown-navigation .title-level4 {
+  color: #222;
+  font-size: 0.72em;
+  /* padding-left: 4em; */
+}
+
+.markdown-navigation .title-level5 {
+  color: #999;
+  font-size: 0.72em;
+  /* padding-left: 5em; */
+}
+
+.markdown-navigation .title-level6 {
+  color: #bbb;
+  font-size: 0.72em;
+  /* padding-left: 6em; */
+}

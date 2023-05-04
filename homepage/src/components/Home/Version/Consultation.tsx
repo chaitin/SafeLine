@@ -90,10 +90,6 @@ function Consultation() {
           <Typography>
             我们将在工作时间 2 小时内联系您，您的手机号不会用于其他目的
           </Typography>
-          {/* <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography> */}
-          咨询企业版
         </Box>
       </Modal>
     </>

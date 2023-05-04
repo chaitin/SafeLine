@@ -129,8 +129,7 @@ export default function DrawerAppBar(props: Props) {
       <AppBar
         component="nav"
         sx={{
-          backgroundColor: alpha("#0F1935", 0.18),
-          backdropFilter: "blur(16px)",
+          backgroundColor: "#0F1935",
           boxShadow: "none",
           color: "text.primary",
           pr: "0 !important",
@@ -153,8 +152,9 @@ export default function DrawerAppBar(props: Props) {
               height={34}
               priority
             />
+
             <Image
-              src="/images/safeline.png"
+              src="/images/403.svg"
               alt="Logo"
               width={34}
               height={34}
