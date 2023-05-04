@@ -200,7 +200,7 @@ export default function Home() {
                   <Box
                     className="legend"
                     sx={{
-                      opacity: "0.25 !important",
+                      opacity: "0.40 !important",
                       py: "4px !important",
                       borderRadius: "4px !important",
                     }}
