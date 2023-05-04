@@ -27,6 +27,7 @@ const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
   const handleClick = () => {
     setOpen(!open);
   };
+
   return (
     <Box sx={{ display: { xs: "block", sm: "flex" }, height: "100%" }}>
       <Box
@@ -139,6 +140,7 @@ const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
           px: 3,
           flexGrow: 1,
           height: "100%",
+          width: { xs: "100%", sm: "calc(100% - 240px)" },
           marginLeft: { xs: 0, sm: "240px" },
           backgroundColor: "#F8F9FC",
         }}

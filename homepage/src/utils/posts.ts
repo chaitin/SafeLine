@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { serialize } from "next-mdx-remote/serialize";
 // import prism from "remark-prism";
+import slug from "remark-slug";
 import remarkGfm from "remark-gfm";
 import externalLinks from "remark-external-links";
 
@@ -112,13 +113,13 @@ export async function getPostData(id: string) {
   let tocElement;
   const res = await serialize(matterResult.content, {
     mdxOptions: {
-      remarkPlugins: [externalLinks, remarkGfm],
+      remarkPlugins: [externalLinks, remarkGfm, slug],
       // rehypePlugins: [
       //   [
       //     toc,
       //     {
       //       headings: ["h1", "h2", "h3", "h4"],
-      //       customizeTOC: (tocAll) => {
+      //       customizeTOC: (tocAll: any) => {
       //         tocElement = tocAll;
       //         return false;
       //       },
@@ -127,6 +128,7 @@ export async function getPostData(id: string) {
       // ],
     },
   });
+  // console.log(tocElement, "tocElement--");
 
-  return res;
+  return { postData: res, content: matterResult.content };
 }
