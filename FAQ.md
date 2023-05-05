@@ -70,6 +70,10 @@ TOTP is calculated and verified according to time. So check your server time.
 
 最低 1C1G 能运行，具体需要多少配置取决于你的业务流量特征，比如 QPS、网络吞吐等等，暂时没有详细的 datasheet 性能参考。
 
+### 镜像下载缓慢甚至连接超时
+
+这个是因为 docker hub 默认使用位于美西节点拉取镜像，可以自行配置国内镜像加速源
+
 ### ERROR: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 
 如描述，你需要启动 docker daemon 才能执行相关的命令。尝试 `systemctl start docker` 或者手动启动 `Docker Desktop` （MacOS 或者 Windows 用户）

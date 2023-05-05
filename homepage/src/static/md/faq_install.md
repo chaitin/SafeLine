@@ -18,8 +18,9 @@ weight: 1
 
 其他参考：[https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose](https://stackoverflow.com/a/66516826)
 
+### 镜像下载缓慢甚至连接超时
 
-
+这个是因为 docker hub 默认使用位于美西节点拉取镜像，可以自行配置国内镜像加速源
 
 ## ERROR: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 
