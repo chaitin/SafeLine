@@ -32,7 +32,7 @@ services:
     restart: always
     image: chaitin/safeline-mgt-api:${IMAGE_TAG:?image tag required}
     volumes:
-    - ${SAFELINE_DIR}/resources/management:/resources/management
+    - ${SAFELINE_DIR?safeline dir required}/resources/management:/resources/management
     - ${SAFELINE_DIR}/resources/nginx:/resources/nginx
     - ${SAFELINE_DIR}/logs:/logs
     - /etc/localtime:/etc/localtime:ro
