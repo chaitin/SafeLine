@@ -19,7 +19,7 @@ order: 1
 
 其他参考：[https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose](https://stackoverflow.com/a/66516826)
 
-### 镜像下载缓慢甚至连接超时
+## 镜像下载缓慢甚至连接超时
 
 这个是因为 docker hub 默认使用位于美西节点拉取镜像，可以自行配置国内镜像加速源
 
@@ -37,7 +37,7 @@ As shown, you shall start docker first. Try `systemctl start docker` or manually
 
 如描述，你需要安装 `docker compose v2`。尝试 `[Install Docker Compose](https://docs.docker.com/compose/install/)`
 
-### safeline-tengine 出现 Address already in use
+## safeline-tengine 出现 Address already in use
 
 `docker logs -f safeline-tengine` 容器日志中看到 `Address already in use` 信息。
 
