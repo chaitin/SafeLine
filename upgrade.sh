@@ -35,5 +35,7 @@ wget https://waf-ce.chaitin.cn/release/latest/compose.yaml --no-check-certificat
 ENV_FILE=".env"
 sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ${ENV_FILE}
 
+grep "SAFELINE_DIR" ${ENV_FILE} > /dev/null || echo "SAFELINE_DIR=$(pwd)" >> ${ENV_FILE}
+
 $compose_command down && $compose_command pull && $compose_command up -d
 echo "Upgrade success!"
