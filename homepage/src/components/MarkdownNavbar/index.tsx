@@ -7,19 +7,34 @@ import { useDebounceFn, useThrottleFn } from "ahooks";
 import { slug } from "github-slugger";
 
 interface MarkdownNavbarProps {
-  container?: HTMLElement;
+  containerId?: string;
   source: string;
+}
+
+interface Heading {
+  dataId: string;
+  listNo: string;
+  offsetTop: number;
+}
+
+interface Nav {
+  index: number;
+  level: number;
+  text: string;
+  listNo: string;
 }
 
 const MarkdownNavbar: FC<MarkdownNavbarProps> = (props) => {
   const router = useRouter();
-  let { container, source } = props;
-  if (!container && typeof window !== "undefined") {
-    // @ts-ignore
-    container = document;
+  let { containerId, source } = props;
+  let container: HTMLElement;
+  if (typeof window !== "undefined") {
+    container =
+      (containerId && document.getElementById(containerId)) || document.body;
   }
+
   const [currentListNo, setCurrentListNo] = useState<string>("");
-  const [navStructure, setNavStructure] = useState<any[]>([]);
+  const [navStructure, setNavStructure] = useState<Nav[]>([]);
   const scrollEventLock = useRef(false);
   const timer = useRef<any>();
 
@@ -38,33 +53,20 @@ const MarkdownNavbar: FC<MarkdownNavbarProps> = (props) => {
     return arr.slice(start, end + 1);
   };
 
-  const getHeadingList = () => {
-    const headingList: { dataId: string; listNo: string; offsetTop: number }[] =
-      [];
-
+  const getHeadingList = (navStructure: Nav[]) => {
+    const headingList: Heading[] = [];
     navStructure.forEach((t) => {
-      const headings = document.querySelectorAll(`h${t.level}`);
-      const curHeading = Array.prototype.slice
-        .apply(headings)
-        .find(
-          (h) =>
-            h.innerText.trim() === t.text.trim() &&
-            !headingList.find(
-              (x) => x.offsetTop === h.getBoundingClientRect().top
-            )
-        );
+      const curHeading = document.getElementById(slug(t.text));
       if (curHeading) {
-        let rect = curHeading.getBoundingClientRect();
         headingList.push({
           dataId: `heading-${t.index}`,
           listNo: t.listNo,
-          offsetTop: rect.top,
+          offsetTop: curHeading.offsetTop - 179,
         });
       }
     });
     return headingList;
   };
-
   const initHeadingsId = (navStructure: any[]) => {
     navStructure.forEach((t) => {
       const headings = document.querySelectorAll(`h${t.level}`);
@@ -82,7 +84,7 @@ const MarkdownNavbar: FC<MarkdownNavbarProps> = (props) => {
     });
   };
 
-  const getNavStructure = (source: string) => {
+  const getNavStructure: (source: string) => Nav[] = (source) => {
     const contentWithoutCode = source
       .replace(/^[^#]+\n/g, "")
       .replace(/(?:[^\n#]+)#+\s([^#\n]+)\n*/g, "") // 匹配行内出现 # 号的情况
@@ -114,7 +116,7 @@ const MarkdownNavbar: FC<MarkdownNavbarProps> = (props) => {
       }
     });
     let matchStack = [];
-    // 此部分重构，原有方法会出现次级标题后再次出现高级标题时，listNo重复的bug
+
     for (let i = 0; i < navData.length; i++) {
       const t = navData[i];
       const { level } = t;
@@ -147,30 +149,57 @@ const MarkdownNavbar: FC<MarkdownNavbarProps> = (props) => {
   };
 
   const refreshNav = (source: string) => {
-    const navStructure = getNavStructure(source);
-    setNavStructure(navStructure.filter((nav) => [2, 3].includes(nav.level)));
-    setCurrentListNo(navStructure[0]?.listNo);
+    // TODO: 只需要 2 3 级标题
+    const navStructure = getNavStructure(source).filter((nav) =>
+      [2, 3].includes(nav.level)
+    );
+    setNavStructure(navStructure);
+    let hash = router.asPath.split("#")[1];
+    let listNo = navStructure[0]?.listNo;
+    if (hash) {
+      const hashText = decodeURIComponent(hash);
+      let findNav = navStructure.find((nav) => hashText === slug(nav.text));
+      if (findNav) {
+        listNo = findNav.listNo;
+        const target = document.getElementById(hashText);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+          scrollEventLock.current = true;
+          setTimeout(() => {
+            scrollEventLock.current = false;
+          }, 500);
+        }
+      }
+    }
+    setCurrentListNo(listNo);
     initHeadingsId(navStructure);
-    container?.addEventListener("scroll", winScroll, false);
+
+    setTimeout(() => {
+      container?.addEventListener(
+        "scroll",
+        () => winScroll(getHeadingList(navStructure)),
+        false
+      );
+    });
   };
 
   const { run: winScroll } = useThrottleFn(
-    () => {
+    (headingList: Heading[]) => {
       clearTimeout(timer.current);
       if (scrollEventLock.current) return;
-      const newHeadingList = getHeadingList().map((h) => ({
-        ...h,
-        distanceToTop: Math.abs(h.offsetTop),
-      }));
-      const distanceList = newHeadingList.map((h) => h.distanceToTop);
-      const minDistance = Math.min(...distanceList);
-      const curHeading = newHeadingList.find(
-        (h) => h.distanceToTop === minDistance
-      );
-      if (!curHeading) return;
-      timer.current = setTimeout(() => {
-        setCurrentListNo(curHeading.listNo);
+
+      var curHeading: Heading | null = null;
+      headingList.forEach((h) => {
+        if (h.offsetTop <= container.scrollTop) {
+          curHeading = h;
+        }
       });
+
+      if (curHeading) {
+        timer.current = setTimeout(() => {
+          setCurrentListNo(curHeading!.listNo);
+        });
+      }
     },
     { wait: 300 }
   );
@@ -198,13 +227,12 @@ const MarkdownNavbar: FC<MarkdownNavbarProps> = (props) => {
 
   const tBlocks = navStructure.map((t, index) => {
     const cls = `title-anchor title-level${t.level}`;
-    const point = slug(t.text);
-    let hash = router.asPath.split("#")[1];
+    const anchor = slug(t.text);
     return (
       <Box
         className={cls}
         component={Link}
-        href={`#${point}`}
+        href={`#${anchor}`}
         style={{ width: "100%" }}
         key={`title_anchor_${Math.random().toString(36).substring(2)}`}
       >
@@ -213,8 +241,7 @@ const MarkdownNavbar: FC<MarkdownNavbarProps> = (props) => {
             "&:hover": {
               color: "primary.main",
             },
-            color:
-              decodeURIComponent(hash) === point ? "primary.main" : "inherit",
+            color: currentListNo === t.listNo ? "primary.main" : "inherit",
           }}
         >
           {t.text}
