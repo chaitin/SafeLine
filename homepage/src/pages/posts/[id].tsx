@@ -18,6 +18,7 @@ interface PostsProps {
   postData: MDXRemoteProps;
   content: string;
   headTitle: string;
+  // tocElement: any;
 }
 
 const Posts: React.FC<PostsProps> = ({
@@ -25,15 +26,16 @@ const Posts: React.FC<PostsProps> = ({
   postData,
   content,
   headTitle,
+  // tocElement,
 }) => {
   const domRef = useRef<HTMLElement>();
-
   return (
     <SideLayout list={group}>
       <Head>
         <title>{headTitle}</title>
       </Head>
       <Box
+        id="markdown-body-warp"
         sx={{
           display: "flex",
           height: "calc(100vh - 168px)",
@@ -60,7 +62,7 @@ const Posts: React.FC<PostsProps> = ({
             top: 0,
           }}
         >
-          <MarkdownNavbar source={content} container={domRef.current!} />
+          <MarkdownNavbar source={content} containerId="markdown-body-warp" />
         </Box>
       </Box>
     </SideLayout>
