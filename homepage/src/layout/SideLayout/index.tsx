@@ -37,11 +37,16 @@ const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
           left: 0,
           width: 240,
           pt: "80px",
+          pb: 3,
           height: "100%",
+          overflow: "auto",
           backgroundColor: "#f8f9fc",
           // boxShadow: "inset 0px 0px 16px 0px rgba(0, 145, 255, 1)",
           display: { xs: "none", sm: "block" },
           borderRight: "1px solid hsla(210, 18%, 87%, 1)",
+          "&::-webkit-scrollbar": {
+            display: "none",
+          },
         }}
       >
         {list.map((group) => (

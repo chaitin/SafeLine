@@ -110,7 +110,7 @@ export async function getPostData(id: string) {
 
   // 使用matter解析markdown元数据和内容
   const matterResult = await matter(fileContents);
-  let tocElement;
+  // let tocElement;
   const res = await serialize(matterResult.content, {
     mdxOptions: {
       remarkPlugins: [externalLinks, remarkGfm, slug],
