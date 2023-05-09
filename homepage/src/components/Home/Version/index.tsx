@@ -116,7 +116,7 @@ const Version = () => {
           })}
         >
           <Typography variant="h5" sx={{ fontWeight: 500, fontSize: "18px" }}>
-            商业版
+            企业版
           </Typography>
           <Consultation />
           <Box>
