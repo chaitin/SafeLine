@@ -103,3 +103,9 @@ curl -kfLsS https://waf-ce.chaitin.cn/release/latest/upgrade.sh | bash
 <img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/CT%20Stack-2.png" width="30%" />
 
 雷池 SafeLine 现已加入 [CTStack](https://stack.chaitin.com/tool/detail?id=717) 社区
+
+## Star History <a name="star-history"></a>
+
+<a href="https://github.com/chaitin/safeline/stargazers">
+        <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=chaitin/safeline&type=Date">
+      </a> 
