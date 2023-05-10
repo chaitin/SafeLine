@@ -36,6 +36,7 @@ ENV_FILE=".env"
 sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ${ENV_FILE}
 
 grep "SAFELINE_DIR" ${ENV_FILE} > /dev/null || echo "SAFELINE_DIR=$(pwd)" >> ${ENV_FILE}
+grep "SUBNET_PREFIX" ${ENV_FILE} > /dev/null || echo "SUBNET_PREFIX=169.254.0" >> ${ENV_FILE}
 
 $compose_command down && $compose_command pull && $compose_command up -d
 echo "Upgrade success!"
