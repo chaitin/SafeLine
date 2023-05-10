@@ -5,8 +5,8 @@ networks:
     ipam:
       driver: default
       config:
-      - gateway: 169.254.0.1
-        subnet: 169.254.0.0/24
+      - gateway: ${SUBNET_PREFIX:?SUBNET_PREFIX required}.1
+        subnet: ${SUBNET_PREFIX}.0/24
     driver_opts:
       com.docker.network.bridge.name: safeline-ce
 
@@ -23,7 +23,7 @@ services:
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?postgres password required}
     networks:
       safeline-ce:
-        ipv4_address: 169.254.0.2
+        ipv4_address: ${SUBNET_PREFIX}.2
     cap_drop:
     - net_raw
     command: [postgres, -c, max_connections=200]
@@ -45,7 +45,7 @@ services:
     - MANAGEMENT_LOGS_DIR=/logs/management
     networks:
       safeline-ce:
-        ipv4_address: 169.254.0.4
+        ipv4_address: ${SUBNET_PREFIX}.4
     cap_drop:
     - net_raw
   detector:
@@ -60,7 +60,7 @@ services:
     - LOG_DIR=/logs/detector
     networks:
       safeline-ce:
-        ipv4_address: 169.254.0.5
+        ipv4_address: ${SUBNET_PREFIX}.5
     cap_drop:
     - net_raw
   mario:
@@ -74,10 +74,10 @@ services:
     environment:
     - LOG_DIR=/logs/mario
     - GOGC=100
-    - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@169.254.0.2/safeline-ce
+    - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
     networks:
       safeline-ce:
-        ipv4_address: 169.254.0.6
+        ipv4_address: ${SUBNET_PREFIX}.6
     cap_drop:
     - net_raw
   tengine:
@@ -93,7 +93,7 @@ services:
     - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
     - /etc/resolv.conf:/etc/resolv.conf
     environment:
-    - MGT_ADDR=169.254.0.4:9002
+    - MGT_ADDR=${SUBNET_PREFIX}.4:9002
     ulimits:
       nofile: 131072
     network_mode: host
