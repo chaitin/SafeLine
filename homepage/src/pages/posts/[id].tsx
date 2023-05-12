@@ -38,12 +38,12 @@ const Posts: React.FC<PostsProps> = ({
         id="markdown-body-warp"
         sx={{
           display: "flex",
-          height: "calc(100vh - 168px)",
+          height: "calc(100vh - 128px)",
           overflow: "auto",
           justifyContent: "space-between",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
+          // "&::-webkit-scrollbar": {
+          //   display: "none",
+          // },
         }}
       >
         <Box

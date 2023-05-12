@@ -141,7 +141,7 @@ const SideLayout: FC<SideLayoutProps> = ({ children, list }) => {
       <Box
         sx={{
           pt: { xs: 18, sm: 13 },
-          pb: 8,
+          pb: 3,
           px: 3,
           flexGrow: 1,
           height: "100%",
