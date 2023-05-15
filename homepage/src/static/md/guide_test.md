@@ -36,10 +36,10 @@ order: 5
 #### 下载测试工具
 
 - [Windows 版本](/blazehttp/blazehttp_windows.exe)
-- [Mac 版本(x64)](/blazehttp/blazehttp_mac_m1)
-- [Mac 版本(M1)](/blazehttp/blazehttp_mac_x64)
-- [Linux 版本(x64)](/blazehttp/blazehttp_linux_arm)
-- [Linux 版本(ARM)](/blazehttp/blazehttp_linux_x64)
+- [Mac 版本(x64)](/blazehttp/blazehttp_mac_x64)
+- [Mac 版本(M1)](/blazehttp/blazehttp_mac_m1)
+- [Linux 版本(x64)](/blazehttp/blazehttp_linux_x64)
+- [Linux 版本(ARM)](/blazehttp/blazehttp_linux_arm64)
 - [源码仓库](https://github.com/chaitin/blazehttp)
 
 #### 准备测试样本
