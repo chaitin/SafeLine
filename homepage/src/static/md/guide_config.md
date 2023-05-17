@@ -14,9 +14,12 @@ order: 4
 ## 将网站流量切到雷池
 
 - 若网站通过域名访问，则可将域名的 DNS 解析指向雷池所在设备
-![DNS.png](https://https://waf-ce.chaitin.cn/images/docs/DNS.png)
-- 若网站前有 nginx 、负载均衡等代理设备，则可将雷池部署在代理设备和业务服务器之间，然后将代理设备的 upstream 指向雷池 （）
-![DNS.png](https://https://waf-ce.chaitin.cn/images/docs/LoadBlance.png)
+![DNS.png](/images/docs/DNS.png)
+- 若网站前有 nginx 、负载均衡等代理设备，则可将雷池部署在代理设备和业务服务器之间，然后将代理设备的 upstream 指向雷池
+![DNS.png](/images/docs/LoadBlance.png)
+
+## 如何配置https
+![safeline_https_website.gif](/images/docs/safeline_https_website.gif)
 
 ## 测试防护效果
 

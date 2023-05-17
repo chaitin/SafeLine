@@ -27,3 +27,11 @@ curl -fLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 # 运行
 sudo docker compose up -d
 ```
+
+# 常见问题
+
+## 支不支持Mac or Windows
+不支持，由于雷池所依赖的部分docker特性在Mac or Windows上并不生效，所以雷池在Mac or windows并不能正常工作
+
+## 我能把雷池和业务服务部署到同一台机器中吗？
+不建议，如放在一起，在流量不变的情况下，机器负载将高于分开部署,增大了资源耗尽的可能性
