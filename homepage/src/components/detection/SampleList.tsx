@@ -70,7 +70,7 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
         <SamplesForm onSetIdChange={onSetIdChange} />
       </Box>
 
-      <Accordion>
+      <Accordion sx={{ borderRadius: "4px" }} className="detection-samples-accordion">
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <SampleCount
             total={value.length}
@@ -110,7 +110,11 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
                     <Typography
                       title={row.summary}
                       noWrap
-                      sx={{ width: "600px" }}
+                      sx={{
+                        width: "600px",
+                        fontFamily:
+                          "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
+                      }}
                     >
                       {row.summary}
                     </Typography>

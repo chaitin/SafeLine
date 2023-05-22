@@ -3,7 +3,6 @@ import Container from "@mui/material/Container";
 import Result from "@/components/detection/Result";
 import { useRouter } from "next/router";
 import "highlight.js/styles/a11y-light.css";
-import Box from "@mui/material/Box";
 import { getSampleSet, getSampleSetResult } from "@/api/detection";
 import { Message } from "@/components";
 import type {

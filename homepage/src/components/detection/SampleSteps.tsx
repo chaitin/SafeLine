@@ -7,6 +7,7 @@ import {
   TextField,
   FormControlLabel,
   Radio,
+  Typography,
 } from "@mui/material";
 import {
   Dialog,
@@ -77,8 +78,8 @@ function SampleSteps({ onDetect }: SampleStepsProps) {
   };
 
   const handleStep = (n: number) => {
-    if(completed[n]) setActiveStep(n)
-  }
+    if (completed[n]) setActiveStep(n);
+  };
 
   return (
     <Box>
@@ -217,7 +218,16 @@ function SampleMarkable({
                 </RadioGroup>
               </TableCell>
               <TableCell>{row.size}</TableCell>
-              <TableCell>{row.summary}</TableCell>
+              <TableCell>
+                <Typography
+                  sx={{
+                    fontFamily:
+                      "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
+                  }}
+                >
+                  {row.summary}
+                </Typography>
+              </TableCell>
               <TableCell>
                 <Button onClick={handleSampleDetail(row.raw)}>详情</Button>
               </TableCell>
