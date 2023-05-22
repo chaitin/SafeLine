@@ -1,7 +1,5 @@
 import Typography from "@mui/material/Typography";
 
-export default SampleCount;
-
 function SampleCount({
   total,
   normal,
@@ -22,3 +20,5 @@ function SampleCount({
     </div>
   );
 }
+
+export default SampleCount;
