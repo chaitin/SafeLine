@@ -3,13 +3,16 @@ import Container from "@mui/material/Container";
 import Result from "@/components/detection/Result";
 import { useRouter } from "next/router";
 import "highlight.js/styles/a11y-light.css";
+import Box from "@mui/material/Box";
 import { getSampleSet, getSampleSetResult } from "@/api/detection";
 import { Message } from "@/components";
 import type {
   RecordSamplesType,
   ResultRowsType,
 } from "@/components/detection/types";
+import Grid from "@mui/material/Grid";
 import SampleList from "@/components/detection/SampleList";
+import { Typography } from "@mui/material";
 
 export default Detection;
 
@@ -76,6 +79,27 @@ function Detection() {
       <div style={{ height: "100px" }}></div>
       <SampleList value={samples} onSetIdChange={handleSetId} />
       <Result rows={result} />
+      <Grid
+        container
+        spacing={2}
+        sx={{ mt: 3, mb: 3, color: "text.auxiliary" }}
+      >
+        <Grid item md={3}>
+          <Typography>TP: 正确识别到攻击样本的数量</Typography><br />
+          <Typography>检出率 = TP / (TP + FN)</Typography>
+        </Grid>
+        <Grid item md={3}>
+          <Typography>TN: 正确识别到普通样本的数量</Typography><br />
+          <Typography>误报率 = FP / (TP + FP)</Typography>
+        </Grid>
+        <Grid item md={3}>
+          <Typography>FP: 将普通样本误报为攻击的数量</Typography><br />
+          <Typography>准确率 = (TP + TN) / (TP + TN + FP + FN)</Typography>
+        </Grid>
+        <Grid item md={3}>
+          <Typography>FN: 未识别到攻击样本的数量</Typography>
+        </Grid>
+      </Grid>
     </Container>
   );
 }
