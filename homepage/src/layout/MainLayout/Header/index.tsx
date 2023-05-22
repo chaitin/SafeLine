@@ -201,6 +201,17 @@ export default function DrawerAppBar(props: Props) {
             >
               技术文档
             </Box>
+            {/* <Box
+              sx={{
+                color: pathname.startsWith("/detection")
+                  ? "primary.main"
+                  : "#fff",
+              }}
+              component={Link}
+              href="/detection"
+            >
+              防护效果
+            </Box> */}
             <Box
               sx={{
                 color: "#fff",

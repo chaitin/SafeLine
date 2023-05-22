@@ -25,6 +25,7 @@
     "eslint-config-next": "13.3.0",
     "github-slugger": "^2.0.0",
     "gray-matter": "^4.0.3",
+    "highlight.js": "11.8.0",
     "next": "13.3.0",
     "next-mdx-remote": "^4.4.1",
     "react": "18.2.0",
