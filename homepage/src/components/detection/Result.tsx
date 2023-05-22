@@ -19,7 +19,7 @@ function Result({ rows }: { rows: ResultRowsType }) {
         <Table sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow>
-              <TableCell>检测引擎</TableCell>
+              <TableCell>WAF 类别</TableCell>
               <TableCell>版本</TableCell>
               <TableCell>检出率</TableCell>
               <TableCell>误报率</TableCell>
