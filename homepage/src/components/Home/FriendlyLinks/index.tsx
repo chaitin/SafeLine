@@ -8,7 +8,7 @@ const LINK_LIST = [
     url: "https://chaitin.cn/",
   },
   {
-    name: "CTStack 安全社区",
+    name: "CT Stack 安全社区",
     url: "https://stack.chaitin.cn/",
   },
   {
