@@ -6,8 +6,11 @@ import Version from "@/components/Home/Version";
 import FriendlyLinks from "@/components/Home/FriendlyLinks";
 import Features from "@/components/Home/Features";
 import Title from "@/components/Home/Title";
+import { getSetupCount } from "@/api/home";
+// import countUpModule from "countup.js";
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { useState, useEffect, useRef } from "react";
 
 const IMAGE_LIST = [
   {
@@ -41,6 +44,22 @@ const IMAGE_LIST = [
 ];
 
 export default function Home() {
+  const totalRef = useRef(null);
+
+  const initTotal = async (n: number) => {
+    const countUpModule = await import("countup.js");
+    const anim = new countUpModule.CountUp(totalRef.current!, Math.max(0, n), {
+      duration: 3,
+    });
+    anim.start();
+  };
+
+  useEffect(() => {
+    getSetupCount().then((d) => {
+      initTotal(d.total);
+    });
+  });
+
   return (
     <Box sx={{ backgroundColor: "#F8F9FC" }}>
       <Box sx={{ pt: 16, pb: 18, backgroundColor: "#0F1935", color: "#fff" }}>
@@ -150,6 +169,19 @@ export default function Home() {
       </Box>
       <Container sx={{ mt: -10, color: "#000", pb: 3 }}>
         <Features />
+      </Container>
+      <Container>
+        <Stack sx={{ pt: 15 }} spacing={3} alignItems="center">
+          <Title title="装机量" />
+          <Typography
+            sx={{
+              color: "primary.main",
+              fontSize: "96px",
+              letterSpacing: "10px",
+            }}
+            ref={totalRef}
+          >-</Typography>
+        </Stack>
       </Container>
       <Container
         sx={{

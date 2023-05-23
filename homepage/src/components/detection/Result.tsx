@@ -8,6 +8,7 @@ import TableBody from "@mui/material/TableBody";
 import Paper from "@mui/material/Paper";
 import Title from "@/components/Home/Title";
 import type { ResultRowsType } from "./types";
+import { Typography } from "@mui/material";
 
 export default Result;
 
@@ -24,13 +25,13 @@ function Result({ rows }: { rows: ResultRowsType }) {
               <TableCell>检出率</TableCell>
               <TableCell>误报率</TableCell>
               <TableCell>准确率</TableCell>
-              <TableCell>平均检查耗时</TableCell>
+              <TableCell>平均检测耗时</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.map((row, index) => (
               <TableRow key={index}>
-                <TableCell>{row.engine}</TableCell>
+                <TableCell>{appendLink(row.engine)}</TableCell>
                 <TableCell>{row.version}</TableCell>
                 <TableCell>{row.detectionRate}</TableCell>
                 <TableCell>{row.failedRate}</TableCell>
@@ -43,4 +44,20 @@ function Result({ rows }: { rows: ResultRowsType }) {
       </TableContainer>
     </Box>
   );
+}
+
+function appendLink(engine: string) {
+  if (engine == "ModSecurity")
+    return (
+      <a href="https://github.com/SpiderLabs/ModSecurity" target="_blank">
+        <Typography sx={{ color: "primary.main" }}>{engine}</Typography>
+      </a>
+    );
+  if (engine == "TADK")
+    return (
+      <a target="_blank" href="https://networkbuilders.intel.com/university/course/traffic-analytics-development-kit-tadk">
+        <Typography sx={{ color: "primary.main" }}>{engine}</Typography>
+      </a>
+    );
+  return engine;
 }

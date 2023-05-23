@@ -10,8 +10,11 @@ const devConfig = {
     return [
       {
         source: "/api/poc/:path*",
-        destination:
-          "https://waf-ce.chaitin.cn/api/poc/:path*",
+        destination: "https://waf-ce.chaitin.cn/api/poc/:path*",
+      },
+      {
+        source: "/api/count",
+        destination: "https://waf-ce.chaitin.cn/api/count",
       },
     ];
   },

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -20,6 +20,7 @@ import {
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import SampleCount from "@/components/detection/SampleCount";
+import hljs from "highlight.js";
 
 import {
   Table,
@@ -145,6 +146,7 @@ function SampleMarkable({
   onChange: (value: Array<{ sample: string; isAttack: boolean }>) => void;
 }) {
   const [sampleDetail, setSampleDetail] = useState("");
+  const [code, setCode] = useState("");
   const [rows, setRows] = useState(() => {
     const rows: Array<{
       isAttack: boolean;
@@ -164,6 +166,11 @@ function SampleMarkable({
 
     return rows;
   });
+
+  useEffect(() => {
+    const highlighted = hljs.highlight(sampleDetail, { language: "http" });
+    setCode(highlighted.value);
+  }, [sampleDetail]);
 
   const handle = () => {
     onChange(rows.map((i) => ({ sample: i.raw, isAttack: i.isAttack })));
@@ -221,6 +228,7 @@ function SampleMarkable({
               <TableCell>
                 <Typography
                   sx={{
+                    width: "220px",
                     fontFamily:
                       "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
                   }}
@@ -240,9 +248,15 @@ function SampleMarkable({
       </Button>
 
       <Dialog open={sampleDetail != ""} onClick={handleClose}>
-        <DialogTitle>样本详情</DialogTitle>
+        {/* <DialogTitle>样本详情</DialogTitle> */}
         <DialogContent>
-          <DialogContentText>{sampleDetail}</DialogContentText>
+          <DialogContentText>
+            <Box
+              component="code"
+              style={{ whiteSpace: "pre-line", wordBreak: "break-all" }}
+              dangerouslySetInnerHTML={{ __html: code }}
+            />
+          </DialogContentText>
         </DialogContent>
 
         <DialogActions>

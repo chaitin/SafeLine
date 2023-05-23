@@ -210,7 +210,7 @@ export default function DrawerAppBar(props: Props) {
               component={Link}
               href="/detection"
             >
-              防护效果
+              安全效果
             </Box> */}
             <Box
               sx={{
