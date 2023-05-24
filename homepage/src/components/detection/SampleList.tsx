@@ -44,7 +44,9 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
       Message.error(res.msg || "获取详情失败");
       return;
     }
-    const highlighted = hljs.highlight(res.data.content, {
+    const text = document.createElement('textarea')
+    text.innerHTML = res.data.content
+    const highlighted = hljs.highlight(text.value, {
       language: "http",
     });
     setDetail(highlighted.value);
