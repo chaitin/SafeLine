@@ -1,3 +1,2 @@
 build:
-	pnpm i && pnpm build
-
+	npm i && npm build
