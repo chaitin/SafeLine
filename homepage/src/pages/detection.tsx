@@ -60,7 +60,7 @@ function Detection() {
           detectionRate: percent(i.recall),
           failedRate: percent(i.fdr),
           accuracy: percent(i.accuracy),
-          cost: i.elapsed + "毫秒",
+          cost: i.elapsed > 0 ? i.elapsed + " 毫秒" : "小于 1 毫秒",
         }))
       );
     });
@@ -84,15 +84,18 @@ function Detection() {
         sx={{ mt: 3, mb: 3, color: "text.auxiliary" }}
       >
         <Grid item md={3}>
-          <Typography>TP: 正确识别到攻击样本的数量</Typography><br />
+          <Typography>TP: 正确识别到攻击样本的数量</Typography>
+          <br />
           <Typography>检出率 = TP / (TP + FN)</Typography>
         </Grid>
         <Grid item md={3}>
-          <Typography>TN: 正确识别到普通样本的数量</Typography><br />
+          <Typography>TN: 正确识别到普通样本的数量</Typography>
+          <br />
           <Typography>误报率 = FP / (TP + FP)</Typography>
         </Grid>
         <Grid item md={3}>
-          <Typography>FP: 将普通样本误报为攻击的数量</Typography><br />
+          <Typography>FP: 将普通样本误报为攻击的数量</Typography>
+          <br />
           <Typography>准确率 = (TP + TN) / (TP + TN + FP + FN)</Typography>
         </Grid>
         <Grid item md={3}>

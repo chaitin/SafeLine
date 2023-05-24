@@ -44,8 +44,8 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
       Message.error(res.msg || "获取详情失败");
       return;
     }
-    const text = document.createElement('textarea')
-    text.innerHTML = res.data.content
+    const text = document.createElement("textarea");
+    text.innerHTML = res.data.content;
     const highlighted = hljs.highlight(text.value, {
       language: "http",
     });
@@ -72,7 +72,10 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
         <SamplesForm onSetIdChange={onSetIdChange} />
       </Box>
 
-      <Accordion sx={{ borderRadius: "4px" }} className="detection-samples-accordion">
+      <Accordion
+        sx={{ borderRadius: "4px" }}
+        className="detection-samples-accordion"
+      >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <SampleCount
             total={value.length}
@@ -91,41 +94,45 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {value.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell>
-                    {row.isAttack ? (
-                      <Typography sx={{ color: "error.main" }}>
-                        攻击样本
+              {value.map((row, index) => {
+                const text = document.createElement("textarea");
+                text.innerHTML = row.summary;
+
+                return (
+                  <TableRow
+                    key={index}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell>
+                      {row.isAttack ? (
+                        <Typography sx={{ color: "error.main" }}>
+                          攻击样本
+                        </Typography>
+                      ) : (
+                        <Typography sx={{ color: "success.main" }}>
+                          普通样本
+                        </Typography>
+                      )}
+                    </TableCell>
+                    <TableCell>{sizeLength(row.size)}</TableCell>
+                    <TableCell>
+                      <Typography
+                        noWrap
+                        sx={{
+                          width: "600px",
+                          fontFamily:
+                            "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
+                        }}
+                      >
+                        {text.value}
                       </Typography>
-                    ) : (
-                      <Typography sx={{ color: "success.main" }}>
-                        普通样本
-                      </Typography>
-                    )}
-                  </TableCell>
-                  <TableCell>{sizeLength(row.size)}</TableCell>
-                  <TableCell>
-                    <Typography
-                      title={row.summary}
-                      noWrap
-                      sx={{
-                        width: "600px",
-                        fontFamily:
-                          "ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace",
-                      }}
-                    >
-                      {row.summary}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={handleDetail(row.id)}>详情</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                    <TableCell>
+                      <Button onClick={handleDetail(row.id)}>详情</Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </AccordionDetails>
