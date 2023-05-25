@@ -12,6 +12,7 @@ import type {
 import Grid from "@mui/material/Grid";
 import SampleList from "@/components/detection/SampleList";
 import { Typography } from "@mui/material";
+import Head from "next/head";
 
 export default Detection;
 
@@ -74,35 +75,40 @@ function Detection() {
   };
 
   return (
-    <Container sx={{ mb: 2 }}>
-      <div style={{ height: "100px" }}></div>
-      <SampleList value={samples} onSetIdChange={handleSetId} />
-      <Result rows={result} />
-      <Grid
-        container
-        spacing={2}
-        sx={{ mt: 3, mb: 3, color: "text.auxiliary" }}
-      >
-        <Grid item md={3}>
-          <Typography>TP: 正确识别到攻击样本的数量</Typography>
-          <br />
-          <Typography>检出率 = TP / (TP + FN)</Typography>
+    <>
+      <Head>
+        <title>检测效果展示 - 长亭雷池 WAF 社区版</title>
+      </Head>
+      <Container sx={{ mb: 2 }}>
+        <div style={{ height: "100px" }}></div>
+        <SampleList value={samples} onSetIdChange={handleSetId} />
+        <Result rows={result} />
+        <Grid
+          container
+          spacing={2}
+          sx={{ mt: 3, mb: 3, color: "text.auxiliary" }}
+        >
+          <Grid item md={3}>
+            <Typography>TP: 正确识别到攻击样本的数量</Typography>
+            <br />
+            <Typography>检出率 = TP / (TP + FN)</Typography>
+          </Grid>
+          <Grid item md={3}>
+            <Typography>TN: 正确识别到普通样本的数量</Typography>
+            <br />
+            <Typography>误报率 = FP / (TP + FP)</Typography>
+          </Grid>
+          <Grid item md={3}>
+            <Typography>FP: 将普通样本误报为攻击的数量</Typography>
+            <br />
+            <Typography>准确率 = (TP + TN) / (TP + TN + FP + FN)</Typography>
+          </Grid>
+          <Grid item md={3}>
+            <Typography>FN: 未识别到攻击样本的数量</Typography>
+          </Grid>
         </Grid>
-        <Grid item md={3}>
-          <Typography>TN: 正确识别到普通样本的数量</Typography>
-          <br />
-          <Typography>误报率 = FP / (TP + FP)</Typography>
-        </Grid>
-        <Grid item md={3}>
-          <Typography>FP: 将普通样本误报为攻击的数量</Typography>
-          <br />
-          <Typography>准确率 = (TP + TN) / (TP + TN + FP + FN)</Typography>
-        </Grid>
-        <Grid item md={3}>
-          <Typography>FN: 未识别到攻击样本的数量</Typography>
-        </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </>
   );
 }
 
