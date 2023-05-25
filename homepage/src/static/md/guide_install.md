@@ -38,6 +38,8 @@ df -h                    # 查看磁盘信息
 
 ### 在线安装 Docker
 
+> 如果已经安装 Docker 和 Docker Compose，可跳过这一步直接进入 [在线安装雷池](#在线安装雷池)
+
 执行以下命令来安装 Docker 和 Docker Compose
 
 ```bash
