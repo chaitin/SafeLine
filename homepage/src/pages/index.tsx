@@ -49,7 +49,7 @@ export default function Home() {
   const initTotal = async (n: number) => {
     const countUpModule = await import("countup.js");
     const anim = new countUpModule.CountUp(totalRef.current!, Math.max(0, n), {
-      duration: 3,
+      duration: 2,
     });
     anim.start();
   };
