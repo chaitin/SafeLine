@@ -95,7 +95,7 @@ export default function DrawerAppBar(props: Props) {
           <ListItemButton
             sx={{ textAlign: "center" }}
             component={Link}
-            href="https://space.bilibili.com/521870525"
+            href="https://www.bilibili.com/medialist/detail/ml2342694989"
             target="_blank"
           >
             <ListItemText primary="教学视频" />
@@ -217,7 +217,7 @@ export default function DrawerAppBar(props: Props) {
                 color: "#fff",
               }}
               component={Link}
-              href="https://space.bilibili.com/521870525"
+              href="https://www.bilibili.com/medialist/detail/ml2342694989"
               target="_blank"
             >
               教学视频
