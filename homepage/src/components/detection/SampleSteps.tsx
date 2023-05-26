@@ -128,9 +128,9 @@ Host: example.com`}
           />
 
           <FormControlLabel
+            sx={{ mt: 1 }}
             control={
               <Checkbox
-                sx={{ mt: 1 }}
                 checked={checked}
                 onChange={(e: any) => setChecked(e.target.checked)}
               />
