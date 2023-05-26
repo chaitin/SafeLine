@@ -256,7 +256,7 @@ export default function Home() {
         <Stack sx={{ pt: 15 }} id="groupchat" spacing={6} alignItems="center">
           <Title title="加入讨论组" />
           <Image
-            src="/images/wechat.png"
+            src="/images/wechat-light.png"
             alt="wechat"
             width={300}
             height={300}
