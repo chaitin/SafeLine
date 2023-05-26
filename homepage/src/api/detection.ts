@@ -2,7 +2,10 @@ export { submitSampleSet, getSampleSet, getSampleSetResult, getSampleDetail };
 
 const BASE_API = "/api/poc/";
 
-function submitSampleSet(data: Array<{ content: string; tag: string }>) {
+function submitSampleSet(data: {
+  pocs: Array<{ content: string; tag: string }>;
+  record_it: boolean;
+}) {
   return fetch(BASE_API + "list", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

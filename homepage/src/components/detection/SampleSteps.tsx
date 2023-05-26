@@ -16,6 +16,7 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
 
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -34,8 +35,11 @@ import { sampleLength, sampleSummary } from "@/utils";
 export default SampleSteps;
 
 interface SampleStepsProps {
-  // onDetect: (samples: Array<{ sample: string; isAttack: boolean }>) => void;
-  onDetect: (value: { sample: string; isAttack: boolean }) => void;
+  onDetect: (value: {
+    sample: string;
+    publish: boolean;
+    isAttack: boolean;
+  }) => void;
 }
 
 function SampleSteps({ onDetect }: SampleStepsProps) {
@@ -44,11 +48,8 @@ function SampleSteps({ onDetect }: SampleStepsProps) {
   const [sampleText, setSampleText] = useState("");
   const [sampleIsAttack, setSampleIsAttack] = useState(false);
   const [sampleTextError, setSampleTextError] = useState("");
-  const [count, setCount] = useState({
-    total: 0,
-    normal: 0,
-    attack: 0,
-  });
+  const [checked, setChecked] = useState(true);
+  const [count, setCount] = useState({ total: 0, normal: 0, attack: 0 });
 
   const nextStep = () => {
     setActiveStep(activeStep + 1);
@@ -74,6 +75,7 @@ function SampleSteps({ onDetect }: SampleStepsProps) {
   const handleDetect = () => {
     onDetect({
       sample: sampleText,
+      publish: checked,
       isAttack: sampleIsAttack,
     });
   };
@@ -124,6 +126,18 @@ Host: example.com`}
             normal={count.normal}
             attack={count.attack}
           />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                sx={{ mt: 1 }}
+                checked={checked}
+                onChange={(e: any) => setChecked(e.target.checked)}
+              />
+            }
+            label="提交到公开样本集"
+          />
+
           <Button
             sx={{ mt: 2 }}
             fullWidth

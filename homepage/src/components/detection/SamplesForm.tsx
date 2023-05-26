@@ -9,7 +9,6 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Title from "@/components/Home/Title";
-import type { RecordSamplesType } from "./types";
 
 export default SamplesForm;
 
@@ -28,8 +27,8 @@ function SamplesForm({
     setOpen(false);
   };
 
-  const getSetId = async (content: string, tag: string) => {
-    const res = await submitSampleSet([{ content, tag }]);
+  const getSetId = async (content: string, publish: boolean, tag: string) => {
+    const res = await submitSampleSet({pocs: [{ content, tag, }], record_it: publish});
     if (res.code != 0) throw res.msg;
     if (res.data.total != 1) throw "样本数量错误";
     return res.data.id;
@@ -37,14 +36,20 @@ function SamplesForm({
 
   const submit = async ({
     sample,
+    publish,
     isAttack,
   }: {
     sample: string;
+    publish: boolean;
     isAttack: boolean;
   }) => {
     setLoading(true);
     try {
-      const setId = await getSetId(sample, isAttack ? "black" : "white");
+      const setId = await getSetId(
+        sample,
+        publish,
+        isAttack ? "black" : "white"
+      );
       onSetIdChange(setId);
     } catch (e) {
       Message.error(("解析失败: " + e) as string);
