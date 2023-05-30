@@ -201,7 +201,7 @@ export default function DrawerAppBar(props: Props) {
             >
               技术文档
             </Box>
-            {/* <Box
+            <Box
               sx={{
                 color: pathname.startsWith("/detection")
                   ? "primary.main"
@@ -210,8 +210,8 @@ export default function DrawerAppBar(props: Props) {
               component={Link}
               href="/detection"
             >
-              安全效果
-            </Box> */}
+              效果对比
+            </Box>
             <Box
               sx={{
                 color: "#fff",
