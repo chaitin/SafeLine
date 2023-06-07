@@ -89,8 +89,9 @@ docker pull chaitin/safeline-mgt-api:latest
 docker pull chaitin/safeline-mario:latest
 docker pull chaitin/safeline-detector:latest
 docker pull postgres:15.2
+docker pull redis:7.0.11
 
-docker save -o image.tar chaitin/safeline-tengine:latest chaitin/safeline-mgt-api:latest chaitin/safeline-mario:latest chaitin/safeline-detector:latest postgres:15.2
+docker save -o image.tar chaitin/safeline-tengine:latest chaitin/safeline-mgt-api:latest chaitin/safeline-mario:latest chaitin/safeline-detector:latest postgres:15.2 redis:7.0.11
 ```
 
 将 image.tar 文件传输到需要安装雷池的服务器上，执行以下命令加载镜像
