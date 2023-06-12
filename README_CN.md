@@ -55,6 +55,9 @@ sudo docker compose up -d
 ```shell
 # 请到 compose.yaml 同级目录下执行下面脚本
 curl -kfLsS https://waf-ce.chaitin.cn/release/latest/upgrade.sh | bash
+
+# 如果有需要，可以手动删除旧版本镜像
+docker rmi $(docker images | grep "safeline" | grep "none" | awk '{print $3}')
 ```
 **有部分环境的默认 SafeLine 安装路径是在 `/data/safeline-ce`，安装之后可能会发现需要重新绑定 OTP、配置丢失等情况，可以修改 .env 的 `SAFELINE_DIR` 变量，指向 `/data/safeline-ce`**
 

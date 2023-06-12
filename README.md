@@ -53,8 +53,8 @@ sudo docker compose up -d
 ```shell
 curl -kfLsS https://waf-ce.chaitin.cn/release/latest/upgrade.sh | bash
 
-# replace with `docker-compose` if necessary.
-docker compose down && docker compose pull && docker compose up -d
+# delete the old used image layers if necessary.
+docker rmi $(docker images | grep "safeline" | grep "none" | awk '{print $3}')
 ```
 
 ## 🕹️ Quick Start
