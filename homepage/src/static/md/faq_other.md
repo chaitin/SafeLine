@@ -19,7 +19,7 @@ docker exec -it safeline-mgt-api cleanlogs
 
 
 ### 如何记录所有访问雷池的请求
-默认情况下雷池是并不会保存请求记录的，如果需要保存请求记录，可以修改**resources/nginx/nginx.conf**
+默认情况下雷池是并不会保存请求记录的，如果需要保存请求记录，可以修改安装路径下的**resources/nginx/nginx.conf**
 ![config_access_log.png](/images/docs/config_access_log.png)
 如图所示，去掉文件第99行的注释，删除第100行的内容，保存后运行命令检查配置文件
 ```shell
@@ -34,7 +34,7 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```shell
 docker exec safeline-tengine nginx -s reload
 ```
-配置生效后，访问日志将会保存至**logs/nginx**
+配置生效后，访问日志将会保存至安装路径下的**logs/nginx**
 
 ***注意：该操作会会加快对硬盘的消耗，请定时清理访问日志***
 
@@ -50,7 +50,7 @@ docker exec safeline-tengine nginx -s reload
 参考资料: https://www.elastic.co/guide/en/logstash/current/plugins-inputs-jdbc.html
 
 ### 如何开启监听ipv6
-雷池默认不开启ipv6, 如果需要开启ipv6，需手动修改**resources/nginx/sites-enabled/** 文件夹下对应域名的配置文件
+雷池默认不开启ipv6, 如果需要开启ipv6，需手动修改安装路径下的**resources/nginx/sites-enabled/** 文件夹下对应域名的配置文件
 
 如需同时监听ipv4与ipv6，则
 ```shell
