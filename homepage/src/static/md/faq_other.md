@@ -68,3 +68,16 @@ server {
 }
 ```
 ***注意：页面上编辑当前站点会覆盖配置***
+修改完成后运行命令检查配置文件
+```shell
+docker exec safeline-tengine nginx -t
+```
+检查应显示
+```shell
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+最后应用配置文件
+```shell
+docker exec safeline-tengine nginx -s reload
+```
