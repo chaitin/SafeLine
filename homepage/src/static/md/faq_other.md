@@ -37,3 +37,34 @@ docker exec safeline-tengine nginx -s reload
 配置生效后，访问日志将会保存至**logs/nginx**
 
 ***注意：该操作会会加快对硬盘的消耗，请定时清理访问日志***
+
+### 如何在业务服务器上获取用户真实地址
+雷池默认将上一跳的IP加入至X-Forwarded-For中，如果雷池前，没有CDN或者nginx等代理服务，那么可以认为该IP为用户的真实IP
+
+### 如果配置完成后，测试时返回400 Request Header Or Cookie Too Large
+请麻烦检查是否形成了环路，即：雷池将请求转发给上游服务器后，上游服务器又将请求转发回雷池。
+
+### 如何将雷池的日志导出到XXX
+由于雷池的日志是存在Postgres 数据库中，用户可以通过logstash将数据库中的数据导出，并且利用大量的logstash output 插件导入至目标数据库中
+
+参考资料: https://www.elastic.co/guide/en/logstash/current/plugins-inputs-jdbc.html
+
+### 如何开启监听ipv6
+雷池默认不开启ipv6, 如果需要开启ipv6，需手动修改**resources/nginx/sites-enabled/** 文件夹下对应域名的配置文件
+
+如需同时监听ipv4与ipv6，则
+```shell
+server {
+    listen [::]:80;
+    server_name example.com;
+}
+```
+
+如只需监听ipv6，则
+```shell
+server {
+    listen [::]:80 ipv6only=on;
+    server_name example.com;
+}
+```
+***注意：页面上编辑当前站点会覆盖配置***
