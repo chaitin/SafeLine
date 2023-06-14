@@ -81,3 +81,11 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```shell
 docker exec safeline-tengine nginx -s reload
 ```
+### 有多个防护站点监听在同一个端口上，匹配顺序是怎么样的
+如果域名处填写的分别为ip与域名，那么当使用进行ip请求时，则将会命中第一个配置的站点
+![server_index02.png](/images/docs/server_index02.png)
+以上图为例，如果用户使用ip访问，命中example.com
+
+如果域名处填写的分别为域名与泛域名，除非准确命中域名，则会命中泛域名，不论泛域名第几个配置
+![server_index01.png](/images/docs/server_index01.png)
+以上图为例，如果用户使用a.example.com访问，命中a.example.com。 如果用户使用b.example.com,命中*.example.com
