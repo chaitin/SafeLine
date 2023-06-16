@@ -91,7 +91,7 @@ export const dark = {
 
 export const light = {
   primary: {
-    main: '#7635DC',
+    main: '#0fc6c2',
     contrastText: '#fff',
   },
   secondary: {
