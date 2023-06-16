@@ -31,9 +31,9 @@ order: 1
 
 ## ERROR: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 
-如描述，你需要启动 docker daemon 才能执行相关的命令。尝试 `systemctl start docker` 或者手动启动 `Docker Desktop` （MacOS 或者 Windows 用户）
+如描述，你需要启动 docker daemon 才能执行相关的命令。尝试 `systemctl start docker`
 
-As shown, you shall start docker first. Try `systemctl start docker` or manually start your docker desktop for MacOS/Windows users.
+As shown, you shall start docker first. Try `systemctl start docker`.
 
 ## docker not found, unable to deploy
 
