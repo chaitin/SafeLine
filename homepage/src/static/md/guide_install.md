@@ -82,22 +82,10 @@ docker compose up -d
 
 > 这里忽略 Docker 安装的过程
 
-首先，你要找一台能够访问互联网的服务器，执行以下命令拉取镜像，打包到 image.tar 文件中
-```
-docker pull chaitin/safeline-tengine:latest
-docker pull chaitin/safeline-mgt-api:latest
-docker pull chaitin/safeline-mario:latest
-docker pull chaitin/safeline-detector:latest
-docker pull postgres:15.2
-docker pull redis:7.0.11
-
-docker save -o image.tar chaitin/safeline-tengine:latest chaitin/safeline-mgt-api:latest chaitin/safeline-mario:latest chaitin/safeline-detector:latest postgres:15.2 redis:7.0.11
-```
-
-将 image.tar 文件传输到需要安装雷池的服务器上，执行以下命令加载镜像
+首先，下载 [雷池镜像文件](http://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
 
 ```
-docker load -i image.tar
+cat image.tar.gz | gzip -d | docker load
 ```
 
 执行以下命令创建并进入雷池安装目录
