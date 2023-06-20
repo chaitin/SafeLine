@@ -75,9 +75,10 @@ docker pull chaitin/safeline-mgt-api:latest
 docker pull chaitin/safeline-mario:latest
 docker pull chaitin/safeline-detector:latest
 docker pull postgres:15.2
+docker pull redis:7.0.11
 
 # 打包镜像
-docker save -o image.tar chaitin/safeline-tengine:latest chaitin/safeline-mgt-api:latest chaitin/safeline-mario:latest chaitin/safeline-detector:latest postgres:15.2
+docker save -o image.tar chaitin/safeline-tengine:latest chaitin/safeline-mgt-api:latest chaitin/safeline-mario:latest chaitin/safeline-detector:latest postgres:15.2 redis:7.0.11
 
 # 传输到 SafeLine 要部署的目标服务器
 # scp image.tar <target-server>:/root/
