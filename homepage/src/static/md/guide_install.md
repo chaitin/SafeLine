@@ -28,13 +28,13 @@ df -h                    # 查看磁盘信息
 
 有三种安装方式供选择
 
-- [在线安装](#在线安装) : 推荐安装方式
-- [离线安装](#离线安装) : 服务器无法联网时选择
+- [Docker Hub 安装](#Docker Hub 安装) : 推荐安装方式
+- [镜像包安装](#镜像包安装) : 服务器无法连接 Docker Hub 时选择
 - [一键安装](#使用牧云助手安装) : 最简单的安装方式
 
-## 在线安装
+## Docker Hub 安装
 
-***如果服务器可以访问互联网环境，推荐使用在线安装方式***
+***如果服务器可以访问互联网环境，推荐使用该方式***
 
 ### 在线安装 Docker
 
@@ -68,6 +68,8 @@ cd safeline              # 进入 safeline 目录
 curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 ```
 
+> 如果连接 Docker Hub 网络不稳，导致镜像下载失败，可以采用 [镜像包安装](#镜像包安装) 方式
+
 执行以下命令启动雷池
 
 ```
@@ -76,13 +78,13 @@ docker compose up -d
 
 经过以上步骤，你的雷池已经安装好了，下一步请参考 [登录雷池](/posts/guide_login)
 
-## 离线安装 
+## 镜像包安装 
 
-如果你的服务器无法连接互联网环境，可以使用离线安装方式
+如果你的服务器无法连接互联网环境，或连接 Docker Hub 网络不稳，可以使用镜像包安装方式
 
 > 这里忽略 Docker 安装的过程
 
-首先，下载 [雷池镜像文件](http://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
+首先，下载 [雷池社区版镜像包](http://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
 
 ```
 cat image.tar.gz | gzip -d | docker load
@@ -95,8 +97,7 @@ mkdir -p safeline        # 创建 safeline 目录
 cd safeline              # 进入 safeline 目录
 ```
 
-下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 并传输到 safeline 目录中
-
+下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 并传输到 safeline 目录中  
 
 执行以下命令，生成雷池运行所需的相关环境变量
 
