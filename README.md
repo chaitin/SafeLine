@@ -1,8 +1,7 @@
 <p align="center">
-  <img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_logo.png" width="120">
+  <img src="https://waf-ce.chaitin.cn/images/403.svg" width="120">
 </p>
-<h1 align="center">SafeLine Community Edition</h1>
-<h3 align="center">Keep hackers at bay</h3>
+<h1 align="center">长亭雷池 WAF 社区版</h1>
 <br>
 <p align="center">
   <img src="https://img.shields.io/badge/SafeLine-BEST_WAF-blue">
@@ -12,101 +11,109 @@
   <img src="https://img.shields.io/github/stars/chaitin/safeline?style=social">
 </p>
 
-<p align="center"> <a href="https://waf-ce.chaitin.cn/">Official Website</a> </p>
-<p align="center"> English | <a href="README_CN.md">中文文档</a> </p>
+<p align="center">
+  <a href="https://waf-ce.chaitin.cn/">官方网站</a> | 
+  <a href="https://waf-ce.chaitin.cn/posts/guide_introduction">技术文档</a> | 
+  <a href="README_EN.md">For English</a>
+</p>
 
-A simple and easy to use WAF tool. Built on [Chaitin Technology](https://www.chaitin.cn/en/)'s ace 🤖️Intelligent Semantic Analysis algorithm🤖️, designed for the community.
+<h3 align="center">相关源码仓库</h3>
+<p align="center">
+  <a href="https://github.com/chaitin/yanshi">语义分析自动机引擎</a> | 
+  <a href="https://github.com/chaitin/safeline-open-platform">流量分析插件</a> | 
+  <a href="https://github.com/chaitin/lua-resty-t1k">T1K 协议</a> |
+  <a href="https://github.com/chaitin/blazehttp">测试工具</a>
+</p>
 
-## ✨ Demo
+一款足够简单、足够好用、足够强的免费 WAF。  
 
-### 🔥🔥🔥 Online Demo: https://demo.waf-ce.chaitin.cn:9443/
+耗时近 10 年，长亭科技倾情打造，核心检测能力由智能语义分析算法驱动，专为社区而生，不让黑客越雷池半步。
 
-There is a simple http server, listened on `http://127.0.0.1:8889`, can be used as for testing.
+<img src="https://waf-ce.chaitin.cn/images/album/0.png" />
 
-![](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_detect_log.gif)
+## 产品特性
 
-![](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_website.gif)
+#### 便捷性
 
-## 🚀 Installation
+采用容器化部署，一条命令即可完成安装，0 成本上手。安全配置开箱即用，无需人工维护，可实现安全躺平式管理。
 
-### 1. Make sure [Docker](https://docs.docker.com/engine/install/) and [Compose V2](https://docs.docker.com/compose/install/) are installed correctly on the machine 
-```shell
-docker info # >= 20.10.6
-docker compose version # >= 2.0.0
+#### 安全性
+
+首创业内领先的智能语义分析算法，精准检测、低误报、难绕过。语义分析算法无规则，面对未知特征的 0day 攻击不再手足无措。
+
+#### 高性能
+
+无规则引擎，线性安全检测算法，平均请求检测延迟在 1 毫秒级别。并发能力强，单核轻松检测 2000+ TPS，只要硬件足够强，可支撑的流量规模无上限。
+
+#### 高可用
+
+流量处理引擎基于 Nginx 开发，性能与稳定性均可得到保障。内置完善的健康检查机制，服务可用性高达 99.99%。
+
+## 🚀 安装
+
+### 配置需求
+
+- 操作系统：Linux
+- 指令架构：x86_64
+- 软件依赖：Docker 20.10.6 版本以上
+- 软件依赖：Docker Compose 2.0.0 版本以上
+- 最小化环境：1 核 CPU / 1 GB 内存 / 10 GB 磁盘
+
+### 创建安装目录
+
+```
+mkdir -p safeline        # 创建 safeline 目录
+cd safeline              # 进入 safeline 目录
 ```
 
-### 2. Setup and deploy
+### 一键安装
 
-```shell
-mkdir -p safeline && cd safeline
-# setup
-curl -kfLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
-
-# launch
-sudo docker compose up -d
+```
+curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 ```
 
-#### Upgrade
+> 更多安装方式请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_install">安装雷池</a>
 
-**WARN: SafeLine will be restarted and your traffic will be unavailable for a short period of time. You may need to choose a proper time for upgration.**
+### 启动
 
-```shell
-curl -kfLsS https://waf-ce.chaitin.cn/release/latest/upgrade.sh | bash
-
-# delete the old used image layers if necessary.
-docker rmi $(docker images | grep "safeline" | grep "none" | awk '{print $3}')
+```
+docker compose up -d
 ```
 
-## 🕹️ Quick Start
+## 🕹️ 快速使用
 
-### 1. Login
+### 登录
 
-Open admin page `https://<waf-ip>:9443` and scan qrcode with any authenticator Apps that support TOTP, enter the code to login.
+浏览器打开后台管理页面 `https://<waf-ip>:9443`。根据界面提示，使用 **支持 TOTP 的认证软件** 扫描二维码，然后输入动态口令登录：
 
 ![safeline_login.gif](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_login.gif)
 
-### 2. Create website
+### 配置防护站点
+
+雷池以反向代理方式接入，优先于网站服务器接收流量，对流量中的攻击行为进行检测和清洗，将清洗过后的流量转发给网站服务器。
 
 ![safeline_website.gif](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_website.gif)
 
-<font color=grey>💡 TIPS: After creating website，execute `curl -H "Host: <Domain>" http://<WAF IP>:<Port>` to check if you can get correct response from web server.</font>
+<font color=grey>💡 TIPS: 添加后，执行 `curl -H "Host: <域名>" http://<WAF IP>:<端口>` 应能获取到业务网站的响应。</font>
 
-### 3. Deploy your website to SafeLine
+### 测试效果
 
-- If your website is hosted by DNS, just modify your DNS record to WAF
-- If your website is behind any reverse-proxy like nginx, you can modify your nginx conf and set upstream to WAF
+使用以下方式尝试模拟黑客攻击，看看雷池的防护效果如何
 
-### 4. Protected!👌
+- 浏览器访问 `http://<IP或域名>:<端口>/?id=1%20AND%201=1`
+- 浏览器访问 `http://<IP或域名>:<端口>/?a=<script>alert(1)</script>`
 
-Try these:
+> 如果你需要进行深度测试，请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_test">测试防护效果</a>
 
-- `http://<IP or Domain>:<Port>/webshell.php`
-- `http://<IP or Domain>:<Port>/?id=1%20AND%201=1`
-- `http://<IP or Domain>:<Port>/?a=<script>alert(1)</script>`
+## 🏘️ 联系我们
 
-## 📖 FAQ
-
-Please refer to our [FAQ](FAQ.md) first if you have any questions.
-
-For examples:
-- [docker compose or docker-compose?](FAQ.md#docker-compose-or-docker-compose)
-- [website configurations](FAQ.md#站点配置问题)
-- [website not working / not correctly response](FAQ.md#配置完成之后还是没有成功访问到上游服务器)
-
-## 🏘️ Contact Us
-
-1. You can make bug feedback and feature suggestions directly through GitHub Issues.
-2. By scanning the QR code below (use wechat or qq), you can join the discussion group of SafeLine users for detailed discussions.
+1. 可以通过 GitHub Issue 直接进行 Bug 反馈和功能建议
+2. 可以扫描下方二维码加入雷池社区版用户讨论群
 
 <img src="https://waf-ce.chaitin.cn/images/wechat-light.png" width="30%" />
-
-## ✨ CTStack
-<img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/CT%20Stack-2.png" width="30%" />
-
-SafeLine has already joined [CTStack](https://stack.chaitin.com/tool/detail?id=717) community.
 
 ## Star History <a name="star-history"></a>
 
 <a href="https://github.com/chaitin/safeline/stargazers">
-        <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=chaitin/safeline&type=Date">
-      </a> 
+    <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=chaitin/safeline&type=Date">
+</a> 
