@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://waf-ce.chaitin.cn/images/403.svg" width="120">
 </p>
-<h1 align="center">长亭雷池 WAF 社区版</h1>
+<h1 align="center">雷池 - 广受好评的社区 WAF</h1>
 <br>
 <p align="center">
   <img src="https://img.shields.io/badge/SafeLine-BEST_WAF-blue">
@@ -13,11 +13,18 @@
 
 <p align="center">
   <a href="https://waf-ce.chaitin.cn/">官方网站</a> | 
+  <a href="https://demo.waf-ce.chaitin.cn:9443/dashboard">在线 Demo</a> | 
   <a href="https://waf-ce.chaitin.cn/posts/guide_introduction">技术文档</a> | 
   <a href="README_EN.md">For English</a>
 </p>
 
-<h3 align="center">相关源码仓库</h3>
+一款足够简单、足够好用、足够强的免费 WAF。基于业界领先的语义引擎检测技术，作为反向代理接入，保护你的网站不受黑客攻击。
+
+耗时近 10 年，长亭科技倾情打造，核心检测能力由智能语义分析算法驱动，专为社区而生，不让黑客越雷池半步。
+
+<img src="https://waf-ce.chaitin.cn/images/album/0.png" />
+
+<h4 align="center">相关源码仓库</h4>
 <p align="center">
   <a href="https://github.com/chaitin/yanshi">语义分析自动机引擎</a> | 
   <a href="https://github.com/chaitin/safeline-open-platform">流量分析插件</a> | 
@@ -25,13 +32,7 @@
   <a href="https://github.com/chaitin/blazehttp">测试工具</a>
 </p>
 
-一款足够简单、足够好用、足够强的免费 WAF。  
-
-耗时近 10 年，长亭科技倾情打造，核心检测能力由智能语义分析算法驱动，专为社区而生，不让黑客越雷池半步。
-
-<img src="https://waf-ce.chaitin.cn/images/album/0.png" />
-
-## 产品特性
+## 相关特性
 
 #### 便捷性
 
