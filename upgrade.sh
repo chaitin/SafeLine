@@ -1,10 +1,5 @@
 #! /bin/bash
 
-
-
-echo "Upgrade success!"
-#!/bin/bash
-
 echo "
   ____             __          _       _                
  / ___|    __ _   / _|   ___  | |     (_)  _ __     ___ 
