@@ -60,12 +60,6 @@
 - 软件依赖：Docker Compose 2.0.0 版本以上
 - 最小化环境：1 核 CPU / 1 GB 内存 / 10 GB 磁盘
 
-### 创建安装目录
-
-```
-mkdir -p safeline        # 创建 safeline 目录
-cd safeline              # 进入 safeline 目录
-```
 
 ### 一键安装
 
@@ -74,12 +68,6 @@ curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 ```
 
 > 更多安装方式请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_install">安装雷池</a>
-
-### 启动
-
-```
-docker compose up -d
-```
 
 ## 🕹️ 快速使用
 
@@ -105,6 +93,14 @@ docker compose up -d
 - 浏览器访问 `http://<IP或域名>:<端口>/?a=<script>alert(1)</script>`
 
 > 如果你需要进行深度测试，请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_test">测试防护效果</a>
+
+### FAQ
+
+- [安装问题](https://waf-ce.chaitin.cn/posts/faq_install)
+- [登录问题](https://waf-ce.chaitin.cn/posts/faq_login)
+- [网站无法访问](https://waf-ce.chaitin.cn/posts/faq_access)
+- [配置问题](https://waf-ce.chaitin.cn/posts/faq_config)
+- [其他问题](https://waf-ce.chaitin.cn/posts/faq_other)
 
 ## 🏘️ 联系我们
 
