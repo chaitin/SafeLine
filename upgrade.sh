@@ -137,7 +137,7 @@ fi
 
 compose_path=`$compose_command ls | grep safeline | awk '{print $3}'`
 
-if [[ -z "$compose_path"]]; then
+if [[ -z "$compose_path" ]]; then
     abort "没有正在运行的雷池环境"
 fi
 

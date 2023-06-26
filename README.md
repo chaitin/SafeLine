@@ -64,7 +64,7 @@
 ### 一键安装
 
 ```
-curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
+bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ```
 
 > 更多安装方式请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_install">安装雷池</a>

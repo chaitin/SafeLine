@@ -13,7 +13,7 @@ order: 6
 执行以下命令即可进行升级。
 
 ```
-curl -kfLsS https://waf-ce.chaitin.cn/release/latest/upgrade.sh | bash
+bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/upgrade.sh)"
 ```
 
 [可选] 升级成功后, 可以执行以下命令删除旧版本 Docke 镜像, 以释放磁盘空间

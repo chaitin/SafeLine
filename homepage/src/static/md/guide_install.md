@@ -39,7 +39,7 @@ df -h                    # 查看磁盘信息
 执行以下命令，即可开始安装
 
 ```
-curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
+bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ```
 
 > 如果连接 Docker Hub 网络不稳，导致镜像下载失败，可以采用 [离线安装](#离线安装) 方式
