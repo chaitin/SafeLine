@@ -12,7 +12,7 @@ order: 2
 - 指令架构：x86_64
 - 软件依赖：Docker 20.10.6 版本以上
 - 软件依赖：Docker Compose 2.0.0 版本以上
-- 最小化环境：1 核 CPU / 1 GB 内存 / 10 GB 磁盘
+- 最小化环境：1 核 CPU / 1 GB 内存 / 5 GB 磁盘
 
 可以逐行执行以下命令来确认服务器配置
 
@@ -28,57 +28,26 @@ df -h                    # 查看磁盘信息
 
 有三种安装方式供选择
 
-- [Docker Hub 安装](#docker-hub-安装) : 推荐安装方式
-- [镜像包安装](#镜像包安装) : 服务器无法连接 Docker Hub 时选择
+- [在线安装](#在线安装) : 推荐安装方式
+- [离线安装](#离线安装) : 服务器无法连接 Docker Hub 时选择
 - [一键安装](#使用牧云助手安装) : 最简单的安装方式
 
-## Docker Hub 安装
+## 在线安装
 
 ***如果服务器可以访问互联网环境，推荐使用该方式***
 
-### 在线安装 Docker
-
-> 如果已经安装 Docker 和 Docker Compose，可跳过这一步直接进入 [在线安装雷池](#在线安装雷池)
-
-执行以下命令来安装 Docker 和 Docker Compose
-
-```bash
-curl -fsSLk https://get.docker.com/ | bash
-```
-
-安装命令结束后，可以执行以下命令来确认 Docker 和 Docker Compose 是否安装成功
-
-```
-docker version           # 查看 Docker 版本
-docker compose version   # 查看 Docker Compose 版本
-```
-
-### 在线安装雷池
-
-执行以下命令创建并进入雷池安装目录
-
-```
-mkdir -p safeline        # 创建 safeline 目录
-cd safeline              # 进入 safeline 目录
-```
-
-执行以下命令，将会自动下载镜像，并完成环境的初始化
+执行以下命令，即可开始安装
 
 ```
 curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
 ```
 
-> 如果连接 Docker Hub 网络不稳，导致镜像下载失败，可以采用 [镜像包安装](#镜像包安装) 方式
+> 如果连接 Docker Hub 网络不稳，导致镜像下载失败，可以采用 [离线安装](#离线安装) 方式
 
-执行以下命令启动雷池
-
-```
-docker compose up -d
-```
 
 经过以上步骤，你的雷池已经安装好了，下一步请参考 [登录雷池](/posts/guide_login)
 
-## 镜像包安装 
+## 离线安装 
 
 如果你的服务器无法连接互联网环境，或连接 Docker Hub 网络不稳，可以使用镜像包安装方式
 
@@ -102,10 +71,11 @@ cd safeline              # 进入 safeline 目录
 执行以下命令，生成雷池运行所需的相关环境变量
 
 ```
-echo "SAFELINE_DIR=$(pwd)" > .env
+echo "SAFELINE_DIR=$safeline_path" >> .env
 echo "IMAGE_TAG=latest" >> .env
 echo "MGT_PORT=9443" >> .env
 echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
+echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
 echo "SUBNET_PREFIX=169.254.0" >> .env
 ```
 
