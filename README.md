@@ -75,13 +75,13 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 
 浏览器打开后台管理页面 `https://<waf-ip>:9443`。根据界面提示，使用 **支持 TOTP 的认证软件** 扫描二维码，然后输入动态口令登录：
 
-![safeline_login.gif](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_login.gif)
+![login.gif](https://waf-ce.chaitin.cn/images/gif/login.gif)
 
 ### 配置防护站点
 
 雷池以反向代理方式接入，优先于网站服务器接收流量，对流量中的攻击行为进行检测和清洗，将清洗过后的流量转发给网站服务器。
 
-![safeline_website.gif](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_website.gif)
+![config.gif](https://waf-ce.chaitin.cn/images/gif/config_site.gif)
 
 <font color=grey>💡 TIPS: 添加后，执行 `curl -H "Host: <域名>" http://<WAF IP>:<端口>` 应能获取到业务网站的响应。</font>
 
@@ -91,6 +91,8 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 
 - 浏览器访问 `http://<IP或域名>:<端口>/?id=1%20AND%201=1`
 - 浏览器访问 `http://<IP或域名>:<端口>/?a=<script>alert(1)</script>`
+
+![log.gif](https://waf-ce.chaitin.cn/images/gif/detect_log.gif)
 
 > 如果你需要进行深度测试，请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_test">测试防护效果</a>
 
