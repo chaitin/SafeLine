@@ -74,17 +74,31 @@ abort() {
     exit 1
 }
 
+trap 'onexit' INT
+onexit() {
+    echo
+    abort "用户手动结束安装"
+}
+
+
 safeline_path='/data/safeline'
 
-if [[ "$#" -ne "0" ]]; then
-    abort "当前脚本无需任何参数, 直接运行即可"
+if [ -z "$BASH" ]; then
+    abort "请用 bash 执行本脚本, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
 fi
-info "运行参数确认正常"
+
+if [ ! -t 0 ]; then
+    abort "STDIN 不是标准的输入设备, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
+fi
+
+if [ "$#" -ne "0" ]; then
+    abort "当前脚本无需任何参数, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
+fi
 
 if [ "$EUID" -ne "0" ]; then
     abort "请以 root 权限运行"
 fi
-info "运行权限确认正常"
+info "脚本调用方式确认正常"
 
 if [ -z `command_exists docker` ]; then
     warning "缺少 Docker 环境"
