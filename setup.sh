@@ -47,6 +47,10 @@ space_left() {
     echo `df -h "$dir" --output='avail' | tail -n 1`
 }
 
+start_docker() {
+    systemctl start docker && systemctl enable docker
+}
+
 confirm() {
     echo -e -n "\033[34m[SafeLine] $* \033[1;36m(Y/n)\033[0m"
     read -n 1 -s opt
@@ -114,6 +118,7 @@ if [ -z `command_exists docker` ]; then
 fi
 info "发现 Docker 环境: '`command -v docker`'"
 
+start_docker
 docker version > /dev/null 2>&1
 if [ $? -ne "0" ]; then
     abort "Docker 服务工作异常"
