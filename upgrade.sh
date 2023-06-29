@@ -144,7 +144,9 @@ else
     info "发现 Docker Compose Plugin"
 fi
 
-compose_path=`$compose_command ls | grep safeline | awk '{print $3}'`
+while IFS= read -r line; do
+    grep "name: safeline-ce" "$line" > /dev/null && compose_path=$line && break
+done <<< `$compose_command ls | grep compose.yaml | awk '{print $3}'`
 
 if [[ -z "$compose_path" ]]; then
     abort "没有正在运行的雷池环境"
