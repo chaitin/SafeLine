@@ -17,7 +17,7 @@ const MainLayout: FC<IProps> = ({ children }) => {
           name="description"
           content="长亭雷池 Web 应用防火墙 | 长亭雷池 WAF"
         />
-        <meta name="keywords" content="WAF,雷池,长亭,社区版" />
+        <meta name="keywords" content="WAF,雷池,长亭,社区版,免费,开源,网站防护" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/images/safeline.png" />
       </Head>

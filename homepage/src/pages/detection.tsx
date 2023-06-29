@@ -77,7 +77,7 @@ function Detection() {
   return (
     <>
       <Head>
-        <title>检测效果展示 - 长亭雷池 WAF 社区版</title>
+        <title>效果对比 - 长亭雷池 WAF 社区版</title>
       </Head>
       <Container sx={{ mb: 2 }}>
         <div style={{ height: "100px" }}></div>

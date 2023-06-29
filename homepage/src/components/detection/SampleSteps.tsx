@@ -109,7 +109,7 @@ function SampleSteps({ onDetect }: SampleStepsProps) {
             onChange={(e) => setSampleText(e.target.value)}
             placeholder={`GET /path/api HTTP/1.1
 Host: example.com`}
-            sx={{ mb: 2 }}
+            sx={{ mb: 2, overflow: "auto", maxHeight: "65vh" }}
           />
           <Button fullWidth variant="contained" onClick={handleCommit}>
             提交样本

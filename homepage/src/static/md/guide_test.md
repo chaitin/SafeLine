@@ -55,14 +55,14 @@ order: 5
 3. 使用以下请求开始测试
 
 ```
-./blazehttp -t http://<IP或域名>:<端口> -g './testcases/*.http'
+./blazehttp -t http://<IP或域名>:<端口> -g './testcases/**/*.http'
 ```
 
 #### 测试效果展示
 
 ```
 # 测试请求
-./blazehttp -t http://192.168.0.1:8080 -g './testcases/*.http'
+./blazehttp -t http://192.168.0.1:8080 -g './testcases/**/*.http'
 
 sending 100% |██████████████████████████████████████████| (18/18, 86 it/s)        
 Total http file: 18, success: 18 failed: 0

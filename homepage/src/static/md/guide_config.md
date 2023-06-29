@@ -7,7 +7,7 @@ order: 4
 # 配置防护站点
 
 
-![safeline_website.gif](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_website.gif)
+![config_site.gif](https://waf-ce.chaitin.cn/images/gif/config_site.gif)
 
 💡 TIPS: 添加后，执行 `curl -H "Host: <域名>" http://<WAF IP>:<端口>` 应能获取到业务网站的响应。
 

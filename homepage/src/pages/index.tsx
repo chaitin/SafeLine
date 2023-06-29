@@ -212,7 +212,7 @@ export default function Home() {
       >
         <Stack sx={{ pt: 15 }} spacing={6} alignItems="center">
           <Title title="产品展示" />
-          <Box sx={{ boxShadow: "0 12px 25px -12px rgba(93,99,112, 0.2)" }}>
+          <Box sx={{ boxShadow: "0px 0px 6px #0fc6c2" }}>
             <Carousel
               interval={2000}
               infiniteLoop
