@@ -1,15 +1,16 @@
 ---
-title: "关于 2.0 新功能"
+title: "人机验证"
 group:
    title: "关于雷池"
    order: 3
 order: 3
 ---
 
-# 关于2.0新功能
-## 人机验证
+# 人机验证
 
 自从雷池社区版发布以来，我们一直密切关注用户对于爬虫和扫描器的反馈和防护需求。 因此，在2.0版本中，我们致力于探索与此相关的功能，以满足用户的期望和保护网站的安全。
+
+![challenge.png](/images/docs/challenge.png)
 
 ### 加入人机验证之后的请求处理流程
 ![flow.png](/images/docs/flow.png)
