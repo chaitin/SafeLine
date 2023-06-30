@@ -118,12 +118,11 @@ if [ $? -ne "0" ]; then
 fi
 info "Docker 工作状态正常"
 
-compose_plugin=true
-compose_command="docker compose"
-docker compose version > /dev/null 2>&1 || (compose_plugin=false && compose_command="docker-compose")
-
-if [[ "x${compose_plugin}" = "xfalse" ]]; then
+if $docker_command version; then
+    info "发现 Docker Compose Plugin"
+else
     warning "未发现 Docker Compose Plugin"
+    compose_command="docker-compose"
     if [ -z `command_exists "docker-compose"` ]; then
         warning "未发现 docker-compose 组件"
         if confirm "是否需要自动安装 Docker Compose Plugin"; then
@@ -132,7 +131,6 @@ if [[ "x${compose_plugin}" = "xfalse" ]]; then
                 abort "Docker Compose Plugin 安装失败"
             fi
             info "Docker Compose Plugin 安装完成"
-            compose_plugin=true
             compose_command="docker compose"
         else
             abort "中止安装"
@@ -140,8 +138,6 @@ if [[ "x${compose_plugin}" = "xfalse" ]]; then
     else
         info "发现 docker-compose 组件: '`command -v docker-compose`'"
     fi
-else
-    info "发现 Docker Compose Plugin"
 fi
 
 compose_path=`$compose_command ls | grep compose.yaml | awk '{print $3}' | xargs grep 'name: safeline-ce' -l`
