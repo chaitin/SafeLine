@@ -120,7 +120,7 @@ info "Docker 工作状态正常"
 
 compose_plugin=true
 compose_command="docker compose"
-docker compose version > /dev/null 2>&1 || compose_plugin=false || compose_command="docker-compose"
+docker compose version > /dev/null 2>&1 || compose_plugin=false && compose_command="docker-compose"
 
 if [[ "x${compose_plugin}" = "xfalse" ]]; then
     warning "未发现 Docker Compose Plugin"
