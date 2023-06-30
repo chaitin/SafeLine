@@ -125,7 +125,8 @@ if [ $? -ne "0" ]; then
 fi
 info "Docker 工作状态正常"
 
-if $docker_command version; then
+compose_command="docker compose"
+if $compose_command version; then
     info "发现 Docker Compose Plugin"
 else
     warning "未发现 Docker Compose Plugin"
