@@ -82,6 +82,7 @@ docker exec safeline-tengine nginx -s reload
 ```shell
 server {
     listen [::]:80;
+    listen 0.0.0.0:80;
     server_name example.com;
 }
 ```
@@ -89,7 +90,7 @@ server {
 如只需监听ipv6，则
 ```shell
 server {
-    listen [::]:80 ipv6only=on;
+    listen [::]:80;
     server_name example.com;
 }
 ```
