@@ -48,7 +48,7 @@ space_left() {
 }
 
 start_docker() {
-    systemctl restart docker && systemctl enable docker
+    systemctl start docker && systemctl enable docker
 }
 
 confirm() {
