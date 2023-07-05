@@ -121,9 +121,7 @@ docker exec safeline-tengine nginx -s reload
 
 雷池每次修改站点或者重启服务时，都会重新生成 **resources/nginx/sites-enabled/** 下的 nginx conf 文件。因为没法“智能”合并用户自定义的配置和自动生成的配置。但是也还是有方式能持久化地添加一些 nginx conf，不会被覆盖。
 
-每个 `IF_backend_XXX` 的 location 中都有 `include proxy_params;` 这一行配置，且 `resources/nginx/proxy_params` 这个文件不会被修改站点、重启服务等动作覆盖。
-
-**2.1.0 版本支持了 include custom_params/backend_XXX; 可以自定义站点级的 nginx location 配置**
+每个 `IF_backend_XXX` 的 location 中都有 `include proxy_params;` 这一行配置，且 `resources/nginx/proxy_params` 这个文件不会被修改站点、重启服务等动作覆盖。2.1.0 版本之后支持 `include custom_params/backend_XXX;` 可以自定义站点级的 nginx location 配置。
 
 ```shell
 server {
@@ -136,7 +134,7 @@ server {
 }
 ```
 
-所以只需要根据需求修改对应的文件就可以了。比如在 `resources/nginx/proxy_params` 里面增加如下配置，即可支持 `X-Forwarded-Scheme`：
+所以只需要根据需求修改对应的文件就可以了。比如在 `resources/nginx/proxy_params` 里面增加如下配置，即可支持 `X-Forwarded-Proto`：
 
 ```shell
 proxy_set_header X-Forwarded-Proto $scheme;
