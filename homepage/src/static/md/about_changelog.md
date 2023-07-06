@@ -8,6 +8,24 @@ order: 3
 
 [版本升级方法](https://waf-ce.chaitin.cn/posts/guide_upgrade)
 
+## [2.1.0] - 2023-07-06
+
+#### 新增
+
+- 添加/编辑站点时，自动检查端口占用情况，避免保存后配置不生效
+- 支持自定义站点的 nginx conf，详情可见[官网文档](https://waf-ce.chaitin.cn/posts/faq_other#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AB%99%E7%82%B9-nginx-conf)
+- [站点列表支持按域名、端口或访问量进行排序](https://github.com/chaitin/safeline/issues/14)
+- [绑定 TOTP 密钥时，支持直接复制密钥；登录时的 6 位动态密码输入框，支持粘贴](https://github.com/chaitin/safeline/issues/30)
+
+#### 优化
+
+- [黑白名单和人机验证列表中，可以鼠标悬浮查看 “复合条件” 的具体内容](https://github.com/chaitin/safeline/issues/130)
+- 修复人机验证列表中，“源 IP 不属于 IP 组” 的规则，IP 组名称显示成了 id 的问题
+- [优化人机验证启用/禁用交互](https://github.com/chaitin/safeline/issues/130)
+- [优化描述文字](https://github.com/chaitin/safeline/issues/122)
+- 优化一些界面 UI 交互、提示文字
+- 修复一些已知问题
+
 ## [2.0.1] - 2023-06-30
 
 - 调整了人机验证的策略，降低误拦的情况
