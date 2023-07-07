@@ -8,6 +8,10 @@ order: 3
 
 [版本升级方法](https://waf-ce.chaitin.cn/posts/guide_upgrade)
 
+## [2.1.2] - 2023-07-07
+
+- 修复了日志详情中防护策略模块没有翻译的问题
+
 ## [2.1.1] - 2023-07-06
 
 - 修复了防护策略模块没有翻译的问题
@@ -23,7 +27,7 @@ order: 3
 
 #### 优化
 
-- [黑白名单和人机验证列表中，可以鼠标悬浮查看 “复合条件” 的具体内容](https://github.com/chaitin/safeline/issues/130)
+- [黑白名单和人机验证列表中，可以鼠标悬浮查看 “复合条件” 的具体内容](https://github.com/chaitin/safeline/issues/120)
 - 修复人机验证列表中，“源 IP 不属于 IP 组” 的规则，IP 组名称显示成了 id 的问题
 - [优化人机验证启用/禁用交互](https://github.com/chaitin/safeline/issues/130)
 - [优化描述文字](https://github.com/chaitin/safeline/issues/122)
