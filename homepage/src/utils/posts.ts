@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { serialize } from "next-mdx-remote/serialize";
-// import prism from "remark-prism";
 import slug from "remark-slug";
 import remarkGfm from "remark-gfm";
 import externalLinks from "remark-external-links";
