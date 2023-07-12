@@ -141,14 +141,16 @@ else
     fi
 fi
 
-compose_path=`$compose_command ls | grep compose.yaml | awk '{print $3}' | xargs grep 'name: safeline-ce' -l`
+container_id=`docker ps --filter ancestor=chaitin/safeline-mgt-api --format '{{.ID}}'`
+mount_path=`docker inspect --format '{{range .Mounts}}{{if eq .Destination "/logs"}}{{.Source}}{{end}}{{end}}' $container_id`
+safeline_path=`dirname $mount_path`
+compose_path=$safeline_path/compose.yaml
 
-if [[ -z "$compose_path" ]]; then
+if [ -f "$compose_path" ]; then
+    info "发现位于 '$safeline_path' 的雷池环境"
+else
     abort "没有正在运行的雷池环境"
 fi
-
-safeline_path=`dirname $compose_path`
-info "发现位于 '$safeline_path' 的雷池环境"
 
 cd "$safeline_path"
 
@@ -163,8 +165,11 @@ info "下载 compose.yaml 脚本成功"
 sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
 
 grep "SAFELINE_DIR" ".env" > /dev/null || echo "SAFELINE_DIR=$(pwd)" >> ".env"
-grep "SUBNET_PREFIX" ".env" > /dev/null || echo "SUBNET_PREFIX=169.254.0" >> ".env"
+grep "IMAGE_TAG" ".env" > /dev/null || echo "IMAGE_TAG=latest" >> ".env"
+grep "MGT_PORT" ".env" > /dev/null || echo "MGT_PORT=9443" >> ".env"
+grep "POSTGRES_PASSWORD" ".env" > /dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> ".env"
 grep "REDIS_PASSWORD" ".env" > /dev/null || echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> ".env"
+grep "SUBNET_PREFIX" ".env" > /dev/null || echo "SUBNET_PREFIX=169.254.0" >> ".env"
 
 info "升级 .env 脚本成功"
 
