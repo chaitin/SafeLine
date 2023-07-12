@@ -71,7 +71,7 @@ cd safeline              # 进入 safeline 目录
 执行以下命令，生成雷池运行所需的相关环境变量
 
 ```
-echo "SAFELINE_DIR=$safeline_path" >> .env
+echo "SAFELINE_DIR=$(pwd)" >> .env
 echo "IMAGE_TAG=latest" >> .env
 echo "MGT_PORT=9443" >> .env
 echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
