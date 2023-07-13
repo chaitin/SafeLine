@@ -1,0 +1,31 @@
+name: Bug
+description: 明确的软件故障或缺陷
+# Create a report to help us improve
+title: "[Bug] "
+
+body:
+- type: markdown
+  attributes:
+    value: |
+      提示：提问前请先搜索一下是否存在重复问题
+    # Please check for duplicate issue first.
+- type: textarea
+  id: Description
+  attributes:
+    label: 问题描述
+    # Describe the bug
+  validations:
+    required: false
+- type: textarea
+  id: Reproduce
+  attributes:
+    label: 复现方法
+    # To Reproduce
+    placeholder: |
+      1. ...
+      2. ...
+- type: textarea
+  id: Expected
+  attributes:
+    label: 期望的结果
+    # Expected behavior. Descript what you expected to happen.

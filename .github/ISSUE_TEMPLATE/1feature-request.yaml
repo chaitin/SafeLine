@@ -1,0 +1,27 @@
+name: 功能建议
+# Feature request
+description: 新功能或现有能力的优化建议
+title: "[建议] "
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提示：创建前可先搜索一下是否存在重复问题。描述简洁、准确有助于集中大家的意见，推进 issue 尽快解决
+      # Please check for duplicate issue first.
+  - type: textarea
+    id: problem
+    attributes:
+      label: 背景与遇到的问题
+      # Background and the problem that frustrates you
+      placeholder: |
+        例如：我的业务有xxx特性，当我在使用xxx功能的时候，会遇到xxx情况...
+    validations:
+      required: false
+  - type: textarea
+    id: solution
+    attributes:
+      label: 建议的解决方案
+      # Describe the solution you'd like
+    validations:
+      required: false
