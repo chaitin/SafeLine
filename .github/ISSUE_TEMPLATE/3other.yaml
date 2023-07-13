@@ -1,0 +1,12 @@
+name: 其他问题与反馈
+description: 文档、部署失败等其他问题。
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提示：创建前请先搜索一下是否存在重复问题
+      # Please check for duplicate issue first.
+  - type: textarea
+    id: content
+    attributes:
+      label: 反馈内容
