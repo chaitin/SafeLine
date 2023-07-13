@@ -9,6 +9,7 @@ body:
       value: |
         提示：创建前可先搜索一下是否存在重复问题。描述简洁、准确有助于集中大家的意见，推进 issue 尽快解决
       # Please check for duplicate issue first.
+      # 尽量描述需求的背景、原始问题，避免出现 X-Y 问题，参考： https://coolshell.cn/articles/10804.html
   - type: textarea
     id: problem
     attributes:
