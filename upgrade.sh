@@ -85,10 +85,6 @@ if [ -z "$BASH" ]; then
     abort "请用 bash 执行本脚本, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
 fi
 
-if [ ! -t 0 ]; then
-    abort "STDIN 不是标准的输入设备, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
-fi
-
 if [ "$#" -ne "0" ]; then
     abort "当前脚本无需任何参数, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
 fi
