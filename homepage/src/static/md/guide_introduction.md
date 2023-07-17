@@ -15,7 +15,7 @@ WAF 是 Web Application Firewall 的缩写，也被称为 Web 应用防火墙。
 
 雷池是长亭科技耗时近 10 年倾情打造的 WAF，核心检测能力由智能语义分析算法驱动。
 
-Slogon：不让黑客越雷池半步。
+Slogan：不让黑客越雷池半步。
 
 ## 为什么是雷池
 
