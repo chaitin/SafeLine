@@ -98,7 +98,7 @@ For examples:
 1. You can make bug feedback and feature suggestions directly through GitHub Issues.
 2. By scanning the QR code below (use wechat or qq), you can join the discussion group of SafeLine users for detailed discussions.
 
-<img src="https://waf-ce.chaitin.cn/images/wechat-light.png" width="30%" />
+<img src="https://waf-ce.chaitin.cn/images/wechat-230717.png" width="30%" />
 
 ## ✨ CTStack
 <img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/CT%20Stack-2.png" width="30%" />

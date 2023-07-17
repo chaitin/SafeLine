@@ -109,7 +109,7 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 1. 可以通过 GitHub Issue 直接进行 Bug 反馈和功能建议
 2. 可以扫描下方二维码加入雷池社区版用户讨论群
 
-<img src="https://waf-ce.chaitin.cn/images/wechat-light.png" width="30%" />
+<img src="https://waf-ce.chaitin.cn/images/wechat-230717.png" width="30%" />
 
 ## Star History <a name="star-history"></a>
 
