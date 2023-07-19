@@ -77,8 +77,6 @@ docker exec safeline-tengine nginx -s reload
 ## 如何将雷池的日志导出到XXX
 雷池社区版自发布以来经常有用户询问如何将拦截日志通过syslog转发至目标地址，接下来我们将尝试使用fluentd来实现这个需求。
 
-
-## 配置fluentd
 首先，我们编写fluent.conf，我们将读取mgt_detect_log_basic中的数据，并通过配置syslog转发出去。下面是input部分，match部分可以参考参考文档中的syslog部分。
 ```
 <source>
