@@ -75,9 +75,67 @@ docker exec safeline-tengine nginx -s reload
 请麻烦检查是否形成了环路，即：雷池将请求转发给上游服务器后，上游服务器又将请求转发回雷池。
 
 ## 如何将雷池的日志导出到XXX
-由于雷池的日志是存在Postgres 数据库中，用户可以通过logstash将数据库中的数据导出，并且利用大量的logstash output 插件导入至目标数据库中
+雷池社区版自发布以来经常有用户询问如何将拦截日志通过syslog转发至目标地址，接下来我们将尝试使用fluentd来实现这个需求。
 
-参考资料: https://www.elastic.co/guide/en/logstash/current/plugins-inputs-jdbc.html
+
+## 配置fluentd
+首先，我们编写fluent.conf，我们将读取mgt_detect_log_basic中的数据，并通过配置syslog转发出去。下面是input部分，match部分可以参考参考文档中的syslog部分。
+```
+<source>
+  @type sql
+
+  host safeline-postgres // 默认数据库地址，如果在compose.yml中该过，请使用改后值
+  port 5432
+  database safeline-ce // 数据库名
+  adapter postgresql
+  username safeline-ce // 默认用户名，如果在compose.yml中该过，请使用改后值
+  password POSTGRES_PASSWORD // 数据库密码，见安装目录下.env
+
+  select_interval 60s  # optional
+  select_limit 500     # optional
+
+  state_file /var/run/fluentd/sql_state
+
+  <table>
+    table mgt_detect_log_basic
+    update_column timestamp
+    time_column timestamp  # optional
+  </table>
+
+  # detects all tables instead of <table> sections
+  #all_tables
+</source>
+```
+之后，来编写我们的fluentd的Dockerfile
+```
+FROM fluent/fluentd:v1.16-1
+
+# Use root account to use apk
+USER root
+
+# below RUN includes plugin as examples elasticsearch is not required
+# you may customize including plugins as you wish
+RUN apk add --no-cache --update --virtual .build-deps \
+        sudo build-base ruby-dev \
+ && apk add libpq-dev \
+ && sudo gem install pg --no-document \
+ && sudo gem install fluent-plugin-remote_syslog \
+ && sudo gem sources --clear-all \
+ && apk del .build-deps libpq-dev \
+ && rm -rf /tmp/* /var/tmp/* /usr/lib/ruby/gems/*/cache/*.gem
+
+COPY fluent.conf /fluentd/etc/fluent.conf
+
+USER fluent
+```
+最后，编译完成后，我们将容器跑起来，参考命令
+```
+echo "" > ./sql-state
+docker run -d --restart=always --name safeline-fluentd --net safeline-ce -v ./sql-state:/var/run/fluentd/sql_state safeline-flunetd:latest
+```
+参考文档
+[SQL input plugin for Fluentd event collector](https://github.com/fluent/fluent-plugin-sql)
+[fluent-plugin-remote_syslog](https://github.com/fluent-plugins-nursery/fluent-plugin-remote_syslog)
 
 ## 如何开启监听ipv6
 雷池默认不开启ipv6, 如果需要开启ipv6，需手动修改安装路径下的**resources/nginx/sites-enabled/** 文件夹下对应域名的配置文件
