@@ -8,7 +8,7 @@ order: 3
 
 [版本升级方法](https://waf-ce.chaitin.cn/posts/guide_upgrade)
 
-## [2.3.0] - 2023-07-20
+## [2.3.1] - 2023-07-20
 
 ### 新增
 
