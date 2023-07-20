@@ -1,6 +1,3 @@
-[submodule "yanshi"]
-	path = yanshi
-	url = https://github.com/chaitin/yanshi
 [submodule "blazehttp"]
 	path = blazehttp
 	url = https://github.com/chaitin/blazehttp

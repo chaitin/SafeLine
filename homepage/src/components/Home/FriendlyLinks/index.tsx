@@ -27,6 +27,10 @@ const LINK_LIST = [
     name: "长亭合作伙伴论坛",
     url: "https://bbs.chaitin.cn/",
   },
+  {
+    name: "关于我们",
+    url: "https://waf-ce.chaitin.cn/posts/about_chaitin",
+  },
 ];
 
 const FriendlyLinks = () => {
