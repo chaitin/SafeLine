@@ -1,0 +1,8 @@
+*.o
+*.dot
+*.output
+/build
+/src/parser.cc
+/src/parser.hh
+/src/lexer.cc
+/src/lexer.hh
