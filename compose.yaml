@@ -30,7 +30,7 @@ services:
   redis:
     container_name: safeline-redis
     restart: always
-    image: redis:7.0.11
+    image: redis:7.0.10
     volumes:
       - ${SAFELINE_DIR}/resources/redis/data:/data
       - /etc/localtime:/etc/localtime:ro
