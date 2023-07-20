@@ -56,7 +56,9 @@ services:
     environment:
     - MANAGEMENT_RESOURCES_DIR=/resources/management
     - NGINX_RESOURCES_DIR=/resources/nginx
-    - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@127.0.0.1/safeline-ce
+    - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
+    - MARIO_URL=http://safeline-mario:3335
+    - DETECTOR_URL=http://safeline-detector:8001
     - MANAGEMENT_LOGS_DIR=/logs/management
     networks:
       safeline-ce:
