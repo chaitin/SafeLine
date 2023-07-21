@@ -8,6 +8,8 @@ echo "
  |____/   \__,_| |_|    \___| |_____| |_| |_| |_|  \___|
 "
 
+echo $1
+
 qrcode() {
     echo
 
@@ -146,19 +148,35 @@ fi
 container_id=`docker ps --filter ancestor=chaitin/safeline-mgt-api --format '{{.ID}}'`
 mount_path=`docker inspect --format '{{range .Mounts}}{{if eq .Destination "/logs"}}{{.Source}}{{end}}{{end}}' $container_id`
 safeline_path=`dirname $mount_path`
-compose_path=$safeline_path/compose.yaml
+
+while [ -z "$safeline_path" ]; do
+    echo -e -n "\033[34m[SafeLine] 未发现正在运行的雷池，请输入雷池安装路径: \033[0m"
+    read input_path
+    [[ -z "$input_path" ]] && input_path=$safeline_path
+
+    if [[ ! $input_path == /* ]]; then
+        warning "'$input_path' 不是合法的绝对路径"
+        continue
+    fi
+
+    safeline_path=$input_path
+done
+
+cd "$safeline_path"
+
+compose_name=`ls docker-compose.yaml compose.yaml 2>/dev/null`
+compose_path=$safeline_path/$compose_name
 
 if [ -f "$compose_path" ]; then
     info "发现位于 '$safeline_path' 的雷池环境"
 else
-    abort "没有正在运行的雷池环境"
+    abort "没有发现位于 $safeline_path 的雷池环境"
 fi
 
-cd "$safeline_path"
 
-mv compose.yaml compose.yaml.old
+mv $compose_name $compose_name.old
 
-wget "https://waf-ce.chaitin.cn/release/latest/compose.yaml" --no-check-certificate -O compose.yaml
+wget "https://waf-ce.chaitin.cn/release/latest/compose.yaml" --no-check-certificate -O $compose_name
 if [ $? -ne "0" ]; then
     abort "下载 compose.yaml 脚本失败"
 fi
