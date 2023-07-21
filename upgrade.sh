@@ -150,9 +150,9 @@ mount_path=`docker inspect --format '{{range .Mounts}}{{if eq .Destination "/log
 safeline_path=`dirname $mount_path`
 
 while [ -z "$safeline_path" ]; do
-    echo -e -n "\033[34m[SafeLine] 未发现正在运行的雷池，请输入雷池安装路径: \033[0m"
+    echo -e -n "\033[34m[SafeLine] 未发现正在运行的雷池，请输入雷池安装路径 (留空则为 '`pwd`'): \033[0m"
     read input_path
-    [[ -z "$input_path" ]] && input_path=$safeline_path
+    [[ -z "$input_path" ]] && input_path=`pwd`
 
     if [[ ! $input_path == /* ]]; then
         warning "'$input_path' 不是合法的绝对路径"
