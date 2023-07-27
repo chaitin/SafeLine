@@ -8,6 +8,17 @@ order: 3
 
 [版本升级方法](https://waf-ce.chaitin.cn/posts/guide_upgrade)
 
+## [2.4.0] - 2023-07-27
+
+#### 新增
+
+- IP 组支持注释 [#143](https://github.com/chaitin/safeline/issues/143)
+
+#### 优化
+
+- 优化编辑 IP 组和相关规则时的性能
+- 优化一些界面 UI 交互细节
+
 ## [2.3.2] - 2023-07-24
 
 #### 修复
