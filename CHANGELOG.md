@@ -1,6 +1,19 @@
 SAFELINE-CE CHANGELOG
 ===
 
+## [2.5.0] - 2023-08-03
+
+### 新增
+
+- 请求频率限制（[#29](https://github.com/chaitin/safeline/issues/29)）
+
+### 优化
+
+- 支持筛选攻击检测日志的 ID（[#74](https://github.com/chaitin/safeline/issues/74)），优化筛选的交互
+- 证书支持 .cer 格式（[#181](https://github.com/chaitin/safeline/issues/181)）
+- 优化人机校验页面，适配移动端（[#184](https://github.com/chaitin/safeline/issues/184)）
+- 界面增加一些配置提示：添加站点时 “域名” 的格式、黑白名单/人机验证中匹配条件的生效逻辑
+
 ## [2.4.0] - 2023-07-27
 
 ### 新增

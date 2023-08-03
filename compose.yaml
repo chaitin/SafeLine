@@ -59,6 +59,7 @@ services:
     - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
     - MARIO_URL=http://safeline-mario:3335
     - DETECTOR_URL=http://safeline-detector:8001
+    - REDIS_URL=redis://:${REDIS_PASSWORD}@safeline-redis:6379/0
     - MANAGEMENT_LOGS_DIR=/logs/management
     networks:
       safeline-ce:
