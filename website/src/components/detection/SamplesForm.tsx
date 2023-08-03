@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import Message from "@site/src/components/Message";
-import { submitSampleSet, getSampleSetResult } from "@site/src/api/detection";
+import { submitSampleSet } from "@site/src/api";
 import CircularProgress from "@mui/material/CircularProgress";
 import CloseIcon from "@mui/icons-material/Close";
 import IconButton from "@mui/material/IconButton";

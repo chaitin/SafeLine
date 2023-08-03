@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { Carousel } from "react-responsive-carousel";
 import Features from "@site/src/components/Features";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import { Box, Grid, Button, Typography, Container, Stack } from "@mui/material";
 import Layout from "@theme/Layout";
 import Title from "@site/src/components/Title";
 import Version from "@site/src/components/Version";
-import { getSetupCount } from "@site/src/api/home";
+import { getSetupCount } from "@site/src/api";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import ThemeProvider from "@site/src/components/Theme";
 import Head from "@docusaurus/Head";
@@ -43,7 +42,6 @@ const IMAGE_LIST = [
 ];
 
 export default function Home(): JSX.Element {
-  const { siteConfig } = useDocusaurusContext();
 
   const totalRef = useRef(null);
 

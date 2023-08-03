@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Result from "@site/src/components/detection/Result";
 // import { useRouter } from "next/router";
 import { useLocation } from "@docusaurus/router";
-import { getSampleSet, getSampleSetResult } from "@site/src/api/detection";
+import { getSampleSet, getSampleSetResult } from "@site/src/api";
 import Message from "@site/src/components/Message";
 import type {
   RecordSamplesType,

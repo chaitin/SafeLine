@@ -6,7 +6,7 @@ order: 3
 
 # 版本更新记录
 
-[版本升级方法](https://waf-ce.chaitin.cn/docs/01-上手指南/06-guide_upgrade)
+[版本升级方法](https://waf-ce.chaitin.cn/docs/02-上手指南/05-guide_upgrade)
 
 ## [2.3.2] - 2023-07-24
 

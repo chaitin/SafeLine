@@ -1,12 +1,18 @@
-export { submitSampleSet, getSampleSet, getSampleSetResult, getSampleDetail };
+export {
+  submitSampleSet,
+  getSampleSet,
+  getSampleSetResult,
+  getSampleDetail,
+  getSetupCount,
+};
 
-const BASE_API = "/api/poc/";
+const BASE_API = "http://localhost:2023/api";
 
 function submitSampleSet(data: {
   pocs: Array<{ content: string; tag: string }>;
   record_it: boolean;
 }) {
-  return fetch(BASE_API + "list", {
+  return fetch(BASE_API + "/poc/list", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     mode: "cors",
@@ -16,11 +22,11 @@ function submitSampleSet(data: {
 }
 
 function getSampleSet(id: string) {
-  return fetch(BASE_API + "list?id=" + id).then((res) => res.json());
+  return fetch(BASE_API + "/poc/list?id=" + id).then((res) => res.json());
 }
 
 function getSampleDetail(id: string) {
-  return fetch(BASE_API + "detail?id=" + id).then((res) => res.json());
+  return fetch(BASE_API + "/poc/detail?id=" + id).then((res) => res.json());
 }
 
 async function getSampleSetResult(id: string, timeout: number = 60) {
@@ -29,7 +35,7 @@ async function getSampleSetResult(id: string, timeout: number = 60) {
   const maxRetry = 20;
 
   for (let i = 0; i < maxRetry; i++) {
-    const res = await fetch(BASE_API + "results?id=" + id).then((res) =>
+    const res = await fetch(BASE_API + "/poc/results?id=" + id).then((res) =>
       res.json()
     );
     if (res.code == 0 && res.data.data) {
@@ -39,4 +45,8 @@ async function getSampleSetResult(id: string, timeout: number = 60) {
     await new Promise((r) => setTimeout(r, 2000));
   }
   return { data: [], timeout: true };
+}
+
+function getSetupCount() {
+  return fetch(BASE_API + "/count").then((res) => res.json());
 }

@@ -1,9 +1,6 @@
 ---
 title: "雷池简介"
-group: 
-   title: "上手指南"
-   order: 1
-order: 1
+slug: /
 ---
 # 雷池简介
 

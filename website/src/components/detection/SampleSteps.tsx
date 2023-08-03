@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import hljs from "highlight.js";
 import {
   Box,
   Button,
@@ -11,7 +12,6 @@ import {
 } from "@mui/material";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,

@@ -44,13 +44,13 @@ const config = {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/chaitin/safeline/tree/main/website/docs",
+          editUrl: "https://github.com/chaitin/safeline/tree/main/website",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/chaitin/safeline/tree/main/website/blog",
+          editUrl: "https://github.com/chaitin/safeline/tree/main/website",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -87,7 +87,7 @@ const config = {
         logo: { alt: "Logo", src: "images/logo.png" },
         items: [
           {
-            to: "/docs/上手指南/guide_introduction",
+            to: "/docs",
             label: "技术文档",
             position: "right",
           },
@@ -130,11 +130,11 @@ const config = {
             items: [
               {
                 label: "CT Stack 安全社区",
-                href: "https://stack.chaitin.cn/",
+                to: "https://stack.chaitin.cn/",
               },
               {
                 label: "长亭合作伙伴论坛",
-                href: "https://bbs.chaitin.cn/",
+                to: "https://bbs.chaitin.cn/",
               },
             ],
           },
@@ -147,7 +147,7 @@ const config = {
               },
               {
                 label: "关于我们",
-                href: "https://waf-ce.chaitin.cn/docs/关于雷池/about_chaitin",
+                to: "/docs/关于雷池/about_chaitin",
               },
             ],
           },
@@ -161,10 +161,11 @@ const config = {
             ],
           },
         ],
-        copyright: `${
+        copyright: `Copyright © ${new Date().getFullYear()} 
+        北京长亭未来科技有限公司京 ICP 备 19035216 号京公网安备 11010802020947 号
+        <div style="display: none">${
           process.env.NODE_ENV === "production" ? cnzz : ""
-        } <b>Copyright</b> © ${new Date().getFullYear()} 
-        北京长亭未来科技有限公司京 ICP 备 19035216 号京公网安备 11010802020947 号`,
+        }</div>`,
       },
       prism: {
         theme: lightCodeTheme,

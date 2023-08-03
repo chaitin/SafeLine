@@ -14,6 +14,15 @@ npm start
 npm run serve -- --build --host 0.0.0.0
 ```
 
+接口代理
+
+```sh
+# 格式化配置文件
+caddy fmt test/Caddyfile --overwrite
+# 启动服务
+caddy run --config test/Caddyfile
+```
+
 ### 部署
 
 ```

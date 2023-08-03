@@ -16,11 +16,11 @@ export default Result;
 function Result({ rows }: { rows: ResultRowsType }) {
   return (
     <Box sx={{ mt: 4 }}>
-      <Title title="测试结果" sx={{ fontSize: "16px", marginBottom: "16px" }} />
+      <Title title="测试结果" sx={{ fontSize: "16px", mb: "16px" }} />
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }}>
+        <Table sx={{ minWidth: 650, mb: 0 }}>
           <TableHead>
-            <TableRow>
+            <TableRow sx={{ border: 0 }}>
               <TableCell>WAF 类别</TableCell>
               <TableCell>版本</TableCell>
               <TableCell>检出率</TableCell>
@@ -32,12 +32,24 @@ function Result({ rows }: { rows: ResultRowsType }) {
           <TableBody>
             {rows.map((row, index) => (
               <TableRow key={index}>
-                <TableCell>{appendLink(row.engine)}</TableCell>
-                <TableCell>{row.version}</TableCell>
-                <TableCell>{row.detectionRate}</TableCell>
-                <TableCell>{row.failedRate}</TableCell>
-                <TableCell>{row.accuracy}</TableCell>
-                <TableCell>{row.cost}</TableCell>
+                <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
+                  {appendLink(row.engine)}
+                </TableCell>
+                <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
+                  {row.version}
+                </TableCell>
+                <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
+                  {row.detectionRate}
+                </TableCell>
+                <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
+                  {row.failedRate}
+                </TableCell>
+                <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
+                  {row.accuracy}
+                </TableCell>
+                <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
+                  {row.cost}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

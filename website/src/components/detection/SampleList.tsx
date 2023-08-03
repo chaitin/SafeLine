@@ -1,5 +1,6 @@
-import React from 'react'
+import React from "react";
 import { useState } from "react";
+import hljs from "highlight.js";
 
 import {
   Box,
@@ -13,6 +14,7 @@ import {
   DialogActions,
   DialogContent,
 } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -21,8 +23,8 @@ import TableCell from "@mui/material/TableCell";
 import Title from "@site/src/components/Title";
 import SampleCount from "./SampleCount";
 import SamplesForm from "./SamplesForm";
-import  Message  from "@site/src/components/Message";
-import { getSampleDetail } from "@site/src/api/detection";
+import Message from "@site/src/components/Message";
+import { getSampleDetail } from "@site/src/api";
 import { sizeLength } from "@site/src/components/utils";
 
 import type { RecordSamplesType } from "./types";
@@ -72,10 +74,7 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
         <SamplesForm onSetIdChange={onSetIdChange} />
       </Box>
 
-      <Accordion
-        sx={{ borderRadius: "4px" }}
-        className="detection-samples-accordion"
-      >
+      <Accordion sx={{ borderRadius: "4px" }}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <SampleCount
             total={value.length}
@@ -86,7 +85,7 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
         <AccordionDetails>
           <Table>
             <TableHead>
-              <TableRow>
+              <TableRow sx={{ borderBottom: "0" }}>
                 <TableCell width={150}>样本类型</TableCell>
                 <TableCell width={150}>样本大小</TableCell>
                 <TableCell>摘要</TableCell>
@@ -99,11 +98,8 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
                 text.innerHTML = row.summary;
 
                 return (
-                  <TableRow
-                    key={index}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell>
+                  <TableRow key={index}>
+                    <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
                       {row.isAttack ? (
                         <Typography sx={{ color: "error.main" }}>
                           攻击样本
@@ -114,8 +110,10 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
                         </Typography>
                       )}
                     </TableCell>
-                    <TableCell>{sizeLength(row.size)}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
+                      {sizeLength(row.size)}
+                    </TableCell>
+                    <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
                       <Typography
                         noWrap
                         sx={{
@@ -127,7 +125,7 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
                         {text.value}
                       </Typography>
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ borderLeft: "0", borderRight: "0" }}>
                       <Button onClick={handleDetail(row.id)}>详情</Button>
                     </TableCell>
                   </TableRow>
