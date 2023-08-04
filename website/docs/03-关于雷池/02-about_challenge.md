@@ -1,9 +1,5 @@
 ---
 title: "人机验证"
-group:
-   title: "关于雷池"
-   order: 3
-order: 3
 ---
 
 # 人机验证

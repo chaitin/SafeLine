@@ -186,8 +186,8 @@ const FunctionTable = () => {
           }}
           style={{ marginTop: "48px" }}
         >
-          <TableHead>
-            <TableRow>
+          <TableHead sx={{ background: "transparent" }}>
+            <TableRow sx={{ border: "0" }}>
               <TableCell sx={{ width: "33%" }} />
               <TableCell align="center" sx={{ width: "33%", fontSize: "16px" }}>
                 <Box

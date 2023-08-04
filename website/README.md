@@ -1,30 +1,41 @@
-# 雷池社区官网
+# Website
 
-使用 [Docusaurus 2](https://docusaurus.io/) 开发。包含两部分内容：页面和文档。
+This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 
-- 页面，在 src 目录下，手写 js
-- 文档，在 docs 目录下，手写 markdown
-
-### 开发
-
-```sh
-# 开发
-npm start
-# 支持 搜索功能的预览
-npm run serve -- --build --host 0.0.0.0
-```
-
-接口代理
-
-```sh
-# 格式化配置文件
-caddy fmt test/Caddyfile --overwrite
-# 启动服务
-caddy run --config test/Caddyfile
-```
-
-### 部署
+### Installation
 
 ```
-docker build -t website .
+$ yarn
 ```
+
+### Local Development
+
+```
+$ yarn start
+```
+
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+
+### Build
+
+```
+$ yarn build
+```
+
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+### Deployment
+
+Using SSH:
+
+```
+$ USE_SSH=true yarn deploy
+```
+
+Not using SSH:
+
+```
+$ GIT_USER=<Your GitHub username> yarn deploy
+```
+
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.

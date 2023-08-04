@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import hljs from "highlight.js";
+// import hljs from "highlight.js";
 import {
   Box,
   Button,
@@ -181,8 +181,9 @@ function SampleMarkable({
   });
 
   useEffect(() => {
-    const highlighted = hljs.highlight(sampleDetail, { language: "http" });
-    setCode(highlighted.value);
+    // const highlighted = hljs.highlight(sampleDetail, { language: "http" });
+    // setCode(highlighted.value);
+    setCode(sampleDetail)
   }, [sampleDetail]);
 
   const handle = () => {

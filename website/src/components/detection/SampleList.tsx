@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import hljs from "highlight.js";
+// import hljs from "highlight.js";
 
 import {
   Box,
@@ -48,10 +48,11 @@ function SampleList({ value, onSetIdChange }: SampleListProps) {
     }
     const text = document.createElement("textarea");
     text.innerHTML = res.data.content;
-    const highlighted = hljs.highlight(text.value, {
-      language: "http",
-    });
-    setDetail(highlighted.value);
+    // const highlighted = hljs.highlight(text.value, {
+    //   language: "http",
+    // });
+    // setDetail(highlighted.value);
+    setDetail(text.value)
     setOpen(true);
   };
 

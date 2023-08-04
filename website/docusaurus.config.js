@@ -9,9 +9,8 @@ const cnzz = `<script type="text/javascript" src="https://v1.cnzz.com/z_stat.php
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "长亭雷池 WAF 社区版",
-  tagline: "Dinosaurs are cool",
+  tagline: "",
   favicon: "images/favicon.ico",
-  plugins: [require.resolve("@cmfcmf/docusaurus-search-local")],
 
   // Set the production url of your site here
   url: "https://waf-ce.chaitin.cn/",
@@ -34,6 +33,24 @@ const config = {
     defaultLocale: "zh-Hans",
     locales: ["zh-Hans"],
   },
+
+  themes: [
+    [
+      // @ts-ignore
+      require.resolve("@easyops-cn/docusaurus-search-local"),
+      /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
+      // @ts-ignore
+      ({
+        // ... Your options.
+        // `hashed` is recommended as long-term-cache of index file is possible.
+        hashed: true,
+        // For Docs using Chinese, The `language` is recommended to set to:
+        // ```
+        language: ["en", "zh"],
+        // ```
+      }),
+    ],
+  ],
 
   presets: [
     [
@@ -59,24 +76,6 @@ const config = {
     ],
   ],
 
-  themes: [
-    [
-      // @ts-ignore
-      require.resolve("@easyops-cn/docusaurus-search-local"),
-      /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
-      // @ts-ignore
-      ({
-        // ... Your options.
-        // `hashed` is recommended as long-term-cache of index file is possible.
-        hashed: true,
-        // For Docs using Chinese, The `language` is recommended to set to:
-        // ```
-        language: ["zh"],
-        // ```
-      }),
-    ],
-  ],
-
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -86,11 +85,7 @@ const config = {
         title: "",
         logo: { alt: "Logo", src: "images/logo.png" },
         items: [
-          {
-            to: "/docs",
-            label: "技术文档",
-            position: "right",
-          },
+          { to: "/docs", label: "技术文档", position: "right" },
           { to: "/detection", label: "效果对比", position: "right" },
           {
             to: "https://www.bilibili.com/medialist/detail/ml2342694989",
@@ -109,6 +104,7 @@ const config = {
           },
         ],
       },
+
       footer: {
         style: "dark",
         links: [
@@ -121,7 +117,7 @@ const config = {
               },
               {
                 label: "长亭 B 站主页",
-                to: "https://space.bilibili.com/521870525",
+                href: "https://space.bilibili.com/521870525",
               },
             ],
           },
@@ -130,11 +126,11 @@ const config = {
             items: [
               {
                 label: "CT Stack 安全社区",
-                to: "https://stack.chaitin.cn/",
+                href: "https://stack.chaitin.cn/",
               },
               {
                 label: "长亭合作伙伴论坛",
-                to: "https://bbs.chaitin.cn/",
+                href: "https://bbs.chaitin.cn/",
               },
             ],
           },
@@ -143,7 +139,7 @@ const config = {
             items: [
               {
                 label: "长亭百川云平台",
-                to: "https://rivers.chaitin.cn/",
+                href: "https://rivers.chaitin.cn/",
               },
               {
                 label: "关于我们",
@@ -156,16 +152,13 @@ const config = {
             items: [
               {
                 label: "长亭 GitHub 主页",
-                to: "https://github.com/chaitin",
+                href: "https://github.com/chaitin",
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} 
-        北京长亭未来科技有限公司京 ICP 备 19035216 号京公网安备 11010802020947 号
-        <div style="display: none">${
-          process.env.NODE_ENV === "production" ? cnzz : ""
-        }</div>`,
+        copyright: `Copyright © ${new Date().getFullYear()}
+        北京长亭未来科技有限公司京 ICP 备 19035216 号京公网安备 11010802020947 号`,
       },
       prism: {
         theme: lightCodeTheme,
