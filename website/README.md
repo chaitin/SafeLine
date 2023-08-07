@@ -1,41 +1,49 @@
 # Website
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+使用 [Docusaurus 2](https://docusaurus.io/), 作为基础框架。
 
-### Installation
+### 开发
 
-```
-$ yarn
-```
-
-### Local Development
-
-```
-$ yarn start
+```sh
+# 代码变动后可以自动更新，但是不能
+npm start
+# 支持搜索功能，但是无法自动更新
+npm run preview
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+### 部署
 
-### Build
+手动本地构建 docker 镜像，然后运行
 
-```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
+```sh
+docker build -t website:latest .
+docker run --name site -p 3000:80 -d website:latest
 ```
 
-Not using SSH:
+### 链接替换
 
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
+使用 nginx rewrite 把更改地址的链接记录下，运行旧链接访问到新地址
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+```nginx
+
+location / {
+
+    rewrite /posts/guide_introduction /docs/;
+    rewrite /posts/guide_install /docs/上手指南/guide_install;
+    rewrite /posts/guide_login /docs/上手指南/guide_login;
+    rewrite /posts/guide_config /docs/上手指南/guide_config;
+    rewrite /posts/guide_test /docs/上手指南/guide_test;
+    rewrite /posts/guide_upgrade /docs/上手指南/guide_upgrade;
+    rewrite /posts/faq_install /docs/常见问题排查/faq_install;
+    rewrite /posts/faq_login /docs/常见问题排查/faq_login;
+    rewrite /posts/faq_access /docs/常见问题排查/faq_access;
+    rewrite /posts/faq_config /docs/常见问题排查/faq_config;
+    rewrite /posts/faq_other /docs/常见问题排查/faq_other;
+    rewrite /posts/about_syntaxanalysis /docs/关于雷池/about_syntaxanalysis;
+    rewrite /posts/about_challenge /docs/关于雷池/about_challenge;
+    rewrite /posts/about_changelog /docs/关于雷池/about_changelog;
+    rewrite /posts/about_chaitin /docs/关于雷池/about_chaitin;
+
+    proxy_pass http://upstream;
+}
+```
