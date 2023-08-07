@@ -4,8 +4,6 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
-const cnzz = `<script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281262430&web_id=1281262430"/>`;
-
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "长亭雷池 WAF 社区版",
@@ -59,15 +57,13 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/chaitin/safeline/tree/main/website",
+          // editUrl: "https://github.com/chaitin/safeline/tree/main/website",
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl: "https://github.com/chaitin/safeline/tree/main/website",
+          // editUrl: "https://github.com/chaitin/safeline/tree/main/website",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),

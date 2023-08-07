@@ -28,3 +28,7 @@ a:hover {
 [data-theme="dark"] {
   --ifm-navbar-background-color: #0f1935;
 }
+
+aside.theme-doc-sidebar-container {
+  width: 240px !important;
+}
