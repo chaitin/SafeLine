@@ -40,7 +40,7 @@ docker load -i image.tar.gz
 ```
 sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
 grep "SAFELINE_DIR" ".env" > /dev/null || echo "SAFELINE_DIR=$(pwd)" >> ".env"
-grep "SUBNET_PREFIX" ".env" > /dev/null || echo "SUBNET_PREFIX=169.254.0" >> ".env"
+grep "SUBNET_PREFIX" ".env" > /dev/null || echo "SUBNET_PREFIX=172.22.222" >> ".env"
 grep "REDIS_PASSWORD" ".env" > /dev/null || echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> ".env"
 ```
 
