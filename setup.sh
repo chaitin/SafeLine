@@ -179,7 +179,7 @@ fi
 info "创建安装目录 '$safeline_path' 成功"
 cd "$safeline_path"
 
-wget "https://waf-ce.chaitin.cn/release/latest/compose.yaml" --no-check-certificate -O compose.yaml
+curl -sS "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -o compose.yaml
 if [ $? -ne "0" ]; then
     abort "下载 compose.yaml 脚本失败"
 fi
@@ -196,7 +196,7 @@ echo "IMAGE_TAG=latest" >> .env
 echo "MGT_PORT=9443" >> .env
 echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
 echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
-echo "SUBNET_PREFIX=169.254.0" >> .env
+echo "SUBNET_PREFIX=172.22.222" >> .env
 
 info "即将开始下载 Docker 镜像"
 
