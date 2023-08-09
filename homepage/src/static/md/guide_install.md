@@ -53,7 +53,7 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 
 > 这里忽略 Docker 安装的过程
 
-首先，下载 [雷池社区版镜像包](https://demo.waf-ce.chaitin.cn:8443/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
+首先，下载 [雷池社区版镜像包](https://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
 
 ```
 cat image.tar.gz | gzip -d | docker load
