@@ -93,11 +93,6 @@ const config = {
             label: "演示环境",
             position: "right",
           },
-          {
-            href: "https://github.com/chaitin/safeline",
-            label: "GitHub",
-            position: "right",
-          },
         ],
       },
 
