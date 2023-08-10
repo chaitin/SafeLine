@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        提示：创建前可先搜索一下是否存在重复问题。描述简洁、准确有助于集中大家的意见，推进 issue 尽快解决
+        提示：创建前请搜索一下是否有重复问题。一个 issue 尽量只描述一个问题。简洁、准确的描述有助于集中大家的意见，推进问题尽快解决
       # Please check for duplicate issue first.
       # 尽量描述需求的背景、原始问题，避免出现 X-Y 问题，参考： https://coolshell.cn/articles/10804.html
   - type: textarea
@@ -24,5 +24,7 @@ body:
     attributes:
       label: 建议的解决方案
       # Describe the solution you'd like
+      placeholder: |
+        例如：建议增加xxx功能；将xxx改为xxx...
     validations:
       required: false
