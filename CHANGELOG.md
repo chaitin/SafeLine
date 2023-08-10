@@ -10,8 +10,9 @@ SAFELINE-CE CHANGELOG
 
 ### 优化
 
+- 攻击检测的原始日志支持搜索端口 ([#193](https://github.com/chaitin/safeline/issues/193))
 - 修复编辑站点后，“维护模式” 会失效的问题
-- 修改雷池社区版的默认占用的网段段，防止跟腾讯云等默认网段冲突
+- 修改默认占用的网段，避免跟腾讯云默认网段冲突 ([#40](https://github.com/chaitin/safeline/issues/40))
 - 优化安装脚本 ([#194](https://github.com/chaitin/safeline/issues/194))，优化界面一些 UI 交互、错误提示
 
 ## [2.5.0] - 2023-08-03
