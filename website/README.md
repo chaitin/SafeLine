@@ -29,20 +29,20 @@ docker run --name site -p 3000:80 -d website:latest
 location / {
 
     rewrite /posts/guide_introduction /docs/;
-    rewrite /posts/guide_install /docs/上手指南/guide_install;
-    rewrite /posts/guide_login /docs/上手指南/guide_login;
-    rewrite /posts/guide_config /docs/上手指南/guide_config;
-    rewrite /posts/guide_test /docs/上手指南/guide_test;
-    rewrite /posts/guide_upgrade /docs/上手指南/guide_upgrade;
-    rewrite /posts/faq_install /docs/常见问题排查/faq_install;
-    rewrite /posts/faq_login /docs/常见问题排查/faq_login;
-    rewrite /posts/faq_access /docs/常见问题排查/faq_access;
-    rewrite /posts/faq_config /docs/常见问题排查/faq_config;
-    rewrite /posts/faq_other /docs/常见问题排查/faq_other;
-    rewrite /posts/about_syntaxanalysis /docs/关于雷池/about_syntaxanalysis;
-    rewrite /posts/about_challenge /docs/关于雷池/about_challenge;
-    rewrite /posts/about_changelog /docs/关于雷池/about_changelog;
-    rewrite /posts/about_chaitin /docs/关于雷池/about_chaitin;
+    rewrite /posts/guide_install /docs/guide/install;
+    rewrite /posts/guide_login /docs/guide/login;
+    rewrite /posts/guide_config /docs/guide/config;
+    rewrite /posts/guide_test /docs/guide/test;
+    rewrite /posts/guide_upgrade /docs/guide/upgrade;
+    rewrite /posts/faq_install /docs/faq/install;
+    rewrite /posts/faq_login /docs/faq/login;
+    rewrite /posts/faq_access /docs/faq/access;
+    rewrite /posts/faq_config /docs/faq/config;
+    rewrite /posts/faq_other /docs/faq/other;
+    rewrite /posts/about_syntaxanalysis /docs/about/syntaxanalysis;
+    rewrite /posts/about_challenge /docs/about/challenge;
+    rewrite /posts/about_changelog /docs/about/changelog;
+    rewrite /posts/about_chaitin /docs/about/chaitin;
 
     proxy_pass http://upstream;
 }

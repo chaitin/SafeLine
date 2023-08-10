@@ -42,7 +42,7 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 
 > 如果连接 Docker Hub 网络不稳，导致镜像下载失败，可以采用 [离线安装](#离线安装) 方式
 
-经过以上步骤，你的雷池已经安装好了，下一步请参考 [登录雷池](/docs/上手指南/guide_login)
+经过以上步骤，你的雷池已经安装好了，下一步请参考 [登录雷池](/docs/guide/login)
 
 ## 离线安装
 
@@ -82,7 +82,7 @@ echo "SUBNET_PREFIX=172.22.222" >> .env
 docker compose up -d
 ```
 
-经过以上步骤，你的雷池已经安装好了，下一步请参考 [登录雷池](/docs/上手指南/guide_login)
+经过以上步骤，你的雷池已经安装好了，下一步请参考 [登录雷池](/docs/guide/login)
 
 ## 使用牧云助手安装
 
@@ -94,4 +94,4 @@ docker compose up -d
 
 ## 常见安装问题
 
-请参考 [安装问题](/docs/常见问题排查/faq_install)
+请参考 [安装问题](/docs/faq/install)

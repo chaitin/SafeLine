@@ -134,7 +134,7 @@ const config = {
               },
               {
                 label: "关于我们",
-                to: "/docs/关于雷池/about_chaitin",
+                to: "/docs/about/chaitin",
               },
             ],
           },

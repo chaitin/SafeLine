@@ -4,7 +4,7 @@ title: "版本更新记录"
 
 # 版本更新记录
 
-[版本升级方法](/docs/上手指南/guide_upgrade)
+[版本升级方法](/docs/guide/upgrade)
 
 ## [2.6.0] - 2023-08-10
 
@@ -88,7 +88,7 @@ title: "版本更新记录"
 
 ### 新增
 
-- 支持自定义站点的 nginx conf，详情可见[官网文档](/docs/常见问题排查/faq_other#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AB%99%E7%82%B9-nginx-conf)
+- 支持自定义站点的 nginx conf，详情可见[官网文档](/docs/faq/other#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AB%99%E7%82%B9-nginx-conf)
 - 添加/编辑站点时，自动检查端口占用情况，避免保存后配置不生效
 - [站点列表支持按域名、端口或访问量进行排序](https://github.com/chaitin/safeline/issues/14)
 - [绑定 TOTP 密钥时，支持直接复制密钥；登录时的 6 位动态密码输入框，支持粘贴](https://github.com/chaitin/safeline/issues/30)

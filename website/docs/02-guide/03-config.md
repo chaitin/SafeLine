@@ -21,4 +21,4 @@ title: "配置防护站点"
 
 ## 测试防护效果
 
-[测试防护效果](/docs/上手指南/guide_test)
+[测试防护效果](/docs/guide/test)
