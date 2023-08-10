@@ -1,12 +1,15 @@
 ---
 title: "安装问题"
 ---
+
 # 安装问题
 
-## 支不支持Mac or Windows
-不支持，由于雷池所依赖的部分docker特性在Mac or Windows上并不生效，所以雷池在Mac or windows并不能正常工作
+## 支不支持 Mac or Windows
+
+不支持，由于雷池所依赖的部分 docker 特性在 Mac or Windows 上并不生效，所以雷池在 Mac or windows 并不能正常工作
 
 ## 我能把雷池和业务服务部署到同一台机器中吗？
+
 不建议，如放在一起，在流量不变的情况下，机器负载将高于分开部署,增大了资源耗尽的可能性
 
 ## docker compose 还是 docker-compose？

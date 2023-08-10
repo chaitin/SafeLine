@@ -21,7 +21,6 @@ a:hover {
   --ifm-footer-link-hover-color: #0fc6c2;
   --ifm-navbar-link-hover-color: #0fc6c2;
   --ifm-navbar-background-color: #0f1935;
-  --ifm-menu-color: white;
   --ifm-navbar-link-color: white;
 }
 
@@ -36,4 +35,10 @@ aside.theme-doc-sidebar-container {
 
 .navbar__toggle.clean-btn svg {
   color: white;
+}
+
+@media (max-width: 996px) {
+  :root {
+    --ifm-menu-color: white;
+  }
 }

@@ -137,11 +137,9 @@ USER fluent
 
 最后，编译完成后，我们将容器跑起来，参考命令
 
-```sh
+```
 echo "" > ./sql-state
-docker run -d --restart=always --name safeline-fluentd \
-  --net safeline-ce -v ./sql-state:/var/run/fluentd/sql_state \
-  safeline-flunetd:latest
+docker run -d --restart=always --name safeline-fluentd --net safeline-ce -v ./sql-state:/var/run/fluentd/sql_state safeline-flunetd:latest
 ```
 
 参考文档

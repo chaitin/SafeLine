@@ -32,7 +32,7 @@ df -h                    # 查看磁盘信息
 
 ## 在线安装
 
-***如果服务器可以访问互联网环境，推荐使用该方式***
+**_如果服务器可以访问互联网环境，推荐使用该方式_**
 
 执行以下命令，即可开始安装
 
@@ -42,16 +42,15 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 
 > 如果连接 Docker Hub 网络不稳，导致镜像下载失败，可以采用 [离线安装](#离线安装) 方式
 
-
 经过以上步骤，你的雷池已经安装好了，下一步请参考 [登录雷池](/docs/上手指南/guide_login)
 
-## 离线安装 
+## 离线安装
 
 如果你的服务器无法连接互联网环境，或连接 Docker Hub 网络不稳，可以使用镜像包安装方式
 
 > 这里忽略 Docker 安装的过程
 
-首先，下载 [雷池社区版镜像包](http://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
+首先，下载 [雷池社区版镜像包](https://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
 
 ```
 cat image.tar.gz | gzip -d | docker load
@@ -64,7 +63,7 @@ mkdir -p safeline        # 创建 safeline 目录
 cd safeline              # 进入 safeline 目录
 ```
 
-下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 并传输到 safeline 目录中  
+下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 并传输到 safeline 目录中
 
 执行以下命令，生成雷池运行所需的相关环境变量
 
@@ -91,7 +90,7 @@ docker compose up -d
 
 ![](/images/docs/guide_install/collie_apps.png)
 
-参考视频教程 [用 “白嫖的云主机” 一键安装 “开源的Web防火墙”](https://www.bilibili.com/video/BV1sh4y1t7Pk/)
+参考视频教程 [用 “白嫖的云主机” 一键安装 “开源的 Web 防火墙”](https://www.bilibili.com/video/BV1sh4y1t7Pk/)
 
 ## 常见安装问题
 

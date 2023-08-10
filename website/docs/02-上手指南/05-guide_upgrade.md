@@ -24,24 +24,28 @@ docker rmi $(docker images | grep "safeline" | grep "none" | awk '{print $3}')
 
 ## 离线镜像
 
-适用于 docker hub 拉取镜像失败的场景，手动更新镜像，注意还是要执行 `upgrade.sh` 来处理 `.env` 的更新，否则有可能会因为缺少参数而启动失败。
+适用于 docker hub 拉取镜像失败的场景，手动更新镜像。
 
+```
+# cd /path/to/safeline
 
-下载 [雷池社区版镜像包](http://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
+mv compose.yaml compose.yaml.old
+wget "https://waf-ce.chaitin.cn/release/latest/compose.yaml" --no-check-certificate -O compose.yaml
+
+sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
+
+grep "SAFELINE_DIR" ".env" > /dev/null || echo "SAFELINE_DIR=$(pwd)" >> ".env"
+grep "IMAGE_TAG" ".env" > /dev/null || echo "IMAGE_TAG=latest" >> ".env"
+grep "MGT_PORT" ".env" > /dev/null || echo "MGT_PORT=9443" >> ".env"
+grep "POSTGRES_PASSWORD" ".env" > /dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> ".env"
+grep "REDIS_PASSWORD" ".env" > /dev/null || echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> ".env"
+grep "SUBNET_PREFIX" ".env" > /dev/null || echo "SUBNET_PREFIX=172.22.222" >> ".env"
+```
+
+下载 [雷池社区版镜像包](https://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
 
 ```
 docker load -i image.tar.gz
-```
-
-**重要**, 进入安装雷池的目录   
-
-执行以下命令修改配置文件
-
-```
-sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
-grep "SAFELINE_DIR" ".env" > /dev/null || echo "SAFELINE_DIR=$(pwd)" >> ".env"
-grep "SUBNET_PREFIX" ".env" > /dev/null || echo "SUBNET_PREFIX=172.22.222" >> ".env"
-grep "REDIS_PASSWORD" ".env" > /dev/null || echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> ".env"
 ```
 
 执行以下命令替换 Docker 容器
