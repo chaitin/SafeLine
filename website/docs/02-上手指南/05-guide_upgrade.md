@@ -14,7 +14,7 @@ title: "升级雷池"
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/upgrade.sh)"
 ```
 
-[可选] 升级成功后, 可以执行以下命令删除旧版本 Docke 镜像, 以释放磁盘空间
+[可选] 升级成功后，可以执行以下命令删除旧版本 Docke 镜像，以释放磁盘空间。
 
 ```
 docker rmi $(docker images | grep "safeline" | grep "none" | awk '{print $3}')
@@ -55,4 +55,4 @@ docker compose down
 docker compose up -d
 ```
 
-OK, 你已经完成了升级
+OK，你已经完成了升级

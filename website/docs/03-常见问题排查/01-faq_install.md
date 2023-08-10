@@ -4,13 +4,13 @@ title: "安装问题"
 
 # 安装问题
 
-## 支不支持 Mac or Windows
+## 支不支持 MacOS/Windows
 
-不支持，由于雷池所依赖的部分 docker 特性在 Mac or Windows 上并不生效，所以雷池在 Mac or windows 并不能正常工作
+不支持，由于雷池所依赖的部分 docker 特性在 MacOS/Windows 上并不生效，所以雷池在 MacOS/Windows 并不能正常工作。
 
 ## 我能把雷池和业务服务部署到同一台机器中吗？
 
-不建议，如放在一起，在流量不变的情况下，机器负载将高于分开部署,增大了资源耗尽的可能性
+不建议，如放在一起，在流量不变的情况下，机器负载将高于分开部署，增大了资源耗尽的可能性。
 
 ## docker compose 还是 docker-compose？
 
@@ -26,21 +26,19 @@ title: "安装问题"
 
 ## 镜像下载缓慢甚至连接超时
 
-这个是因为 docker hub 默认使用位于美西节点拉取镜像，可以自行配置国内镜像加速源
+这个是因为 docker hub 默认使用位于美西节点拉取镜像，可以自行配置国内镜像加速源。
 
 ## ERROR: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 
-如描述，你需要启动 docker daemon 才能执行相关的命令。尝试 `systemctl start docker`
-
-As shown, you shall start docker first. Try `systemctl start docker`.
+如描述，你需要启动 docker daemon 才能执行相关的命令。尝试 `systemctl start docker`。
 
 ## docker not found, unable to deploy
 
-如描述，你需要安装 `docker`。尝试 `curl -fLsS https://get.docker.com/ | sh` 或者 [Install Docker Engine](https://docs.docker.com/engine/install/)
+如描述，你需要安装 `docker`。尝试 `curl -fLsS https://get.docker.com/ | sh` 或者 [Install Docker Engine](https://docs.docker.com/engine/install/)。
 
 ## docker compose v2 not found, unable to deploy
 
-如描述，你需要安装 `docker compose v2`。尝试 `[Install Docker Compose](https://docs.docker.com/compose/install/)`
+如描述，你需要安装 `docker compose v2`。尝试 `[Install Docker Compose](https://docs.docker.com/compose/install/)`。
 
 ## safeline-tengine 出现 Address already in use
 
@@ -50,7 +48,7 @@ As shown, you shall start docker first. Try `systemctl start docker`.
 
 ## safeline-postgres 出现 Operation not permitted
 
-`docker logs -f safeline-postgres` 容器日志中看到 `Operation not permitted` 报错
+`docker logs -f safeline-postgres` 容器日志中看到 `Operation not permitted` 报错。
 
 可能是您的 docker 版本过低，升级 docker 到最新版本尝试一下。
 

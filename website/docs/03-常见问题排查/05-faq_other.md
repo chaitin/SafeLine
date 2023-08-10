@@ -35,7 +35,7 @@ location /xxx {
 }
 ```
 
-遇到这种情况，打开雷池控制台的 “通用配置” 页面，将选项 “源 IP 获取方式” 的内容修改为 “从 HTTP Header 中获取”，并在对应的输入框中填入 `X-Real-IP 即可`。
+遇到这种情况，打开雷池控制台的 “通用配置” 页面，将选项 “源 IP 获取方式” 的内容修改为 “从 HTTP Header 中获取”，并在对应的输入框中填入 `X-Real-IP` 即可。
 
 ![get_source_ip.png](/images/docs/get_source_ip.png)
 
@@ -44,7 +44,7 @@ location /xxx {
 **_注意：该操作会清除所有日志信息，且不可恢复_**
 
 ```shell
-docker exec -it safeline-mgt-api cleanlogs
+docker exec safeline-mgt-api cleanlogs
 ```
 
 ## 如何记录所有访问雷池的请求
@@ -80,20 +80,20 @@ docker exec safeline-tengine nginx -s reload
 
 ## 如何将雷池的日志导出到 XXX
 
-雷池社区版自发布以来经常有用户询问如何将拦截日志通过 syslog 转发至目标地址，接下来我们将尝试使用 fluentd 来实现这个需求。
+雷池社区版自发布以来经常有用户询问如何将拦截日志通过 syslog 转发至目标地址，接下来我们将尝试使用 `fluentd` 来实现这个需求。
 
-首先，我们编写 fluent.conf，我们将读取 mgt_detect_log_basic 中的数据，并通过配置 syslog 转发出去。下面是 input 部分，match 部分可以参考参考文档中的 syslog 部分。
+首先，我们编写 `fluent.conf，我们将读取` `mgt_detect_log_basic` 中的数据，并通过配置 syslog 转发出去。下面是 input 部分，match 部分可以参考参考文档中的 syslog 部分。
 
 ```
 <source>
   @type sql
 
-  host safeline-postgres // 默认数据库地址，如果在compose.yml中该过，请使用改后值
+  host safeline-postgres // 默认数据库地址，如果在 compose.yml 中改过，请使用改后值
   port 5432
   database safeline-ce // 数据库名
   adapter postgresql
-  username safeline-ce // 默认用户名，如果在compose.yml中该过，请使用改后值
-  password POSTGRES_PASSWORD // 数据库密码，见安装目录下.env
+  username safeline-ce // 默认用户名，如果在 compose.yml 中改过，请使用改后值
+  password POSTGRES_PASSWORD // 数据库密码，见安装目录下 .env
 
   select_interval 60s  # optional
   select_limit 500     # optional
@@ -146,11 +146,11 @@ docker run -d --restart=always --name safeline-fluentd --net safeline-ce -v ./sq
 [SQL input plugin for Fluentd event collector](https://github.com/fluent/fluent-plugin-sql)
 [fluent-plugin-remote_syslog](https://github.com/fluent-plugins-nursery/fluent-plugin-remote_syslog)
 
-## 如何开启监听 ipv6
+## 如何开启监听 IPv6
 
-雷池默认不开启 ipv6, 如果需要开启 ipv6，需手动修改安装路径下的**resources/nginx/sites-enabled/** 文件夹下对应域名的配置文件
+雷池默认不开启 IPv6，如果需要开启 IPv6，需手动修改安装路径下的**resources/nginx/sites-enabled/** 文件夹下对应域名的配置文件。
 
-如需同时监听 ipv4 与 ipv6，则
+如需同时监听 IPv4 与 IPv6，则：
 
 ```shell
 server {
@@ -160,7 +160,7 @@ server {
 }
 ```
 
-如只需监听 ipv6，则
+如只需监听 ipv6，则：
 
 ```shell
 server {
@@ -170,20 +170,20 @@ server {
 ```
 
 **_注意：页面上编辑当前站点会覆盖配置_**
-修改完成后运行命令检查配置文件
+修改完成后运行命令检查配置文件：
 
 ```shell
 docker exec safeline-tengine nginx -t
 ```
 
-检查应显示
+检查应显示：
 
 ```shell
 nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
 nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
-最后应用配置文件
+最后应用配置文件：
 
 ```shell
 docker exec safeline-tengine nginx -s reload
@@ -191,13 +191,13 @@ docker exec safeline-tengine nginx -s reload
 
 ## 有多个防护站点监听在同一个端口上，匹配顺序是怎么样的
 
-如果域名处填写的分别为 ip 与域名，那么当使用进行 ip 请求时，则将会命中第一个配置的站点
+如果域名处填写的分别为 IP 与域名，那么当使用进行 IP 请求时，则将会命中第一个配置的站点
 ![server_index02.png](/images/docs/server_index02.png)
-以上图为例，如果用户使用 ip 访问，命中 example.com
+以上图为例，如果用户使用 IP 访问，命中 example.com。
 
-如果域名处填写的分别为域名与泛域名，除非准确命中域名，则会命中泛域名，不论泛域名第几个配置
+如果域名处填写的分别为域名与泛域名，除非准确命中域名，则会命中泛域名，不论泛域名第几个配置。
 ![server_index01.png](/images/docs/server_index01.png)
-以上图为例，如果用户使用 a.example.com 访问，命中 a.example.com。 如果用户使用 b.example.com,命中\*.example.com
+以上图为例，如果用户使用 a.example.com 访问，命中 a.example.com。 如果用户使用 b.example.com，命中 \*.example.com。
 
 ## 自定义站点 nginx conf
 
