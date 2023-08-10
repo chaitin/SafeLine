@@ -4,6 +4,7 @@ SAFELINE-CE CHANGELOG
 ## [2.6.0] - 2023-08-10
 
 ### 新增
+
 - 新增高频攻击封禁，即多次攻击后自动封禁 IP ([#29](https://github.com/chaitin/safeline/issues/29))
 - 频率限制日志显示封禁 IP 的地理位置 ([#198](https://github.com/chaitin/safeline/issues/198))
 
