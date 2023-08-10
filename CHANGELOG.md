@@ -1,6 +1,18 @@
 SAFELINE-CE CHANGELOG
 ===
 
+## [2.6.0] - 2023-08-10
+
+### 新增
+- 新增高频攻击封禁，即多次攻击后自动封禁 IP ([#29](https://github.com/chaitin/safeline/issues/29))
+- 频率限制日志显示封禁 IP 的地理位置 ([#198](https://github.com/chaitin/safeline/issues/198))
+
+### 优化
+
+- 修复编辑站点后，“维护模式” 会失效的问题
+- 修改雷池社区版的默认占用的网段段，防止跟腾讯云等默认网段冲突
+- 优化安装脚本 ([#194](https://github.com/chaitin/safeline/issues/194))，优化界面一些 UI 交互、错误提示
+
 ## [2.5.0] - 2023-08-03
 
 ### 新增
