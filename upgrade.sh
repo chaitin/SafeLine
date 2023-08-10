@@ -176,7 +176,7 @@ fi
 
 mv $compose_name $compose_name.old
 
-wget "https://waf-ce.chaitin.cn/release/latest/compose.yaml" --no-check-certificate -O $compose_name
+curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o $compose_name
 if [ $? -ne "0" ]; then
     abort "下载 compose.yaml 脚本失败"
 fi
