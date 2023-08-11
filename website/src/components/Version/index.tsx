@@ -40,7 +40,7 @@ const Version = () => {
           sx={{
             width: { xs: "100%", sm: 306 },
             flexShrink: 0,
-            height: { xs: "auto", sm: 440 },
+            height: { xs: "auto" },
             px: 3,
             py: 2,
             mb: { xs: 2, sm: 0 },
@@ -103,7 +103,7 @@ const Version = () => {
           sx={(theme) => ({
             width: { xs: "100%", sm: 306 },
             flexShrink: 0,
-            height: { xs: "auto", sm: 440 },
+            height: { xs: "auto" },
             px: 3,
             py: 2,
             border: "1px solid",
