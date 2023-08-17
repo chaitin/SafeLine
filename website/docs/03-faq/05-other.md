@@ -247,7 +247,7 @@ docker exec safeline-tengine nginx -s reload
 
 放一张截图更容易理解，注意下面「请求报文」中的 Host 字段：
 
-![fake_host.jpg](/images/docs/fake_host.png)
+![fake_host.jpg](/images/docs/fake_host.jpg)
 
 ## 上游服务器获取到的全都是雷池 WAF 的 IP，如何获取到真实 IP？
 

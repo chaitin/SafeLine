@@ -6,6 +6,28 @@ title: "版本更新记录"
 
 [版本升级方法](/docs/guide/upgrade)
 
+## Unrelease: [3.0.0] - 2023-08-18
+
+### 新增
+
+- 新增站点详情，能自动从流量中记录网站资源，一览资源的存活、访问情况
+  - PS. 考虑机器资源消耗问题，当前版本每个站点下最多记录 250 个资源
+- 站点支持输入多个域名、端口（[#162](https://github.com/chaitin/safeline/issues/162)）
+- 通用配置中新增 “站点通用配置”，支持一键开启：
+  - 强制 HTTPS（[#67](https://github.com/chaitin/safeline/issues/67)）
+  - 使用 HTTP/2（[#161](https://github.com/chaitin/safeline/issues/161)）
+  - 监听 IPv6（[#166](https://github.com/chaitin/safeline/issues/166)）
+  - 传递客户端连接的 Host 和协议，方便后续服务器处理
+
+![](/images/docs/about_changelog/site_config.png)
+
+### 优化
+
+- 优化限频配置的默认值
+- 增加 HTTP 497 错误重定向。当以 HTTP 协议访问 HTTPS 端口时，将重定向到 HTTPS（[#186](https://github.com/chaitin/safeline/issues/186)）
+- 默认拒绝 IP 和其他非指定域名的访问。如果需要通过 IP 访问站点，可以给站点添加一个 "*" 域名（[#58](https://github.com/chaitin/safeline/issues/58)）
+- 优化若干 UI 交互细节和文字提示
+
 ## [2.6.0] - 2023-08-10
 
 ### 新增
