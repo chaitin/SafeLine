@@ -40,6 +40,10 @@ title: "安装问题"
 
 如描述，你需要安装 `docker compose v2`。尝试 `[Install Docker Compose](https://docs.docker.com/compose/install/)`。
 
+## `failed to create network safeline-ce`
+
+safeline-ce 是雷池部署时候创建的 network，出现类似报错，先重启下 dockerd 之后重试。
+
 ## safeline-tengine 出现 Address already in use
 
 `docker logs -f safeline-tengine` 容器日志中看到 `Address already in use` 信息。

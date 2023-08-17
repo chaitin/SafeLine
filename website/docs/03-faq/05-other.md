@@ -82,7 +82,7 @@ docker exec safeline-tengine nginx -s reload
 
 雷池社区版自发布以来经常有用户询问如何将拦截日志通过 syslog 转发至目标地址，接下来我们将尝试使用 `fluentd` 来实现这个需求。
 
-首先，我们编写 `fluent.conf，我们将读取` `mgt_detect_log_basic` 中的数据，并通过配置 syslog 转发出去。下面是 input 部分，match 部分可以参考参考文档中的 syslog 部分。
+首先，我们编写 `fluent.conf`，我们将读取 `mgt_detect_log_basic` 中的数据，并通过配置 syslog 转发出去。下面是 input 部分，match 部分可以参考参考文档中的 syslog 部分。
 
 ```
 <source>
@@ -239,4 +239,32 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 
 ```shell
 docker exec safeline-tengine nginx -s reload
+```
+
+## 攻击日志中的域名不是我的网站
+
+攻击日志中显示的域名字段是取的 HTTP Header 中的 Host，如果这个字段不存在，则默认使用目的 IP 作为域名。如果客户端修改了 HTTP Header 的 Host，那么这里显示的就是修改之后的。
+
+放一张截图更容易理解，注意下面「请求报文」中的 Host 字段：
+
+![fake_host.jpg](/images/docs/fake_host.png)
+
+## 上游服务器获取到的全都是雷池 WAF 的 IP，如何获取到真实 IP？
+
+雷池默认透传了源 IP，放在 HTTP Header 中的 `X-Forwarded-For` 里面。
+
+如果上游服务器是 NGINX，添加如下配置就可以。如果不是，需要自行配置解析 XFF
+```
+set_real_ip_from 0.0.0.0/0; 
+real_ip_header X-Forwarded-For;
+```
+
+## 是否支持 WebSocket ？
+
+如果需要支持 WebSocket，需要参考 [自定义站点-nginx-conf](#自定义站点-nginx-conf)，增加下面的配置
+
+```
+proxy_http_version 1.1;
+proxy_set_header Upgrade $http_upgrade;
+proxy_set_header Connection "upgrade";
 ```
