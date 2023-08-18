@@ -6,12 +6,15 @@ title: "版本更新记录"
 
 [版本升级方法](/docs/guide/upgrade)
 
-## Unrelease: [3.0.0] - 2023-08-18
+## [3.0.0] - 2023-08-18
 
 ### 新增
 
 - 新增站点详情，能自动从流量中记录网站资源，一览资源的存活、访问情况
   - PS. 考虑机器资源消耗问题，当前版本每个站点下最多记录 250 个资源
+
+![](/images/docs/about_changelog/api_assets.png)
+
 - 站点支持输入多个域名、端口（[#162](https://github.com/chaitin/safeline/issues/162)）
 - 通用配置中新增 “站点通用配置”，支持一键开启：
   - 强制 HTTPS（[#67](https://github.com/chaitin/safeline/issues/67)）

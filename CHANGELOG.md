@@ -1,7 +1,7 @@
 SAFELINE-CE CHANGELOG
 ===
 
-## Unrelease: [3.0.0] - 2023-08-18
+## [3.0.0] - 2023-08-18
 
 ### 新增
 
