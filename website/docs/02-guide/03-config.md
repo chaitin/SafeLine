@@ -30,7 +30,7 @@ title: "配置防护站点"
 
 ![Alt text](/images/docs/guide_config/deploy_on_separate_server.png)
 
-雷池上的响应站点配置为：
+雷池上相应的站点配置为：
 * 域名：公网域名 `example.com`
 * 端口：80 或 443/ssl
 * 上游服务器：网站服务器的地址 `http://192.168.10.10`
