@@ -16,37 +16,45 @@ title: "配置防护站点"
 
 如果你不了解反向代理的工作原理，可以通过以下几种雷池常见的工作场景，来了解如何配置站点。
 
-### 在单独设备上部署雷池
+假设你的网站域名为 `example.com`，如图：
 
-如果你原本通过域名访问网站，且可以提供一台独立设备部署雷池，那么部署雷池后的效果大致如下：
+![Alt text](/images/docs/guide_config/deploy_origin.png)
+
+### 在单独设备上部署雷池（推荐）
+
+如果你可以提供一台独立设备部署雷池，那么你需要：
+1.  **将网站流量指向雷池**。例如将域名解析到雷池
+2. 禁止网站服务器上，所有除了雷池之外的访问。例如配置防火墙，或者直接把网站服务器放到内网
+
+效果大致如下：
 
 ![Alt text](/images/docs/guide_config/deploy_on_separate_server.png)
 
-这种情况下，你需要将客户端连接指向雷池，例如将域名解析到雷池。注意应当通过防火墙禁止网站服务器所有外部来源的访问，或者直接把网站服务器放到内网。
-
-此时雷池上的站点配置为：
+雷池上的响应站点配置为：
 * 域名：公网域名 `example.com`
 * 端口：80 或 443/ssl
-* 上游服务器：网站服务器地址 `http://192.168.10.10`
+* 上游服务器：网站服务器的地址 `http://192.168.10.10`
 
 ### 直接在网站服务器上部署雷池
 
 提示：不建议这样部署，因为这样单机的负载更高、设备宕机的概率更大。非纯净的环境还会提高安装失败的概率，故障排查也会比较困难。
 
-如果能接受这些风险，雷池也可以直接部署在网站服务器上。效果大致如图：
+如果能接受这些风险，雷池也可以直接部署在网站服务器上。你需要：
+1. 将原本监听 80 或 443/ssl 端口的网站服务改到其他端口，**让雷池监听设备的 80 或 443/ssl 端口**
+2. 使网站服务仅允许本机访问。例如配置系统防火墙、Iptables
+
+效果大致如图：
 
 ![Alt text](/images/docs/guide_config/deploy_on_web_server.png)
-
-这种情况下，你需要将原本监听 80 或 443/ssl 端口的网站服务改到其他端口，**让雷池监听设备的 80 或 443/ssl 端口**。注意应当通过防火墙、Iptables 等方式，使网站服务仅允许本机访问。
 
 此时雷池上的站点配置为：
 * 域名：公网域名 `example.com`
 * 端口：80 或 443/ssl
-* 上游服务器：本机网站服务地址 `http://127.0.0.1:portA`
+* 上游服务器：`http://127.0.0.1:<网站服务改后的端口>`
 
 ### 和其他反代设备一起部署的情况
 
-雷池作为反代设备，可以在任意位置接入主链路。只要将接入位置的流量指向雷池，并在雷池的 “上游服务器” 处填写请求的下一跳服务器地址即可。效果如下图所示：
+雷池作为反代设备，可以在任意位置接入主链路。只要将接入位置的流量指向雷池，并在雷池的 “上游服务器” 处填写请求的下一跳服务器地址即可。例如：
 
 ![Alt text](/images/docs/guide_config/deploy_with_other_server.png)
 
@@ -54,12 +62,15 @@ title: "配置防护站点"
 
 如果按照上文指引部署雷池、配置了站点，但网站仍无法访问，建议按照以下步骤排查：
 
-1. 明确 “网站无法访问” 的具体表现
-    * 如果 `502 Bad Gateway tengine`，大概率是是雷池的上游服务器配置不正确，或者雷池无法访问到上游服务器。请继续按下面步骤排查，重点排查步骤 6、7
-    ![Alt text](/images/docs/guide_config/tengine_502.png)
+1. 明确 “网站无法访问” 的具体表现：
+    * 如果 `502 Bad Gateway tengine`：
+
+        ![Alt text](/images/docs/guide_config/tengine_502.png)
+
+        大概率是是雷池的上游服务器配置不正确，或者雷池无法访问到上游服务器。请继续按下面步骤排查，重点排查步骤 6、7
     * 如果请求能够返回但是十分缓慢
         * 首先确认服务器负载是否正常
-        * 检查雷池服务器与上游服务器的网络状况，检查命令 `curl -H "Host: <SafeLine-IP>" -vv -o /dev/null -s -w 'time_namelookup: %{time_namelookup}\ntime_connect: %{time_connect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n' http://xiaoming.com:8888`
+        * 在客户端执行命令，检查雷池服务器与上游服务器的网络：`curl -H "Host: <SafeLine-IP>" -vv -o /dev/null -s -w 'time_namelookup: %{time_namelookup}\ntime_connect: %{time_connect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n' http://<上游服务器地址>`
             * 如果 time_namelookup 时间过大，请检查 dns server 配置
             * 如果 time_connect 时间过大，请检查雷池与上游服务器之间的网络状态
             * 如果 time_starttransfer 时间过大，请检查上游服务器状态，是否出现资源过载情况
