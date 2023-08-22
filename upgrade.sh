@@ -84,6 +84,11 @@ onexit() {
     abort "用户手动结束升级"
 }
 
+# CPU ssse3 指令集检查
+lscpu | grep ssse3 > /dev/null 2>&1
+if [ $? -ne "0" ]; then
+    abort "雷池需要运行在支持 ssse3 指令集的 CPU 上，虚拟机请自行配置开启 CPU ssse3 指令集支持"
+fi
 
 if [ -z "$BASH" ]; then
     abort "请用 bash 执行本脚本, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"

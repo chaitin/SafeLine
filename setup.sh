@@ -86,19 +86,24 @@ onexit() {
     abort "用户手动结束安装"
 }
 
+# CPU ssse3 指令集检查
+lscpu | grep ssse3 > /dev/null 2>&1
+if [ $? -ne "0" ]; then
+    abort "雷池需要运行在支持 ssse3 指令集的 CPU 上，虚拟机请自行配置开启 CPU ssse3 指令集支持"
+fi
 
 safeline_path='/data/safeline'
 
 if [ -z "$BASH" ]; then
-    abort "请用 bash 执行本脚本, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
+    abort "请用 bash 执行本脚本，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
 fi
 
 if [ ! -t 0 ]; then
-    abort "STDIN 不是标准的输入设备, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
+    abort "STDIN 不是标准的输入设备，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
 fi
 
 if [ "$#" -ne "0" ]; then
-    abort "当前脚本无需任何参数, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
+    abort "当前脚本无需任何参数，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
 fi
 
 if [ "$EUID" -ne "0" ]; then
@@ -161,13 +166,13 @@ while true; do
     fi
 
     if [ -f "$input_path" ] || [ -d "$input_path" ]; then
-        warning "'$input_path' 路径已经存在, 请换一个"
+        warning "'$input_path' 路径已经存在，请换一个"
         continue
     fi
 
     safeline_path=$input_path
 
-    if confirm "目录 '$safeline_path' 当前剩余存储空间为 `space_left \"$safeline_path\"` , 雷池至少需要 5G, 是否确定"; then
+    if confirm "目录 '$safeline_path' 当前剩余存储空间为 `space_left \"$safeline_path\"` ，雷池至少需要 5G，是否确定"; then
         break
     fi
 done
@@ -208,6 +213,6 @@ fi
 
 qrcode
 
-warning "雷池 WAF 社区版安装成功, 请访问以下地址访问控制台"
+warning "雷池 WAF 社区版安装成功，请访问以下地址访问控制台"
 warning "https://0.0.0.0:9443/"
 

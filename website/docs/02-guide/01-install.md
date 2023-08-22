@@ -22,6 +22,8 @@ docker-compose version   # 同上（兼容老版本 Docker Compose）
 cat /proc/cpuinfo        # 查看 CPU 信息
 cat /proc/meminfo        # 查看内存信息
 df -h                    # 查看磁盘信息
+
+lscpu | grep ssse3       # 确认 CPU 是否支持 ssse3 指令集
 ```
 
 有三种安装方式供选择
