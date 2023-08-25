@@ -269,7 +269,7 @@ export default function Home(): JSX.Element {
             >
               <Title title="加入讨论组" />
               <img
-                src="/images/wechat-light.png"
+                src="/images/wechat-230825.png"
                 alt="wechat"
                 width={300}
                 height={300}
