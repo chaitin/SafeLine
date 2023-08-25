@@ -6,6 +6,22 @@ title: "版本更新记录"
 
 [版本升级方法](/docs/guide/upgrade)
 
+## [3.1.0] - 2023-08-25
+
+### 新增
+
+- 新增证书管理。自动判断域名与过期状态，配置站点时可以直接选择（[#111](https://github.com/chaitin/SafeLine/issues/111)），还可以修改管理后台的证书（[#201](https://github.com/chaitin/SafeLine/issues/201)）
+![](/images/docs/about_changelog/mgt_cert.png)
+- 新增系统信息
+
+### 优化
+
+- 修复站点详情全局只支持 250 个资源的问题。现在是每个站点各支持 250 个
+- 修复站点详情中，路径太长样式会错位的问题
+- 修复站点从维护切换成其他状态时，微信会缓存维护页面的问题（[#221](https://github.com/chaitin/SafeLine/issues/221)）
+- 修复手机和平板上不能输入动态口令的问题（[#234](https://github.com/chaitin/SafeLine/issues/234)）
+- 优化导航栏和若干 UI 交互细节
+
 ## [3.0.1] - 2023-08-18
 
 - 更新底层语义分析引擎，加强基础防护能力
