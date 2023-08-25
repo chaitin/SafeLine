@@ -32,6 +32,8 @@ docker rmi $(docker images | grep "safeline" | grep "none" | awk '{print $3}')
 mv compose.yaml compose.yaml.old
 wget "https://waf-ce.chaitin.cn/release/latest/compose.yaml" --no-check-certificate -O compose.yaml
 
+wget "https://waf-ce.chaitin.cn/release/latest/seccomp.json" --no-check-certificate -O seccomp.json
+
 sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
 
 grep "SAFELINE_DIR" ".env" > /dev/null || echo "SAFELINE_DIR=$(pwd)" >> ".env"

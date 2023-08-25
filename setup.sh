@@ -190,6 +190,12 @@ if [ $? -ne "0" ]; then
 fi
 info "下载 compose.yaml 脚本成功"
 
+curl -sS "https://waf-ce.chaitin.cn/release/latest/seccomp.json" -o seccomp.json
+if [ $? -ne "0" ]; then
+    abort "下载 seccomp.json 脚本失败"
+fi
+info "下载 seccomp.json 脚本成功"
+
 touch ".env"
 if [ $? -ne "0" ]; then
     abort "创建 .env 脚本失败"

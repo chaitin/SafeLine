@@ -65,7 +65,7 @@ mkdir -p safeline        # 创建 safeline 目录
 cd safeline              # 进入 safeline 目录
 ```
 
-下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 并传输到 safeline 目录中
+下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 和 [seccomp](https://waf-ce.chaitin.cn/release/latest/seccomp.json) 并传输到 safeline 目录中
 
 执行以下命令，生成雷池运行所需的相关环境变量
 

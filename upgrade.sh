@@ -187,6 +187,12 @@ if [ $? -ne "0" ]; then
 fi
 info "下载 compose.yaml 脚本成功"
 
+curl -sS "https://waf-ce.chaitin.cn/release/latest/seccomp.json" -o seccomp.json
+if [ $? -ne "0" ]; then
+    abort "下载 seccomp.json 脚本失败"
+fi
+info "下载 seccomp.json 脚本成功"
+
 sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
 
 grep "SAFELINE_DIR" ".env" > /dev/null || echo "SAFELINE_DIR=$(pwd)" >> ".env"
