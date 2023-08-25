@@ -195,7 +195,7 @@ docker exec safeline-tengine nginx -s reload
 ![server_index02.png](/images/docs/server_index02.png)
 以上图为例，如果用户使用 IP 访问，命中 example.com。
 
-如果域名处填写的分别为域名与泛域名，除非准确命中域名，则会命中泛域名，不论泛域名第几个配置。
+如果域名处填写的分别为域名与泛域名，除非准确命中域名，否则会命中泛域名，不论泛域名第几个配置。
 ![server_index01.png](/images/docs/server_index01.png)
 以上图为例，如果用户使用 a.example.com 访问，命中 a.example.com。 如果用户使用 b.example.com，命中 \*.example.com。
 
