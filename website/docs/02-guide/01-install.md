@@ -8,7 +8,7 @@ title: "安装雷池"
 
 - 操作系统：Linux
 - 指令架构：x86_64
-- 软件依赖：Docker 20.10.6 版本以上
+- 软件依赖：Docker 20.10.14 版本以上
 - 软件依赖：Docker Compose 2.0.0 版本以上
 - 最小化环境：1 核 CPU / 1 GB 内存 / 5 GB 磁盘
 
@@ -65,7 +65,7 @@ mkdir -p safeline        # 创建 safeline 目录
 cd safeline              # 进入 safeline 目录
 ```
 
-下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 和 [seccomp](https://waf-ce.chaitin.cn/release/latest/seccomp.json) 并传输到 safeline 目录中
+下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 并传输到 safeline 目录中
 
 执行以下命令，生成雷池运行所需的相关环境变量
 

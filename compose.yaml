@@ -65,8 +65,6 @@ services:
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.4
-    security_opt:
-    - seccomp=./seccomp.json
     cap_drop:
     - net_raw
   detector:
