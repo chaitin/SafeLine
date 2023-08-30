@@ -50,6 +50,18 @@ safeline-ce 是雷池部署时候创建的 network，出现类似报错，先重
 
 端口冲突，根据报错信息中的端口号，排查是哪个服务占用了，手动处理冲突。
 
+## safelint-mgt-api 出现 Operation not permitted
+`docker logs -f safelint-mgt-api` 容器日志中看到 `runtime/cgo: pthread_create failed: Operation not permitted` 报错，这个错误一般会在 docker 20.10.9 及以下发生。
+
+- 最推荐的方式是升级 docker 到最新版本尝试解决这个问题。
+- 或您的系统支持配置 seccomp （执行 `grep CONFIG_SECCOMP= /boot/config-$(uname -r)` 输出 `CONFIG_SECCOMP=y` 则为支持）,
+则可以在雷池工作目录下载 [seccomp](https://waf-ce.chaitin.cn/release/latest/seccomp.json) 并且编辑 compose.yaml 文件，
+在 management 下加入如下配置项，然后执行 `docker compose down && docker compose up -d` 来尝试解决这个问题:
+```yaml
+security_opt:  
+- seccomp=./seccomp.json
+```
+
 ## safeline-postgres 出现 Operation not permitted
 
 `docker logs -f safeline-postgres` 容器日志中看到 `Operation not permitted` 报错。
