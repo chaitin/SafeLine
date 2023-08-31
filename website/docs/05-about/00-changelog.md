@@ -6,6 +6,23 @@ title: "版本更新记录"
 
 [版本升级方法](/docs/guide/upgrade)
 
+### [3.2.0] - 2023-08-31
+
+#### 新增
+
+- 证书管理支持上传 PKCS1、PKCS8、ECC 私钥格式的证书（[#257](https://github.com/chaitin/SafeLine/issues/257)）
+- 站点详情新增近 30 天请求数，支持批量删除
+
+#### 优化
+
+- 优化站点详情页面，提高加载速度、优化界面样式和逻辑
+- 限频的生效阈值由 “超过 xx 次” 改为 “达到 xx 次”（[#245](https://github.com/chaitin/SafeLine/issues/245)）
+- 修复频率限制所拦截的请求，没有被计入站点列表的 “今日访问/拦截量” 的问题
+- 修复证书管理的证书有时候无法正常删除的问题（[#268](https://github.com/chaitin/SafeLine/issues/268)）
+- 修复证书管理中，有时候一个证书内会解析出几个重复的域名的问题
+- 去掉对 docker 的 seccomp 特性的依赖（[#255](https://github.com/chaitin/SafeLine/issues/255)）
+- 优化大量界面样式、交互和操作提示细节
+
 ### [3.1.1] - 2023-08-28
 
 #### 优化
