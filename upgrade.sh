@@ -85,8 +85,15 @@ onexit() {
 }
 
 # CPU ssse3 指令集检查
+support_ssse3=1
 lscpu | grep ssse3 > /dev/null 2>&1
 if [ $? -ne "0" ]; then
+    echo "not found info in lscpu"
+    support_ssse3=0
+fi
+
+cat /proc/cpuinfo | grep ssse3 > /dev/null 2>&1
+if [ $support_ssse3 -eq "0" -a $? -ne "0" ]; then
     abort "雷池需要运行在支持 ssse3 指令集的 CPU 上，虚拟机请自行配置开启 CPU ssse3 指令集支持"
 fi
 
