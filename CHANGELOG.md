@@ -1,14 +1,31 @@
 SAFELINE-CE CHANGELOG
 ===
 
-### [3.2.0] - 2023-08-31
+## [3.3.0] - 2023-09-07
 
-#### 新增
+### 新增
+
+- 支持设置拦截页面附加说明（[#192](https://github.com/chaitin/SafeLine/issues/192)）
+- 频率限制新增 “人机验证” 的限制方式（[#226](https://github.com/chaitin/SafeLine/issues/226)）
+
+### 优化
+
+- 当网站域名不匹配的时候，返回 “网站不存在” ，提示更清晰（[#58](https://github.com/chaitin/SafeLine/issues/58)）
+- 修复 攻击事件->原始日志 的 “攻击地址” 中显示额外的转义符的问题
+- 修复站点详情中 “今日总请求量” 和站点列表的 “今日访问量” 不一致的问题（[#279](https://github.com/chaitin/SafeLine/issues/279)）
+- 频率限制后直接封禁的拦截状态码改为 429，和普通拦截 403 区分开，方便排查拦截原因
+- 加强后台登录安全性（感谢微信交流 20 群「千年之狐」提供的建议）
+- 优化安装/升级时 CPU ssse3 指令集的检查方式（[#273](https://github.com/chaitin/SafeLine/issues/273)）
+- 优化界面样式交互，修复一些已知问题
+
+## [3.2.0] - 2023-08-31
+
+### 新增
 
 - 证书管理支持上传 PKCS1、PKCS8、ECC 私钥格式的证书（[#257](https://github.com/chaitin/SafeLine/issues/257)）
 - 站点详情新增近 30 天请求数，支持批量删除
 
-#### 优化
+### 优化
 
 - 优化站点详情页面，提高加载速度、优化界面样式和逻辑
 - 限频的生效阈值由 “超过 xx 次” 改为 “达到 xx 次”（[#245](https://github.com/chaitin/SafeLine/issues/245)）
