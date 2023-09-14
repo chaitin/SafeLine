@@ -44,12 +44,18 @@
         margin-bottom: 1.5rem;
         font-size: 20px;
         line-height: 1.6;
-        color: #333;
+        color: black;
+      }
+
+      .intercepted-tips {
+        margin: 8px 0;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.7);
       }
 
       .intercepted-item {
         margin: 8px 0;
-        color: #666;
+        color: rgba(0, 0, 0, 0.3);
       }
 
       .footer {
@@ -225,6 +231,7 @@
             <div id="intercepted" class="intercepted">
               请求频率过高，存在威胁，已被拦截
             </div>
+            <div class="intercepted-tips" id="intercepted-tips"></div>
             <div class="intercepted-item">
               <span id="intercepted-at">拦截时间</span>: <span id="now"></span>
             </div>
