@@ -24,8 +24,12 @@ body:
     placeholder: |
       1. ...
       2. ...
+  validations:
+    required: true
 - type: textarea
   id: Expected
   attributes:
     label: 期望的结果
     # Expected behavior. Descript what you expected to happen.
+  validations:
+    required: true
