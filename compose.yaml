@@ -119,7 +119,7 @@ services:
     - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
     - /etc/resolv.conf:/etc/resolv.conf
     environment:
-    - REDIS_URL=redis://:${REDIS_PASSWORD}@safeline-redis:6379/0
+    - REDIS_URL=redis://:${REDIS_PASSWORD}@${SUBNET_PREFIX}.3:6379/0
     - MGT_ADDR=${SUBNET_PREFIX}.4:9002
     ulimits:
       nofile: 131072
