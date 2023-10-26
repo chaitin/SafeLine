@@ -5,7 +5,7 @@ SAFELINE-CE CHANGELOG
 
 ### 优化
 
-- 人机验证页面增加响应头 Cache-Control，向下游声明不希望被缓存，避免被 CND 缓存导致不断重复验证（[#402](https://github.com/chaitin/SafeLine/issues/402) ）
+- 人机验证页面增加响应头 Cache-Control，向下游声明不希望被缓存，避免被 CDN 缓存导致不断重复验证（[#402](https://github.com/chaitin/SafeLine/issues/402) ）
 - 修复人机验证在 iframe 中会不断重复验证的问题（[#397](https://github.com/chaitin/SafeLine/issues/397) ）
 - 修复人机验证在 alook 浏览器中页面空白的问题（[#393](https://github.com/chaitin/SafeLine/issues/393) ）
 - 修复添加、编辑站点有时出现 “Service abnormal” 异常的问题
