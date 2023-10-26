@@ -8,15 +8,15 @@ title: "版本更新记录"
 
 ### [3.9.0] - 2023-10-26
 
-#### 优化
+## 优化
 
 - 人机验证页面增加响应头 Cache-Control，向下游声明不希望被缓存，避免被 CND 缓存导致不断重复验证（[#402](https://github.com/chaitin/SafeLine/issues/402) ）
 - 修复人机验证在 iframe 中会不断重复验证的问题（[#397](https://github.com/chaitin/SafeLine/issues/397) ）
 - 修复人机验证在 alook 浏览器中页面空白的问题（[#393](https://github.com/chaitin/SafeLine/issues/393) ）
 - 修复添加、编辑站点有时出现 “Service abnormal” 异常的问题
-- 升级过程增加安装方式检查，通过牧云助手安装的，需要通过牧云助手升级，降低升级失败概率
-- 申请免费证书时，填写多个域名会报错 “domain name contains an invalid character”
-- 编辑站点时域名为空后会报错问题
+- 修复申请免费证书时，无法填写多个域名的问题
+- 修复编辑站点时，域名无法设为空的问题
+- 升级过程增加安装方式检查，通过牧云助手安装的，需要通过牧云助手升级，避免故障
 
 ### [3.8.2] - 2023-10-19
 
