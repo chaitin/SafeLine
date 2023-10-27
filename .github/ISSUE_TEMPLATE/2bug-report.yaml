@@ -16,6 +16,13 @@ body:
     # Describe the bug
   validations:
     required: false
+- type: input
+  id: version
+  attributes:
+    label: 版本号
+    placeholder: 3.0.0
+  validations:
+    required: true
 - type: textarea
   id: Reproduce
   attributes:
