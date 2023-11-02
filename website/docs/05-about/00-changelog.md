@@ -6,6 +6,19 @@ title: "版本更新记录"
 
 [版本升级方法](/docs/guide/upgrade)
 
+### [3.10.0] - 2023-11-02
+
+#### 新增
+
+- 在证书管理创建证书时，支持直接粘贴证书与私钥内容（[#77](https://github.com/chaitin/SafeLine/issues/77)）
+
+#### 优化
+
+- 人机验证的客户端文件从 138k 减小到 78k，提高加载速度
+- 人机验证 cookie 改为 httpOnly 模式，避免在 JavaScript 运行时泄露
+- 人机验证防止简单绕过 （[#405](https://github.com/chaitin/SafeLine/issues/405)）
+- 修复站点详情中，资源 “今日请求” 的总和大于站点 “今日请求总量” 的问题（[#410](https://github.com/chaitin/SafeLine/issues/410)）
+
 ### [3.9.0] - 2023-10-26
 
 #### 优化
