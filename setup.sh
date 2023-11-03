@@ -189,7 +189,7 @@ fi
 info "创建安装目录 '$safeline_path' 成功"
 cd "$safeline_path"
 
-curl -sS "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -o compose.yaml
+curl -sS -k "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -o compose.yaml
 if [ $? -ne "0" ]; then
     abort "下载 compose.yaml 脚本失败"
 fi
