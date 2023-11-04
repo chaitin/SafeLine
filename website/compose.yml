@@ -1,0 +1,5 @@
+services:
+  web:
+    image: safeline-official:2
+    ports: 
+      - 80:80
