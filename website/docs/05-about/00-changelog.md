@@ -6,6 +6,14 @@ title: "版本更新记录"
 
 [版本升级方法](/docs/guide/upgrade)
 
+### [3.10.3] - 2023-11-03
+
+#### 修复
+
+- 修复部分证书无法编辑，提示 “密钥内容解析错误” 的问题
+- 修复升级或重启后，站点证书引用成历史证书的问题
+- 修复编辑证书有时必须填写私钥的问题
+
 ### [3.10.1] - 2023-11-03
 
 #### 修复
@@ -42,7 +50,7 @@ title: "版本更新记录"
 #### 新增
 
 - “通用漏洞规则” 的攻击日志中，新增 “命中规则”，方便管理员了解具体的拦截原因：
-![](/images/docs/about_changelog/log_detail.png)
+  ![](/images/docs/about_changelog/log_detail.png)
 
 #### 优化
 
@@ -89,26 +97,26 @@ title: "版本更新记录"
 ### [3.6.4] - 2023-10-09
 
 #### 修复
+
 - 修复了多个域名申请免费证书失败的问题
 - 修复了有时候不能创建 HTTP 站点的问题
 - 修复证书管理中，“使用站点” 不全的问题
 - 修复证书管理中，泛域名证书的使用站点始终提示 “域名不匹配” 的问题
-
 
 ### [3.6.3] - 2023-10-09
 
 #### 新增
 
 - 新增申请免费证书。只要域名已经指向雷池，就可以在界面上直接申请证书了
-![](/images/docs/about_changelog/cert_create.png)
+  ![](/images/docs/about_changelog/cert_create.png)
 - 证书管理新增 “使用站点”，并且会自动检查站点和证书的域名是否一致：
-![](/images/docs/about_changelog/website_2.png)
+  ![](/images/docs/about_changelog/website_2.png)
 
 #### 优化
 
 - 优化站点配置证书的流程，现在所有证书都在证书管理配置，方便统一查看
 - 雷池控制台证书的配置移动到了 “通用配置” -> “其他” 中，更符合直觉：
-![](/images/docs/about_changelog/mgt_cert_config.png)
+  ![](/images/docs/about_changelog/mgt_cert_config.png)
 - 修复某些情况下采集不到站点 favicon 的问题
 - 修复采集站点标题的时候，会把英文大写转成小写的问题
 - 修复站点详情中，删除文件夹的操作不会生效的问题
@@ -127,7 +135,7 @@ title: "版本更新记录"
 #### 新增
 
 - 人机验证新增每个规则的 “今日验证情况”，方便判断规则配置的效果：
-![](/images/docs/about_changelog/cs_statistics.png)
+  ![](/images/docs/about_changelog/cs_statistics.png)
 
 #### 优化
 
@@ -150,10 +158,10 @@ title: "版本更新记录"
 #### 新增
 
 - “防护站点” 新增站点的标题和 Favicon，每天更新一次，管理起来更加清晰：
-![](/images/docs/about_changelog/website_1.png)
+  ![](/images/docs/about_changelog/website_1.png)
 - 站点详情新增“采集设置”，支持设置不记录的路径前缀和类型
-![](/images/docs/about_changelog/api_assets_collect1.png)
-![](/images/docs/about_changelog/api_assets_collect2.png)
+  ![](/images/docs/about_changelog/api_assets_collect1.png)
+  ![](/images/docs/about_changelog/api_assets_collect2.png)
 
 #### 优化
 
@@ -168,9 +176,9 @@ title: "版本更新记录"
 #### 新增
 
 - 支持设置拦截页面附加说明（[#192](https://github.com/chaitin/SafeLine/issues/192)）
-![](/images/docs/about_changelog/forbidden_page_ext.png)
+  ![](/images/docs/about_changelog/forbidden_page_ext.png)
 - 频率限制新增 “人机验证” 的限制方式（[#226](https://github.com/chaitin/SafeLine/issues/226)）
-![](/images/docs/about_changelog/acl_page.png)
+  ![](/images/docs/about_changelog/acl_page.png)
 
 #### 优化
 
@@ -210,7 +218,7 @@ title: "版本更新记录"
 #### 新增
 
 - 新增证书管理。自动判断域名与过期状态，配置站点时可以直接选择（[#111](https://github.com/chaitin/SafeLine/issues/111)），还可以修改管理后台的证书（[#201](https://github.com/chaitin/SafeLine/issues/201)）
-![](/images/docs/about_changelog/mgt_cert.png)
+  ![](/images/docs/about_changelog/mgt_cert.png)
 - 新增系统信息
 
 #### 优化
@@ -251,7 +259,7 @@ title: "版本更新记录"
 
 - 优化限频配置的默认值
 - 增加 HTTP 497 错误重定向。当以 HTTP 协议访问 HTTPS 端口时，将重定向到 HTTPS（[#186](https://github.com/chaitin/safeline/issues/186)）
-- 默认拒绝 IP 和其他非指定域名的访问。如果需要通过 IP 访问站点，可以给站点添加一个 "*" 域名（[#58](https://github.com/chaitin/safeline/issues/58)）
+- 默认拒绝 IP 和其他非指定域名的访问。如果需要通过 IP 访问站点，可以给站点添加一个 "\*" 域名（[#58](https://github.com/chaitin/safeline/issues/58)）
 - 优化若干 UI 交互细节和文字提示
 
 ### [2.6.0] - 2023-08-10
