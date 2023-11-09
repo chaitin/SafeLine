@@ -61,7 +61,9 @@ RUN sed -i 's/access_log/access_log off; #/' /etc/nginx/nginx.conf
 RUN nginx -t
 
 COPY release /app/release
-COPY blazehttp /app/blazehttp
+# 需要提前编译 blaze
+# cd blaze; ./build.sh
+COPY blazehttp/build /app/blazehttp
 
 COPY website /app
 WORKDIR /app
