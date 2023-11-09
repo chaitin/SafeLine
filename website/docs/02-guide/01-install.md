@@ -92,6 +92,8 @@ docker compose up -d
 
 ![](/images/docs/guide_install/collie_apps.png)
 
+<img src="/images/docs/guide_install/collie_apps.png"  width="300px" />
+
 参考视频教程 [用 “白嫖的云主机” 一键安装 “开源的 Web 防火墙”](https://www.bilibili.com/video/BV1sh4y1t7Pk/)
 
 ## 常见安装问题
