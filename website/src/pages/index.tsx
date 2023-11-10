@@ -54,10 +54,9 @@ export default function Home(): JSX.Element {
   };
 
   useEffect(() => {
-    initTotal(11270)
-    // getSetupCount().then((d) => {
-    //   initTotal(d.total);
-    // });
+    getSetupCount().then((d) => {
+      initTotal(d.total);
+    });
   });
 
   return (
