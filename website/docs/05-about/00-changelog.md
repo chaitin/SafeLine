@@ -6,6 +6,20 @@ title: "版本更新记录"
 
 [版本升级方法](/docs/guide/upgrade)
 
+### [3.12.0] - 2023-11-16
+
+#### 新增
+
+- 登录过程输入完 6 位验证码自动登录（[#335](https://github.com/chaitin/SafeLine/issues/335)）
+- 统计 PV 和 UV 用的 cookie 默认添加 HttpOnly 属性，在 HTTPS 下自动添加 Secure 属性
+
+#### 优化
+
+- 人机验证页面与浏览器插件冲突 https://github.com/chaitin/SafeLine/issues/297
+- 开启 “强制 HTTPS” 时，HSTS 删去 preload 参数，并改为只在 https 端口下返回 （[#407](https://github.com/chaitin/SafeLine/issues/407)）
+- 修复添加、编辑站点有时出现 “Service abnormal” 异常的问题
+- 修复每天刷新证书数据的定时任务执行后清空了证书邮箱、类型值，导致免费证书切换成手动上传证书的问题
+
 ### [3.11.1] - 2023-11-09
 
 #### 修复
