@@ -6,6 +6,12 @@ title: "版本更新记录"
 
 [版本升级方法](/docs/guide/upgrade)
 
+### [3.12.2] - 2023-11-17
+
+#### 修复
+
+- 修复重启 docker （包括雷池升级）后，站点通用配置和拦截页面附加说明没有被正确载入的问题 （[#438](https://github.com/chaitin/SafeLine/issues/438) [#446](https://github.com/chaitin/SafeLine/issues/446)）
+
 ### [3.12.1] - 2023-11-16
 
 #### 新增
