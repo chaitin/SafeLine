@@ -52,7 +52,42 @@ function themes() {
     typography: {
       fontFamily: "inherit",
       body1: {
+        fontSize: "16px",
+      },
+      body2: {
         fontSize: "14px",
+      },
+      subtitle1: {
+        fontSize: "24px",
+      },
+      subtitle2: {
+        fontSize: "12px",
+        fontWeight: 400
+      },
+      h6: {
+        fontSize: "16px",
+        fontWeight: 600, 
+      },
+      h5: {
+        fontSize: "24px",
+        fontWeight: 600,
+        lineHeight: "32px",
+      },
+      h4: {
+        fontSize: "28px",
+        fontWeight: 600,
+      },
+      h3: {
+        fontSize: "38px",
+        fontWeight: 600,
+      },
+      h2: {
+        fontSize: "48px",
+        fontWeight: 600,
+      },
+      h1: {
+        fontSize: "80px",
+        fontWeight: "bold",
       },
     },
   };
@@ -117,7 +152,9 @@ function shadows(color: Color) {
 
 const light = {
   primary: {
-    main: "#0fc6c2",
+    main: "#0FC6C2",
+    lighter: "#B7EDEC",
+    light: "#57D7D4",
     contrastText: "#fff",
   },
   secondary: {
@@ -136,17 +173,15 @@ const light = {
     darker: "#04297A",
     contrastText: "#fff",
   },
-
   success: {
     lighter: "#E9FCD4",
     light: "#AAF27F",
-    main: "#02BFA5",
+    main: "#0FC6C2",
     mainShadow: "#02BFA5",
     dark: "#229A16",
     darker: "#08660D",
     contrastText: "rgba(0,0,0,0.7)",
   },
-
   warning: {
     lighter: "#FFF7CD",
     light: "#FFE16A",
@@ -239,7 +274,7 @@ function componentStyleOverrides(color: Color) {
         root: {
           "&:hover": {
             ".MuiTableCell-root": {
-              // backgroundColor: color.table.row.hoverColor,
+              backgroundColor: color.table.row.hoverColor,
             },
           },
         },
@@ -307,7 +342,8 @@ function componentStyleOverrides(color: Color) {
     MuiChip: {
       styleOverrides: {
         root: {
-          borderRadius: "4px",
+          // borderRadius: "4px",
+          height: "auto",
         },
       },
     },
@@ -324,6 +360,16 @@ function componentStyleOverrides(color: Color) {
           },
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: color.divider,
+          },
+        },
+      },
+    },
+    MuiLink: {
+      styleOverrides: {
+        root: {
+          color: color.primary.contrastText,
+          '&:hover': {
+            color: color.primary.main,
           },
         },
       },

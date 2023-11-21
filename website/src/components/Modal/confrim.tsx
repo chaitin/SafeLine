@@ -1,4 +1,4 @@
-import { render as reactRender } from "@site/src/components/utils";
+import { render as reactRender } from "@/common/utils";
 
 import ConfirmDialog, { type ConfirmDialogProps } from "./ConfirmDialog";
 

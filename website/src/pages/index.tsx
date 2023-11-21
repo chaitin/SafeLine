@@ -1,48 +1,34 @@
 import React, { useEffect, useRef } from "react";
-import { Carousel } from "react-responsive-carousel";
-import Features from "@site/src/components/Features";
-import { Box, Grid, Button, Typography, Container, Stack } from "@mui/material";
-import Layout from "@theme/Layout";
-import Title from "@site/src/components/Title";
-import Version from "@site/src/components/Version";
-import { getSetupCount } from "@site/src/api";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import ThemeProvider from "@site/src/components/Theme";
-import Head from "@docusaurus/Head";
+import Head from 'next/head';
+import { getSetupCount } from "@/api";
+import Features from "@/components/home/Features";
+import Abilities from "@/components/home/Abilities";
+import Partner from "@/components/home/Partner";
+import { Box, Grid, Button, Link, Typography, Container, Stack } from "@mui/material";
+import Image from 'next/image';
 
-const IMAGE_LIST = [
-  {
-    name: "可视化仪表盘",
-    url: "/images/album/0.png",
-  },
-  {
-    name: "登录页",
-    url: "/images/album/5.png",
-  },
-  {
-    name: "攻击检测列表",
-    url: "/images/album/1.png",
-  },
-  {
-    name: "攻击检测详情",
-    url: "/images/album/2.png",
-  },
-  {
-    name: "防护站点列表",
-    url: "/images/album/3.png",
-  },
-  {
-    name: "自定义规则列表",
-    url: "/images/album/3.png",
-  },
-  {
-    name: "攻击阻断页面",
-    url: "/images/album/block.png",
-  },
-];
+const ARTICLES = [
+  '《阮一峰·科技爱好者周刊》',
+  '《Hello Github 月刊》',
+  '《码农出击》',
+  '《GitHub Daily》',
+  '《Open Github 社区》',
+  '《科技 lion》',
+]
 
-export default function Home(): JSX.Element {
+const totalSx = {
+  color: "primary.main",
+  fontSize: { xs: "58px", md: "70px" },
+  background: 'linear-gradient(90deg, #8FE5D7 0%, #0FC6C2 100%)',
+  '-webkit-background-clip': 'text',
+  '-webkit-text-fill-color': 'transparent',
+  lineHeight: 1.25,
+  fontFamily: "AlimamaShuHeiTi-Bold",
+}
 
+const textAligns = ['left', 'center', 'right'];
+
+export default function Home() {
   const totalRef = useRef(null);
 
   const initTotal = async (n: number) => {
@@ -60,224 +46,195 @@ export default function Home(): JSX.Element {
   });
 
   return (
-    <Layout title="" description="长亭雷池 Web 应用防火墙 | 长亭雷池 WAF">
+    <main className="flex flex-col justify-between" title="长亭雷池 WAF 社区版">
       <Head>
+        <title>长亭雷池 WAF 社区版</title>
+        <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta
-          name="keywords"
-          content="WAF,雷池,长亭,社区版,免费,开源,网站防护"
-        ></meta>
+        <meta name="keywords" content="WAF,雷池,长亭,社区版,免费,开源,网站防护"></meta>
+        <meta name="description" content="长亭雷池 WAF 社区版"></meta>
       </Head>
-      <ThemeProvider>
-        <Box sx={{ backgroundColor: "#F8F9FC" }}>
-          <Box
-            sx={{ pt: 16, pb: 18, backgroundColor: "#0F1935", color: "#fff" }}
-          >
-            <Container maxWidth="lg">
-              <Box
-                sx={{ display: { xs: "block", sm: "flex" }, flexWrap: "wrap" }}
-              >
-                <Grid container sx={{ flex: 1 }}>
-                  <Grid item xs={12}>
-                    <Typography variant="h3" sx={{ pb: 3 }}>
-                      雷池 Web 应用防火墙
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Typography variant="subtitle1" sx={{ pb: 3 }}>
-                      耗时近 10 年，长亭科技倾情打造，核心检测能力由
-                      <Box component="span" color="primary.main" sx={{ px: 1 }}>
-                        智能语义分析算法
-                      </Box>
-                      驱动，专为社区而生，不让黑客越雷池半步。
-                    </Typography>
-                  </Grid>
-                  <Grid container item xs={12} spacing={2}>
-                    <Button
-                      variant="contained"
-                      target="_blank"
-                      sx={{
-                        width: { xs: "100%", sm: "auto" },
-                        ml: { xs: 2, sm: 2 },
-                        mb: { xs: 2, sm: 0 },
-                        "&:hover": {
-                          backgroundColor: "rgb(10, 138, 135)",
-                          color: "white",
-                        },
-                      }}
-                      href="https://stack.chaitin.com/tool/detail?id=717"
-                    >
-                      免费使用
-                    </Button>
-                    <Button
-                      variant="contained"
-                      target="_blank"
-                      sx={{
-                        textTransform: "none",
-                        backgroundColor: "#fff",
-                        color: "#000",
-                        ml: { xs: 2, sm: 2 },
-                        mb: { xs: 2, sm: 0 },
-                        width: { xs: "100%", sm: "auto" },
-                        "&:hover": {
-                          fontWeight: "500",
-                          backgroundColor: "white",
-                        },
-                      }}
-                      href="https://github.com/chaitin/safeline"
-                      startIcon={
-                        <img src="/images/github.png" width={16} height={16} />
-                      }
-                    >
-                      GitHub
-                    </Button>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        backgroundColor: "#fff",
-                        color: "#000",
-                        ml: { xs: 2, sm: 2 },
-                        width: { xs: "100%", sm: "auto" },
-                        "&:hover": {
-                          backgroundColor: "white",
-                        },
-                      }}
-                      href="/#groupchat"
-                      startIcon={
-                        <img
-                          src="/images/wechat-logo.png"
-                          alt="Logo"
-                          width={16}
-                          height={16}
-                        />
-                      }
-                    >
-                      讨论组
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: { xs: "center", sm: "right" },
-                    pt: { xs: 3, sm: 0 },
-                    ml: { xs: 0, sm: 3 },
-                  }}
-                >
-                  <img
-                    src="/images/403.svg"
-                    alt="Logo"
-                    width={196}
-                    height={196}
-                  />
-                </Box>
-              </Box>
-            </Container>
+      <Box>
+        <Box
+          sx={{
+            width: "100%",
+            height: "866px",
+            backgroundImage: "url(/images/home-banner.png)",
+            backgroundSize: "cover",
+            position: 'relative',
+            backgroundPosition: 'center center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
+          <Box sx={{ position: 'absolute', bottom: 351, left: '50%', transform: 'translateX(-50%)' }}>
+            <Box sx={{ width: "369px" }}>
+              <Image
+                src="/images/gif/waf-logo.gif"
+                alt="WAf logo"
+                layout="responsive"
+                width={369}
+                height={369}
+              />
+            </Box>
           </Box>
-          <Container sx={{ mt: -10, color: "#000", pb: 3 }}>
-            <Features />
+        </Box>
+        <Box sx={{ position: "relative", bottom: "360px", marginBottom: "-360px" }}>
+          <Container>
+            <Box
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <Button
+                variant="contained"
+                target="_blank"
+                sx={{
+                  width: { xs: "100%", sm: "188px" },
+                  height: "60px",
+                  ml: { xs: 0, sm: 0 },
+                  mb: { xs: 0, sm: 0 },
+                  fontSize: "20px",
+                  boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
+                }}
+                href="https://waf-ce.chaitin.cn/posts/guide_install"
+              >
+                立即安装
+              </Button>
+            </Box>
           </Container>
           <Container>
-            <Stack sx={{ pt: 15 }} spacing={3} alignItems="center">
-              <Title title="装机量" />
-              <Typography
-                sx={{
-                  color: "primary.main",
-                  fontSize: "96px",
-                  letterSpacing: "10px",
-                }}
-                ref={totalRef}
-              >
-                -
-              </Typography>
-            </Stack>
-          </Container>
-          <Container
-            sx={{
-              color: "#000",
-              ".carousel .control-dots .dot": {
-                backgroundColor: "#000",
-              },
-              ".carousel .control-prev.control-arrow": {
-                padding: "20px",
-                borderRadius: "12px 0 0 12px",
-              },
-              ".carousel .control-next.control-arrow": {
-                padding: "20px",
-                borderRadius: "0 12px 12px 0",
-              },
-              ".carousel .control-prev.control-arrow:before": {
-                borderRightColor: "rgba(0,0,0,0.5)",
-              },
-              ".carousel .control-next.control-arrow:before": {
-                borderLeftColor: "rgba(0,0,0,0.5)",
-              },
-              ".carousel .slide .legend": {
-                width: "30%",
-                marginLeft: "-15%",
-              },
-            }}
-          >
-            <Stack sx={{ pt: 15 }} spacing={6} alignItems="center">
-              <Title title="产品展示" />
-              <Box sx={{ boxShadow: "0px 0px 6px #0fc6c2" }}>
-                <Carousel
-                  interval={2000}
-                  infiniteLoop
-                  autoPlay
-                  showStatus={false}
-                  showThumbs={false}
-                >
-                  {IMAGE_LIST.map((item) => (
-                    <Box
-                      key={item.url}
+            <Box mt={7.5}>
+              <Grid container justifyContent="center">
+                <Grid item xs={12} md={6}>
+                  <Stack spacing={2} alignItems="center">
+                    <Typography
+                      variant="h1"
                       sx={{
-                        borderRadius: "12px",
-                        overflow: "hidden",
+                        ...totalSx,
+                      }}
+                      ref={totalRef}
+                    >
+                      -
+                    </Typography>
+                    <Typography variant="h5">
+                      装机量
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
+                  <Link href="https://github.com/chaitin/SafeLine" target="_blank">
+                    <Stack direction="row" justifyContent="center">
+                        <Stack spacing={2} alignItems="center">
+                          <Typography
+                            variant="h1"
+                            sx={{
+                              ...totalSx,
+                            }}
+                          >
+                            5.9k
+                          </Typography>
+                          <Typography variant="h5" color="common.black">
+                            GitHub Star
+                          </Typography>
+                        </Stack>
+                        <Image
+                          src="/images/gif/starred.gif"
+                          alt="starred"
+                          width={80}
+                          height={78}
+                          style={{ marginTop: "6px" }}
+                        />
+                    </Stack>
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+          </Container>
+          <Container>
+            <Box mt={7}>
+              <Grid container spacing={2}>
+                {ARTICLES.map((article, index) => (
+                  <Grid key={article} item xs={12} sm={4}>
+                    <Typography
+                      variant="h5"
+                      sx={{
+                        color: "#86909C",
+                        textAlign: { xs: 'center', md: textAligns[index % 3] },
+                        fontFamily: "AlimamaShuHeiTi-Bold",
+                        fontSize: "20px",
                       }}
                     >
-                      <Box component="img" src={item.url} alt={item.name} />
-                      <Box
-                        className="legend"
-                        sx={{
-                          opacity: "0.40 !important",
-                          py: "4px !important",
-                          borderRadius: "4px !important",
-                        }}
-                      >
-                        <Typography variant="h6" sx={{ fontSize: "14px" }}>
-                          {item.name}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  ))}
-                </Carousel>
+                      {article}
+                    </Typography>
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
+          </Container>
+          <Container sx={{ pb: 3, mb: 3, mt: 18 }}>
+            <Features />
+          </Container>
+          <Abilities />
+          <Box
+            sx={{
+              backgroundImage: "url(/images/partner-bg.svg)",
+              backgroundSize: "cover",
+              backgroundPosition: 'center center',
+              backgroundRepeat: 'no-repeat'
+            }}
+          >
+            <Partner />
+          </Box>
+          <Box
+            sx={{
+              width: "100%",
+              mt: 11,
+            }}
+            className="flex flex-col justify-center relative"
+          >
+            <Box>
+              <Box className="relative top-1">
+                <Image
+                  src="/images/enterprise-bg.svg"
+                  alt="雷池企业版"
+                  layout="responsive"
+                  width={100}
+                  height={100}
+                />
               </Box>
-            </Stack>
-          </Container>
-          <Container sx={{ color: "#000", pb: 3 }}>
-            <Stack sx={{ pt: 15 }} spacing={3} alignItems="center">
-              <Title title="版本对比" />
-              <Version />
-            </Stack>
-
-            <Stack
-              sx={{ pt: 15 }}
-              id="groupchat"
-              spacing={6}
-              alignItems="center"
-            >
-              <Title title="加入讨论组" />
-              <img
-                src="/images/wechat-230825.png"
-                alt="wechat"
-                width={300}
-                height={300}
-              />
-            </Stack>
-          </Container>
+              <Container>
+                <Stack className="absolute top-1/2" sx={{ transform: 'translateY(-40%)' }}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      fontWeight: 400,
+                      color: "common.white",
+                      fontSize: { xs: "16px", md: "28px" },
+                      fontFamily: "AlimamaShuHeiTi-Bold",
+                      letterSpacing: "3px",
+                    }}
+                    >欢迎使用雷池其他版本</Typography>
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      width: { xs: "146px" },
+                      height: { xs:"38px", md: "50px" },
+                      mt: { xs: 1, md: 4 },
+                      backgroundColor: "common.white",
+                      fontSize: "16px",
+                      "&:hover": {
+                        color: "#0A8A87",
+                        backgroundColor: "common.white",
+                      },
+                    }}
+                    href="/version"
+                  >
+                    版本对比
+                  </Button>
+                </Stack>
+              </Container>
+            </Box>
+          </Box>
         </Box>
-      </ThemeProvider>
-    </Layout>
-  );
+      </Box>
+    </main>
+  )
 }

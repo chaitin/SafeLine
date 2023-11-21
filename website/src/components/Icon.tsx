@@ -10,7 +10,7 @@ interface IconProps {
 
 const Icon: FC<IconProps> = ({ type, sx, ...restProps }) => {
   useEffect(() => {
-    require("../../static/fonts/iconfont");
+    require("/public/fonts/iconfont");
   }, []);
   return (
     // @ts-ignore

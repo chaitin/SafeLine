@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1320px" height="1444px" viewBox="0 0 1320 1444" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>语义分析检测算法（3）</title>
+    <defs>
+        <rect id="path-1" x="0" y="132" width="177" height="64" rx="4"></rect>
+        <filter x="-39.5%" y="-78.1%" width="179.1%" height="318.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-3" x="0" y="864" width="177" height="64" rx="4"></rect>
+        <filter x="-39.5%" y="-78.1%" width="179.1%" height="318.8%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-5" x="608" y="164" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-6">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-7" x="608" y="896" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-8">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-9" x="608" y="0" width="243" height="92" rx="4"></rect>
+        <filter x="-28.8%" y="-54.3%" width="157.6%" height="252.2%" filterUnits="objectBoundingBox" id="filter-10">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-11" x="608" y="732" width="243" height="92" rx="4"></rect>
+        <filter x="-28.8%" y="-54.3%" width="157.6%" height="252.2%" filterUnits="objectBoundingBox" id="filter-12">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-13" x="997" y="28" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-14">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-15" x="996" y="760" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-16">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-17" x="608" y="284" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-18">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-19" x="608" y="1016" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-20">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-21" x="608" y="404" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-22">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-23" x="608" y="1136" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-24">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-25" x="608" y="524" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-26">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-27" x="608" y="1256" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-28">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-29" x="997" y="164" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-30">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-31" x="997" y="896" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-32">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-33" x="997" y="284" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-34">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-35" x="997" y="1016" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-36">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-37" x="997" y="404" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-38">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-39" x="997" y="1136" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-40">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-41" x="997" y="524" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-42">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-43" x="997" y="1256" width="243" height="64" rx="4"></rect>
+        <filter x="-28.8%" y="-78.1%" width="157.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-44">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-45" x="0" y="272" width="177" height="64" rx="4"></rect>
+        <filter x="-39.5%" y="-78.1%" width="179.1%" height="318.8%" filterUnits="objectBoundingBox" id="filter-46">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-47" x="0" y="1004" width="177" height="64" rx="4"></rect>
+        <filter x="-39.5%" y="-78.1%" width="179.1%" height="318.8%" filterUnits="objectBoundingBox" id="filter-48">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-49" x="0" y="412" width="177" height="64" rx="4"></rect>
+        <filter x="-39.5%" y="-78.1%" width="179.1%" height="318.8%" filterUnits="objectBoundingBox" id="filter-50">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-51" x="0" y="1144" width="177" height="64" rx="4"></rect>
+        <filter x="-39.5%" y="-78.1%" width="179.1%" height="318.8%" filterUnits="objectBoundingBox" id="filter-52">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-53" x="0" y="552" width="177" height="64" rx="4"></rect>
+        <filter x="-39.5%" y="-78.1%" width="179.1%" height="318.8%" filterUnits="objectBoundingBox" id="filter-54">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-55" x="0" y="1284" width="177" height="64" rx="4"></rect>
+        <filter x="-39.5%" y="-78.1%" width="179.1%" height="318.8%" filterUnits="objectBoundingBox" id="filter-56">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="官网设计" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="用户-服务器备份-3" transform="translate(-22.000000, -15.000000)">
+            <g id="语义分析检测算法（3）" transform="translate(62.000000, 35.000000)">
+                <rect id="矩形备份-3" fill-opacity="0.1" fill="#0FC6C2" x="576" y="132" width="306" height="484" rx="4"></rect>
+                <rect id="矩形备份-18" fill-opacity="0.1" fill="#0FC6C2" x="576" y="864" width="306" height="484" rx="4"></rect>
+                <g id="矩形备份-2">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g id="矩形备份-19">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-3"></use>
+                </g>
+                <g id="矩形备份-5">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-6)" xlink:href="#path-5"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-5"></use>
+                </g>
+                <g id="矩形备份-20">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-8)" xlink:href="#path-7"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-7"></use>
+                </g>
+                <g id="矩形备份-12">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-10)" xlink:href="#path-9"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-9"></use>
+                </g>
+                <g id="矩形备份-21">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-12)" xlink:href="#path-11"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-11"></use>
+                </g>
+                <g id="矩形备份-13">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-14)" xlink:href="#path-13"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-13"></use>
+                </g>
+                <g id="矩形备份-22">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-16)" xlink:href="#path-15"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-15"></use>
+                </g>
+                <g id="矩形备份-9">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-18)" xlink:href="#path-17"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-17"></use>
+                </g>
+                <g id="矩形备份-23">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-20)" xlink:href="#path-19"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-19"></use>
+                </g>
+                <g id="矩形备份-10">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-22)" xlink:href="#path-21"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-21"></use>
+                </g>
+                <g id="矩形备份-24">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-24)" xlink:href="#path-23"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-23"></use>
+                </g>
+                <g id="矩形备份-11">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-26)" xlink:href="#path-25"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-25"></use>
+                </g>
+                <g id="矩形备份-25">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-28)" xlink:href="#path-27"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-27"></use>
+                </g>
+                <rect id="矩形备份-4" fill-opacity="0.1" fill="#428FF9" x="965" y="132" width="306" height="484" rx="4"></rect>
+                <rect id="矩形备份-26" fill-opacity="0.1" fill="#428FF9" x="965" y="864" width="306" height="484" rx="4"></rect>
+                <g id="矩形备份-14">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-30)" xlink:href="#path-29"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-29"></use>
+                </g>
+                <g id="矩形备份-27">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-32)" xlink:href="#path-31"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-31"></use>
+                </g>
+                <g id="矩形备份-15">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-34)" xlink:href="#path-33"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-33"></use>
+                </g>
+                <g id="矩形备份-28">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-36)" xlink:href="#path-35"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-35"></use>
+                </g>
+                <g id="矩形备份-16">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-38)" xlink:href="#path-37"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-37"></use>
+                </g>
+                <g id="矩形备份-29">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-40)" xlink:href="#path-39"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-39"></use>
+                </g>
+                <g id="矩形备份-17">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-42)" xlink:href="#path-41"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-41"></use>
+                </g>
+                <g id="矩形备份-30">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-44)" xlink:href="#path-43"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-43"></use>
+                </g>
+                <g id="矩形备份-6">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-46)" xlink:href="#path-45"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-45"></use>
+                </g>
+                <g id="矩形备份-31">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-48)" xlink:href="#path-47"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-47"></use>
+                </g>
+                <g id="矩形备份-7">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-50)" xlink:href="#path-49"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-49"></use>
+                </g>
+                <g id="矩形备份-32">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-52)" xlink:href="#path-51"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-51"></use>
+                </g>
+                <g id="矩形备份-8">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-54)" xlink:href="#path-53"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-53"></use>
+                </g>
+                <g id="矩形备份-33">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-56)" xlink:href="#path-55"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-55"></use>
+                </g>
+                <text id="SQLi-常见攻击" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="24.13" y="171">SQLi 常见攻击</tspan>
+                </text>
+                <text id="SQLi-常见攻击备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="24.13" y="903">SQLi 常见攻击</tspan>
+                </text>
+                <text id="1-‘union-select-admi" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#000000">
+                    <tspan x="192.5" y="199">1 ‘union select admin from users; #</tspan>
+                </text>
+                <text id="1-‘union-select-admi备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#000000">
+                    <tspan x="192.5" y="931">1 ‘union select admin from users; #</tspan>
+                </text>
+                <text id="1-‘/**/UnioN/**/SelE" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" line-spacing="32" fill="#000000">
+                    <tspan x="193" y="335">1 ‘/**/UnioN/**/SelEct/**/admin/</tspan>
+                    <tspan x="193" y="367">**/FrOm/**/users; #</tspan>
+                </text>
+                <text id="1-‘/**/UnioN/**/SelE备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" line-spacing="32" fill="#000000">
+                    <tspan x="193" y="1067">1 ‘/**/UnioN/**/SelEct/**/admin/</tspan>
+                    <tspan x="193" y="1099">**/FrOm/**/users; #</tspan>
+                </text>
+                <text id="(……#iswin?{\`-cmd.ex" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" line-spacing="32" fill="#000000">
+                    <tspan x="193" y="475">(……#iswin?{\` cmd.exe\` ,\` /c\` ,#</tspan>
+                    <tspan x="193" y="507">cmd};{\` /bin/bash\` ,\` -c\` ,#cmd}…</tspan>
+                </text>
+                <text id="(……#iswin?{\`-cmd.ex备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" line-spacing="32" fill="#000000">
+                    <tspan x="193" y="1207">(……#iswin?{\` cmd.exe\` ,\` /c\` ,#</tspan>
+                    <tspan x="193" y="1239">cmd};{\` /bin/bash\` ,\` -c\` ,#cmd}…</tspan>
+                </text>
+                <text id="We-should-select-the" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" line-spacing="32" fill="#000000">
+                    <tspan x="193" y="615">We should select the best students </tspan>
+                    <tspan x="193" y="647">from this class as the student union </tspan>
+                    <tspan x="193" y="679">presentation</tspan>
+                </text>
+                <text id="We-should-select-the备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" line-spacing="32" fill="#000000">
+                    <tspan x="193" y="1347">We should select the best students </tspan>
+                    <tspan x="193" y="1379">from this class as the student union </tspan>
+                    <tspan x="193" y="1411">presentation</tspan>
+                </text>
+                <text id="拦截" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="709.5" y="203">拦截</tspan>
+                </text>
+                <text id="拦截-SQL-引擎-符合-SQL-语法" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="665.39" y="923">拦截 SQL 引擎</tspan>
+                    <tspan x="665.39" y="947">符合 SQL 语法</tspan>
+                </text>
+                <text id="拦截-SQL-引擎-符合-SQL-语法" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="665.39" y="1043">拦截 SQL 引擎</tspan>
+                    <tspan x="665.39" y="1067">符合 SQL 语法</tspan>
+                </text>
+                <text id="拦截-SQL-引擎-符合-OGNL-表达" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="665.39" y="1163">拦截 SQL 引擎</tspan>
+                    <tspan x="646.86" y="1187">符合 OGNL 表达式</tspan>
+                </text>
+                <text id="传统-WAF-特征库命中-预设的多个关键" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="18" font-weight="bold" line-spacing="24" fill="#FFFFFF">
+                    <tspan x="642.362" y="27">传统 WAF 特征库命中</tspan>
+                    <tspan x="657.5" y="51">预设的多个关键字</tspan>
+                    <tspan x="637.682" y="75">select ｜union｜from</tspan>
+                </text>
+                <text id="NGWAF-智能语义分析引擎-（SQL" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="18" font-weight="bold" line-spacing="24" fill="#FFFFFF">
+                    <tspan x="697.181" y="759">NGWAF</tspan>
+                    <tspan x="657.5" y="783">智能语义分析引擎</tspan>
+                    <tspan x="631.562" y="807">（SQL 引擎、ONGL...）</tspan>
+                </text>
+                <text id="真实服务器" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1068.5" y="67">真实服务器</tspan>
+                </text>
+                <text id="真实服务器备份-2" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1068.5" y="799">真实服务器</tspan>
+                </text>
+                <text id="真实服务器备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1068.5" y="203">真实服务器</tspan>
+                </text>
+                <text id="不受影响" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1078.5" y="935">不受影响</tspan>
+                </text>
+                <text id="成功执行" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1078.5" y="323">成功执行</tspan>
+                </text>
+                <text id="不受影响" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1078.5" y="1055">不受影响</tspan>
+                </text>
+                <text id="成功执行" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1078.5" y="443">成功执行</tspan>
+                </text>
+                <text id="不受影响" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1078.5" y="1175">不受影响</tspan>
+                </text>
+                <text id="正常业务受影响" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1048.5" y="563">正常业务受影响</tspan>
+                </text>
+                <text id="不受影响" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="1078.5" y="1295">不受影响</tspan>
+                </text>
+                <text id="无规则命中（绕过）" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="639.5" y="323">无规则命中（绕过）</tspan>
+                </text>
+                <text id="无规则命中（无法识别）" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="619.5" y="443">无规则命中（无法识别）</tspan>
+                </text>
+                <text id="命中规则（误拦截）" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="639.5" y="563">命中规则（误拦截）</tspan>
+                </text>
+                <text id="正常请求" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="689.5" y="1295">正常请求</tspan>
+                </text>
+                <text id="SQLi-变种攻击" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="24.13" y="311">SQLi 变种攻击</tspan>
+                </text>
+                <text id="SQLi-变种攻击备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="24.13" y="1043">SQLi 变种攻击</tspan>
+                </text>
+                <text id="新型攻击攻击-（Struts2）" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="28.5" y="439">新型攻击攻击</tspan>
+                    <tspan x="34.67" y="463">（Struts2）</tspan>
+                </text>
+                <text id="新型攻击攻击-（Struts2）备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="28.5" y="1171">新型攻击攻击</tspan>
+                    <tspan x="34.67" y="1195">（Struts2）</tspan>
+                </text>
+                <text id="一段英文" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="48" y="591">一段英文</tspan>
+                </text>
+                <text id="一段英文备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="48" y="1323">一段英文</tspan>
+                </text>
+                <path id="路径-104备份-5" d="M560,157 L574,164 L560,171 L560,165 L177,165 L177,163 L560,163 L560,157 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+                <path id="路径-104备份-11" d="M560,889 L574,896 L560,903 L560,897 L177,897 L177,895 L560,895 L560,889 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+                <path id="路径-104备份-9" d="M955.745131,229.564212 L963.745131,234.064212 L964.519864,234.5 L963.745131,234.935788 L955.745131,239.435788 L955.254869,238.564212 L961.591,235 L882,235 L882,234 L961.591,234 L955.254869,230.435788 L955.745131,229.564212 Z" fill-opacity="0.3" fill="#000000" fill-rule="nonzero"></path>
+                <path id="路径-104备份-12" d="M955.745131,961.564212 L963.745131,966.064212 L964.519864,966.5 L963.745131,966.935788 L955.745131,971.435788 L955.254869,970.564212 L961.591,967 L882,967 L882,966 L961.591,966 L955.254869,962.435788 L955.745131,961.564212 Z" fill-opacity="0.3" fill="#000000" fill-rule="nonzero"></path>
+                <path id="路径-104备份-10" d="M955.745131,369.564212 L963.745131,374.064212 L964.519864,374.5 L963.745131,374.935788 L955.745131,379.435788 L955.254869,378.564212 L961.591,375 L882,375 L882,374 L961.591,374 L955.254869,370.435788 L955.745131,369.564212 Z" fill-opacity="0.3" fill="#000000" fill-rule="nonzero"></path>
+                <path id="路径-104备份-13" d="M955.745131,1101.56421 L963.745131,1106.06421 L964.519864,1106.5 L963.745131,1106.93579 L955.745131,1111.43579 L955.254869,1110.56421 L961.591,1107 L882,1107 L882,1106 L961.591,1106 L955.254869,1102.43579 L955.745131,1101.56421 Z" fill-opacity="0.3" fill="#000000" fill-rule="nonzero"></path>
+                <path id="路径-104备份-6" d="M560,297 L574,304 L560,311 L560,305 L177,305 L177,303 L560,303 L560,297 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+                <path id="路径-104备份-14" d="M560,1029 L574,1036 L560,1043 L560,1037 L177,1037 L177,1035 L560,1035 L560,1029 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+                <path id="路径-104备份-7" d="M560,437 L574,444 L560,451 L560,445 L177,445 L177,443 L560,443 L560,437 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+                <path id="路径-104备份-15" d="M560,1169 L574,1176 L560,1183 L560,1177 L177,1177 L177,1175 L560,1175 L560,1169 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+                <path id="路径-104备份-8" d="M560,577 L574,584 L560,591 L560,585 L177,585 L177,583 L560,583 L560,577 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+                <path id="路径-104备份-16" d="M560,1309 L574,1316 L560,1323 L560,1317 L177,1317 L177,1315 L560,1315 L560,1309 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+            </g>
+        </g>
+    </g>
+</svg>
