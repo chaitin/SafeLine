@@ -53,40 +53,19 @@ title: "测试防护效果"
 3. 使用以下请求开始测试
 
 ```
-./blazehttp -t http://<IP或域名>:<端口> -g './testcases/**/*.http'
+./blazehttp -t http://<IP或域名>:<端口>
 ```
 
 #### 测试效果展示
 
-```
+```sh
 # 测试请求
-./blazehttp -t http://192.168.0.1:8080 -g './testcases/**/*.http'
-
-sending 100% |██████████████████████████████████████████| (18/18, 86 it/s)
-Total http file: 18, success: 18 failed: 0
-Stat http response code
-
-Status code: 403 hit: 16
-Status code: 200 hit: 2
-
-Stat http request tag
-
-tag: sqli hit: 1
-tag: black hit: 16
-tag: file_include hit: 1
-tag: file_upload hit: 1
-tag: java_unserialize hit: 1
-tag: php_unserialize hit: 1
-tag: cmdi hit: 1
-tag: ssrf hit: 1
-tag: xslti hit: 1
-tag: xss hit: 1
-tag: xxe hit: 1
-tag: asp_code hit: 1
-tag: white hit: 2
-tag: ognl hit: 1
-tag: shellshock hit: 1
-tag: ssti hit: 1
-tag: directory_traversal hit: 1
-tag: php_code hit: 1
+.//blazehttp -t http://127.0.0.1:8008
+sending 100% |█████████████████████████████████████████████████████████| (33669/33669, 940 it/s) [35s:0s]
+总样本数量: 33669    成功: 33669    错误: 0
+检出率: 71.65% (恶意样本总数: 575 , 正确拦截: 412 , 漏报放行: 163)
+误报率: 0.07% (正常样本总数: 33094 , 正确放行: 33071 , 误报拦截: 23)
+准确率: 99.45% (正确拦截 + 正确放行）/样本总数
+平均耗时: 1.00毫秒
 ```
+

@@ -81,9 +81,12 @@ function Detection() {
     <Layout title="效果对比 - 长亭雷池 WAF 社区版">
       <ThemeProvider>
         <Container sx={{ mt: 2, mb: 2 }}>
-          <SampleList value={samples} onSetIdChange={handleSetId} />
-          <Result rows={result} />
-          <Grid
+          {/* <SampleList value={samples} onSetIdChange={handleSetId} /> */}
+          {/* <Result rows={result} /> */}
+
+          <img src="/images/sample-screenshot.png" />
+
+          {/* <Grid
             container
             spacing={2}
             sx={{ mt: 3, mb: 3, color: "text.auxiliary" }}
@@ -106,7 +109,7 @@ function Detection() {
             <Grid item md={3}>
               <Typography>FN: 未识别到攻击样本的数量</Typography>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Container>
       </ThemeProvider>
     </Layout>
