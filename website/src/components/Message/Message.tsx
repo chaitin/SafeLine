@@ -2,7 +2,7 @@ import React, { useState, forwardRef, useImperativeHandle } from "react";
 
 import { Snackbar, Box, type AlertColor } from "@mui/material";
 
-import { render, unmount } from "@site/src/components/utils";
+import { render, unmount } from "@/common/utils";
 
 import Alert from "./Alert";
 

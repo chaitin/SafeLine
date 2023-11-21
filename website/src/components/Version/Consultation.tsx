@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from "react";
-import Message from "@site/src/components/Message";
-import Modal from "@site/src/components/Modal";
+import Message from "@/components/Message";
+import Modal from "@/components/Modal";
 import { Box, TextField, Typography, Button } from "@mui/material";
 
 function Consultation() {
@@ -52,15 +52,12 @@ function Consultation() {
   return (
     <>
       <Button
-        variant="outlined"
+        variant="contained"
         sx={{
-          width: 200,
-          my: 2,
-          "&:hover": {
-            borderColor: "primary.main",
-            backgroundColor: "primary.main",
-            color: "#fff",
-          },
+          width: 146,
+          mt: 4,
+          mb: 4,
+          boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
         }}
         onClick={() => setConsultOpen(true)}
       >
@@ -82,14 +79,14 @@ function Consultation() {
               size="small"
               label="手机号"
               helperText={
-                wrongPhoneNumber ? "手机号格式不正确" : "请输入您的手机号"
+                wrongPhoneNumber ? "手机号格式不正确" : ""
               }
               variant="outlined"
               value={text}
               onChange={(e) => textHandler(e.target.value)}
             />
           </div>
-          <Typography>
+          <Typography variant="body2">
             我们将在工作时间 2 小时内联系您，您的手机号不会用于其他目的
           </Typography>
         </Box>

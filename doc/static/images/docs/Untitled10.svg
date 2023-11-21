@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="938px" height="569px" viewBox="0 0 938 569" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>语义分析检测算法（1）</title>
+    <defs>
+        <linearGradient x1="50%" y1="-33.3829376%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#F6FEE9" offset="0%"></stop>
+            <stop stop-color="#0FC6C2" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="-33.3829376%" x2="50%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#F6FEE9" offset="0%"></stop>
+            <stop stop-color="#0FC6C2" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="-24.6708029%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#F6FEE9" offset="0%"></stop>
+            <stop stop-color="#0FC6C2" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="-37.157067%" x2="50%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#F6FEE9" offset="0%"></stop>
+            <stop stop-color="#0FC6C2" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-5" x="663" y="445" width="148" height="64" rx="4"></rect>
+        <filter x="-47.3%" y="-78.1%" width="194.6%" height="318.8%" filterUnits="objectBoundingBox" id="filter-6">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-7" x="770" y="305" width="128" height="64" rx="4"></rect>
+        <filter x="-54.7%" y="-78.1%" width="209.4%" height="318.8%" filterUnits="objectBoundingBox" id="filter-8">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="官网设计" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="语义分析检测算法（1）" transform="translate(-103.000000, -78.000000)">
+            <g transform="translate(103.000000, 78.000000)">
+                <ellipse id="椭圆形" fill="url(#linearGradient-1)" opacity="0.1" cx="444.5" cy="256" rx="444.5" ry="256"></ellipse>
+                <ellipse id="椭圆形" fill="url(#linearGradient-2)" opacity="0.2" cx="444.5" cy="319" rx="335.111328" ry="193"></ellipse>
+                <ellipse id="椭圆形" fill="url(#linearGradient-3)" opacity="0.303152902" cx="444.5" cy="365" rx="255.240234" ry="147"></ellipse>
+                <ellipse id="椭圆形" fill="url(#linearGradient-4)" opacity="0.395972842" cx="444.787109" cy="385" rx="185.787109" ry="107"></ellipse>
+                <text id="3型文法-正规文法" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="24" font-weight="bold" line-spacing="32" fill="#000000">
+                    <tspan x="399.92" y="376">3型文法</tspan>
+                    <tspan x="395" y="408">正规文法</tspan>
+                </text>
+                <text id="2型文法-上下文无关文法" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" line-spacing="24" fill="#000000">
+                    <tspan x="407.1" y="246">2型文法</tspan>
+                    <tspan x="373" y="270">上下文无关文法</tspan>
+                </text>
+                <text id="1型文法-上下文无关文法" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" line-spacing="24" fill="#000000">
+                    <tspan x="408.8" y="167">1型文法</tspan>
+                    <tspan x="373" y="191">上下文无关文法</tspan>
+                </text>
+                <text id="0型文法-无限制文法" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" line-spacing="24" fill="#000000">
+                    <tspan x="407.1" y="54">0型文法</tspan>
+                    <tspan x="393" y="78">无限制文法</tspan>
+                </text>
+                <g id="矩形">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-6)" xlink:href="#path-5"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-5"></use>
+                </g>
+                <g id="矩形备份">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-8)" xlink:href="#path-7"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-7"></use>
+                </g>
+                <line x1="770" y1="326.414498" x2="699.740234" y2="265.658884" id="路径-94" stroke="#0FC6C2" stroke-width="2"></line>
+                <line x1="770" y1="338.5" x2="657.70446" y2="338.5" id="路径-110" stroke="#0FC6C2" stroke-width="2"></line>
+                <text id="编程语言" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="794" y="344">编程语言</tspan>
+                </text>
+                <text id="正规表达式" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="687" y="484">正规表达式</tspan>
+                </text>
+                <line x1="663" y1="477" x2="548.522007" y2="436.093667" id="路径-111" stroke="#0FC6C2" stroke-width="2"></line>
+            </g>
+        </g>
+    </g>
+</svg>

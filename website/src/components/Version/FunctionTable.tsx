@@ -11,97 +11,159 @@ import {
   ListItemIcon,
   ListItemText,
   alpha,
-  Tooltip,
+  Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import Icon from "@site/src/components/Icon";
+import Icon from "@/components/Icon";
 
 const Support = () => {
   return (
-    <Icon type="icon-duihao" color="success.main" sx={{ margin: "auto" }} />
+    <Icon type="icon-a-yiwanchengtianchong" color="#02BFA5" sx={{ margin: "auto" }} />
   );
 };
 const NotSupport = () => {
-  return <Icon type="icon-chahao" color="error.main" sx={{ margin: "auto" }} />;
+  return <Typography sx={{ margin: "auto" }} >-</Typography>;
 };
 
-const Unlimited = () => {
-  return <Box color="success.main">无限制</Box>;
+const Illustrate = ({ text }: { text: string }) => {
+  return <Box color="#02BFA5">{text}</Box>;
 };
+
+const versions = [
+  { title: '社区版', key: 'experience', width: '33%' },
+  // { title: '专业版', key: 'major', width: '25%' },
+  { title: '企业版', key: 'basics', width: '33%' },
+]
+
+const colors = ['light', 'main'] // 'lighter', 
 
 const FunctionTable = () => {
   const [open, setOpen] = useState<string[]>([
-    "基本功能",
-    "高级防护能力",
+    "安全防护",
+    "统计分析",
+    "系统管理",
     "部署形态",
-    "流量接入方式",
+    "服务",
   ]);
 
   const cells = [
     {
-      title: "基本功能",
+      title: "安全防护",
       data: [
         {
-          name: "可视化 DashBoard",
+          name: "智能语义分析检测",
+          experience: <Support />, // 社区版
+          major: <Support />, // 专业版
+          basics: <Support />, // 企业版
+        },
+        {
+          name: "简单规则特征库检测",
           experience: <Support />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "频率限制 / CC 攻击防护",
+          experience: <Support />,
+          major: <Support />,
           basics: <Support />,
         },
         {
           name: "自定义黑白名单",
           experience: <Support />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "自定义防护策略",
+          name: "人机验证",
           experience: <Support />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "可防护站点数量",
-          experience: <Unlimited />,
-          basics: <Unlimited />,
+          name: "基础 API 采集",
+          experience: <Support />,
+          major: <Support />,
+          basics: <Support />,
         },
         {
-          name: "可支撑流量大小",
-          experience: <Unlimited />,
-          basics: <Unlimited />,
+          name: "威胁情报",
+          experience: <Illustrate text="社区共享威胁 IP" />,
+          major: <Support />,
+          basics: <Illustrate text="高级威胁情报" />,
+        },
+        {
+          name: "高级 Bot 防护、API 防护",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "网页防篡改",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "灵活可编程插件",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "精细化引擎调节",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
         },
       ],
     },
     {
-      title: "高级防护能力",
+      title: "统计分析",
       data: [
         {
-          name: "智能语义分析引擎",
+          name: "基础统计图表",
           tip: "",
           experience: <Support />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "智能业务建模",
+          name: "高级统计分析与报告",
           experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "动态防护",
+          name: "实时可视化大屏",
           experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+      ],
+    },
+    {
+      title: "系统管理",
+      data: [
+        {
+          name: "多设备集中管理",
+          tip: "",
+          experience: <Support />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "API 防护",
+          name: "多租户管理",
           experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "Bot 管理",
+          name: "安全合规与审计",
           experience: <NotSupport />,
-          basics: <Support />,
-        },
-        {
-          name: "拟态防护",
-          experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
       ],
@@ -110,53 +172,74 @@ const FunctionTable = () => {
       title: "部署形态",
       data: [
         {
-          name: "软件形态",
+          name: "反向代理接入",
           experience: <Support />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "硬件形态",
+          name: "旁路、透明代理、路由等复杂接入方式",
           experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "分布式集群形态",
+          name: "集群式可扩展部署",
           experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "云原生 K8S 集群形态",
+          name: "负载均衡",
           experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "紧急模式 / Bypass",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "硬件形态交付",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "高可用 / HA",
+          experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
       ],
     },
     {
-      title: "流量接入方式",
+      title: "服务",
       data: [
         {
-          name: "反向代理接入",
-          experience: <Support />,
+          name: "专业技术支持服务",
+          experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "SDK 接入",
+          name: "漏洞应急服务",
           experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "透明代理接入",
+          name: "产品销售许可证",
           experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
         {
-          name: "透明桥接接入",
+          name: "定制化",
           experience: <NotSupport />,
-          basics: <Support />,
-        },
-        {
-          name: "旁路镜像接入",
-          experience: <NotSupport />,
+          major: <Support />,
           basics: <Support />,
         },
       ],
@@ -181,46 +264,32 @@ const FunctionTable = () => {
             ".MuiTableCell-root": {
               border: "none",
               backgroundColor: "transparent",
-              px: "12px",
+              pl: "8px",
+              pr: "0px",
             },
           }}
-          style={{ marginTop: "48px" }}
         >
           <TableHead sx={{ background: "transparent" }}>
             <TableRow sx={{ border: "0" }}>
               <TableCell sx={{ width: "33%" }} />
-              <TableCell align="center" sx={{ width: "33%", fontSize: "16px" }}>
-                <Box
-                  sx={(theme) => ({
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    height: "40px",
-                    borderRadius: "4px",
-                    color: theme.palette.primary.main,
-                    backgroundColor: alpha(theme.palette.primary.main, 0.2),
-                  })}
-                >
-                  社区版
-                </Box>
-              </TableCell>
-              <TableCell align="left" sx={{ width: "33%", fontSize: "16px" }}>
-                <Box
-                  sx={(theme) => ({
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    width: "100%",
-                    color: theme.palette.primary.main,
-                    backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                    height: "40px",
-                    borderRadius: "4px",
-                  })}
-                >
-                  企业版
-                </Box>
-              </TableCell>
+              {versions.map((item, index) => (
+                <TableCell key={item.title} align="center" sx={{ width: item.width, fontSize: "16px" }}>
+                  <Box
+                    sx={(theme) => ({
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      height: "40px",
+                      borderRadius: "4px",
+                      color: theme.palette.common.white,
+                      backgroundColor: theme.palette.primary[colors[index] as 'main' | 'light'],
+                    })}
+                  >
+                    {item.title}
+                  </Box>
+                </TableCell>
+              ))}
             </TableRow>
           </TableHead>
         </Table>
@@ -233,14 +302,17 @@ const FunctionTable = () => {
               backgroundColor: "#EFF1F8",
               borderRadius: "4px",
               cursor: "pointer",
-              pl: "20px",
+              pl: 6,
             }}
           >
             <ListItemText
               primary={data.title}
-              sx={{ ".MuiTypography-root": { fontSize: "16px" } }}
+              sx={{
+                ".MuiTypography-root": { fontWeight: 600 },
+                flex: "unset",
+              }}
             />
-            <ListItemIcon sx={{ color: "#000" }}>
+            <ListItemIcon sx={{ color: "common.black", marginLeft: 1 }}>
               {open?.includes(data?.title) ? <ExpandLess /> : <ExpandMore />}
             </ListItemIcon>
           </ListItem>
@@ -248,7 +320,7 @@ const FunctionTable = () => {
             in={open?.includes(data?.title)}
             timeout="auto"
             unmountOnExit
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", mt: "16px !important" }}
           >
             <TableContainer>
               <Table
@@ -261,8 +333,6 @@ const FunctionTable = () => {
                     },
                   },
                   ".MuiTableCell-root": {
-                    pl: "20px !important",
-                    pr: "8px !important",
                     py: "12px !important",
                     backgroundColor: "transparent !important",
                     color: "#000",
@@ -271,32 +341,29 @@ const FunctionTable = () => {
                     "&:last-of-type": {
                       borderRight: "none",
                     },
+                    "&:first-of-type": {
+                      paddingLeft: 6,
+                    },
                   },
                 }}
               >
                 <TableBody
                   sx={{
-                    backgroundColor: alpha("#EFF1F8", 0.6),
+                    backgroundColor: alpha("#EFF1F8", 0.2),
                   }}
                 >
                   {data.data.map((item) => (
                     <TableRow key={item.name}>
                       <TableCell sx={{ width: "33%" }}>
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                          {item.name}
-                          <Tooltip title={item.tip} arrow placement="right">
-                            <Box component="span" sx={{ ml: 1 }}>
-                              <Icon type="icon-bangzhu1" />
-                            </Box>
-                          </Tooltip>
+                        <Box>
+                          <Typography variant="h6" sx={{ fontWeight: 400 }}>{item.name}</Typography>
                         </Box>
                       </TableCell>
-                      <TableCell sx={{ width: "33%" }} align="center">
-                        {item.experience}
-                      </TableCell>
-                      <TableCell sx={{ width: "33%" }} align="center">
-                        {item.basics}
-                      </TableCell>
+                      {versions.map((v, index) => (
+                        <TableCell key={index} sx={{ width: v.width }} align="center">
+                         {item[v.key as 'experience' | 'major' | 'basics']}
+                       </TableCell>
+                      ))}
                     </TableRow>
                   ))}
                 </TableBody>
