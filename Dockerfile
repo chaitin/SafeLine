@@ -63,6 +63,8 @@ RUN nginx -t
 COPY release /app/release
 # 需要提前编译 blaze
 # cd blaze; ./build.sh
+# 创建 testcase 压缩文件
+# zip -r ./build/testcases.zip testcases
 COPY blazehttp/build /app/blazehttp
 
 COPY website /app
