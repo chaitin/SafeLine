@@ -6,7 +6,7 @@ import usePopupState, { bindPopover, bindHover } from '@/components/Popover/useP
 import HoverPopover from '@/components/Popover/HoverPopover'
 
 const navs = [
-  { to: "https://waf-ce.chaitin.cn/docs/", label: "帮助文档", target: "_blank" },
+  { to: "/docs", label: "帮助文档", target: "_blank" },
   { to: "/community", label: "社区", target: "_self" },
   { to: "/version", label: "版本对比", target: "_self" },
 ];

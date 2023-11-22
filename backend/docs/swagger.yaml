@@ -1,0 +1,113 @@
+definitions:
+  service.Discussion:
+    properties:
+      author:
+        $ref: '#/definitions/service.User'
+      category_name:
+        type: string
+      comment_count:
+        type: integer
+      comment_users:
+        items:
+          $ref: '#/definitions/service.User'
+        type: array
+      created_at:
+        type: integer
+      id:
+        type: string
+      is_answered:
+        type: boolean
+      labels:
+        items:
+          $ref: '#/definitions/service.Label'
+        type: array
+      thumbs_up:
+        type: integer
+      title:
+        type: string
+      upvote_count:
+        type: integer
+    type: object
+  service.Issue:
+    properties:
+      author:
+        $ref: '#/definitions/service.User'
+      comment_count:
+        type: integer
+      created_at:
+        type: integer
+      id:
+        type: string
+      labels:
+        items:
+          $ref: '#/definitions/service.Label'
+        type: array
+      thumbs_up:
+        type: integer
+      title:
+        type: string
+      url:
+        type: string
+    type: object
+  service.Label:
+    properties:
+      color:
+        type: string
+      name:
+        type: string
+    type: object
+  service.User:
+    properties:
+      avatar_url:
+        type: string
+      login:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /repos/discussions:
+    get:
+      consumes:
+      - application/json
+      description: get discussions from GitHub
+      parameters:
+      - description: search by
+        in: query
+        name: q
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/service.Discussion'
+            type: array
+      summary: get discussions
+      tags:
+      - GitHub
+  /repos/issues:
+    get:
+      consumes:
+      - application/json
+      description: get issues from GitHub
+      parameters:
+      - description: search by
+        in: query
+        name: q
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/service.Issue'
+            type: array
+      summary: get issues
+      tags:
+      - GitHub
+swagger: "2.0"
