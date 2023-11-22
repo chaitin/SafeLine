@@ -37,6 +37,7 @@ type Issue struct {
 // Discussion represents a GitHub discussion.
 type Discussion struct {
 	ID            string   `json:"id"`
+	Url           string   `json:"url"`
 	Title         string   `json:"title"`
 	BodyText      string   `json:"-"`
 	Labels        []Label  `json:"labels"`
@@ -334,6 +335,7 @@ func (s *GitHubService) fetchDiscussions(ctx context.Context, afterCursor *githu
 	for _, node := range query.Repository.Discussions.Nodes {
 		discussion := &Discussion{
 			ID:       node.ID,
+			Url:      node.Url,
 			Title:    node.Title,
 			BodyText: node.BodyText,
 		}
