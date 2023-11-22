@@ -11,14 +11,12 @@ import (
 // GitHubHandler provides HTTP handlers for GitHub operations.
 type GitHubHandler struct {
 	gitHubService *service.GitHubService
-	pageLimit     int
 }
 
 // NewGitHubHandler creates a new instance of GitHubHandler.
-func NewGitHubHandler(gitHubService *service.GitHubService, pageLimit int) *GitHubHandler {
+func NewGitHubHandler(gitHubService *service.GitHubService) *GitHubHandler {
 	return &GitHubHandler{
 		gitHubService: gitHubService,
-		pageLimit:     pageLimit,
 	}
 }
 
@@ -39,10 +37,6 @@ func (h *GitHubHandler) GetIssues(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	if len(issues) > h.pageLimit {
-		c.JSON(http.StatusOK, issues[:h.pageLimit])
-		return
-	}
 	c.JSON(http.StatusOK, issues)
 }
 
@@ -61,11 +55,6 @@ func (h *GitHubHandler) GetDiscussions(c *gin.Context) {
 	discussions, err := h.gitHubService.GetDiscussions(c, filter)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	if len(discussions) > h.pageLimit {
-		c.JSON(http.StatusOK, discussions[:h.pageLimit])
 		return
 	}
 

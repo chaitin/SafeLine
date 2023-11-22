@@ -21,7 +21,6 @@ func main() {
 
 	// optional variables to set
 	viper.SetDefault("GITHUB_CACHE_TTL", 10) // cache timeout in minutes
-	viper.SetDefault("PAGE_LIMIT", 25)       // the number max returned
 	viper.SetDefault("LISTEN_ADDR", ":8080") // api server addr
 
 	githubToken := viper.GetString("GITHUB_TOKEN")
@@ -41,7 +40,7 @@ func main() {
 	})
 
 	// Create a new instance of GitHubHandler.
-	gitHubHandler := handler.NewGitHubHandler(gitHubService, viper.GetInt("PAGE_LIMIT"))
+	gitHubHandler := handler.NewGitHubHandler(gitHubService)
 
 	v1 := r.Group("/api")
 	v1.GET("/repos/issues", gitHubHandler.GetIssues)
