@@ -3,3 +3,4 @@
 *.zip
 *.tar
 build.sh
+compose.yml

@@ -12,18 +12,17 @@ RUN go build -o server .
 
 FROM node:20.5-alpine
 
+ARG telemetry
+
 RUN apk update
-RUN apk add nginx supervisor
+RUN apk add nginx supervisor curl
 
 RUN echo -e "                                                                   \n\
 server {                                                                        \n\
     listen 80;                                                                  \n\
                                                                                 \n\
-    location /api/count {                                                       \n\
-        proxy_pass https://rivers-telemetry.chaitin.cn:10086;                   \n\
-    }                                                                           \n\
-    location /api/exist {                                                       \n\
-        proxy_pass https://rivers-telemetry.chaitin.cn:10086;                   \n\
+    location /api/(count|exist) {                                               \n\
+        proxy_pass \$telemetry;                                                 \n\
     }                                                                           \n\
     location /api/ {                                                            \n\
         proxy_pass http://localhost:8080;                                       \n\
@@ -93,7 +92,7 @@ command     = server                \n\
 directory   = /srv/server           \n\
 " > /etc/supervisor.d/safeline.ini
 
-# COPY --from=go-builder /work/server /srv/server/server
+COPY --from=go-builder /work/server /srv/server
 
 COPY documents /srv/documents
 WORKDIR /srv/documents
