@@ -8,7 +8,7 @@ COPY backend .
 RUN go env -w GOPROXY=$goproxy
 RUN go env -w GOPRIVATE=$goprivate
 RUN go mod tidy
-RUN go build -o server .
+RUN CGO_ENABLED=0 go build -a -v -ldflags="-w" -o server .
 
 FROM node:20.5-alpine
 
@@ -21,8 +21,11 @@ RUN echo -e "                                                                   
 server {                                                                        \n\
     listen 80;                                                                  \n\
                                                                                 \n\
-    location /api/(count|exist) {                                               \n\
-        proxy_pass \$telemetry;                                                 \n\
+    location /api/count {                                                       \n\
+        proxy_pass $telemetry;                                                  \n\
+    }                                                                           \n\
+    location /api/exist {                                                       \n\
+        proxy_pass $telemetry;                                                  \n\
     }                                                                           \n\
     location /api/ {                                                            \n\
         proxy_pass http://localhost:8080;                                       \n\
@@ -88,8 +91,7 @@ command     = npm start             \n\
 directory   = /srv/website          \n\
                                     \n\
 [program:server]                    \n\
-command     = server                \n\
-directory   = /srv/server           \n\
+command     = /srv/server           \n\
 " > /etc/supervisor.d/safeline.ini
 
 COPY --from=go-builder /work/server /srv/server
