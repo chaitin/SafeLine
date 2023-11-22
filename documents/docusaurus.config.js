@@ -1,8 +1,8 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require("prism-react-renderer/themes/github");
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+// const lightCodeTheme = require("prism-react-renderer/themes/github");
+// const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -14,12 +14,12 @@ const config = {
   url: "https://waf-ce.chaitin.cn/",
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: "/",
+  baseUrl: "/docs",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "chaitin", // Usually your GitHub org/user name.
-  projectName: "safeline-docs", // Usually your repo name.
+  projectName: "document", // Usually your repo name.
 
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -56,15 +56,12 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
           // Remove this to remove the "edit this page" links.
           // editUrl: "https://github.com/chaitin/safeline/tree/main/website",
         },
-        blog: {
-          showReadingTime: true,
-          // Remove this to remove the "edit this page" links.
-          // editUrl: "https://github.com/chaitin/safeline/tree/main/website",
-        },
+        blog: false,
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
@@ -105,22 +102,22 @@ const config = {
           {
             title: "资源",
             items: [
-              {
-                label: "技术文档",
-                to: "/docs",
-              },
+              // {
+              //   label: "技术文档",
+              //   to: "/",
+              // },
               {
                 label: "教学视频",
                 to: "https://www.bilibili.com/medialist/detail/ml2342694989",
               },
-              {
-                label: "学习资料",
-                to: "/docs",
-              },
-              {
-                label: "更新日志",
-                to: "/docs/about/changelog",
-              },
+              // {
+              //   label: "学习资料",
+              //   to: "/",
+              // },
+              // {
+              //   label: "更新日志",
+              //   to: "/about/changelog",
+              // },
             ],
           },
           {
@@ -140,8 +137,8 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} 北京长亭科技有限公司.All rights reserved.`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        // theme: lightCodeTheme,
+        // darkTheme: darkCodeTheme,
       },
       colorMode: {
         defaultMode: 'light',

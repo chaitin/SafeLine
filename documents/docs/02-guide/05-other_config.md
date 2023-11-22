@@ -21,10 +21,10 @@ title: "配置其他"
 
 ### 人机验证
 
-详情查看 [人机验证2.0](/docs/about/challenge)
+详情查看 [人机验证2.0](/about/challenge)
 
 ### 语义分析
-详情查看 [语义分析检测算法](/docs/about/syntaxanalysis)
+详情查看 [语义分析检测算法](/about/syntaxanalysis)
 
 ## 通用配置
 
@@ -72,4 +72,4 @@ title: "配置其他"
 
 ## 常见配置问题
 
-请参考 [其他问题](/docs/faq/other)
+请参考 [其他问题](/faq/other)
