@@ -21,7 +21,7 @@ const ABILITY_LIST = [
   },
   {
     title: "长亭社区恶意 IP 情报",
-    href: "https://waf-ce.chaitin.cn/docs/about/ipintelligence",
+    href: "https://waf-ce.chaitin.cn/docs/about/IpIntelligence",
     img: "/images/ability/ability_maliciousip.svg",
   },
   {
