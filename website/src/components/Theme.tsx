@@ -367,7 +367,7 @@ function componentStyleOverrides(color: Color) {
     MuiLink: {
       styleOverrides: {
         root: {
-          color: color.primary.contrastText,
+          color: color.text.primary,
           '&:hover': {
             color: color.primary.main,
           },

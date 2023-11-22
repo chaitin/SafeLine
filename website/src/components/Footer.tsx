@@ -69,7 +69,7 @@ export default function Footer() {
                 {items.map((item, index) => (
                   <Box key={index} component="span" mr={5}>
                     {item.to ? (
-                      <Link sx={{ fontSize: '16px', fontWeight: 600 }} href={item.to} rel={item.label}>
+                      <Link sx={{ fontSize: '16px', fontWeight: 600, color: "common.white" }} href={item.to} rel={item.label}>
                         {item.label}
                       </Link>
                     ) : (
@@ -93,7 +93,7 @@ export default function Footer() {
                 <Grid container>
                   {link.items.map((item, index) => (
                     <Grid key={index} item xs={link.xs} md={12}>
-                      <Link sx={{ fontSize: '14px', opacity: 0.5, fontWeight: 400, lineHeight: "38px" }} href={item.to} target="_blank" rel={item.label}>
+                      <Link sx={{ fontSize: '14px', color: "common.white", opacity: 0.5, fontWeight: 400, lineHeight: "38px" }} href={item.to} target="_blank" rel={item.label}>
                         {item.label}
                       </Link>
                     </Grid>

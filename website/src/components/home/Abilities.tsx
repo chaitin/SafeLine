@@ -6,22 +6,22 @@ import Icon from "@/components/Icon";
 const ABILITY_LIST = [
   {
     title: "人机验证",
-    href: "https://waf-ce.chaitin.cn/",
+    href: "https://waf-ce.chaitin.cn/docs/about/challenge",
     img: "/images/ability/ability_verification.svg",
   },
   {
     title: "百川网站监控联动",
-    href: "https://waf-ce.chaitin.cn/",
+    href: "https://waf-ce.chaitin.cn/docs/practice/monitor",
     img: "/images/ability/ability_rivers.svg",
   },
   {
     title: "APISIX 插件集成",
-    href: "https://waf-ce.chaitin.cn/",
+    href: "https://waf-ce.chaitin.cn/docs/about/apisix",
     img: "/images/ability/ability_apisix.svg",
   },
   {
     title: "长亭社区恶意 IP 情报",
-    href: "https://waf-ce.chaitin.cn/",
+    href: "https://waf-ce.chaitin.cn/docs/about/ipintelligence",
     img: "/images/ability/ability_maliciousip.svg",
   },
   {
@@ -131,6 +131,7 @@ const AbilityItem: React.FC<ItemProps> = ({ title, href, img, handleIconHover })
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                color: "common.white",
                 "&:hover": {
                   backgroundColor: "primary.main",
                   boxShadow: "0px 4px 10px 0px rgba(3,13,23,0.6)",
@@ -140,7 +141,7 @@ const AbilityItem: React.FC<ItemProps> = ({ title, href, img, handleIconHover })
               }}
             >
               {title}
-              <Icon type="icon-youjiantouxian" color="common.white" />
+              <Icon type="icon-youjiantouxian" />
             </Typography>
           </Link>
         ) : (

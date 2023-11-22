@@ -139,7 +139,7 @@ const Version = () => {
               }}
             >
               <Description content={item.apply_desc} />
-              <Typography variant="h3" sx={{ mt: 3, mb: 1, lineHeight: "46px" }}>
+              <Typography variant="h3" sx={{ mt: 3, lineHeight: "46px" }}>
                 {item.fee}
                 {item.fee_desc && (
                   <Typography component="span" variant="subtitle2" sx={{ color: alpha("#000", 0.5), height: "20px" }}>
@@ -147,7 +147,7 @@ const Version = () => {
                   </Typography>
                 )}
               </Typography>
-              <Description content={item.desc} />
+              {/* <Description content={item.desc} /> */}
               <Box>{item.operation}</Box>
               <FunctionItems items={item.functions} />
             </Box>

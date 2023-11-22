@@ -6,7 +6,7 @@ import usePopupState, { bindPopover, bindHover } from '@/components/Popover/useP
 import HoverPopover from '@/components/Popover/HoverPopover'
 
 const navs = [
-  { to: "https://waf-ce.chaitin.cn/posts/guide_introduction", label: "帮助文档", target: "_blank" },
+  { to: "https://waf-ce.chaitin.cn/docs/", label: "帮助文档", target: "_blank" },
   { to: "/community", label: "社区", target: "_self" },
   { to: "/version", label: "版本对比", target: "_self" },
 ];
@@ -59,7 +59,6 @@ export default function NavBar() {
                         mr: 7,
                         display: 'flex',
                         alignItems: 'center',
-                        color: "common.black",
                         fontFamily: "AlimamaShuHeiTi-Bold",
                       }}
                     >

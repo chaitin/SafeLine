@@ -10,7 +10,7 @@ title: "登录雷池"
 
 根据界面提示，使用 **支持 TOTP 的认证软件或者小程序** 扫描二维码，然后输入动态口令登录：
 
-<iframe src="//player.bilibili.com/player.html?aid=748637002&bvid=BV1wC4y177zN&cid=1339420830&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"
+<iframe src="//player.bilibili.com/player.html?aid=748637002&bvid=BV1wC4y177zN&cid=1339420830&p=1" scrolling="no" border="0" frameBorder="no" framespacing="0" allowFullScreen='{true}'
 style={{ width: '100%', height: '350px' }}
 ></iframe>
 

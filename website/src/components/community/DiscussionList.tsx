@@ -17,6 +17,7 @@ import {
   IconButton,
   InputBase,
   SxProps,
+  Link,
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import TableCell from "@mui/material/TableCell";
@@ -158,7 +159,9 @@ export default function DiscussionList({ value }: DiscussionListProps) {
                       <Box dangerouslySetInnerHTML={{ __html: discussion.category?.emoji_html }}></Box>
                     </Box>
                     <Box>
-                      <Typography variant="h6">{discussion.title}</Typography>
+                      <Link href={discussion.url} target="_blank">
+                        <Typography variant="h6">{discussion.title}</Typography>
+                      </Link>
                       <Labels value={discussion.labels} />
                       <Box>
                         <Typography component="span" variant="subtitle2" sx={{ color: alpha('#000', 0.5) }}>

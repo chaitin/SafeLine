@@ -23,7 +23,7 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 
 ### 在线安装演示
 
-<iframe src="//player.bilibili.com/player.html?aid=236214137&bvid=BV1Je411f7hQ&cid=1339309164&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"
+<iframe src="//player.bilibili.com/player.html?aid=236214137&bvid=BV1Je411f7hQ&cid=1339309164&p=1" scrolling="no" border="0" frameBorder="no" framespacing="0" allowFullScreen='{true}'
 style={{ width: '100%', height: '350px' }}
 > 
 </iframe>
@@ -71,13 +71,10 @@ docker compose up -d
 
 ### 离线安装演示
 
-<iframe src="//player.bilibili.com/player.html?aid=236214137&bvid=BV1Je411f7hQ&cid=1339309164&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"
+<iframe src="//player.bilibili.com/player.html?aid=278701847&bvid=BV1gw411P7om&cid=1339618895&p=1" scrolling="no" border="0" frameBorder="no" framespacing="0" allowFullScreen='{true}'
 style={{ width: '100%', height: '350px' }}
 > 
 </iframe>
-
-
-
 
 
 ## 使用牧云助手安装
@@ -122,7 +119,7 @@ lscpu | grep ssse3                          # 确认CPU是否支持 ssse3 指令
 
 ### 配置检测演示
 
-<iframe src="//player.bilibili.com/player.html?aid=918634668&bvid=BV1Uu4y1L7Ko&cid=1339439164&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"
+<iframe src="//player.bilibili.com/player.html?aid=918634668&bvid=BV1Uu4y1L7Ko&cid=1339439164&p=1" scrolling="no" border="0" frameBorder="no" framespacing="0" allowFullScreen='{true}'
 style={{ width: '100%', height: '350px' }}
 ></iframe>
 

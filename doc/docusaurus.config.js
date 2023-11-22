@@ -80,7 +80,18 @@ const config = {
       navbar: {
         title: "",
         logo: { alt: "Logo", src: "images/safeline.svg", href: "https://waf-ce.chaitin.cn" },
-        items: [],
+        items: [
+          {
+            to: "https://www.bilibili.com/medialist/detail/ml2342694989",
+            label: "教学视频",
+            position: "right",
+          },
+          {
+            to: "https://demo.waf-ce.chaitin.cn:9443/dashboard",
+            label: "演示环境",
+            position: "right",
+          },
+        ],
       },
       footer: {
         style: "dark",
