@@ -2,3 +2,4 @@
 .DS_Store
 *.zip
 *.tar
+build.sh
