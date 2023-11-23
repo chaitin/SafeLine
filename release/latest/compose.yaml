@@ -127,7 +127,6 @@ services:
   fvm-manager:
     container_name: safeline-fvm-manager
     restart: always
-    privileged: true
     image: chaitin/safeline-fvm-manager:${IMAGE_TAG}
     environment:
       - FVM_LOGS_DIR=/logs/management
