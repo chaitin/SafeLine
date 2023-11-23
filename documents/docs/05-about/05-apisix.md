@@ -1,6 +1,7 @@
 ---
 title: "APISIX 联动雷池"
 ---
+
 # APISIX 联动雷池
 
 Apache APISIX 是一个动态、实时、高性能的云原生 API 网关，提供了负载均衡、动态上游、灰度发布、服务熔断、身份认证、可观测性等丰富的流量管理功能。
@@ -17,7 +18,7 @@ apisix：https://github.com/apache/apisix
 
 ### 安装 APISIX
 
->注意，要使用 APISIX 3.5.0 及以上版本的 APISIX
+> 注意，要使用 APISIX 3.5.0 及以上版本的 APISIX
 
 本文使用 apisix 的 docker 版本来做演示，克隆 apisix-docker 仓库，运行以下命令来安装：
 
@@ -46,7 +47,6 @@ bash -c "$(curl -fsSLk <https://waf-ce.chaitin.cn/release/latest/setup.sh>)"
 
 ### 修改雷池检测引擎的工作模式
 
-
 社区版雷池的检测引擎默认以 unix socket 的方式提供服务，我们需要把他修改为 tcp 方式，供 APISIX 调用。
 
 进入雷池检测引擎的配置目录：
@@ -70,14 +70,16 @@ bind_addr: unix:///resources/detector/snserver.sock
 bind_addr: 0.0.0.0
 listen_port: 8000
 ```
+
 这样我们就把雷池引擎的服务监听到了 8000 端口，现在只需要把容器内的 8000 端口映射到宿主机即可。
 
 进入雷池的安装目录
 
 > cd /data/safeline/
-用文本编辑器打开目录里的 compose.yaml 文件，为 detector 容器增加 ports 字段，暴露其 8000
+> 用文本编辑器打开目录里的 compose.yaml 文件，为 detector 容器增加 ports 字段，暴露其 8000
 
 端口，参考如下：
+
 ```
 ......
 
@@ -97,14 +99,17 @@ docker compose up -d
 ```
 
 ### 修改雷池的默认端口
+
 雷池和 apisix 默认都监听 9443 端口，如果在同一台机器上安装，需要修改雷池的默认端口。
 
 在雷池的安装目录下，有一个名为 .env 的隐藏文件，其中的 MGT_PORT 字段，修改这里后使用上面的方法再重启雷池即可生效。
 
 ### 在 apisix 里绑定雷池
+
 调用 apisix 的 api，设置雷池检测引擎的地址，供 apisix 调用，参考以下请求：
 
 192.168.99.11 是我本地雷池的地址，替换为你的 IP 即可
+
 ```
 curl <http://127.0.0.1:9180/apisix/admin/plugin_metadata/chaitin-waf> -H 'X-API-KEY: edd1c9f034335f136f87ad84b625c8f1' -X PUT -d '
 {
@@ -116,6 +121,7 @@ curl <http://127.0.0.1:9180/apisix/admin/plugin_metadata/chaitin-waf> -H 'X-API-
   ]
 }'
 ```
+
 调用 apisix 的 api，设置一条路由，参考以下请求：
 
 > 192.168.99.12:80 是上游服务器的地址，apisix 会将请求反向代理到这个地址。
@@ -140,14 +146,25 @@ curl <http://127.0.0.1:9180/apisix/admin/routes/1> -H 'X-API-KEY: edd1c9f034335f
 
 经过以上步骤，雷池 + apisix 基本配置完成，可以试试效果了，请求 9080 端口，可以看到 apisix 成功代理了上游服务器的页面：
 
->curl '<http://127.0.0.1:9080/>'
+```sh
+curl '<http://127.0.0.1:9080/>'
+```
 
 在请求中加入一个 a 参数，模拟 SQL 注入攻击：
 
->curl '<http://127.0.0.1:9080/>' -d 'a=1 and 1=1'
+```sh
+curl '<http://127.0.0.1:9080/>' -d 'a=1 and 1=1'
+```
 
 返回了 HTTP 403 错误，从错误消息中可以看出，雷池成功抵御了此次攻击。
 
->{"code": 403, "success":false, "message": "blocked by Chaitin SafeLine Web Application Firewall", "event_id": "18e0f220f7a94127acb21ad3c1b4ac47"}
+```json
+{
+  "code": 403,
+  "success": false,
+  "message": "blocked by Chaitin SafeLine Web Application Firewall",
+  "event_id": "18e0f220f7a94127acb21ad3c1b4ac47"
+}
+```
 
 打开雷池的控制台界面，可以看到雷池记录了完整的攻击信息

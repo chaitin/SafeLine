@@ -39,6 +39,7 @@ const config = {
       /** @type {import("@easyops-cn/docusaurus-search-local").PluginOptions} */
       // @ts-ignore
       ({
+        docsRouteBasePath: "/",
         // ... Your options.
         // `hashed` is recommended as long-term-cache of index file is possible.
         hashed: true,
