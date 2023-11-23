@@ -41,7 +41,7 @@ const FEATURE_LIST = [
                 ml: { xs: 0, sm: 2 },
                 mb: { xs: 2, sm: 0 },
               }}
-              href="https://demo.waf-ce.chaitin.cn:9443/dashboard"
+              href="/docs/about/syntaxanalysis"
             >
               了解详情
             </Button>

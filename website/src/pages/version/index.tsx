@@ -6,11 +6,11 @@ import Version from "@/components/Version";
 export default function VersionView() {
 
   return (
-    <main title="版本对比 ｜ 长亭雷池 WAF 社区版">
+    <main title="版本对比 ｜ 雷池 WAF 社区版">
       <Head>
-        <title>版本对比 | 长亭雷池 WAF 社区版</title>
+        <title>版本对比 | 雷池 WAF 社区版</title>
         <meta name="keywords" content="WAF,雷池,社区版,免费,版本对比,企业版,智能语义分析检测"></meta>
-        <meta name="description" content="长亭雷池 WAF 社区版，大小网站皆宜，免费开启使用"></meta>
+        <meta name="description" content="雷池 WAF 社区版，大小网站皆宜，免费开启使用"></meta>
       </Head>
       <Box mb={26}>
         <Box

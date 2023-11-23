@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import Head from 'next/head';
 import { getSetupCount } from "@/api";
 import Features from "@/components/home/Features";
 import Abilities from "@/components/home/Abilities";
@@ -29,7 +28,7 @@ const totalSx = {
 const textAligns = ['left', 'center', 'right'];
 
 export async function getServerSideProps() {
-  let total = 45881
+  let total = 46151
   try {
     const result = await getSetupCount();
     total = result.total;
@@ -53,7 +52,7 @@ export default function Home({ total } : { total: number }) {
       duration: 2,
     });
     anim.start();
-    const startAnim = new countUpModule.CountUp(startRef.current!, Math.max(0, 6.1), {
+    const startAnim = new countUpModule.CountUp(startRef.current!, Math.max(0, 6.3), {
       duration: 2,
       decimalPlaces: 1,
     });
@@ -61,21 +60,11 @@ export default function Home({ total } : { total: number }) {
   };
 
   useEffect(() => {
-    // getSetupCount().then((d) => {
-    //   initTotal(d.total);
-    // });
     initTotal(total);
   }, [total]);
 
   return (
-    <main className="flex flex-col justify-between" title="长亭雷池 WAF 社区版">
-      <Head>
-        <title>长亭雷池 WAF 社区版</title>
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="keywords" content="WAF,雷池,长亭,社区版,免费,开源,网站防护"></meta>
-        <meta name="description" content="长亭雷池 WAF 社区版"></meta>
-      </Head>
+    <main className="flex flex-col justify-between" title="雷池 WAF 社区版">
       <Box>
         <Box
           sx={{
@@ -198,7 +187,7 @@ export default function Home({ total } : { total: number }) {
           <Abilities />
           <Box
             sx={{
-              backgroundImage: "url(/images/partner-bg.svg)",
+              backgroundImage: "url(/images/partner-bg.png)",
               backgroundSize: "cover",
               backgroundPosition: 'center center',
               backgroundRepeat: 'no-repeat'
@@ -209,52 +198,59 @@ export default function Home({ total } : { total: number }) {
           <Box
             sx={{
               width: "100%",
-              mt: 11,
+              height: { xs: "243px", md: "343px" },
+              mt: 19,
+              backgroundImage: "url(/images/enterprise-bg.svg)",
+              backgroundSize: "cover",
+              backgroundPosition: 'center center',
+              backgroundRepeat: 'no-repeat'
             }}
-            className="flex flex-col justify-center relative"
           >
-            <Box>
-              <Box className="relative top-1">
+            <Container className="relative h-full">
+              <Stack justifyContent="center" className="h-full">
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 400,
+                    color: "common.white",
+                    fontSize: { xs: "20px", md: "28px" },
+                    fontFamily: "AlimamaShuHeiTi-Bold",
+                    letterSpacing: "3px",
+                  }}
+                  >欢迎使用雷池其他版本</Typography>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    width: { xs: "146px" },
+                    height: "50px",
+                    mt: 4,
+                    backgroundColor: "common.white",
+                    fontSize: "16px",
+                    "&:hover": {
+                      color: "#0A8A87",
+                      backgroundColor: "common.white",
+                    },
+                  }}
+                  href="/version"
+                >
+                  版本对比
+                </Button>
+              </Stack>
+              <Box
+                sx={{
+                  position: "absolute",
+                  right: -96,
+                  top: -65,
+                }}
+              >
                 <Image
-                  src="/images/enterprise-bg.svg"
-                  alt="雷池企业版"
-                  layout="responsive"
-                  width={100}
-                  height={100}
+                  src="/images/shield.png"
+                  alt="雷池"
+                  width={417}
+                  height={359}
                 />
               </Box>
-              <Container>
-                <Stack className="absolute top-1/2" sx={{ transform: 'translateY(-40%)' }}>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      fontWeight: 400,
-                      color: "common.white",
-                      fontSize: { xs: "16px", md: "28px" },
-                      fontFamily: "AlimamaShuHeiTi-Bold",
-                      letterSpacing: "3px",
-                    }}
-                    >欢迎使用雷池其他版本</Typography>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      width: { xs: "146px" },
-                      height: { xs:"38px", md: "50px" },
-                      mt: { xs: 1, md: 4 },
-                      backgroundColor: "common.white",
-                      fontSize: "16px",
-                      "&:hover": {
-                        color: "#0A8A87",
-                        backgroundColor: "common.white",
-                      },
-                    }}
-                    href="/version"
-                  >
-                    版本对比
-                  </Button>
-                </Stack>
-              </Container>
-            </Box>
+            </Container>
           </Box>
         </Box>
       </Box>

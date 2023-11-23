@@ -6,7 +6,7 @@
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "长亭雷池 WAF 社区版",
+  title: "雷池 WAF 社区版",
   tagline: "",
   favicon: "images/favicon.ico",
 

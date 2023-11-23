@@ -30,11 +30,11 @@ export async function getServerSideProps() {
 
 function Community({ discussions, issues }: CommunityPropsType) {
   return (
-    <main title="社区 ｜ 长亭雷池 WAF 社区版">
+    <main title="社区 ｜ 雷池 WAF 社区版">
       <Head>
-        <title>社区 | 长亭雷池 WAF 社区版</title>
+        <title>社区 | 雷池 WAF 社区版</title>
         <meta name="keywords" content="WAF,雷池,社区版,免费,社区,反馈,discussion,roadmap,"></meta>
-        <meta name="description" content="长亭雷池 WAF 社区版，欢迎你通过社区获取更多帮助"></meta>
+        <meta name="description" content="雷池 WAF 社区版，欢迎你通过社区获取更多帮助"></meta>
       </Head>
       <Box>
         <Box
@@ -101,7 +101,7 @@ function Community({ discussions, issues }: CommunityPropsType) {
                   }}
                 >
                   <Image
-                    src="/images/feedback.svg"
+                    src="/images/feedback.png"
                     alt=""
                     layout="responsive"
                     width={100}
@@ -115,7 +115,7 @@ function Community({ discussions, issues }: CommunityPropsType) {
         <Container>
           <Box
             sx={{
-              backgroundImage: "url(/images/partner-bg.svg)",
+              backgroundImage: "url(/images/partner-bg.png)",
               backgroundSize: "cover",
               backgroundPosition: 'center center',
               backgroundRepeat: 'no-repeat'
