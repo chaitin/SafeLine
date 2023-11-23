@@ -11,7 +11,7 @@ export {
   }
 
   function getSetupCount() {
-    return fetch(BASE_API + "/count").then((res) => res.json());
+    return fetch("https://waf-ce.chaitin.cn/api/count").then((res) => res.json());
   }
 
   function getDiscussions(query: string) {

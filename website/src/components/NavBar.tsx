@@ -59,7 +59,6 @@ export default function NavBar() {
                         mr: 7,
                         display: 'flex',
                         alignItems: 'center',
-                        color: "common.black",
                         fontFamily: "AlimamaShuHeiTi-Bold",
                       }}
                     >

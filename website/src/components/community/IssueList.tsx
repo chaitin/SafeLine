@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Box,
+  Link,
   List,
   ListItem,
   Button,
@@ -51,8 +52,8 @@ const isExistInLabels = (labels: Issue['labels'], label: string) => {
  * 
  * @param issues 
  * @returns 
- * 正在考虑 = 带 enhancement，且没有 inprogress 和 released，且 open
- * 进行中 = 带 enhancement 和 inprogress，且 open
+ * 正在考虑 = 带 enhancement，且没有 in progress 和 released，且 open
+ * 进行中 = 带 enhancement 和 in progress，且 open
  * 最近完成 = 带 enhancement 和 released，且 open
  * 按点赞数量降序排序
  */
@@ -63,7 +64,7 @@ const handleSortIssues = (issues: Issue[]) => {
   const released: Issue[] = []
   list.forEach((item: Issue) => {
     const { labels } = item
-    if (isExistInLabels(labels, 'inprogress')) {
+    if (isExistInLabels(labels, 'in progress')) {
       inProgress.push(item)
     } else if (isExistInLabels(labels, 'released')) {
       released.push(item)
@@ -199,7 +200,9 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue }) => {
         flex: 1,
       }}
     >
-      <Typography variant="h6">{issue.title}</Typography>
+      <Link href={issue.url} target="_blank">
+        <Typography variant="h6">{issue.title}</Typography>
+      </Link>
       <Labels value={issue.labels} />
       <Box mt={1}>
         <Typography component="span" variant="subtitle2" sx={{ color: alpha('#000', 0.5) }}>

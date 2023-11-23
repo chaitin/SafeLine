@@ -28,8 +28,24 @@ const totalSx = {
 
 const textAligns = ['left', 'center', 'right'];
 
-export default function Home() {
+export async function getServerSideProps() {
+  let total = 45881
+  try {
+    const result = await getSetupCount();
+    total = result.total;
+  
+  } finally {
+    return {
+      props: {
+        total,
+      },
+    }
+  }
+}
+
+export default function Home({ total } : { total: number }) {
   const totalRef = useRef(null);
+  const startRef = useRef(null);
 
   const initTotal = async (n: number) => {
     const countUpModule = await import("countup.js");
@@ -37,13 +53,19 @@ export default function Home() {
       duration: 2,
     });
     anim.start();
+    const startAnim = new countUpModule.CountUp(startRef.current!, Math.max(0, 6.1), {
+      duration: 2,
+      decimalPlaces: 1,
+    });
+    startAnim.start();
   };
 
   useEffect(() => {
-    getSetupCount().then((d) => {
-      initTotal(d.total);
-    });
-  });
+    // getSetupCount().then((d) => {
+    //   initTotal(d.total);
+    // });
+    initTotal(total);
+  }, [total]);
 
   return (
     <main className="flex flex-col justify-between" title="长亭雷池 WAF 社区版">
@@ -123,15 +145,16 @@ export default function Home() {
                   <Link href="https://github.com/chaitin/SafeLine" target="_blank">
                     <Stack direction="row" justifyContent="center">
                         <Stack spacing={2} alignItems="center">
-                          <Typography
-                            variant="h1"
-                            sx={{
-                              ...totalSx,
-                            }}
-                          >
-                            5.9k
-                          </Typography>
-                          <Typography variant="h5" color="common.black">
+                          <Stack direction="row" sx={{ ...totalSx }}>
+                            <Typography
+                              variant="h1"
+                              ref={startRef}
+                            >
+                              -
+                            </Typography>
+                            <Typography variant="h1">k</Typography>
+                          </Stack>
+                          <Typography variant="h5">
                             GitHub Star
                           </Typography>
                         </Stack>
