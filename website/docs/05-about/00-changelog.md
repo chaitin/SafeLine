@@ -12,7 +12,7 @@ title: "版本更新记录"
 
 - 人机验证的二次验证，从数字验证码改为旋转图片，网站用户体验更好：
 
-- ![](/images/docs/about_changelog/cs_verfiy_image.png)
+- ![](/images/docs/about_changelog/cs_verify_image.png)
 
 #### 优化
 
