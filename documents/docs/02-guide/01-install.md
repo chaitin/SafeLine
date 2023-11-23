@@ -19,7 +19,7 @@ title: "安装雷池"
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ```
 
-**若安装失败，请参考 [安装问题](/docs/faq/install)**
+**若安装失败，请参考 [安装问题](/faq/install)**
 
 ### 在线安装演示
 
@@ -67,7 +67,7 @@ echo "SUBNET_PREFIX=172.22.222" >> .env
 docker compose up -d
 ```
 
-**若安装失败，请参考 [安装问题](/docs/faq/install)**
+**若安装失败，请参考 [安装问题](/faq/install)**
 
 ### 离线安装演示
 
@@ -126,6 +126,6 @@ style={{ width: '100%', height: '350px' }}
 
 ## 常见安装问题
 
-请参考 [安装问题](/docs/faq/install)
+请参考 [安装问题](/faq/install)
 
-下一步请参考 [登录雷池](/docs/guide/login)
+下一步请参考 [登录雷池](/guide/login)

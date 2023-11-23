@@ -60,4 +60,4 @@ WAF 是 Web Application Firewall 的缩写，也被称为 Web 应用防火墙。
 
 ![](/images/docs/guide_introduction/website_with_safeline.svg)
 
-详情查看 **[雷池技术架构](/docs/about/framework)**
+详情查看 **[雷池技术架构](/about/framework)**

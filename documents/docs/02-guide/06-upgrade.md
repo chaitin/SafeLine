@@ -6,7 +6,7 @@ title: "升级雷池"
 
 **注意**: 升级雷池时服务会重启，流量会中断一小段时间，根据业务情况选择合适的时间来执行升级操作。
 
-[版本更新记录](/docs/about/changelog)
+[版本更新记录](/about/changelog)
 
 ## 在线升级
 
@@ -62,4 +62,4 @@ docker compose up -d
 
 ## 常见升级问题
 
-请参考 [升级问题](/docs/faq/upgrade)
+请参考 [升级问题](/faq/upgrade)

@@ -117,7 +117,7 @@ title: "配置站点"
 
 ## 常见配置问题
 
-请参考 [配置问题](/docs/faq/config)
+请参考 [配置问题](/faq/config)
 
 
 

@@ -24,5 +24,5 @@ style={{ width: '100%', height: '350px' }}
 
 ## 常见登录问题
 
-请参考 [登录问题](/docs/faq/login)
+请参考 [登录问题](/faq/login)
 
