@@ -7,12 +7,12 @@ const ABILITY_LIST = [
   {
     title: "人机验证",
     href: "https://waf-ce.chaitin.cn/docs/about/challenge",
-    img: "/images/ability/ability_verification.svg",
+    img: "/images/ability/ability_verification.png",
   },
   {
     title: "百川网站监控联动",
     href: "https://waf-ce.chaitin.cn/docs/practice/monitor",
-    img: "/images/ability/ability_rivers.svg",
+    img: "/images/ability/ability_rivers.png",
   },
   {
     title: "APISIX 插件集成",
@@ -32,7 +32,7 @@ const ABILITY_LIST = [
   {
     title: "站点资源一览",
     href: "",
-    img: "/images/ability/ability_asset.svg",
+    img: "/images/ability/ability_asset.png",
   },
   {
     title: "CC 攻击防护",
@@ -46,7 +46,7 @@ const ABILITY_LIST = [
   },
 ];
 
-const DEFAULT_URL = '/images/ability/ability_verification.svg';
+const DEFAULT_URL = '/images/ability/ability_verification.png';
 
 const Abilities = () => {
   const [hoveredUrl, setHoveredUrl] = useState(DEFAULT_URL);
@@ -83,10 +83,9 @@ const Abilities = () => {
                   key={ability.title}
                   src={ability.img}
                   alt={ability.title}
-                  layout="responsive"
-                  width={100}
+                  layout={hoveredUrl === ability.img ? "responsive" : "fixed"}
+                  width={0}
                   height={100}
-                  style={{ display: hoveredUrl === ability.img ? 'block' : 'none' }}
                 />
               ))}
             </Box>

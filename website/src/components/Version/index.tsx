@@ -6,7 +6,7 @@ import Consultation from "./Consultation";
 const VERSION_LIST = [
   {
     name: "社区版",
-    name_bg: "/images/community-version.png",
+    name_bg: "/images/community-version.svg",
     apply_desc: "适合小型个人网站或业余爱好项目",
     fee: "免费",
     fee_desc: "",
@@ -64,7 +64,7 @@ const VERSION_LIST = [
   // },
   {
     name: "企业版",
-    name_bg: "/images/enterprise-version.png",
+    name_bg: "/images/enterprise-version.svg",
     apply_desc: "适合小微到中大型企业",
     fee: "按需定制",
     fee_desc: "",
