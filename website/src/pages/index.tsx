@@ -70,13 +70,67 @@ export default function Home({ total } : { total: number }) {
           sx={{
             width: "100%",
             height: "866px",
+            position: 'relative',
             backgroundImage: "url(/images/home-banner.png)",
             backgroundSize: "cover",
-            position: 'relative',
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat'
           }}
         >
+          <Box pt={26.5}>
+            <Stack alignItems="center">
+              <Stack direction="row"
+                sx={{
+                  color: "#86909C",
+                  letterSpacing: 8,
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  sx={{
+                    mr: 35,
+                    fontWeight: 400,
+                  }}
+                >
+                  基于智能语义分析的
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 400,
+                  }}
+                >
+                  下一代 Web 应用防火墙
+                </Typography>
+              </Stack>
+              <Stack
+                direction="row"
+                mt={2}
+                sx={{
+                  fontFamily: "AlimamaShuHeiTi-Bold",
+                  letterSpacing: 10,
+                  background: 'linear-gradient(90deg, #160847 0%, #0A7977 100%)',
+                  '-webkit-background-clip': 'text',
+                  '-webkit-text-fill-color': 'transparent',
+                }}
+              >
+                <Typography
+                  variant="h1"
+                  sx={{
+                    mr: 15.5,
+                  }}
+                >
+                  不让黑客
+                </Typography>
+                <Typography
+                  variant="h1"
+                  sx={{}}
+                >
+                  越雷池一步
+                </Typography>
+              </Stack>
+            </Stack>
+          </Box>
           <Box sx={{ position: 'absolute', bottom: 351, left: '50%', transform: 'translateX(-50%)' }}>
             <Box sx={{ width: "369px" }}>
               <Image
