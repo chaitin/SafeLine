@@ -58,7 +58,7 @@ services:
     - NGINX_RESOURCES_DIR=/resources/nginx
     - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
     - MARIO_URL=http://safeline-mario:3335
-    - DETECTOR_URL=http://safeline-detector:8001
+    - FVM_MANAGER_URL=safeline-fvm-manager:9004
     - REDIS_URL=redis://:${REDIS_PASSWORD}@safeline-redis:6379/0
     - MANAGEMENT_LOGS_DIR=/logs/management
     dns: 
@@ -124,3 +124,18 @@ services:
     ulimits:
       nofile: 131072
     network_mode: host
+  fvm-manager:
+    container_name: safeline-fvm-manager
+    restart: always
+    image: chaitin/safeline-fvm-manager:${IMAGE_TAG}
+    environment:
+      - FVM_LOGS_DIR=/logs/management
+      - DETECTOR_URL=http://safeline-detector:8001
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${SAFELINE_DIR}/logs:/logs
+    networks:
+      safeline-ce:
+        ipv4_address: ${SUBNET_PREFIX}.8
+    cap_drop:
+      - net_raw
