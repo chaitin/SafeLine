@@ -17,7 +17,7 @@ title: "安装雷池"
 
 复制以下命令执行，即可完成安装
 
-```
+```shell
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ```
 
@@ -36,35 +36,40 @@ style={{ width: '100%', height: '350px' }}
 
 > 离线安装前需完成[环境检测](#环境检测),默认已完成 docker 环境准备
 
-首先，下载 [雷池社区版镜像包](https://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
+1. 下载 [雷池社区版镜像包](https://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
 
-```
+```shell
 cat image.tar.gz | gzip -d | docker load
 ```
 
-执行以下命令创建并进入雷池安装目录
+2. 执行以下命令创建并进入雷池安装目录
 
-```
-mkdir -p safeline        # 创建 safeline 目录
-cd safeline              # 进入 safeline 目录
-```
-
-下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 并传输到 safeline 目录中
-
-执行以下命令，生成雷池运行所需的相关环境变量
-
-```
-echo "SAFELINE_DIR=$(pwd)" >> .env
-echo "IMAGE_TAG=latest" >> .env
-echo "MGT_PORT=9443" >> .env
-echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
-echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
-echo "SUBNET_PREFIX=172.22.222" >> .env
+```shell
+mkdir -p safeline  &&  cd safeline    # 创建 safeline 目录并且进入
 ```
 
-执行以下命令启动雷池
+3. **下载 [编排脚本](https://waf-ce.chaitin.cn/release/latest/compose.yaml) 并传输到 safeline 目录中**
 
+4. 复制执行以下命令，生成雷池运行所需的相关环境变量
+
+```shell
+cat >> .env <<EOF
+SAFELINE_DIR=$(pwd)
+IMAGE_TAG=latest
+MGT_PORT=9443
+POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)
+REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)
+SUBNET_PREFIX=172.22.222
+EOF
 ```
+
+注意：不要一行一行复制，一次性复制全部命令后执行，如图
+
+![Alt text](/images/docs/guide_install/env_bash.png)
+
+5. 执行以下命令启动雷池
+
+```shell
 docker compose up -d
 ```
 
