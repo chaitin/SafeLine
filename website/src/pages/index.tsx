@@ -52,7 +52,7 @@ export default function Home({ total } : { total: number }) {
       duration: 2,
     });
     anim.start();
-    const startAnim = new countUpModule.CountUp(startRef.current!, Math.max(0, 6.3), {
+    const startAnim = new countUpModule.CountUp(startRef.current!, Math.max(0, 6.4), {
       duration: 2,
       decimalPlaces: 1,
     });
