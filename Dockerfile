@@ -1,17 +1,37 @@
+FROM golang:1.21 as go-builder
+
+ARG goproxy
+ARG goprivate
+
+WORKDIR /work
+COPY backend .
+RUN go env -w GOPROXY=$goproxy
+RUN go env -w GOPRIVATE=$goprivate
+RUN go mod tidy
+RUN CGO_ENABLED=0 go build -a -v -ldflags="-w" -o server .
+
 FROM node:20.5-alpine
 
+ARG telemetry
+
 RUN apk update
-RUN apk add nginx tini
+RUN apk add nginx supervisor curl
 
 RUN echo -e "                                                                   \n\
 server {                                                                        \n\
     listen 80;                                                                  \n\
                                                                                 \n\
     location /api/count {                                                       \n\
-        proxy_pass https://rivers-telemetry.chaitin.cn:10086;                   \n\
+        proxy_pass $telemetry;                                                  \n\
     }                                                                           \n\
     location /api/exist {                                                       \n\
-        proxy_pass https://rivers-telemetry.chaitin.cn:10086;                   \n\
+        proxy_pass $telemetry;                                                  \n\
+    }                                                                           \n\
+    location /api/ {                                                            \n\
+        proxy_pass http://localhost:8080;                                       \n\
+    }                                                                           \n\
+    location /docs {                                                            \n\
+        proxy_pass http://localhost:3000;                                       \n\
     }                                                                           \n\
     location /blazehttp {                                                       \n\
         root /app/;                                                             \n\
@@ -53,23 +73,47 @@ server {                                                                        
         rewrite /docs/关于雷池/about_chaitin /docs/about/chaitin permanent;      \n\
         rewrite /docs/faq/access /docs/guide/config permanent;                  \n\
         rewrite /docs/faq/config /docs/guide/config permanent;                  \n\
-        proxy_pass http://127.0.0.1:3000;                                       \n\
+        proxy_pass http://127.0.0.1:3001;                                       \n\
     }                                                                           \n\
 }                                                                               \n\
 " > /etc/nginx/http.d/default.conf
 RUN sed -i 's/access_log/access_log off; #/' /etc/nginx/nginx.conf
-RUN nginx -t
+# RUN nginx -t
+
+RUN mkdir /etc/supervisor.d
+RUN echo -e "                       \n\
+[program:doc]                       \n\
+command     = npm run serve         \n\
+directory   = /srv/documents        \n\
+                                    \n\
+[program:front]                     \n\
+command     = npm start             \n\
+directory   = /srv/website          \n\
+                                    \n\
+[program:server]                    \n\
+command     = /srv/server           \n\
+" > /etc/supervisor.d/safeline.ini
+
+COPY --from=go-builder /work/server /srv/server
+
+COPY documents /srv/documents
+WORKDIR /srv/documents
+RUN npm i; npm run build
+# npm run serve
+
+ENV TARGET=http://localhost:8080
+COPY website /srv/website
+WORKDIR /srv/website
+RUN npm i; npm run build
+# npm start
 
 COPY release /app/release
-# 需要提前编译 blaze
-# cd blaze; ./build.sh
-# 创建 testcase 压缩文件
-# zip -r ./build/testcases.zip testcases
+# 需要提前准备好 blazehttp 的文件，5 个不通系统执行文件和 1 个 case 压缩包
 COPY blazehttp/build /app/blazehttp
 
-COPY website /app
-WORKDIR /app
-RUN npm ci
-RUN npm run build
+WORKDIR /srv
 
-CMD nginx; tini -- npm run serve
+# ENV GITHUB_TOKEN=$GITHUB_TOKEN
+# ENV HTTPS_PROXY=$HTTPS_PROXY
+
+CMD supervisord; nginx -g 'daemon off;'
