@@ -45,6 +45,7 @@ echo "SUBNET_PREFIX=172.22.222" >> .env  # 定义 docker 虚拟网卡的子网�
 用于启动多个容器
 
 ```yml
+# 基于3.10 版本进行说明，最新配置文件可能存在部分变动
 networks:
   safeline-ce:
     name: safeline-ce # 定义该子网名称
