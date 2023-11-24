@@ -1,12 +1,8 @@
 FROM golang:1.21 as go-builder
 
-ARG goproxy
-ARG goprivate
-
 WORKDIR /work
 COPY backend .
-RUN go env -w GOPROXY=$goproxy
-RUN go env -w GOPRIVATE=$goprivate
+ENV GOPROXY=https://goproxy.cn,direct
 RUN go mod tidy
 RUN CGO_ENABLED=0 go build -a -v -ldflags="-w" -o server .
 

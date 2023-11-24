@@ -1,27 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { Grid, Box, Typography, Container, Link } from "@mui/material";
-import Image from 'next/image'
+import Image from "next/image";
 import Icon from "@/components/Icon";
 
 const ABILITY_LIST = [
   {
     title: "人机验证",
-    href: "https://waf-ce.chaitin.cn/docs/about/challenge",
+    href: "/docs/about/challenge",
     img: "/images/ability/ability_verification.png",
   },
   {
     title: "百川网站监控联动",
-    href: "https://waf-ce.chaitin.cn/docs/practice/monitor",
+    href: "/docs/practice/monitor",
     img: "/images/ability/ability_rivers.png",
   },
   {
     title: "APISIX 插件集成",
-    href: "https://waf-ce.chaitin.cn/docs/about/apisix",
+    href: "/docs/about/apisix",
     img: "/images/ability/ability_apisix.svg",
   },
   {
     title: "长亭社区恶意 IP 情报",
-    href: "https://waf-ce.chaitin.cn/docs/about/IpIntelligence",
+    href: "/docs/about/IpIntelligence",
     img: "/images/ability/ability_maliciousip.svg",
   },
   {
@@ -46,7 +46,7 @@ const ABILITY_LIST = [
   },
 ];
 
-const DEFAULT_URL = '/images/ability/ability_verification.png';
+const DEFAULT_URL = "/images/ability/ability_verification.png";
 
 const Abilities = () => {
   const [hoveredUrl, setHoveredUrl] = useState(DEFAULT_URL);
@@ -57,7 +57,7 @@ const Abilities = () => {
 
   return (
     <Box
-      position={'relative'}
+      position={"relative"}
       sx={{
         background: "#111227",
         color: "common.white",
@@ -69,10 +69,18 @@ const Abilities = () => {
       <Container maxWidth="lg">
         <Grid container alignItems="center">
           <Grid item xs={12} sm={12} md={6}>
-            <Typography variant="h2" mb={4.5}>多维能力拓展</Typography>
+            <Typography variant="h2" mb={4.5}>
+              多维能力拓展
+            </Typography>
             <Grid container spacing={2}>
               {ABILITY_LIST.map((ability) => (
-                <AbilityItem key={ability.title} title={ability.title} img={ability.img} href={ability.href} handleIconHover={handleIconHover} />
+                <AbilityItem
+                  key={ability.title}
+                  title={ability.title}
+                  img={ability.img}
+                  href={ability.href}
+                  handleIconHover={handleIconHover}
+                />
               ))}
             </Grid>
           </Grid>
@@ -101,11 +109,16 @@ export default Abilities;
 interface ItemProps {
   title: string;
   href?: string;
-  img?: string
-  handleIconHover: Function
+  img?: string;
+  handleIconHover: Function;
 }
 
-const AbilityItem: React.FC<ItemProps> = ({ title, href, img, handleIconHover }) => {
+const AbilityItem: React.FC<ItemProps> = ({
+  title,
+  href,
+  img,
+  handleIconHover,
+}) => {
   return (
     <Grid item xs={12} sm={6}>
       <Box
