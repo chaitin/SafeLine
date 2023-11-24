@@ -1,0 +1,141 @@
+{{- if eq .Values.database.type "internal" -}}
+{{- $database := .Values.persistence.persistentVolumeClaim.database -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "{{ template "safeline.database" . }}"
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+    component: database
+spec:
+  replicas: 1
+  serviceName: "{{ template "safeline.database" . }}"
+  selector:
+    matchLabels:
+{{ include "safeline.matchLabels" . | indent 6 }}
+      component: database
+  template:
+    metadata:
+      labels:
+{{ include "safeline.labels" . | indent 8 }}
+        component: database
+      annotations:
+        checksum/secret: {{ include (print $.Template.BasePath "/database/database-secret.yaml") . | sha256sum }}
+{{- if .Values.database.podAnnotations }}
+{{ toYaml .Values.database.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+{{- if .Values.database.internal.serviceAccountName }}
+      serviceAccountName: {{ .Values.database.internal.serviceAccountName }}
+{{- end -}}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      automountServiceAccountToken: {{ .Values.database.internal.automountServiceAccountToken | default false }}
+      terminationGracePeriodSeconds: 120
+      initContainers:
+      - name: "delete-lost-found"
+        {{- if .Values.global.image.registry }}
+        image: {{ .Values.global.image.registry}}/{{ .Values.database.internal.image.repository }}:{{ .Values.database.internal.image.tag }}
+        {{- else }}
+        image: {{ .Values.database.internal.image.repository }}:{{ .Values.database.internal.image.tag }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - |
+            rm -rf /var/lib/postgresql/data/lost+found
+{{- if .Values.database.internal.initContainer.migrator.resources }}
+        resources:
+{{ toYaml .Values.database.internal.initContainer.migrator.resources | indent 10 }}
+{{- end }}
+        volumeMounts:
+          - name: database-data
+            mountPath: /var/lib/postgresql/data
+            subPath: {{ $database.subPath }}
+      containers:
+      - name: database
+        {{- if .Values.global.image.registry }}
+        image: {{ .Values.global.image.registry}}/{{ .Values.database.internal.image.repository }}:{{ .Values.database.internal.image.tag }}
+        {{- else }}
+        image: {{ .Values.database.internal.image.repository }}:{{ .Values.database.internal.image.tag }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+{{- if .Values.database.internal.resources }}
+        resources:
+{{ toYaml .Values.database.internal.resources | indent 10 }}
+{{- end }}
+        envFrom:
+          - secretRef:
+              name: "{{ template "safeline.database" . }}"
+        env:
+          # - name: PGDATA
+          #   value: "/var/lib/postgresql/data/pgdata"
+          - name: POSTGRES_USER
+            value: {{ template "safeline.database.username" . }}
+        volumeMounts:
+        - name: database-data
+          mountPath: /var/lib/postgresql/data
+        - name: shm-volume
+          mountPath: /dev/shm
+        - name: localtime
+          mountPath: /etc/localtime
+          readOnly: true
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      - name: shm-volume
+        emptyDir:
+          medium: Memory
+          sizeLimit: {{ .Values.database.internal.shmSizeLimit }}
+      {{- if not .Values.persistence.enabled }}
+      - name: "database-data"
+        emptyDir: {}
+      {{- else if $database.existingClaim }}
+      - name: "database-data"
+        persistentVolumeClaim:
+          claimName: {{ $database.existingClaim }}
+      {{- end -}}
+
+    {{- with .Values.database.internal.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.database.internal.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.database.internal.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.database.internal.priorityClassName }}
+      priorityClassName: {{ .Values.database.internal.priorityClassName }}
+    {{- end }}
+  {{- if and .Values.persistence.enabled (not $database.existingClaim) }}
+  volumeClaimTemplates:
+  - metadata:
+      name: "database-data"
+      labels:
+{{ include "safeline.labels" . | indent 8 }}
+      annotations:
+      {{- range $key, $value := $database.annotations }}
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+    spec:
+      accessModes: [{{ $database.accessMode | quote }}]
+      {{- if $database.storageClass }}
+      {{- if (eq "-" $database.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ $database.storageClass }}"
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ $database.size | quote }}
+  {{- end -}}
+{{- end -}}

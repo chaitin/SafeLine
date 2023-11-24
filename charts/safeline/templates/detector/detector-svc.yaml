@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "safeline.detector" . }}
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+spec:
+  ports:
+    - name: detector8000
+      port: {{ template "safeline.detector.detector8000.port" . }}
+    - name: detector8001
+      port: {{ template "safeline.detector.detector8001.port" . }}
+  selector:
+{{ include "safeline.matchLabels" . | indent 4 }}
+    component: detector

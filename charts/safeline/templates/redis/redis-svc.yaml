@@ -1,0 +1,14 @@
+{{- if eq .Values.redis.type "internal" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "safeline.redis" . }}
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+spec:
+  ports:
+    - port: 6379
+  selector:
+{{ include "safeline.matchLabels" . | indent 4 }}
+    component: redis
+{{- end -}}

@@ -1,0 +1,165 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "safeline.tengine" . }}
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+    component: tengine
+spec:
+  replicas: {{ .Values.tengine.replicas }}
+  revisionHistoryLimit: {{ .Values.tengine.revisionHistoryLimit }}
+  strategy:
+{{- if .Values.strategy }}
+{{ toYaml .Values.strategy | indent 4 }}
+{{- end }}
+  selector:
+    matchLabels:
+{{ include "safeline.matchLabels" . | indent 6 }}
+      component: tengine
+  template:
+    metadata:
+      labels:
+{{ include "safeline.matchLabels" . | indent 8 }}
+        component: tengine
+      annotations:
+{{- if .Values.tengine.podAnnotations }}
+{{ toYaml .Values.tengine.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+{{- if .Values.tengine.serviceAccountName }}
+      serviceAccountName: {{ .Values.tengine.serviceAccountName }}
+{{- end -}}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      automountServiceAccountToken: {{ .Values.tengine.automountServiceAccountToken | default false }}
+      terminationGracePeriodSeconds: 120
+      initContainers:
+      - name: delete-lost-found-dir
+        {{- if and .Values.global.image.registry (not .Values.global.image.tag) }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.tengine.image.repository }}:{{ .Chart.AppVersion }}
+        {{- else if and .Values.global.image.registry .Values.global.image.tag }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.tengine.image.repository }}:{{ .Values.global.image.tag }}
+        {{- else if .Values.tengine.image.registry .Values.tengine.image.repository .Values.tengine.image.tag }}
+        image: {{ .Values.tengine.image.registry }}/{{ .Values.tengine.image.repository }}:{{ .Values.tengine.image.tag }}
+        {{- else if and .Values.tengine.image.repository .Values.tengine.image.tag (not .Values.tengine.image.registry) }}
+        image: {{ .Values.tengine.image.repository }}:{{ .Values.tengine.image.tag }}
+        {{- else if and .Values.tengine.image.repository (not .Values.tengine.image.tag) (not .Values.tengine.image.registry) }}
+        image: {{ .Values.tengine.image.repository }}:{{ .Chart.AppVersion }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command:
+          - sh
+          - -c
+          - |-
+            rm -rf /etc/nginx/lost+found
+            rm -rf /resources/management/lost+found
+            rm -rf /resources/detector/lost+found
+            rm -rf /var/log/lost+found
+            rm -rf /usr/local/nginx/cache/lost+found
+        volumeMounts:
+          - mountPath: /etc/nginx
+            name: nginx
+          - mountPath: /resources/management
+            name: management
+          - mountPath: /resources/detector
+            name: detector
+          - mountPath: /var/log
+            name: logs
+            subPath: nginx
+          - mountPath: /usr/local/nginx/cache
+            name: cache
+      containers:
+      - name: tengine
+        {{- if and .Values.global.image.registry (not .Values.global.image.tag) }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.tengine.image.repository }}:{{ .Chart.AppVersion }}
+        {{- else if and .Values.global.image.registry .Values.global.image.tag }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.tengine.image.repository }}:{{ .Values.global.image.tag }}
+        {{- else if .Values.tengine.image.registry .Values.tengine.image.repository .Values.tengine.image.tag }}
+        image: {{ .Values.tengine.image.registry }}/{{ .Values.tengine.image.repository }}:{{ .Values.tengine.image.tag }}
+        {{- else if and .Values.tengine.image.repository .Values.tengine.image.tag (not .Values.tengine.image.registry) }}
+        image: {{ .Values.tengine.image.repository }}:{{ .Values.tengine.image.tag }}
+        {{- else if and .Values.tengine.image.repository (not .Values.tengine.image.tag) (not .Values.tengine.image.registry) }}
+        image: {{ .Values.tengine.image.repository }}:{{ .Chart.AppVersion }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        ports:
+          - name: health
+            containerPort: {{ template "safeline.tengine.health.port" . }}
+          - name: http
+            containerPort: {{ template "safeline.tengine.http.port" . }}
+          - name: https
+            containerPort: {{ template "safeline.tengine.https.port" . }}
+        env:
+          - name: REDIS_URL
+            value: {{ template "safeline.redis.url" . }}
+          - name: MGT_ADDR
+            value: {{ template "safeline.management" . }}:{{ template "safeline.management.controller.port" . }}
+        volumeMounts:
+          - name: localtime
+            mountPath: /etc/localtime
+            readOnly: true
+          - mountPath: /etc/nginx
+            name: nginx
+          - mountPath: /resources/management
+            name: management
+          - mountPath: /resources/detector
+            name: detector
+          - mountPath: /var/log
+            name: logs
+            subPath: nginx
+          - mountPath: /usr/local/nginx/cache
+            name: cache
+{{- if .Values.tengine.resources }}
+        resources:
+{{ toYaml .Values.tengine.resources | indent 10 }}
+{{- end }}
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+        {{- if .Values.persistence.enabled }}
+        - name: nginx
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.nginx.existingClaim | default (include "safeline.nginx" .) }}
+        - name: management
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.management.existingClaim | default (include "safeline.management" .) }}
+        - name: detector
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.detector.existingClaim | default (include "safeline.detector" .) }}
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.logs.existingClaim | default (include "safeline.logs" .) }}
+        - name: cache
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.tengine.existingClaim | default (include "safeline.tengine" .) }}
+        {{- else -}}
+        - name: nginx
+          emptyDir: {}
+        - name: management
+          emptyDir: {}
+        - name: detector
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+        {{- end -}}
+
+    {{- with .Values.tengine.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tengine.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tengine.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.tengine.priorityClassName }}
+      priorityClassName: {{ .Values.tengine.priorityClassName }}
+    {{- end }}

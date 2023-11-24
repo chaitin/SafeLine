@@ -1,0 +1,3 @@
+Please wait for several minutes for Safeline deployment to complete.
+Then you should be able to visit the Safeline managenment at {{ template "safeline.management.url" . }}
+For more details, please visit https://github.com/chaitin/SafeLine

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ template "safeline.management" . }}"
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+spec:
+{{- if or (eq .Values.management.service.type "NodePort") (eq .Values.management.service.type "LoadBalancer") }}
+  type: NodePort
+{{- end }}
+  ports:
+    - name: management
+      port: {{ template "safeline.management.web.port" . }}
+{{- if or (eq .Values.management.service.type "NodePort") (eq .Values.management.service.type "LoadBalancer") }}
+      nodePort: {{ .Values.management.service.web.nodePort }}
+{{- end }}
+    - name: controller
+      protocol: TCP
+      port: {{ template "safeline.management.controller.port" .}}
+  selector:
+{{ include "safeline.matchLabels" . | indent 4 }}
+    component: management

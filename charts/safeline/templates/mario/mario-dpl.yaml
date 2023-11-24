@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "safeline.mario" . }}
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+    component: mario
+spec:
+  replicas: {{ .Values.mario.replicas }}
+  revisionHistoryLimit: {{ .Values.mario.revisionHistoryLimit }}
+  strategy:
+{{- if .Values.strategy }}
+{{ toYaml .Values.strategy | indent 4 }}
+{{- end }}
+  selector:
+    matchLabels:
+{{ include "safeline.matchLabels" . | indent 6 }}
+      component: mario
+  template:
+    metadata:
+      labels:
+{{ include "safeline.matchLabels" . | indent 8 }}
+        component: mario
+      annotations:
+{{- if .Values.mario.podAnnotations }}
+{{ toYaml .Values.mario.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+{{- if .Values.mario.serviceAccountName }}
+      serviceAccountName: {{ .Values.mario.serviceAccountName }}
+{{- end -}}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      automountServiceAccountToken: {{ .Values.mario.automountServiceAccountToken | default false }}
+      terminationGracePeriodSeconds: 120
+      initContainers:
+      - name: delete-lost-found-dir
+        {{- if and .Values.global.image.registry (not .Values.global.image.tag) }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.mario.image.repository }}:{{ .Chart.AppVersion }}
+        {{- else if and .Values.global.image.registry .Values.global.image.tag }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.mario.image.repository }}:{{ .Values.global.image.tag }}
+        {{- else if .Values.mario.image.registry .Values.mario.image.repository .Values.mario.image.tag }}
+        image: {{ .Values.mario.image.registry }}/{{ .Values.mario.image.repository }}:{{ .Values.mario.image.tag }}
+        {{- else if and .Values.mario.image.repository .Values.mario.image.tag (not .Values.mario.image.registry) }}
+        image: {{ .Values.mario.image.repository }}:{{ .Values.mario.image.tag }}
+        {{- else if and .Values.mario.image.repository (not .Values.mario.image.tag) (not .Values.mario.image.registry) }}
+        image: {{ .Values.mario.image.repository }}:{{ .Chart.AppVersion }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command:
+          - sh
+          - -c
+          - |-
+            rm -rf /resources/mario/lost+found
+            rm -rf /log/lost+found
+        volumeMounts:
+          - mountPath: /resources/mario
+            name: mario
+          - mountPath: /logs
+            name: logs
+            subPath: mario
+      containers:
+      - name: mario
+        {{- if and .Values.global.image.registry (not .Values.global.image.tag) }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.mario.image.repository }}:{{ .Chart.AppVersion }}
+        {{- else if and .Values.global.image.registry .Values.global.image.tag }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.mario.image.repository }}:{{ .Values.global.image.tag }}
+        {{- else if .Values.mario.image.registry .Values.mario.image.repository .Values.mario.image.tag }}
+        image: {{ .Values.mario.image.registry }}/{{ .Values.mario.image.repository }}:{{ .Values.mario.image.tag }}
+        {{- else if and .Values.mario.image.repository .Values.mario.image.tag (not .Values.mario.image.registry) }}
+        image: {{ .Values.mario.image.repository }}:{{ .Values.mario.image.tag }}
+        {{- else if and .Values.mario.image.repository (not .Values.mario.image.tag) (not .Values.mario.image.registry) }}
+        image: {{ .Values.mario.image.repository }}:{{ .Chart.AppVersion }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        ports:
+          - name: mario
+            containerPort: {{ template "safeline.mario.mario.port" . }}
+          - name: weblog
+            containerPort: {{ template "safeline.mario.weblog.port" . }}
+        env:
+          - name: LOG_DIR
+            value: /logs/mario
+          - name: GOGC
+            value: "100"
+          - name: DATABASE_URL
+            value: {{ template "safeline.database.url" . }}
+          - name: REDIS_URL
+            value: {{ template "safeline.redis.url" . }}
+        volumeMounts:
+          - name: localtime
+            mountPath: /etc/localtime
+            readOnly: true
+          - mountPath: /resources/mario
+            name: mario
+          - mountPath: /logs
+            name: logs
+            subPath: mario
+{{- if .Values.mario.resources }}
+        resources:
+{{ toYaml .Values.mario.resources | indent 10 }}
+{{- end }}
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+        {{- if .Values.persistence.enabled }}
+        - name: mario
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.mario.existingClaim | default (include "safeline.mario" .) }}
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.logs.existingClaim |default (include "safeline.logs" .) }}
+        {{- else -}}
+        - name: mario
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        {{- end -}}
+
+    {{- with .Values.mario.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.mario.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.mario.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.mario.priorityClassName }}
+      priorityClassName: {{ .Values.mario.priorityClassName }}
+    {{- end }}
+

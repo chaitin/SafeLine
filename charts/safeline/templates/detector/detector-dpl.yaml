@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "safeline.detector" . }}
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+    component: detector
+spec:
+  replicas: {{ .Values.detector.replicas }}
+  revisionHistoryLimit: {{ .Values.detector.revisionHistoryLimit }}
+  strategy:
+{{- if .Values.strategy }}
+{{ toYaml .Values.strategy | indent 4 }}
+{{- end }}
+  selector:
+    matchLabels:
+{{ include "safeline.matchLabels" . | indent 6 }}
+      component: detector
+  template:
+    metadata:
+      labels:
+{{ include "safeline.matchLabels" . | indent 8 }}
+        component: detector
+      annotations:
+{{- if .Values.detector.podAnnotations }}
+{{ toYaml .Values.detector.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+{{- if .Values.detector.serviceAccountName }}
+      serviceAccountName: {{ .Values.detector.serviceAccountName }}
+{{- end -}}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      automountServiceAccountToken: {{ .Values.detector.automountServiceAccountToken | default false }}
+      terminationGracePeriodSeconds: 120
+      initContainers:
+      - name: delete-lost-found-dir
+        {{- if and .Values.global.image.registry (not .Values.global.image.tag) }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.detector.image.repository }}:{{ .Chart.AppVersion }}
+        {{- else if and .Values.global.image.registry .Values.global.image.tag }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.detector.image.repository }}:{{ .Values.global.image.tag }}
+        {{- else if .Values.detector.image.registry .Values.detector.image.repository .Values.detector.image.tag }}
+        image: {{ .Values.detector.image.registry }}/{{ .Values.detector.image.repository }}:{{ .Values.detector.image.tag }}
+        {{- else if and .Values.detector.image.repository .Values.detector.image.tag (not .Values.detector.image.registry) }}
+        image: {{ .Values.detector.image.repository }}:{{ .Values.detector.image.tag }}
+        {{- else if and .Values.detector.image.repository (not .Values.detector.image.tag) (not .Values.detector.image.registry) }}
+        image: {{ .Values.detector.image.repository }}:{{ .Chart.AppVersion }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command:
+          - sh
+          - -c
+          - |-
+            rm -rf /resources/detector/lost+found
+            rm -rf /log/lost+found
+        volumeMounts:
+          - mountPath: /resources/detector
+            name: detector
+          - mountPath: /logs
+            name: logs
+            subPath: detector
+      containers:
+      - name: detector
+        {{- if and .Values.global.image.registry (not .Values.global.image.tag) }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.detector.image.repository }}:{{ .Chart.AppVersion }}
+        {{- else if and .Values.global.image.registry .Values.global.image.tag }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.detector.image.repository }}:{{ .Values.global.image.tag }}
+        {{- else if .Values.detector.image.registry .Values.detector.image.repository .Values.detector.image.tag }}
+        image: {{ .Values.detector.image.registry }}/{{ .Values.detector.image.repository }}:{{ .Values.detector.image.tag }}
+        {{- else if and .Values.detector.image.repository .Values.detector.image.tag (not .Values.detector.image.registry) }}
+        image: {{ .Values.detector.image.repository }}:{{ .Values.detector.image.tag }}
+        {{- else if and .Values.detector.image.repository (not .Values.detector.image.tag) (not .Values.detector.image.registry) }}
+        image: {{ .Values.detector.image.repository }}:{{ .Chart.AppVersion }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        ports:
+          - name: detector-8000
+            containerPort: {{ template "safeline.detector.detector8000.port" . }}
+          - name: detector-8001
+            containerPort: {{ template "safeline.detector.detector8001.port" . }}
+        env:
+          - name: LOG_DIR
+            value: /logs/detector
+        volumeMounts:
+          - name: localtime
+            mountPath: /etc/localtime
+            readOnly: true
+          - mountPath: /resources/detector
+            name: detector
+          - mountPath: /logs
+            name: logs
+            subPath: detector
+{{- if .Values.detector.resources }}
+        resources:
+{{ toYaml .Values.detector.resources | indent 10 }}
+{{- end }}
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+
+        {{- if .Values.persistence.enabled }}
+        - name: detector
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.detector.existingClaim | default (include "safeline.detector" .) }}
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.logs.existingClaim | default (include "safeline.logs" .) }}
+        {{- else -}}
+        - name: detector
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        {{- end -}}
+
+    {{- with .Values.detector.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.detector.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.detector.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.detector.priorityClassName }}
+      priorityClassName: {{ .Values.detector.priorityClassName }}
+    {{- end }}
+

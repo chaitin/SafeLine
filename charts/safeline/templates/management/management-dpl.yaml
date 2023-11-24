@@ -1,0 +1,157 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "safeline.management" . }}
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+    component: management
+spec:
+  replicas: {{ .Values.management.replicas }}
+  revisionHistoryLimit: {{ .Values.management.revisionHistoryLimit }}
+  strategy:
+{{- if .Values.strategy }}
+{{ toYaml .Values.strategy | indent 4 }}
+{{- end }}
+  selector:
+    matchLabels:
+{{ include "safeline.matchLabels" . | indent 6 }}
+      component: management
+  template:
+    metadata:
+      labels:
+{{ include "safeline.matchLabels" . | indent 8 }}
+        component: management
+      annotations:
+{{- if .Values.management.podAnnotations }}
+{{ toYaml .Values.management.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+{{- if .Values.management.serviceAccountName }}
+      serviceAccountName: {{ .Values.management.serviceAccountName }}
+{{- end -}}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      automountServiceAccountToken: {{ .Values.management.automountServiceAccountToken | default false }}
+      terminationGracePeriodSeconds: 120
+      initContainers:
+      - name: delete-lost-found-dir
+        {{- if and .Values.global.image.registry (not .Values.global.image.tag) }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.management.image.repository }}:{{ .Chart.AppVersion }}
+        {{- else if and .Values.global.image.registry .Values.global.image.tag }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.management.image.repository }}:{{ .Values.global.image.tag }}
+        {{- else if .Values.management.image.registry .Values.management.image.repository .Values.management.image.tag }}
+        image: {{ .Values.management.image.registry }}/{{ .Values.management.image.repository }}:{{ .Values.management.image.tag }}
+        {{- else if and .Values.management.image.repository .Values.management.image.tag (not .Values.management.image.registry) }}
+        image: {{ .Values.management.image.repository }}:{{ .Values.management.image.tag }}
+        {{- else if and .Values.management.image.repository (not .Values.management.image.tag) (not .Values.management.image.registry) }}
+        image: {{ .Values.management.image.repository }}:{{ .Chart.AppVersion }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        command:
+          - sh
+          - -c
+          - |-
+            rm -rf /resources/management/lost+found
+            rm -rf /resources/nginx/lost+found
+            rm -rf /log/lost+found
+        volumeMounts:
+          - mountPath: /resources/management
+            name: management
+          - mountPath: /resources/nginx
+            name: nginx
+          - mountPath: /logs
+            name: logs
+            subPath: management
+      containers:
+      - name: management
+        {{- if and .Values.global.image.registry (not .Values.global.image.tag) }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.management.image.repository }}:{{ .Chart.AppVersion }}
+        {{- else if and .Values.global.image.registry .Values.global.image.tag }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.management.image.repository }}:{{ .Values.global.image.tag }}
+        {{- else if .Values.management.image.registry .Values.management.image.repository .Values.management.image.tag }}
+        image: {{ .Values.management.image.registry }}/{{ .Values.management.image.repository }}:{{ .Values.management.image.tag }}
+        {{- else if and .Values.management.image.repository .Values.management.image.tag (not .Values.management.image.registry) }}
+        image: {{ .Values.management.image.repository }}:{{ .Values.management.image.tag }}
+        {{- else if and .Values.management.image.repository (not .Values.management.image.tag) (not .Values.management.image.registry) }}
+        image: {{ .Values.management.image.repository }}:{{ .Chart.AppVersion }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        ports:
+          - name: web
+            containerPort: {{ template "safeline.management.web.port" . }}
+          - name: middle
+            containerPort: {{ template "safeline.management.middle.port" . }}
+          - name: controller
+            containerPort: {{ template "safeline.management.controller.port" . }}
+        env:
+          - name: MANAGEMENT_RESOURCES_DIR
+            value: /resources/management
+          - name: NGINX_RESOURCES_DIR
+            value: /resources/nginx
+          - name: DATABASE_URL
+            value: {{ template "safeline.database.url" . }}
+          - name: MARIO_URL
+            value: {{ template "safeline.mario.url" . }}
+          - name: DETECTOR_URL
+            value: http://{{ template "safeline.detector" . }}:{{ template "safeline.detector.detector8001.port" . }}
+          - name: REDIS_URL
+            value: {{ template "safeline.redis.url" . }}
+          - name: MANAGEMENT_LOGS_DIR
+            value: /logs/management
+        volumeMounts:
+          - name: localtime
+            mountPath: /etc/localtime
+            readOnly: true
+          - mountPath: /resources/management
+            name: management
+          - mountPath: /resources/nginx
+            name: nginx
+          - mountPath: /logs
+            name: logs
+            subPath: management
+{{- if .Values.management.resources }}
+        resources:
+{{ toYaml .Values.management.resources | indent 10 }}
+{{- end }}
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+        {{- if .Values.persistence.enabled }}
+        - name: management
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.management.existingClaim | default (include "safeline.management" .) }}
+        - name: nginx
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.nginx.existingClaim | default (include "safeline.nginx" .) }}
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.persistentVolumeClaim.logs.existingClaim | default (include "safeline.logs" .) }}
+
+        {{- else -}}
+        - name: management
+          emptyDir: {}
+        - name: nginx
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+        {{- end -}}
+
+    {{- with .Values.management.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.management.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.management.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.management.priorityClassName }}
+      priorityClassName: {{ .Values.management.priorityClassName }}
+    {{- end }}
+

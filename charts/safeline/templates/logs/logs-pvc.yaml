@@ -1,0 +1,30 @@
+{{- $logs := .Values.persistence.persistentVolumeClaim.logs -}}
+{{- if and .Values.persistence.enabled (not $logs.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "safeline.logs" . }}
+  annotations:
+  {{- range $key, $value := $logs.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- if eq .Values.persistence.resourcePolicy "keep" }}
+    helm.sh/resource-policy: keep
+  {{- end }}
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+    component: logs
+spec:
+  accessModes: 
+    - {{ $logs.accessMode }}
+  resources:
+    requests:
+      storage: {{ $logs.size }}
+  {{- if $logs.storageClass }}
+    {{- if eq "-" $logs.storageClass }}
+  storageClassName: ""
+    {{- else }}
+  storageClassName: {{ $logs.storageClass }}
+    {{- end }}
+  {{- end }}
+{{- end }}

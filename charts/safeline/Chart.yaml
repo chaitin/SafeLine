@@ -1,0 +1,17 @@
+apiVersion: v1
+appVersion: 3.12.2
+description: A free WAF that is simple enough, easy to use, and strong enough. Based on the industry's leading semantic engine detection technology, it acts as a reverse proxy access to protect your website from hackers.
+home: https://waf-ce.chaitin.cn/
+icon: https://waf-ce.chaitin.cn/images/403.svg
+keywords:
+- waf
+- chaitin
+- safeline
+maintainers:
+- email: admin@jangrui.com
+  name: Jangrui
+name: safeline
+sources:
+- https://github.com/chaitin/safeline
+- https://github.com/jangrui/safeline-helm
+version: 3.12.2

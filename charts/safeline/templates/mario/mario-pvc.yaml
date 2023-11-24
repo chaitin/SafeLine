@@ -1,0 +1,30 @@
+{{- $mario := .Values.persistence.persistentVolumeClaim.mario -}}
+{{- if and .Values.persistence.enabled (not $mario.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "safeline.mario" . }}
+  annotations:
+  {{- range $key, $value := $mario.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- if eq .Values.persistence.resourcePolicy "keep" }}
+    helm.sh/resource-policy: keep
+  {{- end }}
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+    component: mario
+spec:
+  accessModes: 
+    - {{ $mario.accessMode }}
+  resources:
+    requests:
+      storage: {{ $mario.size }}
+  {{- if $mario.storageClass }}
+    {{- if eq "-" $mario.storageClass }}
+  storageClassName: ""
+    {{- else }}
+  storageClassName: {{ $mario.storageClass }}
+    {{- end }}
+  {{- end }}
+{{- end }}

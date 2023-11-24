@@ -1,0 +1,250 @@
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullSecrets: []
+imagePullPolicy: IfNotPresent
+
+global:
+  image:
+    registry: ""
+    tag: ""
+
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+
+persistence:
+  enabled: true
+  resourcePolicy: "keep"
+  persistentVolumeClaim:
+    database:
+      existingClaim: ""
+      storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 1Gi
+      annotations: {}
+
+    logs:
+      existingClaim: ""
+      storageClass: ""
+      accessMode: ReadWriteMany
+      size: 1Gi
+      annotations: {}
+
+    nginx:
+      existingClaim: ""
+      storageClass: ""
+      accessMode: ReadWriteMany
+      size: 1Gi
+      annotations: {}
+
+    management:
+      existingClaim: ""
+      storageClass: ""
+      accessMode: ReadWriteMany
+      size: 1Gi
+      annotations: {}
+
+    detector:
+      existingClaim: ""
+      storageClass: ""
+      accessMode: ReadWriteMany
+      size: 1Gi
+      annotations: {}
+
+    mario:
+      existingClaim: ""
+      storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 1Gi
+      annotations: {}
+
+    tengine:
+      existingClaim: ""
+      storageClass: ""
+      accessMode: ReadWriteOnce
+      size: 1Gi
+      annotations: {}
+
+database:
+  type: internal
+  internal:
+    serviceAccountName: ""
+    automountServiceAccountToken: false
+    image:
+      registry: ''
+      repository: postgres
+      tag: 15.2
+    password: changeit
+    shmSizeLimit: 512Mi
+    resources:
+    #  requests:
+    #    memory: 256Mi
+    #    cpu: 100m
+    livenessProbe:
+      timeoutSeconds: 1
+    readinessProbe:
+      timeoutSeconds: 1
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    priorityClassName:
+    initContainer:
+      migrator: {}
+      # resources:
+      #  requests:
+      #    memory: 128Mi
+      #    cpu: 100m
+      permissions: {}
+      # resources:
+      #  requests:
+      #    memory: 128Mi
+      #    cpu: 100m
+  external:
+    host: ""
+    port: ""
+    username: ""
+    password: ""
+    coreDatabase: "safeline-ce"
+    dbname: "safeline-ce"
+    existingSecret: ""
+    sslmode: "disable"
+  maxIdleConns: 100
+  maxOpenConns: 900
+  podAnnotations: {}
+
+redis:
+  type: internal
+  internal:
+    serviceAccountName: ""
+    automountServiceAccountToken: false
+    image:
+      registry: ''
+      repository: redis
+      tag: 7.0.10
+    resources:
+    #  requests:
+    #    memory: 256Mi
+    #    cpu: 100m
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    priorityClassName:
+  external:
+    # addr: "192.168.0.2:6379"
+    addr: ""
+    sentinelMasterSet: ""
+    coreDatabaseIndex: "0"
+    jobserviceDatabaseIndex: "1"
+    registryDatabaseIndex: "2"
+    trivyAdapterIndex: "5"
+    username: ""
+    password: ""
+    existingSecret: ""
+  podAnnotations: {}
+
+management:
+  image:
+    registry: ''
+    repository: chaitin/safeline-mgt-api
+    tag: ""
+  service:
+    type: NodePort
+    web:
+      nodePort: 31443
+  resources:
+  #   limits:
+  #     cpu: 1000m
+  #     memory: 1000Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 100Mi
+  podAnnotations: {}
+  serviceAccountName: ""
+  automountServiceAccountToken: false
+  replicas: 1
+  revisionHistoryLimit: 10
+  startupProbe:
+    enabled: false
+    initialDelaySeconds: 10
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  priorityClassName: 
+
+detector:
+  image:
+    registry: ''
+    repository: chaitin/safeline-detector
+    tag: ""
+  resources:
+  #   limits:
+  #     cpu: 1000m
+  #     memory: 1000Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 100Mi
+  podAnnotations: {}
+  serviceAccountName: ""
+  automountServiceAccountToken: false
+  replicas: 1
+  revisionHistoryLimit: 10
+  startupProbe:
+    enabled: false
+    initialDelaySeconds: 10
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  priorityClassName: 
+
+mario:
+  image:
+    registry: ''
+    repository: chaitin/safeline-mario
+    tag: ""
+  resources:
+  #   limits:
+  #     cpu: 1000m
+  #     memory: 1000Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 100Mi
+  podAnnotations: {}
+  serviceAccountName: ""
+  automountServiceAccountToken: false
+  replicas: 1
+  revisionHistoryLimit: 10
+  startupProbe:
+    enabled: false
+    initialDelaySeconds: 10
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  priorityClassName: 
+
+tengine:
+  image:
+    registry: ''
+    repository: chaitin/safeline-tengine
+    tag: ""
+  resources:
+  #   limits:
+  #     cpu: 1000m
+  #     memory: 1000Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 100Mi
+  podAnnotations: {}
+  serviceAccountName: ""
+  automountServiceAccountToken: false
+  replicas: 1
+  revisionHistoryLimit: 10
+  startupProbe:
+    enabled: false
+    initialDelaySeconds: 10
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  priorityClassName: 

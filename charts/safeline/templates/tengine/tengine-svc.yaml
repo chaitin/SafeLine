@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ template "safeline.tengine" . }}"
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+spec:
+  ports:
+    - name: health
+      protocol: TCP
+      port: {{ template "safeline.tengine.health.port" . }}
+    - name: http
+      protocol: TCP
+      port: {{ template "safeline.tengine.http.port" . }}
+    - name: https
+      protocol: TCP
+      port: {{ template "safeline.tengine.https.port" . }}
+  selector:
+{{ include "safeline.matchLabels" . | indent 4 }}
+    component: tengine

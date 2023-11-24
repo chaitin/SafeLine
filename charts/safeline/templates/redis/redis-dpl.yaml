@@ -1,0 +1,74 @@
+{{- if eq .Values.redis.type "internal" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "safeline.redis" . }}
+  labels:
+{{ include "safeline.labels" . | indent 4 }}
+    component: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+{{ include "safeline.matchLabels" . | indent 6 }}
+      component: redis
+  template:
+    metadata:
+      labels:
+{{ include "safeline.labels" . | indent 8 }}
+        component: redis
+{{- if .Values.redis.podAnnotations }}
+      annotations:
+{{ toYaml .Values.redis.podAnnotations | indent 8 }}
+{{- end }}
+    spec:
+{{- if .Values.redis.internal.serviceAccountName }}
+      serviceAccountName: {{ .Values.redis.internal.serviceAccountName }}
+{{- end -}}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      automountServiceAccountToken: {{ .Values.redis.internal.automountServiceAccountToken | default false }}
+      terminationGracePeriodSeconds: 120
+      containers:
+      - name: redis
+        {{- if .Values.global.image.registry }}
+        image: {{ .Values.global.image.registry }}/{{ .Values.redis.internal.image.repository }}:{{ .Values.redis.internal.image.tag }}
+        {{- else }}
+        image: {{ .Values.redis.internal.image.repository }}:{{ .Values.redis.internal.image.tag }}
+        {{- end }}
+        imagePullPolicy: {{ .Values.imagePullPolicy }}
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 300
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 1
+          periodSeconds: 10
+{{- if .Values.redis.internal.resources }}
+        resources:
+{{ toYaml .Values.redis.internal.resources | indent 10 }}
+{{- end }}
+        env:
+          - name: TZ
+            value: Asia/Shanghai
+    {{- with .Values.redis.internal.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.redis.internal.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.redis.internal.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.redis.internal.priorityClassName }}
+      priorityClassName: {{ .Values.redis.internal.priorityClassName }}
+    {{- end }}
+  {{- end -}}
