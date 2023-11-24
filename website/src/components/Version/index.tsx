@@ -20,7 +20,7 @@ const VERSION_LIST = [
           my: 4,
           boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
         }}
-        href="https://waf-ce.chaitin.cn/posts/guide_install"
+        href="/docs/guide/install"
       >
         立即安装
       </Button>

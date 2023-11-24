@@ -12,12 +12,12 @@ title: "可用性监控"
 
 交互界面简洁直观、操作上手轻松、注重用户体验，实时监测每个页面的状态和详细信息，让你对网站运行状态了如指掌。
 
-![website.png](https://waf-ce.chaitin.cn/images/docs/practice_monitor/website.png)
+![website.png](/images/docs/practice_monitor/website.png)
 
 ### 雷池用户福利
 
 凡是安装了雷池社区版的用户，可凭借雷池设备码领取长亭网站监控产品 100 元体验金一份
 
-![machineid.png](https://waf-ce.chaitin.cn/images/docs/practice_monitor/machineid.png)
+![machineid.png](/images/docs/practice_monitor/machineid.png)
 
-![gift.png](https://waf-ce.chaitin.cn/images/docs/practice_monitor/gift.png)
+![gift.png](/images/docs/practice_monitor/gift.png)

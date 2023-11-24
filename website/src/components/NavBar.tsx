@@ -133,7 +133,7 @@ export default function NavBar() {
                   variant="contained"
                   target="_blank"
                   sx={{ width: { xs: "100%", sm: "auto" } }}
-                  href="https://waf-ce.chaitin.cn/posts/guide_install"
+                  href="/docs/guide/install"
                 >
                   立即安装
                 </Button>

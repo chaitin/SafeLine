@@ -9,7 +9,7 @@ const LINKS = [
     items: [
       {
         label: "技术文档",
-        to: "https://waf-ce.chaitin.cn/posts/guide_introduction",
+        to: "/docs",
       },
       {
         label: "教学视频",
@@ -17,11 +17,11 @@ const LINKS = [
       },
       {
         label: "学习资料",
-        to: "https://waf-ce.chaitin.cn/posts/guide_introduction",
+        to: "/docs",
       },
       {
         label: "更新日志",
-        to: "https://waf-ce.chaitin.cn/posts/about_changelog",
+        to: "/docs/about/changelog",
       },
     ],
     xs: 6,
