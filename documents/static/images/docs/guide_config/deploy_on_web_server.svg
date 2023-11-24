@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="966px" height="310px" viewBox="0 0 966 310" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>配置防护站点（3）</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="230" height="230" rx="12"></rect>
+        <filter x="-30.4%" y="-21.7%" width="160.9%" height="160.9%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.568627451   0 0 0 0 0.619607843   0 0 0 0 0.670588235  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-3" x="325" y="0" width="561" height="230" rx="12"></rect>
+        <filter x="-12.5%" y="-21.7%" width="125.0%" height="160.9%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.568627451   0 0 0 0 0.619607843   0 0 0 0 0.670588235  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M505.670519,92.4129077 C505.485903,91.297016 504.932053,90.1811243 503.824353,89.6231784 C495.701221,84.9736295 478.71649,76.7904233 477.978023,76.4184594 C477.05494,75.8605135 475.762624,75.8605135 474.83954,76.4184594 C474.101074,76.7904233 457.30096,84.9736294 449.177827,89.6231784 C448.070128,90.1811243 447.516278,91.297016 447.331661,92.4129077 C443.454712,130.167245 474.83954,142.628036 475.208774,142.814018 C475.578007,143 476.131857,143 476.50109,143 C476.870323,143 477.424173,143 477.793407,142.814018 C478.16264,142.628036 485.916539,139.652325 493.301204,131.841083 C499.947403,124.773768 507.701302,112.126995 505.670519,92.4129077 Z" id="path-5"></path>
+        <filter x="-28.9%" y="-19.4%" width="158.1%" height="150.7%" filterUnits="objectBoundingBox" id="filter-6">
+            <feOffset dx="0" dy="4" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.568627451   0 0 0 0 0.619607843   0 0 0 0 0.670588235  0 0 0 0.301054414 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <polygon id="path-7" points="473.632574 93.8959395 483.715734 92.9610227 479.767773 105.263462 485.096653 104.769365 471.550313 126.658537 473.068478 110.703878 468.660724 111.112568"></polygon>
+        <filter x="-42.6%" y="-14.8%" width="185.2%" height="141.5%" filterUnits="objectBoundingBox" id="filter-8">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.3 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-9" x="80" y="65" width="70" height="70" rx="12"></rect>
+        <filter x="-26.4%" y="-16.4%" width="152.9%" height="152.9%" filterUnits="objectBoundingBox" id="filter-10">
+            <feOffset dx="0" dy="7" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.568627451   0 0 0 0 0.619607843   0 0 0 0 0.670588235  0 0 0 0.3 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <path d="M130.683871,85 C131.341935,85 132,85.7099237 132,86.4198473 L132,110.793893 C132,111.503817 131.341935,112.21374 130.683871,112.21374 L116.206452,112.21374 L116.206452,114.10687 L123.445161,114.10687 C123.883871,114.10687 124.322581,114.580153 124.322581,115.053435 C124.322581,115.526718 123.883871,116 123.445161,116 L106.335484,116 C105.896774,116 105.458065,115.526718 105.458065,115.053435 C105.458065,114.580153 105.896774,114.10687 106.335484,114.10687 L113.574194,114.10687 L113.574194,112.21374 L99.316129,112.21374 C98.6580645,112.21374 98,111.503817 98,110.793893 L98,86.4198473 C98,85.4732824 98.4387097,85 99.316129,85 L130.683871,85 Z M127,89 L103,89 C102.447715,89 102,89.4477153 102,90 L102,90 L102,107 C102,107.552285 102.447715,108 103,108 L103,108 L127,108 C127.552285,108 128,107.552285 128,107 L128,107 L128,90 C128,89.4477153 127.552285,89 127,89 L127,89 Z" id="path-11"></path>
+        <filter x="-20.6%" y="-16.1%" width="141.2%" height="145.2%" filterUnits="objectBoundingBox" id="filter-12">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.3 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-13" x="134" y="119" width="24" height="24" rx="4"></rect>
+        <filter x="-77.1%" y="-47.9%" width="254.2%" height="254.2%" filterUnits="objectBoundingBox" id="filter-14">
+            <feOffset dx="0" dy="7" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 0.352941176   0 0 0 0 0.368627451  0 0 0 0.3 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-15" x="0" y="0" width="60" height="60" rx="12"></rect>
+        <filter x="-30.8%" y="-19.2%" width="161.7%" height="161.7%" filterUnits="objectBoundingBox" id="filter-16">
+            <feOffset dx="0" dy="7" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.568627451   0 0 0 0 0.619607843   0 0 0 0 0.670588235  0 0 0 0.3 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="官网设计" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="客户端-雷池-服务器同一设备" transform="translate(-67.000000, -57.000000)">
+            <g id="配置防护站点（3）" transform="translate(107.000000, 77.000000)">
+                <g id="矩形">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g id="矩形备份">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-3"></use>
+                </g>
+                <circle id="椭圆形" stroke="#0FC6C2" stroke-width="3" cx="230" cy="115" r="6.5"></circle>
+                <path id="路径-104" d="M309,108 L323,115 L309,122 L309,116 L238,116 L238,114 L309,114 L309,108 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+                <g id="形状" fill-rule="nonzero">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-6)" xlink:href="#path-5"></use>
+                    <use fill="#FFFFFF" xlink:href="#path-5"></use>
+                </g>
+                <g id="蒙版">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-8)" xlink:href="#path-7"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-7"></use>
+                </g>
+                <text id="客户端备份" font-family="PingFangSC-Semibold, PingFang SC" font-size="20" font-weight="500" line-spacing="28" fill="#000000">
+                    <tspan x="85" y="207">客户端</tspan>
+                </text>
+                <g id="矩形备份-67">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-10)" xlink:href="#path-9"></use>
+                    <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-9"></use>
+                </g>
+                <g id="形状结合备份-5" fill-rule="nonzero">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-12)" xlink:href="#path-11"></use>
+                    <use fill="#0FC6C2" xlink:href="#path-11"></use>
+                </g>
+                <g id="矩形备份-69">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-14)" xlink:href="#path-13"></use>
+                    <use fill="#FF5A5E" fill-rule="evenodd" xlink:href="#path-13"></use>
+                </g>
+                <circle id="椭圆形备份-2894" fill="#FFFFFF" cx="140.5" cy="125.5" r="2.5"></circle>
+                <circle id="椭圆形备份-2895" fill="#FFFFFF" cx="151.5" cy="136.5" r="2.5"></circle>
+                <path d="M140.5,125.5 C142.941757,125.133563 144.77509,125.60662 146,126.919172 C147.837365,128.888 145.588463,133.519891 146.966024,135.266298 C147.884398,136.430569 149.395723,136.841803 151.5,136.5" id="路径-82备份" stroke="#FFFFFF"></path>
+                <text id="雷池" font-family="PingFangSC-Semibold, PingFang SC" font-size="16" font-weight="500" line-spacing="28" fill="#000000">
+                    <tspan x="460" y="168">雷池</tspan>
+                </text>
+                <text id="网站服务" font-family="PingFangSC-Semibold, PingFang SC" font-size="16" font-weight="500" line-spacing="28" fill="#000000">
+                    <tspan x="733" y="168">网站服务</tspan>
+                </text>
+                <text id="监听-80-或-443/ssl-端口" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" line-spacing="22" fill="#000000" fill-opacity="0.5">
+                    <tspan x="410.038" y="196">监听 80 或 443/ssl 端口</tspan>
+                </text>
+                <text id="公网域名-example.com" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" line-spacing="20" fill="#000000" fill-opacity="0.5">
+                    <tspan x="345.366" y="61">公网域名 example.com</tspan>
+                </text>
+                <text id="监听其他端口例如-portA" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" line-spacing="22" fill="#000000" fill-opacity="0.5">
+                    <tspan x="699.708" y="196">监听其他端口例如 portA</tspan>
+                </text>
+                <text id="同一设备" font-family="PingFangSC-Semibold, PingFang SC" font-size="16" font-weight="500" line-spacing="24" fill="#000000">
+                    <tspan x="345" y="37">同一设备</tspan>
+                </text>
+                <text id="请求方向备份" font-family="PingFangSC-Semibold, PingFang SC" font-size="16" font-weight="500" line-spacing="24" fill="#000000">
+                    <tspan x="245" y="148">请求方向</tspan>
+                </text>
+                <g id="编组-2" transform="translate(735.000000, 83.000000)">
+                    <g id="矩形备份-11">
+                        <use fill="black" fill-opacity="1" filter="url(#filter-16)" xlink:href="#path-15"></use>
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-15"></use>
+                    </g>
+                    <polygon id="路径-108备份-2" fill="#E54C21" points="14.6025641 14.7755464 45.525641 14.7755464 42.0897436 44.483039 30.0641026 47.7043841 18.0384615 44.483039"></polygon>
+                    <polygon id="路径-109备份-2" fill="#FFFFFF" points="20.8078229 20.8135906 38.7030053 20.8135906 38.7030053 24.5988642 24.8914705 24.5988642 24.8914705 28.3461538 37.425592 28.3461538 37.425592 38.5222892 29.7554141 41.6859505 22.0734947 38.5222892 22.0734947 33.7704085 24.8914705 33.7704085 24.8914705 36.5324392 29.7554141 38.0546986 34.0561079 36.5324392 34.0561079 31.2497706 21.5078275 31.2497706"></polygon>
+                </g>
+                <path id="路径-104备份" d="M697,108 L711,115 L697,122 L697,116 L522,116 L522,114 L697,114 L697,108 Z" fill="#0FC6C2" fill-rule="nonzero"></path>
+                <text id="直接在网站服务器上部署雷池" font-family="PingFangSC-Semibold, PingFang SC" font-size="16" font-weight="500" line-spacing="24" fill="#000000">
+                    <tspan x="336" y="275">直接在网站服务器上部署雷池</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="590px" height="679px" viewBox="0 0 590 679" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>人机验证</title>
+    <defs>
+        <rect id="path-1" x="114.52863" y="0" width="180" height="64" rx="4"></rect>
+        <filter x="-38.9%" y="-78.1%" width="177.8%" height="318.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-3" x="114.52863" y="535" width="180" height="64" rx="4"></rect>
+        <filter x="-38.9%" y="-78.1%" width="177.8%" height="318.8%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0588235294   0 0 0 0 0.776470588   0 0 0 0 0.760784314  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <rect id="path-5" x="408.52863" y="214" width="140" height="64" rx="4"></rect>
+        <filter x="-50.0%" y="-78.1%" width="200.0%" height="318.8%" filterUnits="objectBoundingBox" id="filter-6">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 0.352941176   0 0 0 0 0.368627451  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-7">
+            <stop stop-color="#0FC6C2" offset="0%"></stop>
+            <stop stop-color="#428FF9" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="100%" y1="50%" x2="-2.85746241e-13%" y2="50%" id="linearGradient-8">
+            <stop stop-color="#FF5A5E" offset="0%"></stop>
+            <stop stop-color="#428FF9" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-9">
+            <stop stop-color="#428FF9" offset="0%"></stop>
+            <stop stop-color="#0FC6C2" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-10">
+            <stop stop-color="#FF5A5E" offset="0%"></stop>
+            <stop stop-color="#428FF9" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-11">
+            <stop stop-color="#FF5A5E" offset="0%"></stop>
+            <stop stop-color="#428FF9" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-12" points="204.207865 214 133.52863 246.17422 204.207865 278.348439 274.207865 246"></polygon>
+        <filter x="-49.8%" y="-77.7%" width="199.5%" height="317.6%" filterUnits="objectBoundingBox" id="filter-13">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <polygon id="path-14" points="204.207865 321 133.52863 353.17422 204.207865 385.348439 274.207865 353"></polygon>
+        <filter x="-49.8%" y="-77.7%" width="199.5%" height="317.6%" filterUnits="objectBoundingBox" id="filter-15">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <polygon id="path-16" points="204.207865 107 133.52863 139.17422 204.207865 171.348439 274.207865 139"></polygon>
+        <filter x="-49.8%" y="-77.7%" width="199.5%" height="317.6%" filterUnits="objectBoundingBox" id="filter-17">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <polygon id="path-18" points="204.207865 428 133.52863 460.17422 204.207865 492.348439 274.207865 460"></polygon>
+        <filter x="-49.8%" y="-77.7%" width="199.5%" height="317.6%" filterUnits="objectBoundingBox" id="filter-19">
+            <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.258823529   0 0 0 0 0.560784314   0 0 0 0 0.976470588  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-20">
+            <stop stop-color="#428FF9" offset="0%"></stop>
+            <stop stop-color="#0FC6C2" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="官网设计" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="人机验证（1）备份" transform="translate(-199.000000, -43.000000)">
+            <g id="人机验证" transform="translate(200.471370, 63.000000)">
+                <g id="矩形备份-2">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-1"></use>
+                </g>
+                <g id="矩形备份-4">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+                    <use fill="#0FC6C2" fill-rule="evenodd" xlink:href="#path-3"></use>
+                </g>
+                <g id="矩形备份-5">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-6)" xlink:href="#path-5"></use>
+                    <use fill="#FF5A5E" fill-rule="evenodd" xlink:href="#path-5"></use>
+                </g>
+                <text id="请求到达雷池" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="144.02863" y="39">请求到达雷池</tspan>
+                </text>
+                <text id="转发给业务服务器" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="20" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="124.02863" y="574">转发给业务服务器</tspan>
+                </text>
+                <path id="路径-104备份-2" d="M205.52863,64 L205.528,92.999 L211.52863,93 L204.52863,107 L197.52863,93 L203.528,92.999 L203.52863,64 L205.52863,64 Z" fill="url(#linearGradient-7)" fill-rule="nonzero"></path>
+                <path id="路径-104备份-8" d="M394.537319,239.156869 L408.52863,246.17422 L394.519962,253.156858 L394.527,247.157 L267.99876,246.999999 L268.00124,245.000001 L394.529,245.157 L394.537319,239.156869 Z" fill="url(#linearGradient-8)" fill-rule="nonzero"></path>
+                <path id="路径-104备份-3" d="M205.52863,171 L205.528,199.999 L211.52863,200 L204.52863,214 L197.52863,200 L203.528,199.999 L203.52863,171 L205.52863,171 Z" fill="#428FF9" fill-rule="nonzero"></path>
+                <path id="路径-104备份-4" d="M205.52863,278 L205.528,306.999 L211.52863,307 L204.52863,321 L197.52863,307 L203.528,306.999 L203.52863,278 L205.52863,278 Z" fill="#428FF9" fill-rule="nonzero"></path>
+                <path id="路径-104备份-5" d="M205.52863,385 L205.528,413.999 L211.52863,414 L204.52863,428 L197.52863,414 L203.528,413.999 L203.52863,385 L205.52863,385 Z" fill="#428FF9" fill-rule="nonzero"></path>
+                <path id="路径-104备份-6" d="M205.52863,490.864621 L205.528,520.999 L211.52863,521 L204.52863,535 L197.52863,521 L203.528,520.999 L203.52863,490.864621 L205.52863,490.864621 Z" fill="url(#linearGradient-9)" fill-rule="nonzero"></path>
+                <path id="路径-121" d="M318.798614,246.17422 L325.798614,260.17422 L319.798,260.174 L319.798614,354.17422 L267.464731,354.17422 L267.464731,352.17422 L317.798,352.174 L317.798,260.174 L311.798614,260.17422 L318.798614,246.17422 Z" fill="url(#linearGradient-10)" fill-rule="nonzero"></path>
+                <path id="路径-122" d="M363.227835,246.17422 L370.227835,260.17422 L364.227,260.174 L364.227835,461 L267.464731,461 L267.464731,459 L362.227,459 L362.227,260.174 L356.227835,260.17422 L363.227835,246.17422 Z" fill="url(#linearGradient-11)" fill-rule="nonzero"></path>
+                <text id="拒绝" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="16" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="463.02863" y="252">拒绝</tspan>
+                </text>
+                <rect id="矩形备份-13" fill="#FFFFFF" x="323.52863" y="236" width="34" height="20" rx="4"></rect>
+                <rect id="矩形备份-14" fill="#FFFFFF" x="194.52863" y="283" width="20" height="20" rx="4"></rect>
+                <rect id="矩形备份-15" fill="#FFFFFF" x="194.52863" y="176" width="20" height="20" rx="4"></rect>
+                <rect id="矩形备份-9" fill="#FFFFFF" x="163.52863" y="497" width="82" height="20" rx="4"></rect>
+                <rect id="矩形备份-10" fill="#FFFFFF" x="163.52863" y="390" width="82" height="20" rx="4"></rect>
+                <rect id="矩形备份-12" fill="#FFFFFF" x="277.52863" y="295" width="82" height="20" rx="4"></rect>
+                <rect id="矩形备份-11" fill="#FFFFFF" x="322.52863" y="390" width="82" height="20" rx="4"></rect>
+                <g id="路径-120备份">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-13)" xlink:href="#path-12"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-12"></use>
+                </g>
+                <g id="路径-120备份-2">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-15)" xlink:href="#path-14"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-14"></use>
+                </g>
+                <text id="命中" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="14" font-weight="bold" fill="#000000" fill-opacity="0.5">
+                    <tspan x="326.52863" y="251">命中</tspan>
+                </text>
+                <g id="路径-120">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-17)" xlink:href="#path-16"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-16"></use>
+                </g>
+                <text id="未命中" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="14" font-weight="bold" fill="#000000" fill-opacity="0.5">
+                    <tspan x="183.52863" y="298">未命中</tspan>
+                </text>
+                <text id="未命中" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="14" font-weight="bold" fill="#000000" fill-opacity="0.5">
+                    <tspan x="183.52863" y="191">未命中</tspan>
+                </text>
+                <text id="是否命中白名单" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="16" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="149.02863" y="146">是否命中白名单</tspan>
+                </text>
+                <text id="是否命中黑名单" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="16" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="149.02863" y="252">是否命中黑名单</tspan>
+                </text>
+                <text id="正常请求" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="14" font-weight="bold" fill="#000000" fill-opacity="0.5">
+                    <tspan x="176.52863" y="512">正常请求</tspan>
+                </text>
+                <text id="验证成功" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="14" font-weight="bold" fill="#000000" fill-opacity="0.5">
+                    <tspan x="176.52863" y="405">验证成功</tspan>
+                </text>
+                <text font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="16" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="173.02863" y="359">人机验证</tspan>
+                </text>
+                <g id="路径-120备份-3">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-19)" xlink:href="#path-18"></use>
+                    <use fill="#428FF9" fill-rule="evenodd" xlink:href="#path-18"></use>
+                </g>
+                <text id="验证失败" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="14" font-weight="bold" fill="#000000" fill-opacity="0.5">
+                    <tspan x="290.52863" y="310">验证失败</tspan>
+                </text>
+                <text id="攻击请求" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="14" font-weight="bold" fill="#000000" fill-opacity="0.5">
+                    <tspan x="335.52863" y="405">攻击请求</tspan>
+                </text>
+                <text id="语义分析" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="16" font-weight="bold" fill="#FFFFFF">
+                    <tspan x="173.02863" y="467">语义分析</tspan>
+                </text>
+                <path id="路径-123" d="M136.768317,138.17422 L136.768317,140.17422 L1,140.174 L1,565.999 L100.528,565.999 L100.52863,560 L114.52863,567 L100.52863,574 L100.528,567.999 L-1,568 L-1,138.17422 L136.768317,138.17422 Z" fill="url(#linearGradient-20)" fill-rule="nonzero"></path>
+                <rect id="矩形备份-16" fill="#FFFFFF" x="55.5286296" y="129" width="34" height="20" rx="4"></rect>
+                <text id="命中备份" font-family="AlimamaShuHeiTi-Bold, Alimama ShuHeiTi" font-size="14" font-weight="bold" fill="#000000" fill-opacity="0.5">
+                    <tspan x="58.5286296" y="144">命中</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>
