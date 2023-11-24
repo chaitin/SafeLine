@@ -59,7 +59,6 @@ docker compose down
 docker compose up -d
 ```
 
-
 ## 常见升级问题
 
 请参考 [升级问题](/faq/upgrade)

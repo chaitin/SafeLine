@@ -1,6 +1,7 @@
 ---
 title: "配置问题"
 ---
+
 # 配置问题
 
 记录常见的配置问题
@@ -11,7 +12,7 @@ title: "配置问题"
 
 梳理问题可能存在的几个原因：
 
-1. 配置站点错误，ip错误、端口冲突等
+1. 配置站点错误，ip 错误、端口冲突等
 
 2. 雷池端与配置的站点网络不通
 
@@ -22,53 +23,59 @@ title: "配置问题"
 ## 排查步骤：
 
 1. 明确 “网站无法访问” 的具体表现：
-    * 如果 `502 Bad Gateway tengine`：
 
-        ![Alt text](/images/docs/guide_config/tengine_502.png)
+   - 如果 `502 Bad Gateway tengine`：
 
-        大概率是是雷池的上游服务器配置不正确，或者雷池无法访问到上游服务器。请继续按下面步骤排查，重点排查步骤 6、7
+     ![Alt text](/images/docs/guide_config/tengine_502.png)
 
-    * 如果请求能够返回但是十分缓慢
-        * 首先确认服务器负载是否正常
-           * 检查服务器的CPU、内存、带宽使用情况 
+     大概率是是雷池的上游服务器配置不正确，或者雷池无法访问到上游服务器。请继续按下面步骤排查，重点排查步骤 6、7
 
-        * 在客户端执行命令，检查雷池服务器与上游服务器的网络：`curl -H "Host: <SafeLine-IP>" -vv -o /dev/null -s -w 'time_namelookup: %{time_namelookup}\ntime_connect: %{time_connect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n' http://<上游服务器地址>`
+   - 如果请求能够返回但是十分缓慢
 
-            * 如果 time_namelookup 时间过大，请检查 dns server 配置
-            * 如果 time_connect 时间过大，请检查雷池与上游服务器之间的网络状态
-            * 如果 time_starttransfer 时间过大，请检查上游服务器状态，是否出现资源过载情况
-    * 如果不是以上情况，继续下一步
+     - 首先确认服务器负载是否正常
+
+       - 检查服务器的 CPU、内存、带宽使用情况
+
+     - 在客户端执行命令，检查雷池服务器与上游服务器的网络：`curl -H "Host: <SafeLine-IP>" -vv -o /dev/null -s -w 'time_namelookup: %{time_namelookup}\ntime_connect: %{time_connect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n' http://<上游服务器地址>`
+
+       - 如果 time_namelookup 时间过大，请检查 dns server 配置
+       - 如果 time_connect 时间过大，请检查雷池与上游服务器之间的网络状态
+       - 如果 time_starttransfer 时间过大，请检查上游服务器状态，是否出现资源过载情况
+
+   - 如果不是以上情况，继续下一步
+
 2. 在客户端执行 `curl -v -H "Host: <域名或者IP>" http://<雷池 IP>:<雷池监听端口>` 。如能获取到业务网站的响应，如图，并且站点的 “今日访问量” +1，说明雷池配置正确，网络正常
-    ![Alt text](/images/docs/guide_config/check_the_site1.png)
+   ![Alt text](/images/docs/guide_config/check_the_site1.png)
 
-    * 如果浏览器无法访问，但这一步正常获取到响应，大概率是因为：
-        * 网站域名还没有切到雷池，浏览器测试时访问的是 `http(s)://<雷池 IP>`，恰好业务服务上有 Host 验证，所以拒绝了该请求。这种情况需要修改本机 host，把域名解析到雷池 IP，再访问 `http(s)://<域名>`，才能准确测试
-        * 网站业务做了其他一些特殊处理。例如访问后 301 跳转到了其他地址，需要具体排查网站业务的响应内容
-    * 如果不能获取到响应，继续下一步
+   - 如果浏览器无法访问，但这一步正常获取到响应，大概率是因为：
+     - 网站域名还没有切到雷池，浏览器测试时访问的是 `http(s)://<雷池 IP>`，恰好业务服务上有 Host 验证，所以拒绝了该请求。这种情况需要修改本机 host，把域名解析到雷池 IP，再访问 `http(s)://<域名>`，才能准确测试
+     - 网站业务做了其他一些特殊处理。例如访问后 301 跳转到了其他地址，需要具体排查网站业务的响应内容
+   - 如果不能获取到响应，继续下一步
 
 3. 在雷池设备上执行 `curl -v -H "Host: <域名或者IP>" http://<雷池 IP>:<雷池监听端口>`。如能获取到业务网站的响应，并且站点上 “今日访问量” +1，说明雷池配置正确
-    * 如果步骤 2 失败而这里成功，说明客户端到雷池之间的网络存在问题。请排查网络，保证客户端可访问到雷池，检测防火墙、端口开放等
-    * 如果不能获取到响应，继续下一步
+
+   - 如果步骤 2 失败而这里成功，说明客户端到雷池之间的网络存在问题。请排查网络，保证客户端可访问到雷池，检测防火墙、端口开放等
+   - 如果不能获取到响应，继续下一步
 
 4. 在雷池设备上执行 `curl -H "Host: <域名或者IP>" http://127.0.0.1:<雷池监听端口>`。如能获取到业务网站的响应，并且站点的 “今日访问量” +1，说明雷池配置正确
-    * 如果步骤 3 失败而这里成功，且 `telnet <雷池 IP> <雷池监听端口>` 返回 `Unable to connect to remote host: Connection refused`，可能是被雷池设备上的防火墙拦截了。
-    * 排查操作系统本身的防火墙，还有可能是云服务商的防火墙。请根据实际情况逐项排查，开放雷池监听端口的访问
-    * 如果不能获取到响应，继续下一步
+
+   - 如果步骤 3 失败而这里成功，且 `telnet <雷池 IP> <雷池监听端口>` 返回 `Unable to connect to remote host: Connection refused`，可能是被雷池设备上的防火墙拦截了。
+   - 排查操作系统本身的防火墙，还有可能是云服务商的防火墙。请根据实际情况逐项排查，开放雷池监听端口的访问
+   - 如果不能获取到响应，继续下一步
 
 5. 在雷池设备上执行 `netstat -anp | grep <雷池监听端口>` 确认端口监听情况。正常情况下，应该有一个 nginx 进程监听在 `0.0.0.0:<雷池监听端口>`。
-    * 没有的话请通过社群或者 Github issue 提交反馈，附上排查过程。有的话继续下一步
 
-    ![Alt text](/images/docs/guide_config/check_listen_port.png)
- 
+   - 没有的话请通过社群或者 Github issue 提交反馈，附上排查过程。有的话继续下一步
+
+   ![Alt text](/images/docs/guide_config/check_listen_port.png)
+
 6. 在雷池设备上 `curl -H "Host: <域名或者IP>" <上游服务器地址>`。如能获取到业务网站的响应，说明雷池设备和站点网络没有问题
 
-    ![Alt text](/images/docs/guide_config/check_the_site2.png)
+   ![Alt text](/images/docs/guide_config/check_the_site2.png)
 
-    * 如果步骤 4 失败而这里成功,可能是配置错误,查看配置站点教程确认配置是否正确，如无法解决，请通过社群或者 Github issue 提交反馈，附上排查过程
+   - 如果步骤 4 失败而这里成功,可能是配置错误,查看配置站点教程确认配置是否正确，如无法解决，请通过社群或者 Github issue 提交反馈，附上排查过程
 
-    * 如果这步失败，说明雷池和上游服务器之间的网络存在问题。请排查网络，确保雷池可以访问到上游服务器
-
-
+   - 如果这步失败，说明雷池和上游服务器之间的网络存在问题。请排查网络，确保雷池可以访问到上游服务器
 
 ## 配置完成后，测试时返回 400 Request Header Or Cookie Too Large
 

@@ -8,7 +8,7 @@ title: "可用性监控"
 
 ### 关于长亭百川网站监测
 
-[长亭百川网站监测](https://rivers.chaitin.cn/landing/radar) 是一款专门为网站管理员打造的网站监测工具，能够有效监测站点可用性、SSL证书合法性、网站敏感内容等信息。
+[长亭百川网站监测](https://rivers.chaitin.cn/landing/radar) 是一款专门为网站管理员打造的网站监测工具，能够有效监测站点可用性、SSL 证书合法性、网站敏感内容等信息。
 
 交互界面简洁直观、操作上手轻松、注重用户体验，实时监测每个页面的状态和详细信息，让你对网站运行状态了如指掌。
 
@@ -21,4 +21,3 @@ title: "可用性监控"
 ![machineid.png](https://waf-ce.chaitin.cn/images/docs/practice_monitor/machineid.png)
 
 ![gift.png](https://waf-ce.chaitin.cn/images/docs/practice_monitor/gift.png)
-

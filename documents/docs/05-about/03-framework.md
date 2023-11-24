@@ -10,16 +10,17 @@ title: "雷池技术架构"
 
 各个容器和服务说明：
 
-| 名称         | 定义              | 详情                                           |
-| ------------ | ----------------- | ---------------------------------------------- |
-| safeline-mgt-api      | 管理容器          | 接收管理后台行为，向其他服务或容器推送消息           |
-| safeline-detector     | 检测容器          | 执行检测的容器，从 Tengine 进入的流量会转发到该节点检测          |
-| safeline-mario        | 日志容器          | 记录与统计恶意行为的节点                     |
-| safeline-tengine      | 网关              | 转发网关，有简单的过滤功能                     |
-| safeline-postgres     | 关系型数据库       | 存储攻击日志、保护站点、黑白名单配置的数据库                                              |
-| safeline-redis        | 缓存数据库 | -                                               |
+| 名称              | 定义         | 详情                                                    |
+| ----------------- | ------------ | ------------------------------------------------------- |
+| safeline-mgt-api  | 管理容器     | 接收管理后台行为，向其他服务或容器推送消息              |
+| safeline-detector | 检测容器     | 执行检测的容器，从 Tengine 进入的流量会转发到该节点检测 |
+| safeline-mario    | 日志容器     | 记录与统计恶意行为的节点                                |
+| safeline-tengine  | 网关         | 转发网关，有简单的过滤功能                              |
+| safeline-postgres | 关系型数据库 | 存储攻击日志、保护站点、黑白名单配置的数据库            |
+| safeline-redis    | 缓存数据库   | -                                                       |
 
 对于后台管理人员，可以直接通信的节点为管理服务 `safeline-mgt-api`，该节点负责：
+
 - 向 Tengine 网关推送自定义配置并利用 NGINX 命令进行 reload 热更新
 - 自定义检测规则（黑白名单等）并向检测引擎 `safeline-detector` 推送
 - 直接读取 `postgres` 数据库，向后台管理人员返回日志、统计、当前配置等
@@ -42,35 +43,36 @@ echo "SUBNET_PREFIX=172.22.222" >> .env  # 定义 docker 虚拟网卡的子网�
 ### compose.yml 文件
 
 用于启动多个容器
+
 ```yml
 networks:
   safeline-ce:
-    name: safeline-ce  # 定义该子网名称
-    driver: bridge  # 该子网为网桥模式
+    name: safeline-ce # 定义该子网名称
+    driver: bridge # 该子网为网桥模式
     ipam:
       driver: default
       config:
-      - gateway: ${SUBNET_PREFIX:?SUBNET_PREFIX required}.1  # 定义网关为 SUBNET_PREFIX.1，若按上文设置，此处为 172.22.222.1
-        subnet: ${SUBNET_PREFIX}.0/24
+        - gateway: ${SUBNET_PREFIX:?SUBNET_PREFIX required}.1 # 定义网关为 SUBNET_PREFIX.1，若按上文设置，此处为 172.22.222.1
+          subnet: ${SUBNET_PREFIX}.0/24
     driver_opts:
-      com.docker.network.bridge.name: safeline-ce   
+      com.docker.network.bridge.name: safeline-ce
 services:
   postgres:
     container_name: safeline-postgres
-    restart: always  # 容器启动失败或崩溃时自动重启
+    restart: always # 容器启动失败或崩溃时自动重启
     image: postgres:15.2
-    volumes:  # 开启的映射文件夹
-    - ${SAFELINE_DIR}/resources/postgres/data:/var/lib/postgresql/data
-    - /etc/localtime:/etc/localtime:ro
+    volumes: # 开启的映射文件夹
+      - ${SAFELINE_DIR}/resources/postgres/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
     environment:
-    - POSTGRES_USER=safeline-ce
-    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?postgres password required}
-    networks:  # 使用上文的 safeline-ce 网络，IP 为 172.22.222.2
+      - POSTGRES_USER=safeline-ce
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?postgres password required}
+    networks: # 使用上文的 safeline-ce 网络，IP 为 172.22.222.2
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.2
     cap_drop:
-    - net_raw
-    command: [postgres, -c, max_connections=200]  # 设置 postgres 的最大连接数
+      - net_raw
+    command: [postgres, -c, max_connections=200] # 设置 postgres 的最大连接数
   redis:
     container_name: safeline-redis
     restart: always
@@ -80,7 +82,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     command: redis-server --appendonly yes --requirepass  ${REDIS_PASSWORD}
     networks:
-      safeline-ce:  # 使用上文的 safeline-ce 网络，ip 为172.22.222.3
+      safeline-ce: # 使用上文的 safeline-ce 网络，ip 为172.22.222.3
         ipv4_address: ${SUBNET_PREFIX}.3
     cap_drop:
       - net_raw
@@ -91,72 +93,72 @@ services:
     restart: always
     image: chaitin/safeline-mgt-api:${IMAGE_TAG:?image tag required}
     volumes:
-    - ${SAFELINE_DIR?safeline dir required}/resources/management:/resources/management
-    - ${SAFELINE_DIR}/resources/nginx:/resources/nginx
-    - ${SAFELINE_DIR}/logs:/logs
-    - /etc/localtime:/etc/localtime:ro
+      - ${SAFELINE_DIR?safeline dir required}/resources/management:/resources/management
+      - ${SAFELINE_DIR}/resources/nginx:/resources/nginx
+      - ${SAFELINE_DIR}/logs:/logs
+      - /etc/localtime:/etc/localtime:ro
     ports:
-    - ${MGT_PORT:-9443}:1443
+      - ${MGT_PORT:-9443}:1443
     environment:
-    - MANAGEMENT_RESOURCES_DIR=/resources/management
-    - NGINX_RESOURCES_DIR=/resources/nginx
-    - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@127.0.0.1/safeline-ce
-    - MANAGEMENT_LOGS_DIR=/logs/management
+      - MANAGEMENT_RESOURCES_DIR=/resources/management
+      - NGINX_RESOURCES_DIR=/resources/nginx
+      - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@127.0.0.1/safeline-ce
+      - MANAGEMENT_LOGS_DIR=/logs/management
     networks:
-      safeline-ce:  # 使用上文的 safeline-ce 网络，IP 为 172.22.222.4
+      safeline-ce: # 使用上文的 safeline-ce 网络，IP 为 172.22.222.4
         ipv4_address: ${SUBNET_PREFIX}.4
     cap_drop:
-    - net_raw
+      - net_raw
   detector:
     container_name: safeline-detector
     restart: always
     image: chaitin/safeline-detector:${IMAGE_TAG}
     volumes:
-    - ${SAFELINE_DIR}/resources/detector:/resources/detector
-    - ${SAFELINE_DIR}/logs/detector:/logs/detector
-    - /etc/localtime:/etc/localtime:ro
+      - ${SAFELINE_DIR}/resources/detector:/resources/detector
+      - ${SAFELINE_DIR}/logs/detector:/logs/detector
+      - /etc/localtime:/etc/localtime:ro
     environment:
-    - LOG_DIR=/logs/detector
+      - LOG_DIR=/logs/detector
     networks:
-      safeline-ce:  # 使用上文的 safeline-ce 网络，IP 为 172.22.222.5
+      safeline-ce: # 使用上文的 safeline-ce 网络，IP 为 172.22.222.5
         ipv4_address: ${SUBNET_PREFIX}.5
     cap_drop:
-    - net_raw
+      - net_raw
   mario:
     container_name: safeline-mario
     restart: always
     image: chaitin/safeline-mario:${IMAGE_TAG}
     volumes:
-    - ${SAFELINE_DIR}/resources/mario:/resources/mario
-    - ${SAFELINE_DIR}/logs/mario:/logs/mario
-    - /etc/localtime:/etc/localtime:ro
+      - ${SAFELINE_DIR}/resources/mario:/resources/mario
+      - ${SAFELINE_DIR}/logs/mario:/logs/mario
+      - /etc/localtime:/etc/localtime:ro
     environment:
-    - LOG_DIR=/logs/mario
-    - GOGC=100
-    - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
-    - REDIS_URL=redis://:${REDIS_PASSWORD}@safeline-redis:6379/0
+      - LOG_DIR=/logs/mario
+      - GOGC=100
+      - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@safeline-redis:6379/0
     networks:
-      safeline-ce:  # 使用上文的 safeline-ce 网络，IP 为172.22.222.6
+      safeline-ce: # 使用上文的 safeline-ce 网络，IP 为172.22.222.6
         ipv4_address: ${SUBNET_PREFIX}.6
     cap_drop:
-    - net_raw
+      - net_raw
   tengine:
     container_name: safeline-tengine
     restart: always
     image: chaitin/safeline-tengine:${IMAGE_TAG}
     volumes:
-    - ${SAFELINE_DIR}/resources/nginx:/etc/nginx
-    - ${SAFELINE_DIR}/resources/management:/resources/management
-    - ${SAFELINE_DIR}/resources/detector:/resources/detector
-    - ${SAFELINE_DIR}/logs/nginx:/var/log/nginx
-    - /etc/localtime:/etc/localtime:ro
-    - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
-    - /etc/resolv.conf:/etc/resolv.conf
+      - ${SAFELINE_DIR}/resources/nginx:/etc/nginx
+      - ${SAFELINE_DIR}/resources/management:/resources/management
+      - ${SAFELINE_DIR}/resources/detector:/resources/detector
+      - ${SAFELINE_DIR}/logs/nginx:/var/log/nginx
+      - /etc/localtime:/etc/localtime:ro
+      - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
+      - /etc/resolv.conf:/etc/resolv.conf
     environment:
-    - MGT_ADDR=${SUBNET_PREFIX}.4:9002  # 配置 mgt-api 的 grpc 服务器地址，用于与 mgt-api 容器通信
+      - MGT_ADDR=${SUBNET_PREFIX}.4:9002 # 配置 mgt-api 的 grpc 服务器地址，用于与 mgt-api 容器通信
     ulimits:
       nofile: 131072
-    network_mode: host  # Tengine 直接使用宿主机网络
+    network_mode: host # Tengine 直接使用宿主机网络
 ```
 
 ### 各个服务的运行日志

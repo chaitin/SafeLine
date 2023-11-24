@@ -1,7 +1,9 @@
 ---
 title: "安装雷池"
 ---
+
 # 安装雷池
+
 根据实际情况选择安装方式，支持一键安装
 
 - [环境检测](#环境检测) : 查看环境是否符合安装要求
@@ -28,12 +30,11 @@ style={{ width: '100%', height: '350px' }}
 > 
 </iframe>
 
-
 ## 离线安装
 
 **_如果服务器不可以访问互联网环境，推荐使用该方式_**
 
-> 离线安装前需完成[环境检测](#环境检测),默认已完成docker环境准备
+> 离线安装前需完成[环境检测](#环境检测),默认已完成 docker 环境准备
 
 首先，下载 [雷池社区版镜像包](https://demo.waf-ce.chaitin.cn/image.tar.gz) 并传输到需要安装雷池的服务器上，执行以下命令加载镜像
 
@@ -76,7 +77,6 @@ style={{ width: '100%', height: '350px' }}
 > 
 </iframe>
 
-
 ## 使用牧云助手安装
 
 使用 [牧云主机管理助手](https://collie.chaitin.cn/) 进行一键安装
@@ -85,17 +85,16 @@ style={{ width: '100%', height: '350px' }}
 
 ![](/images/docs/guide_install/collie_apps.png)
 
-
 ### 助手安装演示
 
 <iframe src="//player.bilibili.com/player.html?aid=613778738&bvid=BV1sh4y1t7Pk&cid=1134834926&p=1"  scrolling="no" border="0" frameBorder="no" framespacing="0" allowFullScreen="{true}"
 style={{ width: '100%', height: '350px' }}
 > </iframe>
 
-
 ## 环境检测
 
 最低配置需求
+
 - 操作系统：Linux
 - 指令架构：x86_64
 - 软件依赖：Docker 20.10.14 版本以上
@@ -115,14 +114,11 @@ df -h                                       # 查看磁盘信息
 lscpu | grep ssse3                          # 确认CPU是否支持 ssse3 指令集
 ```
 
-
-
 ### 配置检测演示
 
 <iframe src="//player.bilibili.com/player.html?aid=918634668&bvid=BV1Uu4y1L7Ko&cid=1339439164&p=1" scrolling="no" border="0" frameBorder="no" framespacing="0" allowFullScreen='{true}'
 style={{ width: '100%', height: '350px' }}
 ></iframe>
-
 
 ## 常见安装问题
 

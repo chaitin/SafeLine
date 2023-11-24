@@ -6,7 +6,6 @@ title: "安装问题"
 
 记录常见的安装问题
 
-
 ## 在线安装失败
 
 1. 检查是否手动关闭防火墙
@@ -17,17 +16,15 @@ title: "安装问题"
 
 3. 如果连接 Docker Hub 网络不稳，导致镜像下载失败（超时）:
 
->docker hub 默认使用国外节点拉取镜像，可以自行搜索配置国内镜像加速源
+> docker hub 默认使用国外节点拉取镜像，可以自行搜索配置国内镜像加速源
 
->采用 [离线安装](/guide/install#离线安装) 方式
-
+> 采用 [离线安装](/guide/install#离线安装) 方式
 
 ## 安装时遇到报错处理方法
 
 #### 报错：ERROR: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
 
-需要安装 docker。尝试 `curl -fLsS https://get.docker.com/ | sh` 或者 [Install Docker Engine](https://docs.docker.com/engine/install/)。
-
+需要安装 docker。尝试 `curl -fLsS https://get.docker.com/ | sh` 或者 [Install Docker Engine](https://docs.docker.com/engine/install/)。
 
 #### 报错：docker not found, unable to deploy
 
@@ -40,7 +37,7 @@ safeline-ce 是雷池部署时候创建的 network，出现类似报错，先重
 
 需要安装 `docker compose v2`。尝试 `[Install Docker Compose](https://docs.docker.com/compose/install/)`。
 
-#### 报错：  `failed to create network safeline-ce`
+#### 报错： `failed to create network safeline-ce`
 
 safeline-ce 是雷池部署时候创建的 network，出现类似报错，先重启下 dockerd 之后重试。
 
@@ -51,15 +48,17 @@ safeline-ce 是雷池部署时候创建的 network，出现类似报错，先重
 端口冲突，根据报错信息中的端口号，排查是哪个服务占用了，手动处理冲突。
 
 #### 报错：safelint-mgt-api 出现 Operation not permitted
+
 `docker logs -f safelint-mgt-api` 容器日志中看到 `runtime/cgo: pthread_create failed: Operation not permitted` 报错，这个错误一般会在 docker 20.10.9 及以下发生。
 
 - 最推荐的方式是升级 docker 到最新版本尝试解决这个问题。
 - 或您的系统支持配置 seccomp （执行 `grep CONFIG_SECCOMP= /boot/config-$(uname -r)` 输出 `CONFIG_SECCOMP=y` 则为支持）,
-则可以在雷池工作目录下载 [seccomp](https://waf-ce.chaitin.cn/release/latest/seccomp.json) 并且编辑 compose.yaml 文件，
-在 management 下加入如下配置项，然后执行 `docker compose down && docker compose up -d` 来尝试解决这个问题:
+  则可以在雷池工作目录下载 [seccomp](https://waf-ce.chaitin.cn/release/latest/seccomp.json) 并且编辑 compose.yaml 文件，
+  在 management 下加入如下配置项，然后执行 `docker compose down && docker compose up -d` 来尝试解决这个问题:
+
 ```yaml
-security_opt:  
-- seccomp=./seccomp.json
+security_opt:
+  - seccomp=./seccomp.json
 ```
 
 #### 报错：safeline-postgres 出现 Operation not permitted
@@ -72,7 +71,6 @@ security_opt:
 
 查看[如何卸载](#如何卸载) ，卸载以后重新安装一次
 
-
 ## 如何自定义 SafeLine 安装路径？
 
 基于最新的 `compose.yaml`，你可以手动修改 `.env` 文件的 `SAFELINE_DIR` 变量。
@@ -81,32 +79,29 @@ security_opt:
 
 可以，但是不建议，机器负载将高于分开部署。
 
-
 ## MacOS/Windows 是否支持安装雷池
 
 社区版暂不支持，如有需求咨询企业版。
 
-
 ## docker compose 还是 docker-compose？
 
-属于两个版本，推荐使用 docker compose 
+属于两个版本，推荐使用 docker compose
 
 参考资料：https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose
-
 
 ## 如何修改 SafeLine 后台管理的默认端口？比如：本机 `:9443` 已经被别的服务占用
 
 使用 `ss -antp|grep LISTEN` 确认端口使用情况，找到未被占用端口
 
-修改在安装目录(默认safeline)下的隐藏文件`.env` 文件，你可以手动添加 `MGT_PORT` 变量到 `.env` 文件。
+修改在安装目录(默认 safeline)下的隐藏文件`.env` 文件，你可以手动添加 `MGT_PORT` 变量到 `.env` 文件。
 
 文件修改后，需要等重启才会生效。
 
-在安装目录(默认safeline)下执行 `docker compose down && docker compose up -d`
+在安装目录(默认 safeline)下执行 `docker compose down && docker compose up -d`
 
 ## 如何卸载
 
-在安装目录(默认safeline)下执行 `docker compose down`
+在安装目录(默认 safeline)下执行 `docker compose down`
 
 ## 问题无法解决
 

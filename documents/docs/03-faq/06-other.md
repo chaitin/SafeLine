@@ -113,7 +113,6 @@ docker run -d --restart=always --name safeline-fluentd --net safeline-ce -v ./sq
 [SQL input plugin for Fluentd event collector](https://github.com/fluent/fluent-plugin-sql)
 [fluent-plugin-remote_syslog](https://github.com/fluent-plugins-nursery/fluent-plugin-remote_syslog)
 
-
 ## 有多个防护站点监听在同一个端口上，匹配顺序是怎么样的
 
 如果域名处填写的分别为 IP 与域名，那么当使用进行 IP 请求时，则将会命中第一个配置的站点
@@ -179,8 +178,9 @@ docker exec safeline-tengine nginx -s reload
 雷池默认透传了源 IP，放在 HTTP Header 中的 `X-Forwarded-For` 里面。
 
 如果上游服务器是 NGINX，添加如下配置就可以。如果不是，需要自行配置解析 XFF
+
 ```
-set_real_ip_from 0.0.0.0/0; 
+set_real_ip_from 0.0.0.0/0;
 real_ip_header X-Forwarded-For;
 ```
 
