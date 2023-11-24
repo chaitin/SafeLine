@@ -71,6 +71,6 @@ a:-webkit-any-link {
 
 @font-face {
   font-family: 'AlimamaShuHeiTi-Bold';
-  src: url('/fonts/AlimamaShuHeiTi-Bold.otf') format('opentype');
+  src: url('/fonts/AlimamaShuHeiTi-Bold.ttf') format('truetype');
 	font-display: swap;
 }
