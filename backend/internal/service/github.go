@@ -58,6 +58,11 @@ type Category struct {
 	EmojiHTML string `json:"emoji_html" graphql:"emojiHTML"`
 }
 
+type Repo struct {
+	ID        string `json:"id"`
+	StarCount int    `json:"star_count"`
+}
+
 type GitHubAPI interface {
 	Query(ctx context.Context, q interface{}, variables map[string]interface{}) error
 }
@@ -373,4 +378,37 @@ func (s *GitHubService) fetchDiscussions(ctx context.Context, afterCursor *githu
 	}
 
 	return discussions, nil
+}
+
+func (s *GitHubService) GetRepo(ctx context.Context) (*Repo, error) {
+	if cachedData, found := s.cache.Load("repo"); found {
+		return cachedData.(*Repo), nil
+	}
+
+	repo, err := s.fetchRepo(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	s.cache.Store("repo", repo)
+
+	return repo, nil
+}
+
+func (s *GitHubService) fetchRepo(ctx context.Context) (*Repo, error) {
+	var query struct {
+		Repository struct {
+			ID             string
+			StargazerCount int
+		} `graphql:"repository(owner: $owner, name: $name)"`
+	}
+	variables := map[string]interface{}{
+		"owner": githubv4.String(s.owner),
+		"name":  githubv4.String(s.repo),
+	}
+	err := s.request(ctx, &query, variables)
+	if err != nil {
+		return nil, err
+	}
+	return &Repo{ID: query.Repository.ID, StarCount: query.Repository.StargazerCount}, nil
 }
