@@ -40,15 +40,15 @@ qrcode() {
 }
 
 command_exists() {
-	command -v "$1" 2>&1
+    command -v "$1" 2>&1
 }
 
 space_left() {
     dir="$1"
     while [ ! -d "$dir" ]; do
-        dir=`dirname "$dir"`;
+        dir=$(dirname "$dir")
     done
-    echo `df -h "$dir" --output='avail' | tail -n 1`
+    echo $(df -h "$dir" --output='avail' | tail -n 1)
 }
 
 confirm() {
@@ -58,9 +58,9 @@ confirm() {
     [[ "$opt" == $'\n' ]] || echo
 
     case "$opt" in
-        'y' | 'Y' ) return 0;;
-        'n' | 'N' ) return 1;;
-        *) confirm "$1";;
+    'y' | 'Y') return 0 ;;
+    'n' | 'N') return 1 ;;
+    *) confirm "$1" ;;
     esac
 }
 
@@ -86,13 +86,13 @@ onexit() {
 
 # CPU ssse3 指令集检查
 support_ssse3=1
-lscpu | grep ssse3 > /dev/null 2>&1
+lscpu | grep ssse3 >/dev/null 2>&1
 if [ $? -ne "0" ]; then
     echo "not found info in lscpu"
     support_ssse3=0
 fi
 
-cat /proc/cpuinfo | grep ssse3 > /dev/null 2>&1
+cat /proc/cpuinfo | grep ssse3 >/dev/null 2>&1
 if [ $support_ssse3 -eq "0" -a $? -ne "0" ]; then
     abort "雷池需要运行在支持 ssse3 指令集的 CPU 上，虚拟机请自行配置开启 CPU ssse3 指令集支持"
 fi
@@ -114,7 +114,7 @@ if [ "$EUID" -ne "0" ]; then
 fi
 info "脚本调用方式确认正常"
 
-if [ -z `command_exists docker` ]; then
+if [ -z $(command_exists docker) ]; then
     warning "缺少 Docker 环境"
     if confirm "是否需要自动安装 Docker"; then
         curl -sSLk https://get.docker.com/ | bash
@@ -126,9 +126,9 @@ if [ -z `command_exists docker` ]; then
         abort "中止安装"
     fi
 fi
-info "发现 Docker 环境: '`command -v docker`'"
+info "发现 Docker 环境: '$(command -v docker)'"
 
-docker version > /dev/null 2>&1
+docker version >/dev/null 2>&1
 if [ $? -ne "0" ]; then
     abort "Docker 服务工作异常"
 fi
@@ -140,7 +140,7 @@ if $compose_command version; then
 else
     warning "未发现 Docker Compose Plugin"
     compose_command="docker-compose"
-    if [ -z `command_exists "docker-compose"` ]; then
+    if [ -z $(command_exists "docker-compose") ]; then
         warning "未发现 docker-compose 组件"
         if confirm "是否需要自动安装 Docker Compose Plugin"; then
             curl -sSLk https://get.docker.com/ | bash
@@ -153,18 +153,18 @@ else
             abort "中止安装"
         fi
     else
-        info "发现 docker-compose 组件: '`command -v docker-compose`'"
+        info "发现 docker-compose 组件: '$(command -v docker-compose)'"
     fi
 fi
 
-container_id=`docker ps --filter ancestor=chaitin/safeline-mgt-api --format '{{.ID}}'`
-mount_path=`docker inspect --format '{{range .Mounts}}{{if eq .Destination "/logs"}}{{.Source}}{{end}}{{end}}' $container_id`
-safeline_path=`dirname $mount_path`
+container_id=$(docker ps --filter ancestor=chaitin/safeline-mgt-api --format '{{.ID}}')
+mount_path=$(docker inspect --format '{{range .Mounts}}{{if eq .Destination "/logs"}}{{.Source}}{{end}}{{end}}' $container_id)
+safeline_path=$(dirname $mount_path)
 
 while [ -z "$safeline_path" ]; do
-    echo -e -n "\033[34m[SafeLine] 未发现正在运行的雷池，请输入雷池安装路径 (留空则为 '`pwd`'): \033[0m"
+    echo -e -n "\033[34m[SafeLine] 未发现正在运行的雷池，请输入雷池安装路径 (留空则为 '$(pwd)'): \033[0m"
     read input_path
-    [[ -z "$input_path" ]] && input_path=`pwd`
+    [[ -z "$input_path" ]] && input_path=$(pwd)
 
     if [[ ! $input_path == /* ]]; then
         warning "'$input_path' 不是合法的绝对路径"
@@ -176,12 +176,12 @@ done
 
 cd "$safeline_path"
 
-grep COLLIE .env > /dev/null 2>&1
+grep COLLIE .env >/dev/null 2>&1
 if [ $? -eq "0" ]; then
     abort "检测到你的环境通过牧云主机助手安装，请使用牧云主机助手-应用市场进行升级."
 fi
 
-compose_name=`ls docker-compose.yaml compose.yaml 2>/dev/null`
+compose_name=$(ls docker-compose.yaml compose.yaml 2>/dev/null)
 compose_path=$safeline_path/$compose_name
 
 if [ -f "$compose_path" ]; then
@@ -189,7 +189,6 @@ if [ -f "$compose_path" ]; then
 else
     abort "没有发现位于 $safeline_path 的雷池环境"
 fi
-
 
 mv $compose_name $compose_name.old
 
@@ -201,12 +200,12 @@ info "下载 compose.yaml 脚本成功"
 
 sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
 
-grep "SAFELINE_DIR" ".env" > /dev/null || echo "SAFELINE_DIR=$(pwd)" >> ".env"
-grep "IMAGE_TAG" ".env" > /dev/null || echo "IMAGE_TAG=latest" >> ".env"
-grep "MGT_PORT" ".env" > /dev/null || echo "MGT_PORT=9443" >> ".env"
-grep "POSTGRES_PASSWORD" ".env" > /dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> ".env"
-grep "REDIS_PASSWORD" ".env" > /dev/null || echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> ".env"
-grep "SUBNET_PREFIX" ".env" > /dev/null || echo "SUBNET_PREFIX=172.22.222" >> ".env"
+grep "SAFELINE_DIR" ".env" >/dev/null || echo "SAFELINE_DIR=$(pwd)" >>".env"
+grep "IMAGE_TAG" ".env" >/dev/null || echo "IMAGE_TAG=latest" >>".env"
+grep "MGT_PORT" ".env" >/dev/null || echo "MGT_PORT=9443" >>".env"
+grep "POSTGRES_PASSWORD" ".env" >/dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >>".env"
+grep "REDIS_PASSWORD" ".env" >/dev/null || echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >>".env"
+grep "SUBNET_PREFIX" ".env" >/dev/null || echo "SUBNET_PREFIX=172.22.222" >>".env"
 
 info "升级 .env 脚本成功"
 
@@ -220,6 +219,9 @@ info "下载新版本 Docker 镜像成功"
 
 info "即将开始替换 Docker 容器"
 
+# 升级到 3.14.0 版本时，移除了 safeline-redis 容器，需要删除容器，否则无法启动新 compose 网络
+docker rm -f safeline-redis &>/dev/null
+
 $compose_command down && $compose_command up -d
 if [ $? -ne "0" ]; then
     abort "替换 Docker 容器失败"
@@ -230,4 +232,3 @@ qrcode
 
 warning "雷池 WAF 社区版安装成功, 请访问以下地址访问控制台"
 warning "https://0.0.0.0:9443/"
-
