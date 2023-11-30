@@ -27,21 +27,6 @@ services:
     cap_drop:
       - net_raw
     command: [postgres, -c, max_connections=200]
-  redis:
-    container_name: safeline-redis
-    restart: always
-    image: redis:7.0.10
-    volumes:
-      - ${SAFELINE_DIR}/resources/redis/data:/data
-      - /etc/localtime:/etc/localtime:ro
-    command: redis-server --appendonly yes --requirepass  ${REDIS_PASSWORD}
-    networks:
-      safeline-ce:
-        ipv4_address: ${SUBNET_PREFIX}.3
-    cap_drop:
-      - net_raw
-    sysctls:
-      net.core.somaxconn: "511"
   management:
     container_name: safeline-mgt-api
     restart: always
@@ -59,7 +44,6 @@ services:
       - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
       - MARIO_URL=http://safeline-mario:3335
       - FVM_MANAGER_URL=safeline-fvm-manager:9004
-      - REDIS_URL=redis://:${REDIS_PASSWORD}@safeline-redis:6379/0
       - MANAGEMENT_LOGS_DIR=/logs/management
     dns:
       - 119.29.29.29
@@ -100,7 +84,6 @@ services:
       - LOG_DIR=/logs/mario
       - GOGC=100
       - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
-      - REDIS_URL=redis://:${REDIS_PASSWORD}@safeline-redis:6379/0
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.6
@@ -119,8 +102,7 @@ services:
       - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
       - /etc/resolv.conf:/etc/resolv.conf
     environment:
-      - REDIS_URL=redis://:${REDIS_PASSWORD}@${SUBNET_PREFIX}.3:6379/0
-      - MGT_ADDR=${SUBNET_PREFIX}.4:9002
+      - MGT_API=https://${SUBNET_PREFIX}.4:1443/api/publish/server
     ulimits:
       nofile: 131072
     network_mode: host
