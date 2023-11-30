@@ -1,5 +1,21 @@
 # SAFELINE-CE CHANGELOG
 
+### [3.14.0] - 2023-11-30
+
+#### 新增
+
+- 增加黑白名单正则表达式校验，避免 “_url_” 这类错误正则
+- 事件列表固定表头 ([#443](https://github.com/chaitin/SafeLine/issues/443))
+
+#### 优化
+
+- 移除 redis 依赖，减少运行容器数量
+
+#### 修复
+
+- 修复黑白名单 CIDR 格式校验提示文案未翻译的问题
+- 修复 safeline-tengine 容器提示缺少 MGT_API 的问题 ([#468](https://github.com/chaitin/SafeLine/issues/468))
+
 ## [3.13.2] - 2023-11-24
 
 ### 修复
