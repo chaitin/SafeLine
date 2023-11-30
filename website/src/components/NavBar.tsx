@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { AppBar, Grid, Toolbar, Typography, Button, Box, Container, Link } from '@mui/material';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import Icon from "@/components/Icon";
 import usePopupState, { bindPopover, bindHover } from '@/components/Popover/usePopupState'
-import HoverPopover from '@/components/Popover/HoverPopover'
 
 const navs = [
   { to: "/docs", label: "帮助文档", target: "_blank" },
-  { to: "/community", label: "社区", target: "_self" },
-  { to: "/version", label: "版本对比", target: "_self" },
+  { to: "/community", label: "开发计划", target: "_self" },
+  { to: "/version", label: "付费版本", target: "_self" },
 ];
+
+const HoverPopover = dynamic(() => import('@/components/Popover/HoverPopover'), {
+  ssr: false,
+});
 
 export default function NavBar() {
   const [isSticky, setIsSticky] = useState(false);
@@ -48,7 +52,7 @@ export default function NavBar() {
                   <Grid container flexDirection="row" display="flex" spacing={2} sx={{ marginTop: '0px' }}>
                     <Image
                       src="/images/safeline.svg"
-                      alt="Waf Logo"
+                      alt="SafeLine Logo"
                       width={24}
                       height={26}
                     />
@@ -128,7 +132,7 @@ export default function NavBar() {
                     />
                   </HoverPopover>
                 </Box>
-                <Link href="https://demo.waf-ce.chaitin.cn:9443/dashboard" sx={{ color: "common.black" }} mr={3.5} target="_blank">演示 demo</Link>
+                <Link href="https://demo.waf-ce.chaitin.cn:9443/dashboard" sx={{ color: "common.black" }} mr={3.5} target="_blank">演示 Demo</Link>
                 <Button
                   variant="contained"
                   target="_blank"

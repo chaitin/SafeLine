@@ -31,7 +31,7 @@ type User = {
   login: string
 }
 
-type Discussion = {
+export type Discussion = {
   id: string
   labels: { name: string, color: string }[]
   thumbs_up: number
@@ -76,7 +76,7 @@ export default function DiscussionList({ value }: DiscussionListProps) {
         <Grid container>
           <Grid item xs={4} display="flex" alignItems="center">
             <Stack direction="row">
-              <Typography variant="h6" sx={{ mr: 2 }}>Discussions</Typography>
+              <Typography variant="h6" sx={{ mr: 2 }}>讨论</Typography>
             </Stack>
           </Grid>
           <Grid item xs={8}>

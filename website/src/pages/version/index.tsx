@@ -1,5 +1,6 @@
 import React from "react";
 import Head from 'next/head';
+import Image from 'next/image';
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Version from "@/components/Version";
 
@@ -17,14 +18,18 @@ export default function VersionView() {
           sx={{
             width: "100%",
             height: "380px",
-            backgroundImage: "url(/images/version-banner.png)",
-            backgroundSize: "cover",
-            position: 'relative',
-            backgroundPosition: 'center center',
-            backgroundRepeat: 'no-repeat'
+            position: "relative",
           }}
         >
-          <Container>
+          <Image
+            src="/images/version-banner.png"
+            alt="付费版本"
+            layout="fill"
+            objectFit="cover"
+            objectPosition="center"
+            quality={100}
+          />
+          <Container className="relative">
             <Box pt={23}>
               <Typography variant="h2" sx={{ fontFamily: "AlimamaShuHeiTi-Bold" }}>大小网站皆宜，免费即可开始</Typography>
             </Box>

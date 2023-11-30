@@ -13,7 +13,7 @@ const Title: React.FC<TitleProps> = ({ title, sx }) => {
       <Grid container flexDirection="row" display="flex" alignItems="center" sx={{ marginTop: 0 }}>
         <Image
           src="/images/safeline.svg"
-          alt="Waf Logo"
+          alt="SafeLine Logo"
           width={40}
           height={43}
         />

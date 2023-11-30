@@ -24,7 +24,6 @@ const LINKS = [
         to: "/docs/about/changelog",
       },
     ],
-    xs: 6,
   },
   {
     title: "关于我们",
@@ -38,13 +37,12 @@ const LINKS = [
         to: "https://stack.chaitin.cn/",
       },
     ],
-    xs: 12,
   },
 ];
 
 export const items = [
-  { to: "/community", label: "社区" },
-  { to: "/version", label: "版本对比" },
+  { to: "/community", label: "开发计划" },
+  { to: "/version", label: "付费版本" },
   { to: "", label: "用户协议" },
 ];
 
@@ -83,7 +81,7 @@ export default function Footer() {
             </Stack>
           </Grid>
           {LINKS.map((link) => (
-            <Grid item xs={12} md={5} my={{ xs: 4, md: 0 }} key={link.title}>
+            <Grid item xs={6} md={5} my={{ xs: 4, md: 0 }} key={link.title}>
               <Stack
                 id="groupchat"
                 spacing={1}
@@ -92,7 +90,7 @@ export default function Footer() {
                 <Title title={link.title} />
                 <Grid container>
                   {link.items.map((item, index) => (
-                    <Grid key={index} item xs={link.xs} md={12}>
+                    <Grid key={index} item xs={12}>
                       <Link sx={{ fontSize: '14px', color: "common.white", opacity: 0.5, fontWeight: 400, lineHeight: "38px" }} href={item.to} target="_blank" rel={item.label}>
                         {item.label}
                       </Link>
@@ -102,7 +100,7 @@ export default function Footer() {
               </Stack>
             </Grid>
           ))}
-          <Grid item xs={24} md={4} display={'flex'} justifyContent={{ xs: "center", lg: "flex-end" }}>
+          <Grid item xs={12} md={4} my={{ xs: 4, md: 0 }} display="flex" justifyContent={{ xs: "center", lg: "flex-end" }}>
             <Stack
               id="groupchat"
               spacing={2}

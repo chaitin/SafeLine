@@ -1,7 +1,11 @@
 import React from "react";
 import { alpha, Box, Button, Typography } from "@mui/material";
+import dynamic from 'next/dynamic';
 import FunctionTable from "./FunctionTable";
-import Consultation from "./Consultation";
+
+const Consultation = dynamic(() => import('./Consultation'), {
+  ssr: false,
+});
 
 const VERSION_LIST = [
   {
@@ -118,7 +122,7 @@ const Version = () => {
                 py: 2,
                 borderRadius: '12px 12px 0px 0px',
                 backgroundSize: "cover",
-                backgroundPosition: "right bottom",
+                backgroundPosition: "center center",
                 textAlign: "center",
                 backgroundImage: `url(${item.name_bg})`,
               }}

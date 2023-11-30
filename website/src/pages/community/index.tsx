@@ -2,27 +2,30 @@ import React from "react";
 import { Box, Grid, Button, Typography, Container, Stack } from "@mui/material";
 import Image from 'next/image';
 import Head from 'next/head';
-import DiscussionList from '@/components/community/DiscussionList';
-import IssueList from '@/components/community/IssueList';
+import DiscussionList, { Discussion } from '@/components/community/DiscussionList';
+import IssueList, { Issue } from '@/components/community/IssueList';
 import { getDiscussions, getIssues } from "@/api";
 
 type CommunityPropsType = {
-  discussions: any[];
-  issues: any[];
+  discussions: Discussion[];
+  issues: Issue[];
 };
 
 export async function getServerSideProps() {
-  let discussions = []
-  let issues = []
+  let discussions: Discussion[] = []
+  let issues: Issue[] = []
+
+  const promises = [
+    getDiscussions('').then((result) => discussions = result || []),
+    getIssues('').then((result) => issues = result || []),
+  ];
   try {
-    discussions = await getDiscussions('');
-    issues = await getIssues('');
-  
+    await Promise.allSettled(promises)
   } finally {
     return {
       props: {
-        discussions: discussions || [],
-        issues: issues || [],
+        discussions: discussions,
+        issues: issues,
       },
     }
   }
@@ -41,25 +44,29 @@ function Community({ discussions, issues }: CommunityPropsType) {
           sx={{
             width: "100%",
             height: "380px",
-            backgroundImage: "url(/images/community-banner.png)",
-            backgroundSize: "cover",
             position: 'relative',
-            backgroundPosition: 'center center',
-            backgroundRepeat: 'no-repeat',
           }}
         >
-          <Container>
+          <Image
+            src="/images/community-banner.png"
+            alt="开发计划"
+            layout="fill"
+            objectFit="cover"
+            objectPosition="center"
+            quality={100}
+          />
+          <Container className="relative">
             <Box pt={23}>
-              <Typography variant="h2" sx={{ fontFamily: "AlimamaShuHeiTi-Bold" }}>通过社区获取更多帮助</Typography>
+              <Typography variant="h2" sx={{ fontFamily: "AlimamaShuHeiTi-Bold" }}>勇往直前，开创无限可能的未来</Typography>
               <Typography variant="subtitle1" sx={{ opacity: 0.5 }} mt={1}>同样欢迎你的参与</Typography>
             </Box>
           </Container>
         </Box>
         <Container sx={{ pt: 6, mb: 18 }}>
-          <DiscussionList value={discussions} />
+          <IssueList value={issues} />
         </Container>
         <Container>
-          <IssueList value={issues} />
+          <DiscussionList value={discussions} />
         </Container>
         <Container>
           <Box
@@ -67,6 +74,7 @@ function Community({ discussions, issues }: CommunityPropsType) {
             py={6}
             sx={{
               mt: 19,
+              mb: 26,
               background: "#111227",
               borderRadius: "16px",
             }}
@@ -76,14 +84,14 @@ function Community({ discussions, issues }: CommunityPropsType) {
               <Grid item xs={12} md={6}>
                 <Stack sx={{ color: "common.white" }}>
                   <Typography variant="h3" sx={{ fontSize: "36px" }}>绕过反馈</Typography>
-                  <Typography mt={1} variant="body1" sx={{ opacity: 0.5 }}>向 CT Stack 安全社区提交雷池 XSS、SQL 绕过，可获取积分奖励</Typography>
+                  <Typography mt={1} variant="body1" sx={{ opacity: 0.5 }}>向长亭提交雷池 XSS、SQL 绕过，您将获得现金和实物奖励</Typography>
                   <Button
                     variant="outlined"
                     target="_blank"
                     sx={{
                       width: { xs: "146px" },
                       height: "50px",
-                      mt: 10,
+                      mt: { xs: 4, sm: 10 },
                       fontSize: "16px",
                       backgroundColor: "common.white",
                     }}
@@ -97,12 +105,13 @@ function Community({ discussions, issues }: CommunityPropsType) {
                 <Box
                   sx={{
                     width: { xs: '100%', md: '367px' },
-                    height: { xs: 'auto', md: '206px' }
+                    height: { xs: 'auto', md: '206px' },
+                    mt: { xs: 2, sm: 0 },
                   }}
                 >
                   <Image
                     src="/images/feedback.png"
-                    alt=""
+                    alt="XSS 挑战入口,SQL 挑战入口"
                     layout="responsive"
                     width={100}
                     height={100}
@@ -110,26 +119,6 @@ function Community({ discussions, issues }: CommunityPropsType) {
                 </Box>
               </Grid>
             </Grid>
-          </Box>
-        </Container>
-        <Container>
-          <Box
-            sx={{
-              backgroundImage: "url(/images/partner-bg.png)",
-              backgroundSize: "cover",
-              backgroundPosition: 'center center',
-              backgroundRepeat: 'no-repeat'
-            }}
-          >
-            <Box textAlign="center" pt={13} pb={12}>
-              <Image
-                src="/images/wechat-230825.png"
-                alt="wechat"
-                width={300}
-                height={300}
-              />
-              <Typography variant="h4" mt={3}>微信讨论组</Typography>
-            </Box>
           </Box>
         </Container>
       </Box>

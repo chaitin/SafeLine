@@ -53,10 +53,10 @@ const ARTICLE_LIST = [
 
 const Partner = () => {
   return (
-    <Container>
+    <Container className='relative'>
       <Box
         sx={{
-          px: 5,
+          px: { xs: 0, sm: 5 },
           pt: 19,
         }}
         className="flex flex-col items-center"
@@ -101,21 +101,19 @@ const Partner = () => {
             </Grid>
           ))}
         </Grid>
-        <Box mt={6}>
-          <Button
-            variant="outlined"
-            target="_blank"
-            sx={{
-              width: { xs: "100%", sm: "146px" },
-              height: "50px",
-              ml: { xs: 2, sm: 2 },
-              mb: { xs: 2, sm: 0 },
-            }}
-            href="https://www.chaitin.cn/zh/"
-          >
-            了解详情
-          </Button>
-        </Box>
+      </Box>
+      <Box mt={6} textAlign="center">
+        <Button
+          variant="outlined"
+          target="_blank"
+          sx={{
+            width: { xs: "100%", sm: "146px" },
+            height: "50px",
+          }}
+          href="https://www.chaitin.cn/zh/"
+        >
+          了解详情
+        </Button>
       </Box>
     </Container>
   );

@@ -45,3 +45,10 @@ export function formatDate(time: number): string {
   const day = date.getDate();
   return `${month} ${day}`;
 }
+
+export function formatStarNumber(v: number) {
+  if (v < 1000) {
+    return v;
+  }
+  return Math.round(v / 100) / 10;
+}

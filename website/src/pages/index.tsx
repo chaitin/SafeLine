@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { getSetupCount } from "@/api";
+import { getReposInfo, getSetupCount } from "@/api";
 import Features from "@/components/home/Features";
 import Abilities from "@/components/home/Abilities";
 import Partner from "@/components/home/Partner";
+import { formatStarNumber } from "@/common/utils";
 import {
   Box,
   Grid,
@@ -15,17 +16,17 @@ import {
 import Image from "next/image";
 
 const ARTICLES = [
-  "《阮一峰·科技爱好者周刊》",
-  "《Hello Github 月刊》",
-  "《码农出击》",
-  "《GitHub Daily》",
-  "《Open Github 社区》",
-  "《科技 lion》",
+  { title: '《阮一峰·科技爱好者周刊》', href: "https://www.ruanyifeng.com/blog/2023/11/weekly-issue-276.html", width: 250 },
+  { title: '《Hello Github 月刊》', href: "https://zhuanlan.zhihu.com/p/668104673", width: 206 },
+  { title: '《Apache APISIX》', href: "https://github.com/apache/apisix", width: 186 },
+  { title: '《科技 lion》', href: "https://kejilion.blogspot.com/2023/11/npm-waf.html", width: 250 },
+  { title: '《Github 爱好者》', href: "https://mp.weixin.qq.com/s/CO-k2nv-PK0Ij-V5lTbUEQ", width: 206 },
+  { title: '《GitHub Daily》', href: "https://zhuanlan.zhihu.com/p/656047298", width: 186 },
 ];
 
 const totalSx = {
   color: "primary.main",
-  fontSize: { xs: "58px", md: "70px" },
+  fontSize: "70px",
   background: "linear-gradient(90deg, #8FE5D7 0%, #0FC6C2 100%)",
   "-webkit-background-clip": "text",
   "-webkit-text-fill-color": "transparent",
@@ -33,27 +34,32 @@ const totalSx = {
   fontFamily: "AlimamaShuHeiTi-Bold",
 };
 
-const textAligns = ["left", "center", "right"];
+const justifyContents = ["flex-start", "center", "flex-end"];
 
 export async function getServerSideProps() {
-  let total = 46151;
+  let total = 48750;
+  let starCount = 6.5;
+  const promises = [
+    getSetupCount().then((result) => total = result.total),
+    getReposInfo().then((result) => starCount = formatStarNumber(result.star_count)),
+  ];
   try {
-    const result = await getSetupCount();
-    total = result.total;
+    await Promise.allSettled(promises)
   } finally {
     return {
       props: {
         total,
+        starCount,
       },
     };
   }
 }
 
-export default function Home({ total }: { total: number }) {
+export default function Home({ total, starCount }: { total: number, starCount: number }) {
   const totalRef = useRef(null);
   const startRef = useRef(null);
 
-  const initTotal = async (n: number) => {
+  const initTotal = async (n: number, starCount: number) => {
     const countUpModule = await import("countup.js");
     const anim = new countUpModule.CountUp(totalRef.current!, Math.max(0, n), {
       duration: 2,
@@ -61,7 +67,7 @@ export default function Home({ total }: { total: number }) {
     anim.start();
     const startAnim = new countUpModule.CountUp(
       startRef.current!,
-      Math.max(0, 6.4),
+      Math.max(0, starCount),
       {
         duration: 2,
         decimalPlaces: 1,
@@ -71,8 +77,8 @@ export default function Home({ total }: { total: number }) {
   };
 
   useEffect(() => {
-    initTotal(total);
-  }, [total]);
+    initTotal(total, starCount);
+  }, [total, starCount]);
 
   return (
     <main className="flex flex-col justify-between" title="雷池 WAF 社区版">
@@ -82,26 +88,33 @@ export default function Home({ total }: { total: number }) {
             width: "100%",
             height: "866px",
             position: "relative",
-            backgroundImage: "url(/images/home-banner.png)",
-            backgroundSize: "cover",
-            backgroundPosition: "center center",
-            backgroundRepeat: "no-repeat",
           }}
         >
-          <Box pt={26.5}>
-            <Stack alignItems="center">
+          <Image
+            src="/images/home-banner.png"
+            alt="雷池 SafeLine 主页背景"
+            layout="fill"
+            objectFit="cover"
+            objectPosition="center"
+            quality={100}
+            // unoptimized={true}
+          />
+          <Box pt={26.5} className="relative">
+            <Box alignItems="center">
               <Stack
                 direction="row"
                 sx={{
                   color: "#86909C",
-                  letterSpacing: 8,
+                  letterSpacing: { xs: 0, sm: 4, md: 8 },
                 }}
+                justifyContent={{ xs: "space-between", sm: "center", md: "center" }}
               >
                 <Typography
                   variant="h5"
                   sx={{
-                    mr: 35,
+                    mr: { xs: 0, sm: 22, md: 36.5 },
                     fontWeight: 400,
+                    fontSize: { xs: "16px", sm: "20px", md: "24px" },
                   }}
                 >
                   基于智能语义分析的
@@ -110,6 +123,7 @@ export default function Home({ total }: { total: number }) {
                   variant="h5"
                   sx={{
                     fontWeight: 400,
+                    fontSize: { xs: "16px", sm: "20px", md: "24px" },
                   }}
                 >
                   下一代 Web 应用防火墙
@@ -118,11 +132,11 @@ export default function Home({ total }: { total: number }) {
               <Stack
                 direction="row"
                 mt={2}
+                justifyContent={{ xs: "space-between", sm: "center", md: "center" }}
                 sx={{
                   fontFamily: "AlimamaShuHeiTi-Bold",
-                  letterSpacing: 10,
-                  background:
-                    "linear-gradient(90deg, #160847 0%, #0A7977 100%)",
+                  letterSpacing: { xs: 5, md: 10 },
+                  background: "linear-gradient(90deg, #160847 0%, #0A7977 100%)",
                   "-webkit-background-clip": "text",
                   "-webkit-text-fill-color": "transparent",
                 }}
@@ -130,29 +144,30 @@ export default function Home({ total }: { total: number }) {
                 <Typography
                   variant="h1"
                   sx={{
-                    mr: 15.5,
+                    mr: { xs: 0, sm: 10, md: 15.5 },
+                    fontSize: { xs: "30px", sm: "60px", md: "80px" },
                   }}
                 >
                   不让黑客
                 </Typography>
-                <Typography variant="h1" sx={{}}>
+                <Typography variant="h1" sx={{ fontSize: { xs: "30px", sm: "60px", md: "80px" }, }}>
                   越雷池一步
                 </Typography>
               </Stack>
-            </Stack>
+            </Box>
           </Box>
           <Box
             sx={{
               position: "absolute",
-              bottom: 351,
+              bottom: { xs: 470, sm: 428, md: 351 },
               left: "50%",
               transform: "translateX(-50%)",
             }}
           >
-            <Box sx={{ width: "369px" }}>
+            <Box width={{ xs: "209px", sm: "269px", md: "369px" }}>
               <Image
                 src="/images/gif/waf-logo.gif"
-                alt="WAf logo"
+                alt="SafeLine logo"
                 layout="responsive"
                 width={369}
                 height={369}
@@ -185,7 +200,7 @@ export default function Home({ total }: { total: number }) {
           <Container>
             <Box mt={7.5}>
               <Grid container justifyContent="center">
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} sm={6}>
                   <Stack spacing={2} alignItems="center">
                     <Typography
                       variant="h1"
@@ -202,7 +217,8 @@ export default function Home({ total }: { total: number }) {
                 <Grid
                   item
                   xs={12}
-                  md={6}
+                  sm={6}
+                  mt={{ xs: 2, sm: 0 }}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
                   <Link
@@ -212,10 +228,10 @@ export default function Home({ total }: { total: number }) {
                     <Stack direction="row" justifyContent="center">
                       <Stack spacing={2} alignItems="center">
                         <Stack direction="row" sx={{ ...totalSx }}>
-                          <Typography variant="h1" ref={startRef}>
+                          <Typography variant="h1" ref={startRef} fontSize="70px">
                             -
                           </Typography>
-                          <Typography variant="h1">k</Typography>
+                          <Typography variant="h1" fontSize="70px">k</Typography>
                         </Stack>
                         <Typography variant="h5">GitHub Star</Typography>
                       </Stack>
@@ -236,17 +252,28 @@ export default function Home({ total }: { total: number }) {
             <Box mt={7}>
               <Grid container spacing={2}>
                 {ARTICLES.map((article, index) => (
-                  <Grid key={article} item xs={12} sm={4}>
+                  <Grid
+                    key={article.title}
+                    item
+                    xs={12}
+                    sm={4}
+                    display="flex"
+                    justifyContent={justifyContents[index % 3]}
+                  >
                     <Typography
                       variant="h5"
                       sx={{
-                        color: "#86909C",
-                        textAlign: { xs: "center", md: textAligns[index % 3] },
-                        fontFamily: "AlimamaShuHeiTi-Bold",
-                        fontSize: "20px",
+                        width: article.width + "px",
+                        textAlign: "left",
                       }}
                     >
-                      {article}
+                      <Link
+                        sx={{ color: "#86909C", fontFamily: "AlimamaShuHeiTi-Bold", fontSize: "20px" }}
+                        target="_blank"
+                        href={article.href}
+                      >
+                        {article.title}
+                      </Link>
                     </Typography>
                   </Grid>
                 ))}
@@ -258,13 +285,15 @@ export default function Home({ total }: { total: number }) {
           </Container>
           <Abilities />
           <Box
-            sx={{
-              backgroundImage: "url(/images/partner-bg.png)",
-              backgroundSize: "cover",
-              backgroundPosition: "center center",
-              backgroundRepeat: "no-repeat",
-            }}
+            sx={{ position: "relative" }}
           >
+            <Image
+              src="/images/partner-bg.png"
+              alt="partner bg"
+              layout="fill"
+              objectFit="cover"
+              objectPosition="center"
+            />
             <Partner />
           </Box>
           <Box
@@ -307,7 +336,7 @@ export default function Home({ total }: { total: number }) {
                   }}
                   href="/version"
                 >
-                  版本对比
+                  付费版本
                 </Button>
               </Stack>
               <Box
@@ -317,12 +346,15 @@ export default function Home({ total }: { total: number }) {
                   top: -65,
                 }}
               >
-                <Image
-                  src="/images/shield.png"
-                  alt="雷池"
-                  width={417}
-                  height={359}
-                />
+                <Box width={{ xs: 267, sm: 417 }} height={359}>
+                  <Image
+                    src="/images/shield.png"
+                    alt="雷池"
+                    layout="responsive"
+                    width={417}
+                    height={359}
+                  />
+                </Box>
               </Box>
             </Container>
           </Box>
