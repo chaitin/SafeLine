@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"net/http"
-	"time"
 )
 
 var cacheCount InstallerCount
@@ -23,9 +22,7 @@ func NewSafelineService(host string) *SafelineService {
 	return &SafelineService{
 		APIHost: host,
 		client: &http.Client{
-			Timeout: 10 * time.Second,
 			Transport: &http.Transport{
-				Proxy:           http.ProxyFromEnvironment,
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 			},
 		},

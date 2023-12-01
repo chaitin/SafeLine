@@ -160,6 +160,14 @@ func (s *GitHubService) refreshCache() {
 		return
 	}
 	s.cache.Store("discussions", discussions)
+
+	repo, err := s.fetchRepo(context.Background())
+	if err != nil {
+		log.Printf("failed to fetch repo %v", err)
+		return
+	}
+
+	s.cache.Store("repo", repo)
 }
 
 // GetIssues tries to get the issues from cache; if not available, fetches from GitHub API.
