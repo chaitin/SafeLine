@@ -61,7 +61,7 @@ const Partner = () => {
         }}
         className="flex flex-col items-center"
       >
-        <Typography variant="h2" mb={2}>
+        <Typography variant="h2" mb={2} fontSize={{ xs: "32px", md: "48px" }}>
           优秀企业的信赖之选
         </Typography>
         {ARTICLE_LIST.map((item) => (
@@ -69,26 +69,27 @@ const Partner = () => {
             key={item}
             variant='h5'
             sx={{ color: "#86909C", fontWeight: 500, wordBreak: "break-word" }}
-            mt={2}
+            mt={{ xs: 1, md: 2 }}
+            fontSize={{ xs: "18px", md: "24px" }}
           >
             <Icon type="icon-jingxuan" className="mr-3 relative top-1" sx={{ fontSize: "1.3em" }} />
             {item}
           </Typography>
         ))}
-        <Grid container mt={4} spacing={3} display="flex" justifyContent="center">
+        <Grid container mt={4} display="flex" justifyContent="center">
           {PARTNER_LIST.map((item) => (
-            <Grid item key={item.title} mb={1}>
+            <Grid item key={item.title} mb={2} mr={{ xs: 2, md: 3 }}>
               <Box
                 sx={{
-                  width: { sx: "140px", md: "160px" },
-                  height: { sx: "auto", md: "95px" },
+                  width: { xs: "108px", md: "160px" },
+                  height: { xs: "auto", md: "95px" },
                   backgroundColor: "common.white",
                   boxShadow: "0px 8px 24px -4px rgba(145,158,171,0.1)",
                   borderRadius: "4px",
                 }}
                 className="flex justify-center items-center"
               >
-                <Box sx={{ width: "140px" }}>
+                <Box sx={{ width: { xs: "108px", md: "140px" }}}>
                   <Image
                     src={`/images/logo/${item.icon}`}
                     alt={item.title}
@@ -108,7 +109,10 @@ const Partner = () => {
           target="_blank"
           sx={{
             width: { xs: "100%", sm: "146px" },
-            height: "50px",
+            height: { xs: "72px", sm: "50px" },
+            ml: { xs: 0, sm: 2 },
+            mb: { xs: 2, sm: 0 },
+            fontSize: { xs: "24px", sm: "14px" },
           }}
           href="https://www.chaitin.cn/zh/"
         >

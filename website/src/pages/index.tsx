@@ -3,6 +3,7 @@ import { getReposInfo, getSetupCount } from "@/api";
 import Features from "@/components/home/Features";
 import Abilities from "@/components/home/Abilities";
 import Partner from "@/components/home/Partner";
+import Version from "@/components/home/Version";
 import { formatStarNumber } from "@/common/utils";
 import {
   Box,
@@ -17,8 +18,8 @@ import Image from "next/image";
 
 const ARTICLES = [
   { title: '《阮一峰·科技爱好者周刊》', href: "https://www.ruanyifeng.com/blog/2023/11/weekly-issue-276.html", width: 250 },
-  { title: '《Hello Github 月刊》', href: "https://zhuanlan.zhihu.com/p/668104673", width: 206 },
-  { title: '《Apache APISIX》', href: "https://github.com/apache/apisix", width: 186 },
+  { title: '《Hello Github 月刊》', href: "https://hellogithub.com/repository/0d07cfe266af4c25ba3eadf2c3d06f50", width: 206 },
+  { title: '《Apache APISIX》', href: "https://zhuanlan.zhihu.com/p/655041825", width: 186 },
   { title: '《科技 lion》', href: "https://kejilion.blogspot.com/2023/11/npm-waf.html", width: 250 },
   { title: '《Github 爱好者》', href: "https://mp.weixin.qq.com/s/CO-k2nv-PK0Ij-V5lTbUEQ", width: 206 },
   { title: '《GitHub Daily》', href: "https://zhuanlan.zhihu.com/p/656047298", width: 186 },
@@ -99,7 +100,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
             quality={100}
             // unoptimized={true}
           />
-          <Box pt={26.5} className="relative">
+          <Box pt={{ xs: 21, md: 26.5 }} className="relative">
             <Box alignItems="center">
               <Stack
                 direction="row"
@@ -107,14 +108,14 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                   color: "#86909C",
                   letterSpacing: { xs: 0, sm: 4, md: 8 },
                 }}
-                justifyContent={{ xs: "space-between", sm: "center", md: "center" }}
+                justifyContent="center"
               >
                 <Typography
                   variant="h5"
                   sx={{
-                    mr: { xs: 0, sm: 22, md: 36.5 },
+                    mr: { xs: 12, sm: 22, md: 36.5 },
                     fontWeight: 400,
-                    fontSize: { xs: "16px", sm: "20px", md: "24px" },
+                    fontSize: { xs: "16px", md: "24px" },
                   }}
                 >
                   基于智能语义分析的
@@ -123,7 +124,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                   variant="h5"
                   sx={{
                     fontWeight: 400,
-                    fontSize: { xs: "16px", sm: "20px", md: "24px" },
+                    fontSize: { xs: "16px", md: "24px" },
                   }}
                 >
                   下一代 Web 应用防火墙
@@ -132,7 +133,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
               <Stack
                 direction="row"
                 mt={2}
-                justifyContent={{ xs: "space-between", sm: "center", md: "center" }}
+                justifyContent="center"
                 sx={{
                   fontFamily: "AlimamaShuHeiTi-Bold",
                   letterSpacing: { xs: 5, md: 10 },
@@ -144,13 +145,13 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                 <Typography
                   variant="h1"
                   sx={{
-                    mr: { xs: 0, sm: 10, md: 15.5 },
-                    fontSize: { xs: "30px", sm: "60px", md: "80px" },
+                    mr: { xs: 9.5, sm: 13.5, md: 15.5 },
+                    fontSize: { xs: "32px", sm: "48px", md: "80px" },
                   }}
                 >
                   不让黑客
                 </Typography>
-                <Typography variant="h1" sx={{ fontSize: { xs: "30px", sm: "60px", md: "80px" }, }}>
+                <Typography variant="h1" sx={{ fontSize: { xs: "32px", sm: "48px", md: "80px" }, }}>
                   越雷池一步
                 </Typography>
               </Stack>
@@ -159,7 +160,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
           <Box
             sx={{
               position: "absolute",
-              bottom: { xs: 470, sm: 428, md: 351 },
+              bottom: { xs: 520, sm: 472, md: 351 },
               left: "50%",
               transform: "translateX(-50%)",
             }}
@@ -176,7 +177,9 @@ export default function Home({ total, starCount }: { total: number, starCount: n
           </Box>
         </Box>
         <Box
-          sx={{ position: "relative", bottom: "360px", marginBottom: "-360px" }}
+          sx={{ position: "relative" }}
+          bottom={{ xs: 448, md: 360 }}
+          mb={{ xs: -56, md: -45 }}
         >
           <Container>
             <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -185,10 +188,10 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                 target="_blank"
                 sx={{
                   width: { xs: "100%", sm: "188px" },
-                  height: "60px",
+                  height: { xs: "80px", sm: "60px" },
                   ml: { xs: 0, sm: 0 },
                   mb: { xs: 0, sm: 0 },
-                  fontSize: "20px",
+                  fontSize: { xs: "32px", sm: "20px" },
                   boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
                 }}
                 href="/docs/guide/install"
@@ -255,10 +258,10 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                   <Grid
                     key={article.title}
                     item
-                    xs={12}
+                    xs={4}
                     sm={4}
                     display="flex"
-                    justifyContent={justifyContents[index % 3]}
+                    justifyContent={{ xs: 'flex-start', sm: justifyContents[index % 3] }}
                   >
                     <Typography
                       variant="h5"
@@ -268,7 +271,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                       }}
                     >
                       <Link
-                        sx={{ color: "#86909C", fontFamily: "AlimamaShuHeiTi-Bold", fontSize: "20px" }}
+                        sx={{ color: "#86909C", fontFamily: "AlimamaShuHeiTi-Bold", fontSize: { xs: "14px", sm: "20px" }}}
                         target="_blank"
                         href={article.href}
                       >
@@ -280,7 +283,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
               </Grid>
             </Box>
           </Container>
-          <Container sx={{ pb: 3, mb: 3, mt: 18 }}>
+          <Container sx={{ pb: 3, mb: 3, mt: { xs: 10, md: 18 }}}>
             <Features />
           </Container>
           <Abilities />
@@ -296,68 +299,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
             />
             <Partner />
           </Box>
-          <Box
-            sx={{
-              width: "100%",
-              height: { xs: "243px", md: "343px" },
-              mt: 19,
-              backgroundImage: "url(/images/enterprise-bg.svg)",
-              backgroundSize: "cover",
-              backgroundPosition: "center center",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            <Container className="relative h-full">
-              <Stack justifyContent="center" className="h-full">
-                <Typography
-                  variant="h4"
-                  sx={{
-                    fontWeight: 400,
-                    color: "common.white",
-                    fontSize: { xs: "20px", md: "28px" },
-                    fontFamily: "AlimamaShuHeiTi-Bold",
-                    letterSpacing: "3px",
-                  }}
-                >
-                  欢迎使用雷池其他版本
-                </Typography>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    width: { xs: "146px" },
-                    height: "50px",
-                    mt: 4,
-                    backgroundColor: "common.white",
-                    fontSize: "16px",
-                    "&:hover": {
-                      color: "#0A8A87",
-                      backgroundColor: "common.white",
-                    },
-                  }}
-                  href="/version"
-                >
-                  付费版本
-                </Button>
-              </Stack>
-              <Box
-                sx={{
-                  position: "absolute",
-                  right: -96,
-                  top: -65,
-                }}
-              >
-                <Box width={{ xs: 267, sm: 417 }} height={359}>
-                  <Image
-                    src="/images/shield.png"
-                    alt="雷池"
-                    layout="responsive"
-                    width={417}
-                    height={359}
-                  />
-                </Box>
-              </Box>
-            </Container>
-          </Box>
+          <Version />
         </Box>
       </Box>
     </main>

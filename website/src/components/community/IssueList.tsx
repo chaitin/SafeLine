@@ -98,12 +98,12 @@ function IssueList({ value }: IssueListProps) {
     <>
       <Box sx={{ pb: 3 }}>
         <Grid container>
-          <Grid item xs={4} display="flex" alignItems="center">
+          <Grid item xs={12} sm={4} mb={{ xs: 4, sm: 0 }} display="flex" justifyContent={{ xs: "center", sm: "flex-start" }}>
             <Stack direction="row">
-              <Typography variant="h6" sx={{ mr: 2 }}>开发计划</Typography>
+              <Typography variant="h5" sx={{ mr: 2 }}>开发计划</Typography>
             </Stack>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={12} sm={8}>
             <Stack direction="row" justifyContent={{ xs: "flex-start", md: "flex-end" }}>
               <Paper
                 sx={{
@@ -131,11 +131,10 @@ function IssueList({ value }: IssueListProps) {
                 variant="contained"
                 target="_blank"
                 sx={{
-                  width: { xs: "102px" },
                   ml: { xs: 2 },
+                  minWidth: "80px",
                   height: "36px",
                   whiteSpace: 'nowrap',
-                  fontSize: { xs: '12px', md: '14px' }
                 }}
                 href="https://github.com/chaitin/SafeLine/issues"
               >

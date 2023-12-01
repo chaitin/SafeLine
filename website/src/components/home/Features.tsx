@@ -37,9 +37,10 @@ const FEATURE_LIST = [
               target="_blank"
               sx={{
                 width: { xs: "100%", sm: "146px" },
-                height: "50px",
+                height: { xs: "72px", sm: "50px" },
                 ml: { xs: 0, sm: 2 },
                 mb: { xs: 2, sm: 0 },
+                fontSize: { xs: "24px", sm: "14px" },
               }}
               href="/docs/about/syntaxanalysis"
             >
