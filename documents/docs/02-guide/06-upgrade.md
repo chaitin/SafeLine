@@ -10,7 +10,7 @@ title: "升级雷池"
 
 ## 在线升级
 
-执行以下命令进行升级。
+执行以下命令进行升级，升级不会清除历史数据。
 
 ```
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/upgrade.sh)"
