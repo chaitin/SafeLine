@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image'
 import { Box, Grid, Typography, Stack, SxProps, Container, Link } from '@mui/material';
-import WafTitle from './home/WafTitle'
 
 const LINKS = [
   {
@@ -24,7 +23,6 @@ const LINKS = [
         to: "/docs/about/changelog",
       },
     ],
-    xs: 6,
   },
   {
     title: "关于我们",
@@ -38,13 +36,12 @@ const LINKS = [
         to: "https://stack.chaitin.cn/",
       },
     ],
-    xs: 12,
   },
 ];
 
 export const items = [
-  { to: "/community", label: "社区" },
-  { to: "/version", label: "版本对比" },
+  { to: "/community", label: "开发计划" },
+  { to: "/version", label: "付费版本" },
   { to: "", label: "用户协议" },
 ];
 
@@ -64,7 +61,29 @@ export default function Footer() {
               spacing={4}
               alignItems="flex-start"
             >
-              <WafTitle title="雷池 SafeLine" sx={{ marginLeft: '16px' }} />
+              <Link href="/">
+                <Grid container flexDirection="row" display="flex" alignItems="center" sx={{ marginTop: 0 }}>
+                  <Image
+                    src="/images/safeline.svg"
+                    alt="SafeLine Logo"
+                    width={40}
+                    height={43}
+                  />
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      color: "common.white",
+                      fontFamily: "AlimamaShuHeiTi-Bold",
+                      marginLeft: '16px',
+                      fontSize: { xs: "40px", md: "28px" },
+                      position: "relative",
+                      bottom: 5,
+                     }}
+                  >
+                    雷池 SafeLine
+                  </Typography>
+                </Grid>
+              </Link>
               <Box>
                 {items.map((item, index) => (
                   <Box key={index} component="span" mr={5}>
@@ -83,7 +102,7 @@ export default function Footer() {
             </Stack>
           </Grid>
           {LINKS.map((link) => (
-            <Grid item xs={12} md={5} my={{ xs: 4, md: 0 }} key={link.title}>
+            <Grid item xs={8} md={5} my={{ xs: 4, md: 0 }} key={link.title}>
               <Stack
                 id="groupchat"
                 spacing={1}
@@ -92,7 +111,7 @@ export default function Footer() {
                 <Title title={link.title} />
                 <Grid container>
                   {link.items.map((item, index) => (
-                    <Grid key={index} item xs={link.xs} md={12}>
+                    <Grid key={index} item xs={12}>
                       <Link sx={{ fontSize: '14px', color: "common.white", opacity: 0.5, fontWeight: 400, lineHeight: "38px" }} href={item.to} target="_blank" rel={item.label}>
                         {item.label}
                       </Link>
@@ -102,7 +121,7 @@ export default function Footer() {
               </Stack>
             </Grid>
           ))}
-          <Grid item xs={24} md={4} display={'flex'} justifyContent={{ xs: "center", lg: "flex-end" }}>
+          <Grid item xs={8} md={4} my={{ xs: 4, md: 0 }} display="flex" justifyContent={{ xs: "center", lg: "flex-end" }}>
             <Stack
               id="groupchat"
               spacing={2}
@@ -118,7 +137,7 @@ export default function Footer() {
             </Stack>
           </Grid>
         </Grid>
-        <Grid container sx={{ pb: 1.5 }}>
+        <Grid container sx={{ pb: 1.5 }} justifyContent={{ xs: "center", md: "flex-start" }}>
           <Typography
             variant="inherit"
             sx={{ fontSize: "12px", color: "rgba(255,255,255,0.26)", fontWeight: 400 }}

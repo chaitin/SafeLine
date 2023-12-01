@@ -61,30 +61,29 @@ const Abilities = () => {
       sx={{
         background: "#111227",
         color: "common.white",
-        pt: 18,
-        pb: 27,
+        pt: { xs: 8, md: 18 },
+        pb: { xs: 8, md: 27 },
         px: 2,
       }}
     >
       <Container maxWidth="lg">
         <Grid container alignItems="center">
-          <Grid item xs={12} sm={12} md={6}>
-            <Typography variant="h2" mb={4.5}>
+          <Grid item xs={12} md={6}>
+            <Typography variant="h2" mb={4.5} textAlign={{ xs: "center", md: "left" }} fontSize={{ sx: "32px", md: "48px" }}>
               多维能力拓展
             </Typography>
             <Grid container spacing={2}>
               {ABILITY_LIST.map((ability) => (
                 <AbilityItem
                   key={ability.title}
-                  title={ability.title}
-                  img={ability.img}
-                  href={ability.href}
+                  ability={ability}
+                  hoveredUrl={hoveredUrl}
                   handleIconHover={handleIconHover}
                 />
               ))}
             </Grid>
           </Grid>
-          <Grid item xs={12} sm={12} md={6}>
+          <Grid item xs={0} md={6} display={{ xs: "none", md: "block" }}>
             <Box sx={{ width: { xs: "100%", sm: "100%" } }}>
               {ABILITY_LIST.map((ability) => (
                 <Image
@@ -107,16 +106,14 @@ const Abilities = () => {
 export default Abilities;
 
 interface ItemProps {
-  title: string;
-  href?: string;
-  img?: string;
+  ability: any
+  hoveredUrl?: string;
   handleIconHover: Function;
 }
 
 const AbilityItem: React.FC<ItemProps> = ({
-  title,
-  href,
-  img,
+  ability,
+  hoveredUrl,
   handleIconHover,
 }) => {
   return (
@@ -128,12 +125,12 @@ const AbilityItem: React.FC<ItemProps> = ({
           borderRadius: "12px",
           width: { xs: "100%", lg: "274px" },
         }}
-        onMouseEnter={() => handleIconHover(img)}
+        onMouseEnter={() => handleIconHover(ability.img)}
         onMouseLeave={() => {}}
-        onClick={() => handleIconHover(img)}
+        onClick={() => handleIconHover(ability.img)}
       >
-        {href ? (
-          <Link href={href} target="_blank" rel={title}>
+        {ability.href ? (
+          <Link href={ability.href} target="_blank" rel={ability.title}>
             <Typography
               variant="h6"
               px={3}
@@ -152,7 +149,7 @@ const AbilityItem: React.FC<ItemProps> = ({
                 },
               }}
             >
-              {title}
+              {ability.title}
               <Icon type="icon-youjiantouxian" />
             </Typography>
           </Link>
@@ -168,7 +165,7 @@ const AbilityItem: React.FC<ItemProps> = ({
               alignItems: "center",
             }}
           >
-            {title}
+            {ability.title}
           </Typography>
         )}
       </Box>

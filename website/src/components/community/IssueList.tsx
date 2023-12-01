@@ -21,7 +21,7 @@ import { getIssues } from "@/api";
 
 export default IssueList;
 
-type Issue = {
+export type Issue = {
   id: string
   labels: { name: string, color: string }[]
   thumbs_up: number
@@ -98,12 +98,12 @@ function IssueList({ value }: IssueListProps) {
     <>
       <Box sx={{ pb: 3 }}>
         <Grid container>
-          <Grid item xs={4} display="flex" alignItems="center">
+          <Grid item xs={12} sm={4} mb={{ xs: 4, sm: 0 }} display="flex" justifyContent={{ xs: "center", sm: "flex-start" }}>
             <Stack direction="row">
-              <Typography variant="h6" sx={{ mr: 2 }}>Roadmap</Typography>
+              <Typography variant="h5" sx={{ mr: 2 }}>开发计划</Typography>
             </Stack>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={12} sm={8}>
             <Stack direction="row" justifyContent={{ xs: "flex-start", md: "flex-end" }}>
               <Paper
                 sx={{
@@ -131,11 +131,10 @@ function IssueList({ value }: IssueListProps) {
                 variant="contained"
                 target="_blank"
                 sx={{
-                  width: { xs: "102px" },
                   ml: { xs: 2 },
+                  minWidth: "80px",
                   height: "36px",
                   whiteSpace: 'nowrap',
-                  fontSize: { xs: '12px', md: '14px' }
                 }}
                 href="https://github.com/chaitin/SafeLine/issues"
               >
@@ -166,10 +165,13 @@ function IssueList({ value }: IssueListProps) {
             }}
           >
             <Box px={2} py={2}>
-              <Typography variant="h6" color={tab.color}>{tab.title}</Typography>
-              <List sx={{ py: 0, maxHeight: "830px", overflowY: "auto" }}>
-                {issues[tab.key].map((issue) => (
-                  <ListItem key={issue.id} sx={{ pt: 2, pb: 0, px: 0 }}>
+              <Typography variant="h6" color={tab.color} mb={2}>
+                {tab.title}
+                （{issues[tab.key]?.length || 0}）
+              </Typography>
+              <List sx={{ py: 0, maxHeight: "790px", overflowY: "auto" }}>
+                {issues[tab.key].map((issue, index) => (
+                  <ListItem key={issue.id} sx={{ pt: index > 0 ? 2 : 0, pb: 0, px: 0 }}>
                     <IssueItem issue={issue} />
                   </ListItem>
                 ))}

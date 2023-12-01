@@ -1,10 +1,21 @@
 definitions:
+  service.Category:
+    properties:
+      emoji:
+        type: string
+      emoji_html:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+    type: object
   service.Discussion:
     properties:
       author:
         $ref: '#/definitions/service.User'
-      category_name:
-        type: string
+      category:
+        $ref: '#/definitions/service.Category'
       comment_count:
         type: integer
       comment_users:
@@ -26,6 +37,13 @@ definitions:
       title:
         type: string
       upvote_count:
+        type: integer
+      url:
+        type: string
+    type: object
+  service.InstallerCount:
+    properties:
+      total:
         type: integer
     type: object
   service.Issue:
@@ -55,6 +73,13 @@ definitions:
         type: string
       name:
         type: string
+    type: object
+  service.Repo:
+    properties:
+      id:
+        type: string
+      star_count:
+        type: integer
     type: object
   service.User:
     properties:
@@ -88,6 +113,21 @@ paths:
       summary: get discussions
       tags:
       - GitHub
+  /repos/info:
+    get:
+      consumes:
+      - application/json
+      description: get repo info from GitHub
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.Repo'
+      summary: get repo info
+      tags:
+      - GitHub
   /repos/issues:
     get:
       consumes:
@@ -110,4 +150,19 @@ paths:
       summary: get issues
       tags:
       - GitHub
+  /safeline/count:
+    get:
+      consumes:
+      - application/json
+      description: get installer count
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/service.InstallerCount'
+      summary: get installer count
+      tags:
+      - Safeline
 swagger: "2.0"

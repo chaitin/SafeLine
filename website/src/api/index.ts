@@ -2,6 +2,7 @@ export {
     getSetupCount,
     getDiscussions,
     getIssues,
+    getReposInfo,
   };
   
   const BASE_API = "/api";
@@ -11,7 +12,11 @@ export {
   }
 
   function getSetupCount() {
-    return fetch("https://waf-ce.chaitin.cn/api/count").then((res) => res.json());
+    return fetch(getAPIUrl() + "/safeline/count").then((res) => res.json());
+  }
+
+  function getReposInfo() {
+    return fetch(getAPIUrl() + "/repos/info").then((res) => res.json());
   }
 
   function getDiscussions(query: string) {

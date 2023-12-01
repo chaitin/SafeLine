@@ -32,9 +32,9 @@ const Illustrate = ({ text }: { text: string }) => {
 };
 
 const versions = [
-  { title: '社区版', key: 'experience', width: '33%' },
-  // { title: '专业版', key: 'major', width: '25%' },
-  { title: '企业版', key: 'basics', width: '33%' },
+  { title: '社区版', key: 'experience' },
+  // { title: '专业版', key: 'major' },
+  { title: '企业版', key: 'basics' },
 ]
 
 const colors = ['light', 'main'] // 'lighter', 
@@ -271,9 +271,9 @@ const FunctionTable = () => {
         >
           <TableHead sx={{ background: "transparent" }}>
             <TableRow sx={{ border: "0" }}>
-              <TableCell sx={{ width: "33%" }} />
+              <TableCell sx={{ width: { xs: "50%", sm: "33%" }}}/>
               {versions.map((item, index) => (
-                <TableCell key={item.title} align="center" sx={{ width: item.width, fontSize: "16px" }}>
+                <TableCell key={item.title} align="center" sx={{ width: { xs: "25%", sm: "33%" }, fontSize: "16px" }}>
                   <Box
                     sx={(theme) => ({
                       display: "flex",
@@ -354,13 +354,13 @@ const FunctionTable = () => {
                 >
                   {data.data.map((item) => (
                     <TableRow key={item.name}>
-                      <TableCell sx={{ width: "33%" }}>
+                      <TableCell sx={{ width: { xs: "50%", sm: "33%" }}}>
                         <Box>
                           <Typography variant="h6" sx={{ fontWeight: 400 }}>{item.name}</Typography>
                         </Box>
                       </TableCell>
                       {versions.map((v, index) => (
-                        <TableCell key={index} sx={{ width: v.width }} align="center">
+                        <TableCell key={index} sx={{ width: { xs: "25%", sm: "33%" } }} align="center">
                          {item[v.key as 'experience' | 'major' | 'basics']}
                        </TableCell>
                       ))}

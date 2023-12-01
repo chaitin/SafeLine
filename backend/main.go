@@ -16,10 +16,6 @@ import (
 func main() {
 	viper.AutomaticEnv()
 
-	// variables that must be set
-	viper.SetDefault("GITHUB_TOKEN", "")
-
-	// optional variables to set
 	viper.SetDefault("GITHUB_CACHE_TTL", 10) // cache timeout in minutes
 	viper.SetDefault("LISTEN_ADDR", ":8080") // api server addr
 
@@ -27,6 +23,12 @@ func main() {
 	if githubToken == "" {
 		log.Fatal("GITHUB_TOKEN must be set")
 	}
+
+	telemetryHost := viper.GetString("TELEMETRY_HOST")
+	if telemetryHost == "" {
+		log.Fatal("TELEMETRY_HOST must be set")
+	}
+
 	listenAddr := viper.GetString("LISTEN_ADDR")
 
 	r := gin.Default()
@@ -45,6 +47,12 @@ func main() {
 	v1 := r.Group("/api")
 	v1.GET("/repos/issues", gitHubHandler.GetIssues)
 	v1.GET("/repos/discussions", gitHubHandler.GetDiscussions)
+	v1.GET("/repos/info", gitHubHandler.GetRepo)
+
+	// Initialize the SafelineService.
+	safelineService := service.NewSafelineService(telemetryHost)
+	safelineHandler := handler.NewSafelineHandler(safelineService)
+	v1.GET("/safeline/count", safelineHandler.GetInstallerCount)
 
 	docs.SwaggerInfo.BasePath = v1.BasePath()
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))

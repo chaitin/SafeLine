@@ -60,3 +60,20 @@ func (h *GitHubHandler) GetDiscussions(c *gin.Context) {
 
 	c.JSON(http.StatusOK, discussions)
 }
+
+// GetRepo handles GET requests for fetching GitHub repo info.
+// @Summary get repo info
+// @Description get repo info from GitHub
+// @Tags	GitHub
+// @Accept	json
+// @Produce	json
+// @Success 200 {object} service.Repo
+// @Router /repos/info [get]
+func (h *GitHubHandler) GetRepo(c *gin.Context) {
+	repo, err := h.gitHubService.GetRepo(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, repo)
+}

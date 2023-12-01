@@ -1,14 +1,14 @@
 FROM golang:1.21 as go-builder
 
 WORKDIR /work
-COPY backend .
 ENV GOPROXY=https://goproxy.cn,direct
-RUN go mod tidy
+COPY backend/go.mod .
+COPY backend/go.sum .
+RUN go mod download
+COPY backend .
 RUN CGO_ENABLED=0 go build -a -v -ldflags="-w" -o server .
 
 FROM node:20.5-alpine
-
-ARG telemetry
 
 RUN apk update
 RUN apk add nginx supervisor curl
@@ -17,12 +17,6 @@ RUN echo -e "                                                                   
 server {                                                                        \n\
     listen 80;                                                                  \n\
                                                                                 \n\
-    location /api/count {                                                       \n\
-        proxy_pass $telemetry;                                                  \n\
-    }                                                                           \n\
-    location /api/exist {                                                       \n\
-        proxy_pass $telemetry;                                                  \n\
-    }                                                                           \n\
     location /api/ {                                                            \n\
         proxy_pass http://localhost:8080;                                       \n\
     }                                                                           \n\

@@ -2,27 +2,30 @@ import React from "react";
 import { Box, Grid, Button, Typography, Container, Stack } from "@mui/material";
 import Image from 'next/image';
 import Head from 'next/head';
-import DiscussionList from '@/components/community/DiscussionList';
-import IssueList from '@/components/community/IssueList';
+import DiscussionList, { Discussion } from '@/components/community/DiscussionList';
+import IssueList, { Issue } from '@/components/community/IssueList';
 import { getDiscussions, getIssues } from "@/api";
 
 type CommunityPropsType = {
-  discussions: any[];
-  issues: any[];
+  discussions: Discussion[];
+  issues: Issue[];
 };
 
 export async function getServerSideProps() {
-  let discussions = []
-  let issues = []
+  let discussions: Discussion[] = []
+  let issues: Issue[] = []
+
+  const promises = [
+    getDiscussions('').then((result) => discussions = result || []),
+    getIssues('').then((result) => issues = result || []),
+  ];
   try {
-    discussions = await getDiscussions('');
-    issues = await getIssues('');
-  
+    await Promise.allSettled(promises)
   } finally {
     return {
       props: {
-        discussions: discussions || [],
-        issues: issues || [],
+        discussions: discussions,
+        issues: issues,
       },
     }
   }
@@ -40,97 +43,91 @@ function Community({ discussions, issues }: CommunityPropsType) {
         <Box
           sx={{
             width: "100%",
-            height: "380px",
-            backgroundImage: "url(/images/community-banner.png)",
-            backgroundSize: "cover",
+            height: { xs: "866px", md: "380px" },
             position: 'relative',
+            backgroundImage: { xs: "url(/images/community-banner-mobile.png)", md: "url(/images/community-banner.png)" },
+            backgroundSize: "cover",
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
           }}
         >
-          <Container>
-            <Box pt={23}>
-              <Typography variant="h2" sx={{ fontFamily: "AlimamaShuHeiTi-Bold" }}>通过社区获取更多帮助</Typography>
+          <Container className="relative">
+            <Box
+              pt={{ xs: 19, md: 23 }}
+              textAlign={{ xs: "center", md: "left" }}
+            >
+              <Typography
+                variant="h2"
+                sx={{
+                  fontFamily: "AlimamaShuHeiTi-Bold",
+                  fontSize: { xs: "32px", md: "48px" }
+                }}>
+                  勇往直前，开创无限可能的未来
+                </Typography>
               <Typography variant="subtitle1" sx={{ opacity: 0.5 }} mt={1}>同样欢迎你的参与</Typography>
             </Box>
           </Container>
         </Box>
-        <Container sx={{ pt: 6, mb: 18 }}>
-          <DiscussionList value={discussions} />
-        </Container>
-        <Container>
-          <IssueList value={issues} />
-        </Container>
-        <Container>
-          <Box
-            px={6}
-            py={6}
-            sx={{
-              mt: 19,
-              background: "#111227",
-              borderRadius: "16px",
-            }}
-            className="flex flex-col justify-center"
-          >
-            <Grid container>
-              <Grid item xs={12} md={6}>
-                <Stack sx={{ color: "common.white" }}>
-                  <Typography variant="h3" sx={{ fontSize: "36px" }}>绕过反馈</Typography>
-                  <Typography mt={1} variant="body1" sx={{ opacity: 0.5 }}>向 CT Stack 安全社区提交雷池 XSS、SQL 绕过，可获取积分奖励</Typography>
-                  <Button
-                    variant="outlined"
-                    target="_blank"
+        <Container sx={{ position: "relative", bottom: { xs: 124, md: 0 }, mb: { xs: "-124px", md: 0 } }}>
+          <Container sx={{ pt: 6, mb: { xs: 10, sm: 18 }}}>
+            <IssueList value={issues} />
+          </Container>
+          <Container>
+            <DiscussionList value={discussions} />
+          </Container>
+          <Container>
+            <Box
+              px={6}
+              py={6}
+              sx={{
+                mt: { xs: 10, sm: 19 },
+                mb: { xs: 10, sm: 26 },
+                background: "#111227",
+                borderRadius: "16px",
+              }}
+              className="flex flex-col justify-center"
+            >
+              <Grid container>
+                <Grid item xs={12} sm={6}>
+                  <Stack sx={{ color: "common.white" }}>
+                    <Typography variant="h3" sx={{ fontSize: "36px" }}>绕过反馈</Typography>
+                    <Typography mt={1} variant="body1" sx={{ opacity: 0.5 }}>向长亭提交雷池 XSS、SQL 绕过，您将获得现金和实物奖励</Typography>
+                    <Button
+                      variant="outlined"
+                      target="_blank"
+                      sx={{
+                        width: { xs: "100%", sm: "146px" },
+                        height: "50px",
+                        mt: { xs: 4, sm: 10 },
+                        fontSize: "16px",
+                        backgroundColor: "common.white",
+                      }}
+                      href="https://stack.chaitin.com/security-challenge/safeline/index"
+                    >
+                      去提交
+                    </Button>
+                  </Stack>
+                </Grid>
+                <Grid item xs={12} sm={6} display="flex" justifyContent={{ xs: 'center', md: 'flex-end' }} mt={{ xs: 2, md: 0 }}>
+                  <Box
                     sx={{
-                      width: { xs: "146px" },
-                      height: "50px",
-                      mt: 10,
-                      fontSize: "16px",
-                      backgroundColor: "common.white",
+                      width: '367px',
+                      height: '169px',
+                      mt: { xs: 2, sm: 0 },
                     }}
-                    href="https://stack.chaitin.com/security-challenge/safeline/index"
                   >
-                    去提交
-                  </Button>
-                </Stack>
+                    <Image
+                      src="/images/feedback.png"
+                      alt="XSS 挑战入口,SQL 挑战入口"
+                      layout="responsive"
+                      width={100}
+                      height={100}
+                    />
+                  </Box>
+                </Grid>
               </Grid>
-              <Grid item xs={12} md={6} display="flex" justifyContent={{ sx: 'flex-start', md: 'flex-end' }} mt={{ xs: 2, md: 0 }}>
-                <Box
-                  sx={{
-                    width: { xs: '100%', md: '367px' },
-                    height: { xs: 'auto', md: '206px' }
-                  }}
-                >
-                  <Image
-                    src="/images/feedback.png"
-                    alt=""
-                    layout="responsive"
-                    width={100}
-                    height={100}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        </Container>
-        <Container>
-          <Box
-            sx={{
-              backgroundImage: "url(/images/partner-bg.png)",
-              backgroundSize: "cover",
-              backgroundPosition: 'center center',
-              backgroundRepeat: 'no-repeat'
-            }}
-          >
-            <Box textAlign="center" pt={13} pb={12}>
-              <Image
-                src="/images/wechat-230825.png"
-                alt="wechat"
-                width={300}
-                height={300}
-              />
-              <Typography variant="h4" mt={3}>微信讨论组</Typography>
             </Box>
-          </Box>
+          </Container>
         </Container>
       </Box>
     </main>

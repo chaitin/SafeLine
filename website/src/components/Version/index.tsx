@@ -1,7 +1,11 @@
 import React from "react";
 import { alpha, Box, Button, Typography } from "@mui/material";
+import dynamic from 'next/dynamic';
 import FunctionTable from "./FunctionTable";
-import Consultation from "./Consultation";
+
+const Consultation = dynamic(() => import('./Consultation'), {
+  ssr: false,
+});
 
 const VERSION_LIST = [
   {
@@ -118,7 +122,7 @@ const Version = () => {
                 py: 2,
                 borderRadius: '12px 12px 0px 0px',
                 backgroundSize: "cover",
-                backgroundPosition: "right bottom",
+                backgroundPosition: "center center",
                 textAlign: "center",
                 backgroundImage: `url(${item.name_bg})`,
               }}
@@ -147,7 +151,6 @@ const Version = () => {
                   </Typography>
                 )}
               </Typography>
-              {/* <Description content={item.desc} /> */}
               <Box>{item.operation}</Box>
               <FunctionItems items={item.functions} />
             </Box>
@@ -156,7 +159,11 @@ const Version = () => {
       </Box>
       <Typography
         variant="h4"
-        sx={{ fontSize: "48px", fontWeight: 600, mt: "180px !important" }}
+        sx={{
+          fontSize: "48px",
+          fontWeight: 600,
+          mt: { xs: "64px !important", md: "180px !important" },
+        }}
       >
         细节对比
       </Typography>
