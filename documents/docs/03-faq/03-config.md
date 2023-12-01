@@ -20,23 +20,21 @@ title: "配置问题"
 
 4. 同时存在其他错误的配置可能会导致新的配置一直不生效，检查有没有存在其他错误的配置
 
-## 排查步骤：
+## 排查步骤
 
 1. 明确 “网站无法访问” 的具体表现：
 
    - 如果 `502 Bad Gateway tengine`：
 
-     ![Alt text](/images/docs/guide_config/tengine_502.png)
+      大概率是是雷池的上游服务器配置不正确，或者雷池无法访问到上游服务器，请继续按下面步骤排查。
 
-     大概率是是雷池的上游服务器配置不正确，或者雷池无法访问到上游服务器。请继续按下面步骤排查，重点排查步骤 6、7
+      ![Alt text](/images/docs/guide_config/tengine_502.png)
 
    - 如果请求能够返回但是十分缓慢
 
-     - 首先确认服务器负载是否正常
+     - 确认服务器负载是否正常，检查服务器的 CPU、内存、带宽使用情况
 
-       - 检查服务器的 CPU、内存、带宽使用情况
-
-     - 在客户端执行命令，检查雷池服务器与上游服务器的网络：`curl -H "Host: <SafeLine-IP>" -vv -o /dev/null -s -w 'time_namelookup: %{time_namelookup}\ntime_connect: %{time_connect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n' http://<上游服务器地址>`
+     - 在客户端执行命令，检查雷池服务器与上游服务器的网络：`curl -H "Host: <雷池 IP>" -vv -o /dev/null -s -w 'time_namelookup: %{time_namelookup}\ntime_connect: %{time_connect}\ntime_starttransfer: %{time_starttransfer}\ntime_total: %{time_total}\n' http://<上游服务器地址>`
 
        - 如果 time_namelookup 时间过大，请检查 dns server 配置
        - 如果 time_connect 时间过大，请检查雷池与上游服务器之间的网络状态
@@ -45,12 +43,14 @@ title: "配置问题"
    - 如果不是以上情况，继续下一步
 
 2. 在客户端执行 `curl -v -H "Host: <域名或者IP>" http://<雷池 IP>:<雷池监听端口>` 。如能获取到业务网站的响应，如图，并且站点的 “今日访问量” +1，说明雷池配置正确，网络正常
+
    ![Alt text](/images/docs/guide_config/check_the_site1.png)
 
-   - 如果浏览器无法访问，但这一步正常获取到响应，大概率是因为：
+   如果浏览器无法访问，但这一步正常获取到响应，大概率是因为：
+
      - 网站域名还没有切到雷池，浏览器测试时访问的是 `http(s)://<雷池 IP>`，恰好业务服务上有 Host 验证，所以拒绝了该请求。这种情况需要修改本机 host，把域名解析到雷池 IP，再访问 `http(s)://<域名>`，才能准确测试
      - 网站业务做了其他一些特殊处理。例如访问后 301 跳转到了其他地址，需要具体排查网站业务的响应内容
-   - 如果不能获取到响应，继续下一步
+     - 如果不能获取到响应，继续下一步
 
 3. 在雷池设备上执行 `curl -v -H "Host: <域名或者IP>" http://<雷池 IP>:<雷池监听端口>`。如能获取到业务网站的响应，并且站点上 “今日访问量” +1，说明雷池配置正确
 
