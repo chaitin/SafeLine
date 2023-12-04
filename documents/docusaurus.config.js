@@ -102,11 +102,11 @@ const config = {
                 to: "https://waf-ce.chaitin.cn",
               },
               {
-                label: "社区",
+                label: "开发计划",
                 to: "https://waf-ce.chaitin.cn/community",
               },
               {
-                label: "版本对比",
+                label: "付费版本",
                 to: "https://waf-ce.chaitin.cn/version",
               },
             ],

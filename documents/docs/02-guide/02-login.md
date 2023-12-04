@@ -12,7 +12,7 @@ title: "登录雷池"
 
 根据界面提示，使用 **支持 TOTP 的认证软件或者小程序** 扫描二维码，然后输入动态口令登录：
 
-<iframe src="//player.bilibili.com/player.html?aid=748637002&bvid=BV1wC4y177zN&cid=1339420830&p=1" scrolling="no" border="0" frameBorder="no" framespacing="0" allowFullScreen='{true}'
+<iframe src="//player.bilibili.com/player.html?aid=748637002&bvid=BV1wC4y177zN&cid=1339420830&p=1&autoplay=0" scrolling="no" border="0" frameBorder="no" framespacing="0" allowFullScreen='{true}'
 style={{ width: '100%', height: '350px' }}
 ></iframe>
 
@@ -20,7 +20,7 @@ style={{ width: '100%', height: '350px' }}
 
 1.服务器和 totp 应用的**时间必须保持一致**，否则无法验证通过
 
-2.跳转到登录页后，**无法回退查看二维码**，需使用页面提供的方法重置
+2.完成首次登录后，**无法回退查看二维码**，使用页面提供的方法重置
 
 ## 常见登录问题
 

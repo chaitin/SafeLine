@@ -19,7 +19,7 @@ const FEATURE_LIST = [
             />
           </Box>
         </Grid>
-        <Grid item xs={12} md={4} ml={2} mt={14}>
+        <Grid item xs={12} md={4} ml={2} mt={{ xs: 3, md: 14 }}>
           <List>
             <ListItem sx={{ mb: 1 }}>
               <ListItemText sx={{ textIndent: '-0.75rem' }} primary="· 国内首创、业内领先的智能语义分析算法" />
@@ -37,9 +37,10 @@ const FEATURE_LIST = [
               target="_blank"
               sx={{
                 width: { xs: "100%", sm: "146px" },
-                height: "50px",
+                height: { xs: "72px", sm: "50px" },
                 ml: { xs: 0, sm: 2 },
                 mb: { xs: 2, sm: 0 },
+                fontSize: { xs: "24px", sm: "14px" },
               }}
               href="/docs/about/syntaxanalysis"
             >
@@ -61,7 +62,7 @@ const FEATURE_LIST = [
             />
             <Image
               src="/images/feature1.svg"
-              alt=""
+              alt="SQL注入,CSRF,XSS,SSRF,..."
               layout="responsive"
               width={100}
               height={100}
@@ -77,11 +78,11 @@ const FEATURE_LIST = [
     desc: "轻松上手，实现躺平式管理",
     icon: "/images/feature2-icon.png",
     content: (
-      <Grid container position={'relative'} sx={{ mb: 5 }}>
+      <Grid container position="relative" sx={{ mb: 5 }} ml={{ xs: 3, md: 0 }}>
         <Grid container>
-          <Grid item xs={12} md={6} mt={7}>
+          <Grid item xs={12} md={6} mt={7} order={{ xs: 2, md: 1 }}>
             <Box
-              position={'relative'}
+              position="relative"
             >
               <Image
                 src="/images/feature2-bg.png"
@@ -94,7 +95,7 @@ const FEATURE_LIST = [
               />
               <Image
                 src="/images/feature2.svg"
-                alt="" 
+                alt="开箱即用，轻松上手，适配多种运行环境" 
                 layout="responsive"
                 width={100}
                 height={100}
@@ -103,7 +104,7 @@ const FEATURE_LIST = [
               />
             </Box>
           </Grid>
-          <Grid item xs={12} md={4} mt={14}>
+          <Grid item xs={12} md={4} mt={{ xs: 3, md: 14 }} order={{ xs: 1, md: 2 }}>
             <List>
               <ListItem sx={{ mb: 1 }}>
                 <ListItemText sx={{ textIndent: '-0.75rem' }} primary="· 一键安装，容器式管理，适配多种运行环境" />
@@ -135,7 +136,7 @@ const FEATURE_LIST = [
     desc: "无规则引擎，线性安全检测算法",
     icon: "/images/feature3-icon.png",
     content: (
-      <Grid container display={'flex'} justifyContent={'flex-end'} position={'relative'} sx={{ mb: 10 }}>
+      <Grid container display="flex" justifyContent="flex-end" position="relative" sx={{ mb: 10 }} ml={{ xs: 3, md: 0 }}>
         <Grid item xs={0} md={2} sx={{ display: { xs: 'none', md: 'block' }, position: 'absolute', left: 0 }}>
           <Box>
             <Image
@@ -146,7 +147,7 @@ const FEATURE_LIST = [
             />
           </Box>
         </Grid>
-        <Grid item xs={12} md={4} mt={14}>
+        <Grid item xs={12} md={4} mt={{ xs: 3, md: 14 }}>
           <List>
             <ListItem>
               <ListItemText sx={{ textIndent: '-0.75rem' }} primary="· 平均检测延迟 < 1 毫秒，单核轻松检测 2000+ TPS 并发" />
@@ -170,7 +171,7 @@ const FEATURE_LIST = [
             />
             <Image
               src="/images/feature3.svg"
-              alt=""
+              alt="性能,服务可用性99.99%"
               layout="responsive"
               width={100}
               height={100}
@@ -194,7 +195,11 @@ const Features = () => {
       <Grid container>
         {FEATURE_LIST.map((feature, index) => (
           <Grid item xs={12} key={feature.title}>
-            <Box display={{ xs: "block",  md: index % 2 == 1 ? 'flex' : ''}} alignItems={'flex-end'} flexDirection={index % 2 == 1 ? 'column' : 'row'}>
+            <Box
+              display={{ xs: "block",  md: index % 2 == 1 ? 'flex' : ''}}
+              alignItems="flex-end"
+              flexDirection={index % 2 == 1 ? 'column' : 'row'}
+            >
               <Box>
                 <Image
                   src={feature.icon}

@@ -18,7 +18,7 @@ apisix：https://github.com/apache/apisix
 
 ### 安装 APISIX
 
-> 注意，要使用 APISIX 3.5.0 及以上版本的 APISIX
+> 注意，要使用 APISIX 3.5.0 及以上版本
 
 本文使用 apisix 的 docker 版本来做演示，克隆 apisix-docker 仓库，运行以下命令来安装：
 

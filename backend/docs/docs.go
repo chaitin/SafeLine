@@ -49,6 +49,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/repos/info": {
+            "get": {
+                "description": "get repo info from GitHub",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "GitHub"
+                ],
+                "summary": "get repo info",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.Repo"
+                        }
+                    }
+                }
+            }
+        },
         "/repos/issues": {
             "get": {
                 "description": "get issues from GitHub",
@@ -82,17 +105,57 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/safeline/count": {
+            "get": {
+                "description": "get installer count",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Safeline"
+                ],
+                "summary": "get installer count",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/service.InstallerCount"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "service.Category": {
+            "type": "object",
+            "properties": {
+                "emoji": {
+                    "type": "string"
+                },
+                "emoji_html": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "service.Discussion": {
             "type": "object",
             "properties": {
                 "author": {
                     "$ref": "#/definitions/service.User"
                 },
-                "category_name": {
-                    "type": "string"
+                "category": {
+                    "$ref": "#/definitions/service.Category"
                 },
                 "comment_count": {
                     "type": "integer"
@@ -125,6 +188,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "upvote_count": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "service.InstallerCount": {
+            "type": "object",
+            "properties": {
+                "total": {
                     "type": "integer"
                 }
             }
@@ -169,6 +243,17 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "service.Repo": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "star_count": {
+                    "type": "integer"
                 }
             }
         },
