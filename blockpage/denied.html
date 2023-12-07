@@ -228,20 +228,24 @@
                 </g>
               </svg>
             </div>
-            <div class="intercepted">请求存在威胁，已被拦截</div>
+            <div class="intercepted" id="block-title">
+              请求存在威胁，已被拦截
+            </div>
             <div class="intercepted-tips" id="intercepted-tips"></div>
             <div class="intercepted-item" id="EventID"></div>
             <div class="intercepted-item" id="TYPE"></div>
-            <div class="intercepted-item">拦截时间: <span id="now"></span></div>
+            <div class="intercepted-item">
+              <span id="time">拦截时间</span>: <span id="now"></span>
+            </div>
           </td>
         </tr>
       </table>
       <div class="footer">
-        安全检测能力由
-        <a class="footer-waflink" href="https://waf-ce.chaitin.cn"
-          >长亭雷池 WAF</a
-        >
-        驱动
+        <span id="powered-by">安全检测能力由</span>
+        <a class="footer-waflink" href="https://waf-ce.chaitin.cn">
+          <span id="waf-title">长亭雷池 WAF</span>
+        </a>
+        <span id="powered-by-tail">驱动</span>
       </div>
     </div>
     <script>
@@ -306,6 +310,22 @@
           document.getElementById("TYPE").innerText = "TYPE: " + type;
         }
       };
+    </script>
+
+    <script>
+      function R(id, text) {
+        var el = document.getElementById(id);
+        if (el) el.innerText = text;
+      }
+      if (!navigator.language.startsWith("zh")) {
+        document.title = "Request has been denied";
+
+        R("block-title", "Threat has been detected, request denied");
+        R("time", "Denied at");
+        R("waf-title", "Safeline WAF");
+        R("powered-by", "Powered by");
+        R("powered-by-tail", "");
+      }
     </script>
   </body>
 </html>
