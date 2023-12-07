@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>502 Bad Gateway</title>
+    <title>504 Gateway Timeout</title>
   </head>
   <body style="margin: 0; height: 100%; font-size: 14px">
     <div
@@ -21,10 +21,10 @@
       <table style="height: 100%; width: 100%">
         <tr>
           <td>
-            <div id="title" style="font-size: 48px">502 Bad Gateway</div>
+            <div id="title" style="font-size: 48px">504 Gateway Timeout</div>
             <div id="desc" style="font-size: 20px; color: rgba(0, 0, 0, 0.7)">
-              The server encountered a temporary error and could not complete
-              your request. Please try again later.
+              The server takes too long to complete this request. Please try
+              again later.
             </div>
             <div
               style="
@@ -127,9 +127,9 @@
       }
 
       if (navigator.language.startsWith("zh")) {
-        document.title = "502 网关错误";
-        R("title", "502 网关错误");
-        R("desc", "网站服务器异常，无法完成您的请求，请稍后");
+        document.title = "504 网关超时";
+        R("title", "504 网关超时");
+        R("desc", "网站服务器响应超时，无法完成您的请求，请稍后再试。");
         R("safeline-waf", "长亭雷池 WAF");
         R("powered-by", "安全检测能力由");
         R("powered-by-tail", "驱动");
