@@ -34,3 +34,31 @@ func (h *SafelineHandler) GetInstallerCount(c *gin.Context) {
 	}
 	c.JSON(200, count)
 }
+
+type ExistReq struct {
+	Id    string `json:"id"`
+	Token string `json:"token"`
+}
+
+// Exist return ip if id exist
+// @Summary get ip if id exist
+// @Description get ip if id exist
+// @Tags Safeline
+// @Accept json
+// @Produce json
+// @Param body body ExistReq true "body"
+// @Success 200 {object} string
+// @Router /exist [post]
+func (h *SafelineHandler) Exist(c *gin.Context) {
+	req := &ExistReq{}
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	ip, err := h.safelineService.GetExist(c, req.Id, req.Token)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(200, gin.H{"ip": ip})
+}
