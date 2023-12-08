@@ -91,6 +91,27 @@ definitions:
 info:
   contact: {}
 paths:
+  /exist:
+    get:
+      consumes:
+      - application/json
+      description: get ip if id exist
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: get ip if id exist
+      tags:
+      - Safeline
   /repos/discussions:
     get:
       consumes:

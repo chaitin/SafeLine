@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -50,4 +51,28 @@ func (s *SafelineService) GetInstallerCount(ctx context.Context) (InstallerCount
 		Total: int(r["data"].(map[string]interface{})["total"].(float64)),
 	}
 	return cacheCount, nil
+}
+
+// GetExist return ip if id exist
+func (s *SafelineService) GetExist(ctx context.Context, id string) (string, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, s.APIHost+"/api/v1/public/safeline/exist?id="+id, nil)
+	if err != nil {
+		return "", err
+	}
+	res, err := s.client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("id %s not found", id)
+	}
+	var r map[string]interface{}
+	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
+		return "", err
+	}
+	if r["code"].(float64) != 0 {
+		return "", nil
+	}
+	return r["data"].(map[string]interface{})["ip"].(string), nil
 }
