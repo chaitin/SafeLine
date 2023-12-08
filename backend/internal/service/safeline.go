@@ -4,8 +4,11 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io"
 	"net/http"
+	"strings"
 )
 
 var cacheCount InstallerCount
@@ -54,8 +57,9 @@ func (s *SafelineService) GetInstallerCount(ctx context.Context) (InstallerCount
 }
 
 // GetExist return ip if id exist
-func (s *SafelineService) GetExist(ctx context.Context, id string) (string, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, s.APIHost+"/api/v1/public/safeline/exist?id="+id, nil)
+func (s *SafelineService) GetExist(ctx context.Context, id string, token string) (string, error) {
+	body := fmt.Sprintf(`{"id":"%s", "token": "%s"}`, id, token)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.APIHost+"/api/v1/public/safeline/exist", strings.NewReader(body))
 	if err != nil {
 		return "", err
 	}
@@ -65,7 +69,8 @@ func (s *SafelineService) GetExist(ctx context.Context, id string) (string, erro
 	}
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("id %s not found", id)
+		raw, _ := io.ReadAll(res.Body)
+		return "", errors.New(string(raw))
 	}
 	var r map[string]interface{}
 	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {

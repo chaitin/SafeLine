@@ -1,4 +1,11 @@
 definitions:
+  handler.ExistReq:
+    properties:
+      id:
+        type: string
+      token:
+        type: string
+    type: object
   service.Category:
     properties:
       emoji:
@@ -92,16 +99,17 @@ info:
   contact: {}
 paths:
   /exist:
-    get:
+    post:
       consumes:
       - application/json
       description: get ip if id exist
       parameters:
-      - description: id
-        in: query
-        name: id
+      - description: body
+        in: body
+        name: body
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/handler.ExistReq'
       produces:
       - application/json
       responses:

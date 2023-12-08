@@ -16,7 +16,7 @@ const docTemplate = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/exist": {
-            "get": {
+            "post": {
                 "description": "get ip if id exist",
                 "consumes": [
                     "application/json"
@@ -30,11 +30,13 @@ const docTemplate = `{
                 "summary": "get ip if id exist",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "query",
-                        "required": true
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.ExistReq"
+                        }
                     }
                 ],
                 "responses": {
@@ -163,6 +165,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handler.ExistReq": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "token": {
+                    "type": "string"
+                }
+            }
+        },
         "service.Category": {
             "type": "object",
             "properties": {
