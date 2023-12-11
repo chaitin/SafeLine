@@ -21,7 +21,7 @@ import { getIssues } from "@/api";
 
 export default IssueList;
 
-export type Issue = {
+type Issue = {
   id: string
   labels: { name: string, color: string }[]
   thumbs_up: number
@@ -29,63 +29,36 @@ export type Issue = {
   url: string
   comment_count: number
   created_at: number
+  updated_at: number
   author: {
     avatar_url: string,
     login: string,
   }
 }
+
+export type Issues = {
+  in_consideration?: Issue[]
+  in_progress?: Issue[]
+  released?: Issue[]
+}
+
 interface IssueListProps {
-  value: Issue[];
+  value: Issues;
 }
 
 const ROADMAP_TABS = [
-  { title: '正在考虑', key: 'inConsideration', color: '#FFBF00' },
-  { title: '进行中', key: 'inProgress', color: '#0FC6C2' },
+  { title: '正在考虑', key: 'in_consideration', color: '#FFBF00' },
+  { title: '进行中', key: 'in_progress', color: '#0FC6C2' },
   { title: '最近完成', key: 'released', color: '#245CFF' },
 ]
 
-const isExistInLabels = (labels: Issue['labels'], label: string) => {
-  return !!labels?.find((item: { name: string }) => item.name.includes(label))
-}
-
-/**
- * 
- * @param issues 
- * @returns 
- * 正在考虑 = 带 enhancement，且没有 in progress 和 released，且 open
- * 进行中 = 带 enhancement 和 in progress，且 open
- * 最近完成 = 带 enhancement 和 released，且 open
- * 按点赞数量降序排序
- */
-const handleSortIssues = (issues: Issue[]) => {
-  const list = issues.filter((item: Issue) => isExistInLabels(item.labels, 'enhancement')).sort((item1, item2) => item2.thumbs_up - item1.thumbs_up)
-  const inConsideration: Issue[] = []
-  const inProgress: Issue[] = []
-  const released: Issue[] = []
-  list.forEach((item: Issue) => {
-    const { labels } = item
-    if (isExistInLabels(labels, 'in progress')) {
-      inProgress.push(item)
-    } else if (isExistInLabels(labels, 'released')) {
-      released.push(item)
-    } else {
-      inConsideration.push(item)
-    }
-  })
-  return {
-    inConsideration,
-    inProgress,
-    released,
-  }
-}
-
 function IssueList({ value }: IssueListProps) {
   const [searchText, setSearchText] = useState<string>('');
-  const [issues, setIssues] = useState<Record<string, Array<Issue>>>(handleSortIssues(value || []))
+  const [issues, setIssues] = useState<Record<string, Array<Issue>>>(value || {})
 
   const handleSearch = async() => {
     const result = await getIssues(searchText)
-    setIssues(handleSortIssues(result || []))
+    setIssues(result || {})
   }
 
   const handleKeyDown = (event: any) => {
@@ -170,7 +143,7 @@ function IssueList({ value }: IssueListProps) {
                 （{issues[tab.key]?.length || 0}）
               </Typography>
               <List sx={{ py: 0, maxHeight: "790px", overflowY: "auto" }}>
-                {issues[tab.key].map((issue, index) => (
+                {issues[tab.key]?.map((issue, index) => (
                   <ListItem key={issue.id} sx={{ pt: index > 0 ? 2 : 0, pb: 0, px: 0 }}>
                     <IssueItem issue={issue} />
                   </ListItem>
