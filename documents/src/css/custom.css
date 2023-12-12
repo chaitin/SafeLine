@@ -16,6 +16,7 @@ a:hover {
 :root {
   --ifm-color-primary: #0fc6c2;
   --ifm-breadcrumb-color-active: #0fc6c2;
+  --ifm-menu-color: #000;
   --ifm-menu-color-active: #0fc6c2;
   --ifm-link-hover-color: #0fc6c2;
   --ifm-footer-link-hover-color: #0fc6c2;
@@ -34,12 +35,12 @@ aside.theme-doc-sidebar-container {
   width: 240px !important;
 }
 
-.navbar__toggle.clean-btn svg {
+/* .navbar__toggle.clean-btn svg {
   color: white;
-}
+} */
 
 @media (max-width: 996px) {
   :root {
-    --ifm-menu-color: white;
+    --ifm-menu-color: #000;
   }
 }

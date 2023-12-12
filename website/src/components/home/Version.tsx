@@ -32,7 +32,7 @@ const Version = () => {
           <Button
             variant="outlined"
             sx={{
-              width: { xs: "384px", md: "146px" },
+              width: { xs: "100%", sm: "384px", md: "146px" },
               height: { xs: "72px", md: "50px" },
               mt: 4,
               backgroundColor: "common.white",
