@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 3001",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sitemap_build": "next-sitemap"
   },
   "dependencies": {
     "@emotion/react": "11.11.1",
@@ -16,6 +17,7 @@
     "@mui/material": "5.14.3",
     "countup.js": "2.7.0",
     "next": "14.0.1",
+    "next-sitemap": "^4.2.3",
     "react": "^18",
     "react-dom": "^18"
   },
