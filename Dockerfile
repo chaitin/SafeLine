@@ -25,11 +25,20 @@ server {                                                                        
     }                                                                           \n\
     location /blazehttp {                                                       \n\
         root /app/;                                                             \n\
-        try_files \$uri =404;                                                   \n\
+        try_files \$uri =404;                                                    \n\
     }                                                                           \n\
     location /release {                                                         \n\
         root /app/;                                                             \n\
-        try_files \$uri =404;                                                   \n\
+        try_files \$uri =404;                                                    \n\
+    }                                                                           \n\
+    location /sitemap.xml {                                                     \n\
+        root /srv/website/public;                                               \n\
+    }                                                                           \n\
+    location /sitemap-0.xml {                                                   \n\
+        root /srv/website/public;                                               \n\
+    }                                                                           \n\
+    location /robots.txt {                                                      \n\
+        root /srv/website/public;                                               \n\
     }                                                                           \n\
     location / {                                                                \n\
         rewrite /posts/guide_introduction /docs/ permanent;                     \n\
