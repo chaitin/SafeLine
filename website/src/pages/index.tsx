@@ -100,20 +100,20 @@ export default function Home({ total, starCount }: { total: number, starCount: n
             quality={100}
             // unoptimized={true}
           />
-          <Box pt={{ xs: 21, md: 26.5 }} className="relative">
+          <Box pt={{ xs: 21, md: 26.5 }} className="relative" display={{ xs: "none", sm: "block" }}>
             <Box alignItems="center">
               <Stack
                 direction="row"
                 sx={{
                   color: "#86909C",
-                  letterSpacing: { xs: 0, sm: 4, md: 8 },
+                  letterSpacing: { xs: 4, md: 8 },
                 }}
                 justifyContent="center"
               >
                 <Typography
                   variant="h5"
                   sx={{
-                    mr: { xs: 12, sm: 22, md: 36.5 },
+                    mr: { xs: 22, md: 36.5 },
                     fontWeight: 400,
                     fontSize: { xs: "16px", md: "24px" },
                   }}
@@ -145,22 +145,45 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                 <Typography
                   variant="h1"
                   sx={{
-                    mr: { xs: 9.5, sm: 13.5, md: 15.5 },
-                    fontSize: { xs: "32px", sm: "48px", md: "80px" },
+                    mr: { xs: 13.5, md: 15.5 },
+                    fontSize: { xs: "48px", md: "80px" },
                   }}
                 >
                   不让黑客
                 </Typography>
-                <Typography variant="h1" sx={{ fontSize: { xs: "32px", sm: "48px", md: "80px" }, }}>
+                <Typography variant="h1" sx={{ fontSize: { xs: "48px", md: "80px" }, }}>
                   越雷池一步
                 </Typography>
               </Stack>
             </Box>
           </Box>
+          <Box pt={{ xs: 16 }} className="relative" display={{ xs: "block", sm: "none" }}>
+            <Stack alignItems="center">
+              <Typography
+                variant="h1"
+                sx={{
+                  fontSize: "32px",
+                }}
+              >
+                不让黑客，越雷池一步
+              </Typography>
+              <Typography
+                variant="h5"
+                sx={{
+                  fontWeight: 400,
+                  mt: 2,
+                  fontSize: "16px",
+                  color: "#86909C",
+                }}
+              >
+                基于智能语义分析的，下一代 Web 应用防火墙
+              </Typography>
+            </Stack>
+          </Box>
           <Box
             sx={{
               position: "absolute",
-              bottom: { xs: 520, sm: 472, md: 351 },
+              bottom: { xs: 436, sm: 472, md: 351 },
               left: "50%",
               transform: "translateX(-50%)",
             }}
@@ -222,6 +245,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                   xs={12}
                   sm={6}
                   mt={{ xs: 2, sm: 0 }}
+                  pl={{ xs: 10, sm: 0 }}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
                   <Link
@@ -258,7 +282,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                   <Grid
                     key={article.title}
                     item
-                    xs={4}
+                    xs={6}
                     sm={4}
                     display="flex"
                     justifyContent={{ xs: 'flex-start', sm: justifyContents[index % 3] }}

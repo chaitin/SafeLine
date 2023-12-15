@@ -4,11 +4,29 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"slices"
+	"sort"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/shurcooL/githubv4"
+)
+
+type LabelName = string
+
+const (
+	LabelNameEnhancement LabelName = "enhancement"
+	LabelNameInProgress  LabelName = "in progress"
+	LabelNameReleased    LabelName = "released"
+)
+
+type RoadmapLabelName = string
+
+const (
+	RoadmapLabelNameInConsideration RoadmapLabelName = "in_consideration"
+	RoadmapLabelNameInProgress      RoadmapLabelName = "in_progress"
+	RoadmapLabelNameReleased        RoadmapLabelName = "released"
 )
 
 type Label struct {
@@ -21,17 +39,58 @@ type User struct {
 	AvatarUrl string `json:"avatar_url"`
 }
 
+type IssueState = string
+
+const (
+	IssueStateOpened IssueState = "OPEN"
+	IssueStateClosed IssueState = "CLOSED"
+)
+
 // Issue represents a GitHub issue with minimal fields.
 type Issue struct {
-	ID            string  `json:"id"`
-	Title         string  `json:"title"`
-	Body          string  `json:"-"`
-	Url           string  `json:"url"`
-	Labels        []Label `json:"labels"`
-	CommentCount  int     `json:"comment_count"`
-	ThumbsUpCount int     `json:"thumbs_up"`
-	Author        User    `json:"author"`
-	CreatedAt     int64   `json:"created_at"`
+	ID            string     `json:"id"`
+	Title         string     `json:"title"`
+	Body          string     `json:"-"`
+	State         IssueState `json:"state"`
+	Url           string     `json:"url"`
+	Labels        []Label    `json:"labels"`
+	CommentCount  int        `json:"comment_count"`
+	ThumbsUpCount int        `json:"thumbs_up"`
+	Author        User       `json:"author"`
+	CreatedAt     int64      `json:"created_at"`
+	UpdatedAt     int64      `json:"updated_at"`
+}
+
+func (i Issue) InConsideration() bool {
+	if i.State != IssueStateOpened {
+		return false
+	}
+	if !slices.Contains(i.LabelNames(), LabelNameEnhancement) {
+		return false
+	}
+	if slices.Contains(i.LabelNames(), LabelNameInProgress) {
+		return false
+	}
+	if slices.Contains(i.LabelNames(), LabelNameReleased) {
+		return false
+	}
+	return true
+}
+
+func (i Issue) InProgress() bool {
+	return i.State == IssueStateOpened && slices.Contains(i.LabelNames(), LabelNameInProgress)
+}
+
+func (i Issue) Released() bool {
+	return slices.Contains(i.LabelNames(), LabelNameReleased)
+}
+
+func (i Issue) LabelNames() []string {
+	var names []string
+	for _, v := range i.Labels {
+		names = append(names, v.Name)
+	}
+	return names
 }
 
 // Discussion represents a GitHub discussion.
@@ -171,30 +230,52 @@ func (s *GitHubService) refreshCache() {
 }
 
 // GetIssues tries to get the issues from cache; if not available, fetches from GitHub API.
-func (s *GitHubService) GetIssues(ctx context.Context, filter string) (issues []*Issue, err error) {
+func (s *GitHubService) GetIssues(ctx context.Context, filter string) (map[string][]*Issue, error) {
 	cachedIssues, found := s.cache.Load("issues")
 	if found {
 		return s.filterIssues(cachedIssues.([]*Issue), filter)
 	}
 
-	issues, err = s.fetchIssues(ctx, nil)
+	issues, err := s.fetchIssues(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
+
 	return s.filterIssues(issues, filter)
 }
 
-func (s *GitHubService) filterIssues(issues []*Issue, filter string) ([]*Issue, error) {
+func (s *GitHubService) filterIssues(issues []*Issue, filter string) (map[string][]*Issue, error) {
+	filteredIssues := issues
 	if filter != "" {
-		filteredIssues := make([]*Issue, 0)
+		filteredIssues = make([]*Issue, 0)
 		for _, issue := range issues {
 			if strings.Contains(issue.Title, filter) || strings.Contains(issue.Body, filter) {
 				filteredIssues = append(filteredIssues, issue)
 			}
 		}
-		return filteredIssues, nil
 	}
-	return issues, nil
+	out := make(map[string][]*Issue)
+	for _, issue := range filteredIssues {
+		if issue.InConsideration() {
+			out[RoadmapLabelNameInConsideration] = append(out[RoadmapLabelNameInConsideration], issue)
+		}
+		if issue.InProgress() {
+			out[RoadmapLabelNameInProgress] = append(out[RoadmapLabelNameInProgress], issue)
+		}
+		if issue.Released() {
+			out[RoadmapLabelNameReleased] = append(out[RoadmapLabelNameReleased], issue)
+		}
+	}
+	sort.Slice(out[RoadmapLabelNameInConsideration], func(i, j int) bool {
+		return out[RoadmapLabelNameInConsideration][i].ThumbsUpCount > out[RoadmapLabelNameInConsideration][j].ThumbsUpCount
+	})
+	sort.Slice(out[RoadmapLabelNameInProgress], func(i, j int) bool {
+		return out[RoadmapLabelNameInProgress][i].ThumbsUpCount > out[RoadmapLabelNameInProgress][j].ThumbsUpCount
+	})
+	sort.Slice(out[RoadmapLabelNameReleased], func(i, j int) bool {
+		return out[RoadmapLabelNameReleased][i].UpdatedAt > out[RoadmapLabelNameReleased][j].UpdatedAt
+	})
+	return out, nil
 }
 
 // GetRepositoryIssues queries GitHub for issues of a repository.
@@ -207,7 +288,9 @@ func (s *GitHubService) fetchIssues(ctx context.Context, afterCursor *githubv4.S
 					Title     string
 					Body      string
 					Url       string
+					State     string
 					CreatedAt githubv4.DateTime
+					UpdatedAt githubv4.DateTime
 					Author    User
 					Labels    struct {
 						Nodes []struct {
@@ -226,7 +309,7 @@ func (s *GitHubService) fetchIssues(ctx context.Context, afterCursor *githubv4.S
 					EndCursor   githubv4.String
 					HasNextPage bool
 				}
-			} `graphql:"issues(first: 100, after: $afterCursor, states: OPEN, orderBy: {field: CREATED_AT, direction: DESC})"`
+			} `graphql:"issues(first: 100, after: $afterCursor, orderBy: {field: UPDATED_AT, direction: DESC})"`
 		} `graphql:"repository(owner: $owner, name: $name)"`
 	}
 	variables := map[string]interface{}{
@@ -243,19 +326,21 @@ func (s *GitHubService) fetchIssues(ctx context.Context, afterCursor *githubv4.S
 	issues := make([]*Issue, 0)
 	for _, node := range query.Repository.Issues.Nodes {
 		issue := &Issue{
-			ID:    node.ID,
-			Title: node.Title,
-			Body:  node.Body,
-			Url:   node.Url,
+			ID:            node.ID,
+			Title:         node.Title,
+			Body:          node.Body,
+			Url:           node.Url,
+			State:         node.State,
+			CreatedAt:     node.CreatedAt.Unix(),
+			UpdatedAt:     node.UpdatedAt.Unix(),
+			Author:        node.Author,
+			CommentCount:  node.Comments.TotalCount,
+			ThumbsUpCount: node.Reactions.TotalCount,
 		}
 		issue.Labels = make([]Label, len(node.Labels.Nodes))
 		for i, label := range node.Labels.Nodes {
 			issue.Labels[i] = Label{Name: label.Name, Color: label.Color}
 		}
-		issue.CommentCount = node.Comments.TotalCount
-		issue.ThumbsUpCount = node.Reactions.TotalCount
-		issue.Author = node.Author
-		issue.CreatedAt = node.CreatedAt.Unix()
 		issues = append(issues, issue)
 	}
 

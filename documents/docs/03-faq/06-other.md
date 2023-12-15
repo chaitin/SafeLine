@@ -186,13 +186,8 @@ real_ip_header X-Forwarded-For;
 
 ## 是否支持 WebSocket ？
 
-如果需要支持 WebSocket，需要参考 [自定义站点-nginx-conf](#自定义站点-nginx-conf)，增加下面的配置
+默认支持
 
-```
-proxy_http_version 1.1;
-proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection "upgrade";
-```
 
 ## 问题无法解决
 

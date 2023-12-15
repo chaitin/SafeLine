@@ -101,7 +101,11 @@ security_opt:
 
 ## 如何卸载
 
-在安装目录(默认 safeline)下执行 `docker compose down`
+在安装目录(默认 safeline)下
+
+根据本地的compose版本，执行 `docker compose down` 或者 `docker-compose down`
+
+
 
 ## 问题无法解决
 

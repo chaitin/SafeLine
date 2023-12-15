@@ -3,21 +3,21 @@ import { Box, Grid, Button, Typography, Container, Stack } from "@mui/material";
 import Image from 'next/image';
 import Head from 'next/head';
 import DiscussionList, { Discussion } from '@/components/community/DiscussionList';
-import IssueList, { Issue } from '@/components/community/IssueList';
+import IssueList, { Issues } from '@/components/community/IssueList';
 import { getDiscussions, getIssues } from "@/api";
 
 type CommunityPropsType = {
   discussions: Discussion[];
-  issues: Issue[];
+  issues: Issues;
 };
 
 export async function getServerSideProps() {
   let discussions: Discussion[] = []
-  let issues: Issue[] = []
+  let issues: Issues = {}
 
   const promises = [
     getDiscussions('').then((result) => discussions = result || []),
-    getIssues('').then((result) => issues = result || []),
+    getIssues('').then((result) => issues = result || {}),
   ];
   try {
     await Promise.allSettled(promises)

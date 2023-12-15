@@ -158,10 +158,7 @@ const FEATURE_LIST = [
           </List>
         </Grid>
         <Grid item xs={12} md={6} mt={7}>
-          <Box
-            position={'relative'}
-            width={{ xs: "80%", md: "100%" }}
-          >
+          <Box position={'relative'}>
             <Image
               src="/images/feature3-bg.png"
               alt=""

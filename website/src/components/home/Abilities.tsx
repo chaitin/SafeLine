@@ -69,7 +69,7 @@ const Abilities = () => {
       <Container maxWidth="lg">
         <Grid container alignItems="center">
           <Grid item xs={12} md={6}>
-            <Typography variant="h2" mb={4.5} textAlign={{ xs: "center", md: "left" }} fontSize={{ sx: "32px", md: "48px" }}>
+            <Typography variant="h2" mb={4.5} textAlign={{ xs: "center", md: "left" }} fontSize={{ xs: "32px", md: "48px" }}>
               多维能力拓展
             </Typography>
             <Grid container spacing={2}>
