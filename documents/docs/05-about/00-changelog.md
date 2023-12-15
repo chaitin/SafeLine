@@ -11,7 +11,7 @@ title: "版本更新记录"
 #### 新增
 
 - 右上角增加 “更多工具”，方便快速访问牧云主机助手、百川网站监测等常用运维管理工具
-- ![](/images/docs/about_changelog/502_page.png)
+- ![](/images/docs/about_changelog/moretools.png)
 
 #### 优化
 
