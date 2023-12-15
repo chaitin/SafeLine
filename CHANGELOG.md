@@ -11,7 +11,7 @@
 ### 优化
 
 - 登录时若验证码错误，不再自动清空内容，方便修改（[#449](https://github.com/chaitin/SafeLine/issues/449)）
-- 精简 docker 镜像文件，safeline-mgt-api 体积减小 90%、safeline-fvm-manager 体积减小 60%
+- 精简 docker 镜像文件，safeline-mgt-api 体积减小 90%
 - 获取站点的 Favicon 和标题时，增加浏览器 UserAgent，避免被上游服务拒绝
 - 数据统计页 4xx 和 5xx 错误率的默认显示方式从 “-%” 改为 “0%” （[#517](https://github.com/chaitin/SafeLine/issues/517)）
 - 优化控制台和 502 、504 页面的一些样式细节
