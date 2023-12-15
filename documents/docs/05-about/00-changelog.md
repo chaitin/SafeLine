@@ -6,6 +6,22 @@ title: "版本更新记录"
 
 [版本升级方法](/guide/upgrade)
 
+### [3.16.1] - 2023-12-14
+
+#### 新增
+
+- 右上角增加 “更多工具”，方便快速访问牧云主机助手、百川网站监测等常用运维管理工具
+- ![](/images/docs/about_changelog/502_page.png)
+
+#### 优化
+
+- 登录时若验证码错误，不再自动清空内容，方便修改（[#449](https://github.com/chaitin/SafeLine/issues/449)）
+- 精简 docker 镜像文件，safeline-mgt-api 体积减小 90%、safeline-fvm-manager 体积减小 60%
+- 获取站点的 Favicon 和标题时，增加浏览器 UserAgent，避免被上游服务拒绝
+- 数据统计页 4xx 和 5xx 错误率的默认显示方式从 “-%” 改为 “0%” （[#517](https://github.com/chaitin/SafeLine/issues/517)）
+- 优化控制台和 502 、504 页面的一些样式细节
+
+
 ### [3.15.3] - 2023-12-08
 
 #### 修复
