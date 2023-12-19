@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://waf-ce.chaitin.cn/images/403.svg" width="120">
+  <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/403.svg" width="120">
 </p>
 <h1 align="center">雷池 - 广受好评的社区 WAF</h1>
 <br>
@@ -22,7 +22,7 @@
 
 核心检测能力由智能语义分析算法驱动，专为社区而生，不让黑客越雷池半步。
 
-<img src="https://waf-ce.chaitin.cn/images/album/0.png" />
+<img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/album/0.png" />
 
 <h4 align="center">相关源码仓库</h4>
 <p align="center">
@@ -75,13 +75,13 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 
 浏览器打开后台管理页面 `https://<waf-ip>:9443`。根据界面提示，使用 **支持 TOTP 的认证软件** 扫描二维码，然后输入动态口令登录：
 
-![login.gif](https://waf-ce.chaitin.cn/images/gif/login.gif)
+![login.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/login.gif)
 
 ### 配置防护站点
 
 雷池以反向代理方式接入，优先于网站服务器接收流量，对流量中的攻击行为进行检测和清洗，将清洗过后的流量转发给网站服务器。
 
-![config.gif](https://waf-ce.chaitin.cn/images/gif/config_site.gif)
+![config.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/config_site.gif)
 
 <font color=grey>💡 TIPS: 添加后，执行 `curl -H "Host: <域名>" http://<WAF IP>:<端口>` 应能获取到业务网站的响应。</font>
 
@@ -92,7 +92,7 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 - 浏览器访问 `http://<IP或域名>:<端口>/?id=1%20AND%201=1`
 - 浏览器访问 `http://<IP或域名>:<端口>/?a=<script>alert(1)</script>`
 
-![log.gif](https://waf-ce.chaitin.cn/images/gif/detect_log.gif)
+![log.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/detect_log.gif)
 
 > 如果你需要进行深度测试，请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_test">测试防护效果</a>
 
@@ -109,7 +109,7 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 1. 可以通过 GitHub Issue 直接进行 Bug 反馈和功能建议
 2. 可以扫描下方二维码加入雷池社区版用户讨论群
 
-<img src="https://waf-ce.chaitin.cn/images/wechat-230825.png" width="30%" />
+<img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/wechat-230825.png" width="30%" />
 
 ## Star History <a name="star-history"></a>
 
