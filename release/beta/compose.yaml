@@ -108,7 +108,6 @@ services:
     image: chaitin/safeline-fvm:${IMAGE_TAG}
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${SAFELINE_DIR}/logs:/logs
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.8
