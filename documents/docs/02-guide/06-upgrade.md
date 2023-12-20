@@ -12,17 +12,23 @@ title: "升级雷池"
 
 执行以下命令进行升级，升级不会清除历史数据。
 
-```
+```sh
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/upgrade.sh)"
 ```
 
 [可选] 执行以下命令删除旧版本 Docker 镜像，释放磁盘空间。
 
-```
+```sh
 docker rmi $(docker images | grep "safeline" | grep "none" | awk '{print $3}')
 ```
 
 > 有部分环境的默认 SafeLine 安装路径是在 `/data/safeline-ce`，安装之后可能会发现需要重新绑定 OTP、配置丢失等情况，可以修改 .env 的 `SAFELINE_DIR` 变量，指向 `/data/safeline-ce`
+
+## 在线升级 Beta 版
+
+```sh
+bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/beta/upgrade.sh)"
+```
 
 ## 离线镜像
 

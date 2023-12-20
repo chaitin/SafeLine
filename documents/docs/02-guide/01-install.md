@@ -17,8 +17,19 @@ title: "安装雷池"
 
 复制以下命令执行，即可完成安装
 
-```shell
+```sh
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
+```
+
+## 在线安装 Beta 版
+
+**注意**:
+
+1. 建议在生产环境中使用稳定版
+2. beta 版仅支持在线安装和更新
+
+```sh
+bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/beta/setup.sh)"
 ```
 
 **若安装失败，请参考 [安装问题](/faq/install)**
@@ -29,8 +40,6 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 style={{ width: '100%', height: '350px' }}
 > 
 </iframe>
-
-
 
 ## 离线安装
 
