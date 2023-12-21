@@ -205,7 +205,6 @@ echo "SAFELINE_DIR=$safeline_path" >> .env
 echo "IMAGE_TAG=beta" >> .env
 echo "MGT_PORT=9443" >> .env
 echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
-echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
 echo "SUBNET_PREFIX=172.22.222" >> .env
 
 info "即将开始下载 Docker 镜像"

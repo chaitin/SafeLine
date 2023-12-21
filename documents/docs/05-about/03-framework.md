@@ -36,7 +36,6 @@ echo "SAFELINE_DIR=$(pwd)" >> .env  # 设置当前路径为雷池社区版的根
 echo "IMAGE_TAG=latest" >> .env  # 设置镜像的 tag
 echo "MGT_PORT=9443" >> .env  # 管理容器服务使用的端口
 echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env  # /dev/urandom是一个很长的随机数文本，tr -dc 命令用于删除非字母、非数字的字符，用于生成随机的 postgres 密码
-echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env  # 同上，用于生成随机的 redis 密码
 echo "SUBNET_PREFIX=172.22.222" >> .env  # 定义 docker 虚拟网卡的子网前缀
 ```
 
@@ -74,21 +73,6 @@ services:
     cap_drop:
       - net_raw
     command: [postgres, -c, max_connections=200] # 设置 postgres 的最大连接数
-  redis:
-    container_name: safeline-redis
-    restart: always
-    image: redis:7.0.11
-    volumes:
-      - ${SAFELINE_DIR}/resources/redis/data:/data
-      - /etc/localtime:/etc/localtime:ro
-    command: redis-server --appendonly yes --requirepass  ${REDIS_PASSWORD}
-    networks:
-      safeline-ce: # 使用上文的 safeline-ce 网络，ip 为172.22.222.3
-        ipv4_address: ${SUBNET_PREFIX}.3
-    cap_drop:
-      - net_raw
-    sysctls:
-      net.core.somaxconn: "511"
   management:
     container_name: safeline-mgt-api
     restart: always
@@ -137,7 +121,6 @@ services:
       - LOG_DIR=/logs/mario
       - GOGC=100
       - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
-      - REDIS_URL=redis://:${REDIS_PASSWORD}@safeline-redis:6379/0
     networks:
       safeline-ce: # 使用上文的 safeline-ce 网络，IP 为172.22.222.6
         ipv4_address: ${SUBNET_PREFIX}.6
