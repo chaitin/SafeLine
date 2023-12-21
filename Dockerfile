@@ -43,7 +43,7 @@ server {                                                                        
     location /googlef97f8402f9139518.html {                                     \n\
         root /srv/website/public;                                               \n\
     }                                                                           \n\
-    location BingSiteAuth.xml {                                                 \n\
+    location /BingSiteAuth.xml {                                                 \n\
         root /srv/website/public;                                               \n\
     }                                                                           \n\
     location / {                                                                \n\
