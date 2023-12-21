@@ -220,10 +220,12 @@ info "即将开始替换 Docker 容器"
 
 # 升级到 3.14.0 版本时，移除了 safeline-redis 容器，需要删除容器，否则无法启动新 compose 网络
 docker rm -f safeline-redis &>/dev/null
+# 升级到 4.0.0 ，重命名了 mgt、fvm、pg 几个容器
 docker rm -f safeline-mgt-api &>/dev/null
 docker rm -f safeline-fvm-manager &>/dev/null
+docker rm -f safeline-postgres &>/dev/null
 
-$compose_command down && $compose_command up -d
+$compose_command down --remove-orphans && $compose_command up -d
 if [ $? -ne "0" ]; then
     abort "替换 Docker 容器失败"
 fi

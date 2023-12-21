@@ -82,13 +82,12 @@ services:
     restart: always
     image: chaitin/safeline-tengine:${IMAGE_TAG}
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/resolv.conf:/etc/resolv.conf
       - ${SAFELINE_DIR}/resources/nginx:/etc/nginx
-      - ${SAFELINE_DIR}/resources/management:/resources/management
       - ${SAFELINE_DIR}/resources/detector:/resources/detector
       - ${SAFELINE_DIR}/logs/nginx:/var/log/nginx
-      - /etc/localtime:/etc/localtime:ro
       - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
-      - /etc/resolv.conf:/etc/resolv.conf
     environment:
       - TCD_MGT_API=https://${SUBNET_PREFIX}.4:1443/api/open/publish/server
       - SNSERVER_ADDR=${SUBNET_PREFIX}.5:8000
