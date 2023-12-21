@@ -35,7 +35,7 @@ services:
     ports:
       - ${MGT_PORT:-9443}:1443
     environment:
-      - MGT_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
+      - MGT_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce
     dns:
       - 119.29.29.29
       - 223.5.5.5
@@ -70,7 +70,7 @@ services:
     environment:
       - LOG_DIR=/logs/mario
       - GOGC=100
-      - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
+      - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.6

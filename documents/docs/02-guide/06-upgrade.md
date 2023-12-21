@@ -34,7 +34,7 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/beta/upgrade.sh)"
 
 适用于 docker hub 拉取镜像失败的场景，手动更新镜像。
 
-```
+```sh
 # cd /path/to/safeline
 
 mv compose.yaml compose.yaml.old
