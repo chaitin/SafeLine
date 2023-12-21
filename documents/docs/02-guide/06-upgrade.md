@@ -26,6 +26,11 @@ docker rmi $(docker images | grep "safeline" | grep "none" | awk '{print $3}')
 
 ## 在线升级 Beta 版
 
+**注意**:
+
+1. 稳定版与 beta 版的升级脚本不通，注意区分
+2. beta 版仅支持在线安装和更新
+
 ```sh
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/beta/upgrade.sh)"
 ```

@@ -25,7 +25,7 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 
 **注意**:
 
-1. 建议在生产环境中使用稳定版
+1. 不要在生产环境中使用 beta 版
 2. beta 版仅支持在线安装和更新
 
 ```sh
