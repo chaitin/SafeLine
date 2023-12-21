@@ -35,7 +35,7 @@ services:
     ports:
       - ${MGT_PORT:-9443}:1443
     environment:
-      - MGT_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce
+      - MGT_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce?sslmode=disable
     dns:
       - 119.29.29.29
       - 223.5.5.5
