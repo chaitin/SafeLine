@@ -198,10 +198,10 @@ if [ $? -ne "0" ]; then
 fi
 info "下载 compose.yaml 脚本成功"
 
-sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=beta/g" ".env"
+sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=beta-stream/g" ".env"
 
 grep "SAFELINE_DIR" ".env" >/dev/null || echo "SAFELINE_DIR=$(pwd)" >>".env"
-grep "IMAGE_TAG" ".env" >/dev/null || echo "IMAGE_TAG=beta" >>".env"
+grep "IMAGE_TAG" ".env" >/dev/null || echo "IMAGE_TAG=beta-stream" >>".env"
 grep "MGT_PORT" ".env" >/dev/null || echo "MGT_PORT=9443" >>".env"
 grep "POSTGRES_PASSWORD" ".env" >/dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >>".env"
 grep "SUBNET_PREFIX" ".env" >/dev/null || echo "SUBNET_PREFIX=172.22.222" >>".env"
