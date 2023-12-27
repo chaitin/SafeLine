@@ -43,6 +43,9 @@ server {                                                                        
     location /googlef97f8402f9139518.html {                                     \n\
         root /srv/website/public;                                               \n\
     }                                                                           \n\
+    location /BingSiteAuth.xml {                                                 \n\
+        root /srv/website/public;                                               \n\
+    }                                                                           \n\
     location / {                                                                \n\
         rewrite /posts/guide_introduction /docs/ permanent;                     \n\
         rewrite /posts/guide_install /docs/guide/install permanent;             \n\
