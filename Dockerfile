@@ -103,13 +103,13 @@ COPY --from=go-builder /work/server /srv/server
 
 COPY documents /srv/documents
 WORKDIR /srv/documents
-RUN npm i; npm run build
+RUN npm ci; npm run build
 # npm run serve
 
 ENV TARGET=http://localhost:8080
 COPY website /srv/website
 WORKDIR /srv/website
-RUN npm i; npm run build
+RUN npm ci; npm run build
 # npm start
 
 COPY release /app/release
