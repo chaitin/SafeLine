@@ -36,6 +36,8 @@ services:
       - ${MGT_PORT:-9443}:1443
     environment:
       - MGT_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce?sslmode=disable
+      - MGT_JWT_VALID=true
+      - MGT_LICENSE_SERVER=https://safeline-ce-test-495.dev.rivers.ctopt.cn
     depends_on:
       - postgres
       - fvm
