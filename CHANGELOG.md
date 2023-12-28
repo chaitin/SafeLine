@@ -1,5 +1,16 @@
 # SAFELINE-CE CHANGELOG
 
+## [4.0.0-beta.3] - 2023-12-28
+
+### 修复
+
+- 修复由于服务启动顺序导致输出非必要的错误日志
+
+### 优化
+
+- 支持类 ChatGPT 应用的流式 HTTP 响应（[#513](https://github.com/chaitin/SafeLine/issues/513)）
+- 更新流式检测引擎到 （20231228） 版本
+
 ## [4.0.0-beta.2] - 2023-12-22
 
 ### 修复
