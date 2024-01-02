@@ -150,7 +150,7 @@ const FunctionTable = () => {
         {
           name: "多设备集中管理",
           tip: "",
-          experience: <Support />,
+          experience: <NotSupport />,
           major: <Support />,
           basics: <Support />,
         },
