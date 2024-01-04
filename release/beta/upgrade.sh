@@ -157,9 +157,8 @@ else
     fi
 fi
 
-container_id=$(docker ps --filter ancestor=chaitin/safeline-mgt-api --format '{{.ID}}')
-mount_path=$(docker inspect --format '{{range .Mounts}}{{if eq .Destination "/logs"}}{{.Source}}{{end}}{{end}}' $container_id)
-safeline_path=$(dirname $mount_path)
+container_id=$(docker ps -n 1 --filter name=.*safeline-mgt.* --format '{{.ID}}')
+safeline_path=$(docker inspect --format '{{index .Config.Labels "com.docker.compose.project.working_dir"}}' $container_id)
 
 while [ -z "$safeline_path" ]; do
     echo -e -n "\033[34m[SafeLine] 未发现正在运行的雷池，请输入雷池安装路径 (留空则为 '$(pwd)'): \033[0m"
