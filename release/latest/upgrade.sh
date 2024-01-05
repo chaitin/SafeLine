@@ -221,7 +221,7 @@ grep "POSTGRES_PASSWORD" ".env" >/dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C
 grep "SUBNET_PREFIX" ".env" >/dev/null || echo "SUBNET_PREFIX=172.22.222" >>".env"
 
 
-if [ $CDN -eq 1 ]; then
+if [ $CDN -eq 0 ]; then
     grep "IMAGE_PREFIX" ".env" >/dev/null || echo "IMAGE_PREFIX=chaitin" >>".env"
 else
     grep "IMAGE_PREFIX" ".env" >/dev/null || echo "IMAGE_PREFIX=swr.cn-east-3.myhuaweicloud.com/chaitin-safeline" >>".env"
