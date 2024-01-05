@@ -4,7 +4,7 @@
 
 ### 新增
 
-- 完整支持 **流式语义分析检测**，包含 协议解析、解码、模式匹配 三个阶段的改造，解决经典 “大包绕过” 问题（执行xxxxx即可开启）
+- 完整支持 **流式语义分析检测**，包含 协议解析、解码、模式匹配 三个阶段的改造，解决经典 “大包绕过” 问题
 - IP 组支持通过 URL 在线订阅内容（[#414](https://github.com/chaitin/SafeLine/issues/414)）
 - 新增 “搜索引擎爬虫 IP”，包含 Google、Bing、百度、360 的爬虫 IP（[#374](https://github.com/chaitin/SafeLine/issues/374)、[#399](https://github.com/chaitin/SafeLine/issues/399)）
 - 出厂预置 “搜索引擎爬虫白名单” 和 “长亭社区恶意 IP 情报黑名单”，方便配置
