@@ -9,6 +9,7 @@ echo "
 "
 
 export STREAM=${STREAM:-0}
+export CDN=${CDN:-0}
 
 echo $1
 
@@ -194,11 +195,7 @@ fi
 
 mv $compose_name $compose_name.old
 
-if [ $STREAM -eq 1 ]; then
-    curl "https://waf-ce.chaitin.cn/release/beta/compose.yaml" -sSLk -o $compose_name
-else
-    curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o $compose_name
-fi
+curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o $compose_name
 
 if [ $? -ne "0" ]; then
     abort "下载 compose.yaml 脚本失败"
@@ -222,6 +219,13 @@ fi
 grep "MGT_PORT" ".env" >/dev/null || echo "MGT_PORT=9443" >>".env"
 grep "POSTGRES_PASSWORD" ".env" >/dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >>".env"
 grep "SUBNET_PREFIX" ".env" >/dev/null || echo "SUBNET_PREFIX=172.22.222" >>".env"
+
+
+if [ $CDN -eq 1 ]; then
+    grep "IMAGE_PREFIX" ".env" >/dev/null || echo "IMAGE_PREFIX=chaitin" >>".env"
+else
+    grep "IMAGE_PREFIX" ".env" >/dev/null || echo "IMAGE_PREFIX=swr.cn-east-3.myhuaweicloud.com/chaitin-safeline" >>".env"
+fi
 
 info "升级 .env 脚本成功"
 

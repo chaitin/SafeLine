@@ -9,6 +9,7 @@ echo "
 "
 
 export STREAM=${STREAM:-0}
+export CDN=${CDN:-0}
 
 qrcode() {
     echo "█████████████████████████████████████████"
@@ -191,11 +192,7 @@ fi
 info "创建安装目录 '$safeline_path' 成功"
 cd "$safeline_path"
 
-if [ $STREAM -eq 1 ]; then
-    curl "https://waf-ce.chaitin.cn/release/beta/compose.yaml" -sSLk -o compose.yaml
-else
-    curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o compose.yaml
-fi
+curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o compose.yaml
 
 if [ $? -ne "0" ]; then
     abort "下载 compose.yaml 脚本失败"
@@ -219,6 +216,12 @@ fi
 echo "MGT_PORT=9443" >> .env
 echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
 echo "SUBNET_PREFIX=172.22.222" >> .env
+
+if [ $CDN -eq 1 ]; then
+    echo "IMAGE_PREFIX=chaitin" >>".env"
+else
+    echo "IMAGE_PREFIX=swr.cn-east-3.myhuaweicloud.com/chaitin-safeline" >>".env"
+fi
 
 info "即将开始下载 Docker 镜像"
 

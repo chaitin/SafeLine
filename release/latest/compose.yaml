@@ -30,7 +30,7 @@ services:
   management:
     container_name: safeline-mgt-api
     restart: always
-    image: chaitin/safeline-mgt-api:${IMAGE_TAG:?image tag required}
+    image: ${IMAGE_PREFIX}/safeline-mgt-api:${IMAGE_TAG:?image tag required}
     volumes:
       - ${SAFELINE_DIR?safeline dir required}/resources/management:/resources/management
       - ${SAFELINE_DIR}/resources/nginx:/resources/nginx
@@ -60,7 +60,7 @@ services:
   detector:
     container_name: safeline-detector
     restart: always
-    image: chaitin/safeline-detector:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-detector:${IMAGE_TAG}
     volumes:
       - ${SAFELINE_DIR}/resources/detector:/resources/detector
       - ${SAFELINE_DIR}/logs/detector:/logs/detector
@@ -75,7 +75,7 @@ services:
   mario:
     container_name: safeline-mario
     restart: always
-    image: chaitin/safeline-mario:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-mario:${IMAGE_TAG}
     volumes:
       - ${SAFELINE_DIR}/resources/mario:/resources/mario
       - ${SAFELINE_DIR}/logs/mario:/logs/mario
@@ -92,7 +92,7 @@ services:
   tengine:
     container_name: safeline-tengine
     restart: always
-    image: chaitin/safeline-tengine:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-tengine:${IMAGE_TAG}
     volumes:
       - ${SAFELINE_DIR}/resources/nginx:/etc/nginx
       - ${SAFELINE_DIR}/resources/management:/resources/management
@@ -109,7 +109,7 @@ services:
   fvm-manager:
     container_name: safeline-fvm-manager
     restart: always
-    image: chaitin/safeline-fvm-manager:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-fvm-manager:${IMAGE_TAG}
     environment:
       - FVM_LOGS_DIR=/logs/management
       - DETECTOR_URL=http://safeline-detector:8001
