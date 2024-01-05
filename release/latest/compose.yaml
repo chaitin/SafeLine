@@ -12,7 +12,7 @@ networks:
 
 services:
   postgres:
-    container_name: safeline-postgres
+    container_name: safeline-pg
     restart: always
     image: postgres:15.2
     volumes:
@@ -24,27 +24,22 @@ services:
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.2
-    cap_drop:
-      - net_raw
     command: [postgres, -c, max_connections=200]
-  management:
-    container_name: safeline-mgt-api
+  mgt:
+    container_name: safeline-mgt
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-mgt-api:${IMAGE_TAG:?image tag required}
+    image: ${IMAGE_PREFIX}/safeline-mgt:${IMAGE_TAG:?image tag required}
     volumes:
-      - ${SAFELINE_DIR?safeline dir required}/resources/management:/resources/management
-      - ${SAFELINE_DIR}/resources/nginx:/resources/nginx
-      - ${SAFELINE_DIR}/logs:/logs
       - /etc/localtime:/etc/localtime:ro
+      - ${SAFELINE_DIR}/resources/mgt:/app/data
     ports:
       - ${MGT_PORT:-9443}:1443
     environment:
-      - MANAGEMENT_RESOURCES_DIR=/resources/management
-      - NGINX_RESOURCES_DIR=/resources/nginx
-      - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
-      - MARIO_URL=http://safeline-mario:3335
-      - FVM_MANAGER_URL=safeline-fvm-manager:9004
-      - MANAGEMENT_LOGS_DIR=/logs/management
+      - MGT_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce?sslmode=disable
+      - MGT_LICENSE_SERVER=https://safeline-ce-4463.rivers.chaitin.cn/
+    depends_on:
+      - postgres
+      - fvm
     dns:
       - 119.29.29.29
       - 223.5.5.5
@@ -55,9 +50,7 @@ services:
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.4
-    cap_drop:
-      - net_raw
-  detector:
+  detect:
     container_name: safeline-detector
     restart: always
     image: ${IMAGE_PREFIX}/safeline-detector:${IMAGE_TAG}
@@ -70,8 +63,6 @@ services:
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.5
-    cap_drop:
-      - net_raw
   mario:
     container_name: safeline-mario
     restart: always
@@ -83,41 +74,45 @@ services:
     environment:
       - LOG_DIR=/logs/mario
       - GOGC=100
-      - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
+      - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.6
-    cap_drop:
-      - net_raw
   tengine:
     container_name: safeline-tengine
     restart: always
     image: ${IMAGE_PREFIX}/safeline-tengine:${IMAGE_TAG}
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/resolv.conf:/etc/resolv.conf
       - ${SAFELINE_DIR}/resources/nginx:/etc/nginx
-      - ${SAFELINE_DIR}/resources/management:/resources/management
       - ${SAFELINE_DIR}/resources/detector:/resources/detector
       - ${SAFELINE_DIR}/logs/nginx:/var/log/nginx
-      - /etc/localtime:/etc/localtime:ro
       - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
-      - /etc/resolv.conf:/etc/resolv.conf
     environment:
-      - MGT_API=https://${SUBNET_PREFIX}.4:1443/api/publish/server
+      - TCD_MGT_API=https://${SUBNET_PREFIX}.4:1443/api/open/publish/server
+      - TCD_SNSERVER=${SUBNET_PREFIX}.5:8000
+      # deprecated
+      - SNSERVER_ADDR=${SUBNET_PREFIX}.5:8000
     ulimits:
       nofile: 131072
     network_mode: host
-  fvm-manager:
-    container_name: safeline-fvm-manager
+  luigi:
+    container_name: safeline-luigi
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-fvm-manager:${IMAGE_TAG}
-    environment:
-      - FVM_LOGS_DIR=/logs/management
-      - DETECTOR_URL=http://safeline-detector:8001
+    image: ${IMAGE_PREFIX}/safeline-luigi:${IMAGE_TAG}
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${SAFELINE_DIR}/logs:/logs
+      - ${SAFELINE_DIR}/resources/luigi:/app/data
+    networks:
+      safeline-ce:
+        ipv4_address: ${SUBNET_PREFIX}.7
+  fvm:
+    container_name: safeline-fvm
+    restart: always
+    image: ${IMAGE_PREFIX}/safeline-fvm:${IMAGE_TAG}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.8
-    cap_drop:
-      - net_raw
