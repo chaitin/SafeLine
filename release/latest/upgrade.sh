@@ -206,7 +206,7 @@ fi
 info "下载 compose.yaml 脚本成功"
 
 if [ $STREAM -eq 1 ]; then
-    sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=beta-stream/g" ".env"
+    sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest-stream/g" ".env"
 else
     sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
 fi
@@ -214,7 +214,7 @@ fi
 grep "SAFELINE_DIR" ".env" >/dev/null || echo "SAFELINE_DIR=$(pwd)" >>".env"
 
 if [ $STREAM -eq 1 ]; then
-    grep "IMAGE_TAG" ".env" >/dev/null || echo "IMAGE_TAG=beta-stream" >>".env"
+    grep "IMAGE_TAG" ".env" >/dev/null || echo "IMAGE_TAG=latest-stream" >>".env"
 else
     grep "IMAGE_TAG" ".env" >/dev/null || echo "IMAGE_TAG=latest" >>".env"
 fi

@@ -211,7 +211,7 @@ info "创建 .env 脚本成功"
 echo "SAFELINE_DIR=$safeline_path" >> .env
 
 if [ $STREAM -eq 1 ]; then
-    echo "IMAGE_TAG=beta-stream" >>".env"
+    echo "IMAGE_TAG=latest-stream" >>".env"
 else
     echo "IMAGE_TAG=latest" >>".env"
 fi
