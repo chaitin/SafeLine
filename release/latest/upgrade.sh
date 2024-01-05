@@ -222,6 +222,12 @@ grep "SUBNET_PREFIX" ".env" >/dev/null || echo "SUBNET_PREFIX=172.22.222" >>".en
 
 
 if [ $CDN -eq 0 ]; then
+    sed -i "s/IMAGE_PREFIX=.*/IMAGE_PREFIX=chaitin/g" ".env"
+else
+    sed -i "s/IMAGE_PREFIX=.*/IMAGE_PREFIX=swr.cn-east-3.myhuaweicloud.com\/chaitin-safeline/g" ".env"
+fi
+
+if [ $CDN -eq 0 ]; then
     grep "IMAGE_PREFIX" ".env" >/dev/null || echo "IMAGE_PREFIX=chaitin" >>".env"
 else
     grep "IMAGE_PREFIX" ".env" >/dev/null || echo "IMAGE_PREFIX=swr.cn-east-3.myhuaweicloud.com/chaitin-safeline" >>".env"
