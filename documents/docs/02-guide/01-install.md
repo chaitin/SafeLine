@@ -67,6 +67,7 @@ style={{ width: '100%', height: '350px' }}
    MGT_PORT=9443
    POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)
    SUBNET_PREFIX=172.22.222
+   IMAGE_PREFIX=chaitin
    EOF
    ```
 
