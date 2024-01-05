@@ -6,14 +6,22 @@ title: "版本更新记录"
 
 [版本升级方法](/guide/upgrade)
 
+### [4.0.1] - 2024-01-05
+
+#### 修复
+
+- safeline-luigi 容器打印与功能无关的错误日志
+- 统计页面中不显示 QPS 数据
+
 ### [4.0.0] - 2024-01-05
+
 #### 新增
 
 - 完整支持 **流式语义分析检测**，包含 协议解析、解码、模式匹配 三个阶段的改造，解决经典 “大包绕过” 问题
 - IP 组支持通过 URL 在线订阅内容（[#414](https://github.com/chaitin/SafeLine/issues/414)）：
 - ![](/images/docs/about_changelog/ip_group_url.png)
 - 新增 “搜索引擎爬虫 IP”，包含 Google、Bing、百度、360 的爬虫 IP（[#374](https://github.com/chaitin/SafeLine/issues/374)、[#399](https://github.com/chaitin/SafeLine/issues/399)）：
-![](/images/docs/about_changelog/ip_group_builtin.png)
+  ![](/images/docs/about_changelog/ip_group_builtin.png)
 - 出厂预置 “搜索引擎爬虫白名单” 和 “长亭社区恶意 IP 情报黑名单”，方便配置
 
 #### 优化
@@ -35,7 +43,6 @@ title: "版本更新记录"
   - 升级脚本未正常检测到雷池安装目录（[#561](https://github.com/chaitin/SafeLine/pull/561)，感谢热心网友 nmgliangwei）
   - safeline-mgt 持续输出版本号错误日志
   - 拦截页面未显示时间
-
 
 ### [4.0.0-beta.3] - 2023-12-28
 
