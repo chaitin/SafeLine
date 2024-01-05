@@ -8,6 +8,8 @@ echo "
  |____/   \__,_| |_|    \___| |_____| |_| |_| |_|  \___|
 "
 
+export STREAM=${STREAM:-0}
+
 echo $1
 
 qrcode() {
@@ -157,7 +159,7 @@ else
     fi
 fi
 
-container_id=$(docker ps --filter ancestor=chaitin/safeline-mgt-api --format '{{.ID}}')
+container_id=$(docker ps --filter ancestor=chaitin/safeline-tengine --format '{{.ID}}')
 mount_path=$(docker inspect --format '{{range .Mounts}}{{if eq .Destination "/logs"}}{{.Source}}{{end}}{{end}}' $container_id)
 safeline_path=$(dirname $mount_path)
 
@@ -192,19 +194,33 @@ fi
 
 mv $compose_name $compose_name.old
 
-curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o $compose_name
+if [ $STREAM -eq 1 ]; then
+    curl "https://waf-ce.chaitin.cn/release/beta/compose.yaml" -sSLk -o $compose_name
+else
+    curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o $compose_name
+fi
+
 if [ $? -ne "0" ]; then
     abort "下载 compose.yaml 脚本失败"
 fi
 info "下载 compose.yaml 脚本成功"
 
-sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
+if [ $STREAM -eq 1 ]; then
+    sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=beta-stream/g" ".env"
+else
+    sed -i "s/IMAGE_TAG=.*/IMAGE_TAG=latest/g" ".env"
+fi
 
 grep "SAFELINE_DIR" ".env" >/dev/null || echo "SAFELINE_DIR=$(pwd)" >>".env"
-grep "IMAGE_TAG" ".env" >/dev/null || echo "IMAGE_TAG=latest" >>".env"
+
+if [ $STREAM -eq 1 ]; then
+    grep "IMAGE_TAG" ".env" >/dev/null || echo "IMAGE_TAG=beta-stream" >>".env"
+else
+    grep "IMAGE_TAG" ".env" >/dev/null || echo "IMAGE_TAG=latest" >>".env"
+fi
+
 grep "MGT_PORT" ".env" >/dev/null || echo "MGT_PORT=9443" >>".env"
 grep "POSTGRES_PASSWORD" ".env" >/dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >>".env"
-grep "REDIS_PASSWORD" ".env" >/dev/null || echo "REDIS_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >>".env"
 grep "SUBNET_PREFIX" ".env" >/dev/null || echo "SUBNET_PREFIX=172.22.222" >>".env"
 
 info "升级 .env 脚本成功"
@@ -222,7 +238,7 @@ info "即将开始替换 Docker 容器"
 # 升级到 3.14.0 版本时，移除了 safeline-redis 容器，需要删除容器，否则无法启动新 compose 网络
 docker rm -f safeline-redis &>/dev/null
 
-$compose_command down && $compose_command up -d
+$compose_command down --remove-orphans && $compose_command up -d
 if [ $? -ne "0" ]; then
     abort "替换 Docker 容器失败"
 fi

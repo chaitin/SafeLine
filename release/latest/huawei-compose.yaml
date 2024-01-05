@@ -1,0 +1,123 @@
+networks:
+  safeline-ce:
+    name: safeline-ce
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - gateway: ${SUBNET_PREFIX:?SUBNET_PREFIX required}.1
+          subnet: ${SUBNET_PREFIX}.0/24
+    driver_opts:
+      com.docker.network.bridge.name: safeline-ce
+
+services:
+  postgres:
+    container_name: safeline-postgres
+    restart: always
+    image: swr.cn-east-3.myhuaweicloud.com/chaitin-safeline/postgres:15.2
+    volumes:
+      - ${SAFELINE_DIR}/resources/postgres/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_USER=safeline-ce
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?postgres password required}
+    networks:
+      safeline-ce:
+        ipv4_address: ${SUBNET_PREFIX}.2
+    cap_drop:
+      - net_raw
+    command: [postgres, -c, max_connections=200]
+  management:
+    container_name: safeline-mgt-api
+    restart: always
+    image: swr.cn-east-3.myhuaweicloud.com/chaitin-safeline/safeline-mgt-api:${IMAGE_TAG:?image tag required}
+    volumes:
+      - ${SAFELINE_DIR?safeline dir required}/resources/management:/resources/management
+      - ${SAFELINE_DIR}/resources/nginx:/resources/nginx
+      - ${SAFELINE_DIR}/logs:/logs
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - ${MGT_PORT:-9443}:1443
+    environment:
+      - MANAGEMENT_RESOURCES_DIR=/resources/management
+      - NGINX_RESOURCES_DIR=/resources/nginx
+      - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
+      - MARIO_URL=http://safeline-mario:3335
+      - FVM_MANAGER_URL=safeline-fvm-manager:9004
+      - MANAGEMENT_LOGS_DIR=/logs/management
+    dns:
+      - 119.29.29.29
+      - 223.5.5.5
+      - 180.76.76.76
+      - 1.2.4.8
+      - 114.114.114.114
+      - 8.8.8.8
+    networks:
+      safeline-ce:
+        ipv4_address: ${SUBNET_PREFIX}.4
+    cap_drop:
+      - net_raw
+  detector:
+    container_name: safeline-detector
+    restart: always
+    image: swr.cn-east-3.myhuaweicloud.com/chaitin-safeline/safeline-detector:${IMAGE_TAG}
+    volumes:
+      - ${SAFELINE_DIR}/resources/detector:/resources/detector
+      - ${SAFELINE_DIR}/logs/detector:/logs/detector
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - LOG_DIR=/logs/detector
+    networks:
+      safeline-ce:
+        ipv4_address: ${SUBNET_PREFIX}.5
+    cap_drop:
+      - net_raw
+  mario:
+    container_name: safeline-mario
+    restart: always
+    image: swr.cn-east-3.myhuaweicloud.com/chaitin-safeline/safeline-mario:${IMAGE_TAG}
+    volumes:
+      - ${SAFELINE_DIR}/resources/mario:/resources/mario
+      - ${SAFELINE_DIR}/logs/mario:/logs/mario
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - LOG_DIR=/logs/mario
+      - GOGC=100
+      - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-postgres/safeline-ce
+    networks:
+      safeline-ce:
+        ipv4_address: ${SUBNET_PREFIX}.6
+    cap_drop:
+      - net_raw
+  tengine:
+    container_name: safeline-tengine
+    restart: always
+    image: swr.cn-east-3.myhuaweicloud.com/chaitin-safeline/safeline-tengine:${IMAGE_TAG}
+    volumes:
+      - ${SAFELINE_DIR}/resources/nginx:/etc/nginx
+      - ${SAFELINE_DIR}/resources/management:/resources/management
+      - ${SAFELINE_DIR}/resources/detector:/resources/detector
+      - ${SAFELINE_DIR}/logs/nginx:/var/log/nginx
+      - /etc/localtime:/etc/localtime:ro
+      - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
+      - /etc/resolv.conf:/etc/resolv.conf
+    environment:
+      - MGT_API=https://${SUBNET_PREFIX}.4:1443/api/publish/server
+    ulimits:
+      nofile: 131072
+    network_mode: host
+  fvm-manager:
+    container_name: safeline-fvm-manager
+    restart: always
+    image: swr.cn-east-3.myhuaweicloud.com/chaitin-safeline/safeline-fvm-manager:${IMAGE_TAG}
+    environment:
+      - FVM_LOGS_DIR=/logs/management
+      - DETECTOR_URL=http://safeline-detector:8001
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${SAFELINE_DIR}/logs:/logs
+    networks:
+      safeline-ce:
+        ipv4_address: ${SUBNET_PREFIX}.8
+    cap_drop:
+      - net_raw
