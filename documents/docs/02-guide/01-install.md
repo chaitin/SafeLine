@@ -20,7 +20,7 @@ title: "安装雷池"
 ```sh
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ```
-
+<!-- 
 ## 在线安装 Beta 版
 
 **注意**:
@@ -30,7 +30,7 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 
 ```sh
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/beta/setup.sh)"
-```
+``` -->
 
 **若安装失败，请参考 [安装问题](/faq/install)**
 
