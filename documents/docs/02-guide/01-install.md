@@ -20,17 +20,14 @@ title: "安装雷池"
 ```sh
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ```
-<!-- 
-## 在线安装 Beta 版
-
-**注意**:
-
-1. 不要在生产环境中使用 beta 版
-2. beta 版仅支持在线安装和更新
-
+如果需要使用华为云加速，可使用
 ```sh
-bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/beta/setup.sh)"
-``` -->
+CDN=1 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
+```
+如果需要安装最新版本流式检测模式，可使用
+```sh
+STREAM=1 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
+```
 
 **若安装失败，请参考 [安装问题](/faq/install)**
 
