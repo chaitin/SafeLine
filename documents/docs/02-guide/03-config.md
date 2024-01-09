@@ -101,7 +101,7 @@ title: "配置站点"
 
 效果大致如图：
 
-![Alt text](/images/docs/guide_config/deploy_with_other_server.svg)
+![Alt text](/images/docs/guide_config/deploy_with_other_server.png)
 
 ## 常见配置问题
 
