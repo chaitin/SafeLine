@@ -14,7 +14,7 @@ services:
   postgres:
     container_name: safeline-pg
     restart: always
-    image: postgres:15.2
+    image: swr.cn-east-3.myhuaweicloud.com/chaitin-safeline/postgres:15.2
     volumes:
       - ${SAFELINE_DIR}/resources/postgres/data:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
