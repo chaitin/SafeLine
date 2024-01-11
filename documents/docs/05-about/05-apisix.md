@@ -55,23 +55,14 @@ bash -c "$(curl -fsSLk <https://waf-ce.chaitin.cn/release/latest/setup.sh>)"
 cd /data/safeline/resources/detector/
 ```
 
-用文本编辑器打开目录里的 snserver.yml 文件，寻找这样的三行内容：
+用文本编辑器打开目录里的 detector.yml 文件，我们需要将 bind 方式从 unix socket 改为 tcp，添加如下配置：
 
 ```
-bind_addr: unix:///resources/detector/snserver.sock
-# bind_addr: 0.0.0.0
-# listen_port: 8000
-```
-
-找到以后，我们需要将 bind 方式从 unix socket 改为 tcp，将这三行修改为以下内容即可：
-
-```
-# bind_addr: unix:///resources/detector/snserver.sock
 bind_addr: 0.0.0.0
 listen_port: 8000
 ```
 
-这样我们就把雷池引擎的服务监听到了 8000 端口，现在只需要把容器内的 8000 端口映射到宿主机即可。
+detector配置的属性值将覆盖容器内默认配置文件的同名属性值。这样我们就把雷池引擎的服务监听到了 8000 端口，现在只需要把容器内的 8000 端口映射到宿主机即可。
 
 进入雷池的安装目录
 
