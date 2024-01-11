@@ -24,9 +24,9 @@ As shown, you shall install `docker` first. Try `curl -fLsS https://get.docker.c
 
 As shown, you shall install `docker compose v2`. Try `[Install Docker Compose](https://docs.docker.com/compose/install/)`
 
-### safeline-postgres: Operation not permitted
+### safeline-pg: Operation not permitted
 
-`docker logs -f safeline-postgres` with error `Operation not permitted`
+`docker logs -f safeline-pg` with error `Operation not permitted`
 
 Upgrade your docker engine and retry.
 
@@ -94,9 +94,9 @@ As shown, you shall start docker first. Try `systemctl start docker`.
 
 端口冲突，根据报错信息中的端口号，排查是哪个服务占用了，手动处理冲突。
 
-### safeline-postgres 出现 Operation not permitted
+### safeline-pg 出现 Operation not permitted
 
-`docker logs -f safeline-postgres` 容器日志中看到 `Operation not permitted` 报错
+`docker logs -f safeline-pg` 容器日志中看到 `Operation not permitted` 报错
 
 可能是您的 docker 版本过低，升级 docker 到最新版本尝试一下。
 

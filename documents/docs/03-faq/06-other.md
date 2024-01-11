@@ -42,7 +42,7 @@ location /xxx {
 **_注意：该操作会清除所有日志信息，且不可恢复_**
 
 ```shell
-docker exec safeline-mgt-api cleanlogs
+docker exec safeline-mgt cleanlogs
 ```
 
 ## 将雷池的日志导出到 XXX
@@ -55,7 +55,7 @@ docker exec safeline-mgt-api cleanlogs
 <source>
   @type sql
 
-  host safeline-postgres // 默认数据库地址，如果在 compose.yml 中改过，请使用改后值
+  host safeline-pg // 默认数据库地址，如果在 compose.yml 中改过，请使用改后值
   port 5432
   database safeline-ce // 数据库名
   adapter postgresql
