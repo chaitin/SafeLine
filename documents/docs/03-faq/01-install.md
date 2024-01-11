@@ -61,9 +61,9 @@ security_opt:
   - seccomp=./seccomp.json
 ```
 
-#### 报错：safeline-postgres 出现 Operation not permitted
+#### 报错：safeline-pg 出现 Operation not permitted
 
-`docker logs -f safeline-postgres` 容器日志中看到 `Operation not permitted` 报错。
+`docker logs -f safeline-pg` 容器日志中看到 `Operation not permitted` 报错。
 
 可能是您的 docker 版本过低，升级 docker 到最新版本尝试一下。
 
