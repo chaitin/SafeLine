@@ -22,7 +22,7 @@ title: "防护问题"
 
 ![config_access_log.png](/images/docs/config_access_log.png)
 
-如图所示，去掉文件第 99 行的注释，删除第 100 行的内容，保存后运行命令检查配置文件
+如图所示，去掉文件第 98 行的注释，删除第 99 行的内容，保存后运行命令检查配置文件
 
 ```shell
 docker exec safeline-tengine nginx -t
