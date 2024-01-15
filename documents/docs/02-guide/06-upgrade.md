@@ -64,7 +64,7 @@ docker load -i image.tar.gz
 执行以下命令替换 Docker 容器
 
 ```
-docker compose down
+docker compose down --remove-orphans
 docker compose up -d
 ```
 
