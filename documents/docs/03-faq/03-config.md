@@ -20,6 +20,8 @@ title: "配置问题"
 
 4. 同时存在其他错误的配置可能会导致新的配置一直不生效，检查有没有存在其他错误的配置
 
+5. 雷池本身的状态不正常，使用 docker ps 检查容器状态 
+
 ## 排查步骤
 
 1. 明确 “网站无法访问” 的具体表现：
@@ -80,6 +82,36 @@ title: "配置问题"
 ## 配置完成后，测试时返回 400 Request Header Or Cookie Too Large
 
 请麻烦检查是否形成了环路，即：雷池将请求转发给上游服务器后，上游服务器又将请求转发回雷池。
+
+## 不同版本关闭防火墙的命令
+   
+Ubuntu 18.04 LTS 、 Ubuntu 20.04 LTS 、 Ubuntu 22.04 LTS
+
+Debian 9 (Stretch)、Debian 10 (Buster)、Debian 11 (Bullseye)
+```
+关闭防火墙命令（UFW）：sudo ufw disable
+注：Debian 默认可能不安装 UFW，依赖于 iptables。
+```
+
+CentOS 7、CentOS 8、RHEL 7、 RHEL 8、Fedora 32、 Fedora 33、Fedora 34
+```
+关闭防火墙命令（Firewalld）：sudo systemctl stop firewalld && sudo systemctl disable firewalld
+```
+openSUSE Leap 15.2、openSUSE Leap 15.3
+```
+关闭防火墙命令（通常是 SuSEfirewall2 或 firewalld）：
+1.SuSEfirewall2, 使用 sudo SuSEfirewall2 stop
+2.firewalld, 使用 sudo systemctl stop firewalld && sudo systemctl disable firewalld
+```
+
+## 如何对站点开启强制hppts访问、开启IPV6监听、使用HTTP/2
+
+根据站点需求开启
+
+开启路径：防护配置-通用配置-其他-站点通用配置 
+
+ ![Alt text](/images/docs/guide_config/check_the_site3.png)
+
 
 ## 问题无法解决
 

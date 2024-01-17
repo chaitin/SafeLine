@@ -6,11 +6,13 @@ title: "其他问题"
 
 记录不常见的其他问题
 
-## 源 IP 显示不正确
+## 雷池获得的请求者的源IP 显示不正确
 
 雷池默认会通过 Socket 连接获取请求者的源 IP，如果请求在到达雷池之前，还经过了其他代理设备（如：反代、LB、CDN、AD 等），这种情况会影响雷池获取正确的源 IP 信息。
 
-通常，代理设备都会将真实源 IP 通过 HTTP Header 的方式传递给下一跳设备。如下方的 HTTP 请求，在 `X-Forwarded-For` 和 `X-Real-IP` 两个 Header 中都包含了源 IP：
+通常，代理设备都会将真实源 IP 通过 HTTP Header 的方式传递给下一跳设备。
+
+如下方的 HTTP 请求，在 `X-Forwarded-For` 和 `X-Real-IP` 两个 Header 中都包含了源 IP：
 
 ```
 GET /path HTTP/1.1
@@ -36,6 +38,22 @@ location /xxx {
 遇到这种情况，打开雷池控制台的 “通用配置” 页面，将选项 “源 IP 获取方式” 的内容修改为 “从 HTTP Header 中获取”，并在对应的输入框中填入 `X-Real-IP` 即可。
 
 ![get_source_ip.png](/images/docs/get_source_ip.png)
+
+
+## 上游服务器获得请求者的源IP 显示不正确
+
+有可能上游服务器获取到的全都是雷池 WAF 的 IP，如何获取真是的请求者源IP？
+
+雷池默认透传了源 IP，放在 HTTP Header 中的 `X-Forwarded-For` 里面。
+
+如果上游服务器是 NGINX，添加如下配置就可以。如果不是，需要自行配置解析 XFF
+
+```
+set_real_ip_from 0.0.0.0/0;
+real_ip_header X-Forwarded-For;
+```
+
+
 
 ## 清理数据库中的统计信息和检测日志
 
@@ -173,16 +191,7 @@ docker exec safeline-tengine nginx -s reload
 
 ![fake_host.jpg](/images/docs/fake_host.jpg)
 
-## 上游服务器获取到的全都是雷池 WAF 的 IP，如何获取到真实 IP？
 
-雷池默认透传了源 IP，放在 HTTP Header 中的 `X-Forwarded-For` 里面。
-
-如果上游服务器是 NGINX，添加如下配置就可以。如果不是，需要自行配置解析 XFF
-
-```
-set_real_ip_from 0.0.0.0/0;
-real_ip_header X-Forwarded-For;
-```
 
 ## 是否支持 WebSocket ？
 
