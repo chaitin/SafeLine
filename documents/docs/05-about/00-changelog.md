@@ -6,6 +6,32 @@ title: "版本更新记录"
 
 [版本升级方法](/guide/upgrade)
 
+### [4.2.0] - 2024-01-19
+
+#### 新增
+
+- 点击右上角可领取 2023 专属年度报告:
+- ![](/images/docs/about_changelog/4.2.0-1.png)
+- 新增补充规则，可以一览系统当前的通用漏洞规则：
+- ![](/images/docs/about_changelog/4.2.0-2.png)
+- 黑白名单、人机验证新增匹配方式，包括：
+  - IP 不等于
+  - Host 不等于
+  - Header 某个参数的内容不等于、包含、不包含
+
+#### 优化
+
+- 代理时开启 SNI，避免访问上游服务时无法获取正确的证书   （[#491](https://github.com/chaitin/SafeLine/issues/491)、[#609](https://github.com/chaitin/SafeLine/issues/609)）
+- 当尝试在同一端口同时监听 http 和 https 时，给出更具体的错误提示
+- 优化英文英文模式下中国省份的显示（[#512](https://github.com/chaitin/SafeLine/issues/512)）
+- 优化英文模式下攻击事件页 tab 按钮的对齐（[#604](https://github.com/chaitin/SafeLine/issues/604)）
+- 优化英文模式下威胁情报同步成功的提示信息 （[#605](https://github.com/chaitin/SafeLine/issues/605)）
+- 优化删除 IP 组确认的提示信息（[#610](https://github.com/chaitin/SafeLine/issues/610)）
+- 优化 “刚果（金）”和 “刚果（布）” 的地区名称（[#620](https://github.com/chaitin/SafeLine/issues/620)）
+- 更新底层检测引擎版本，提高防护能力
+- 修复创建订阅的 IP 组时，有时无法保存的问题
+- 修复订阅的 IP 组存在行内注释时，对应的 IP 会失效的问题
+
 ### [4.1.1] - 2024-01-11
 
 #### 修复
