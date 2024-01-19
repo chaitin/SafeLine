@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+
+<html lang="zh">
+  <head>
+    <meta charset="utf-8" />
+    <title>Safeline Waf Auth</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      html {
+        height: 100%;
+      }
+      body {
+        background: #f7f8fa;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        margin: 0;
+        height: 100%;
+      }
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+      }
+      .title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 60px;
+        font-size: 24px;
+      }
+      .form {
+        width: 440px;
+        height: 318px;
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0px 8px 15px 0px rgba(145, 158, 171, 0.08);
+        border-radius: 8px;
+        border: 2px solid #ffffff;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        padding: 32px;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+      .form-title {
+        width: 96px;
+        height: 32px;
+        font-size: 24px;
+        font-family: PingFangSC, PingFang SC;
+        font-weight: 600;
+        color: #000000;
+        line-height: 32px;
+      }
+      .form-field {
+        width: 376px;
+        height: 42px;
+        background: #f7f8fa;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+      }
+      .form-field svg {
+        margin: 0 12px;
+      }
+      .form-input {
+        font-size: 16px;
+        border: 0;
+        outline: 0;
+        background: #f7f8fa;
+        flex-grow: 1;
+        width: 100px;
+      }
+      .form-submit {
+        width: 376px;
+        height: 42px;
+        background: #0fc6c2;
+        border-radius: 4px;
+        border: 0;
+        color: white;
+        cursor: pointer;
+      }
+      .form-error {
+        color: lightcoral;
+        display: none;
+      }
+      .form-submit:hover {
+        background: #09c0c0;
+      }
+    </style>
+    <script>
+      /**
+       * [js-md5]{@link https://github.com/emn178/js-md5}
+       *
+       * @namespace md5
+       * @version 0.8.0
+       * @author Chen, Yi-Cyuan [emn178@gmail.com]
+       * @copyright Chen, Yi-Cyuan 2014-2023
+       * @license MIT
+       */
+      !(function () {
+        "use strict";
+        function t(t) {
+          if (t)
+            (b[0] =
+              b[16] =
+              b[1] =
+              b[2] =
+              b[3] =
+              b[4] =
+              b[5] =
+              b[6] =
+              b[7] =
+              b[8] =
+              b[9] =
+              b[10] =
+              b[11] =
+              b[12] =
+              b[13] =
+              b[14] =
+              b[15] =
+                0),
+              (this.blocks = b),
+              (this.buffer8 = a);
+          else if (u) {
+            var r = new ArrayBuffer(68);
+            (this.buffer8 = new Uint8Array(r)),
+              (this.blocks = new Uint32Array(r));
+          } else
+            this.blocks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+          (this.h0 =
+            this.h1 =
+            this.h2 =
+            this.h3 =
+            this.start =
+            this.bytes =
+            this.hBytes =
+              0),
+            (this.finalized = this.hashed = !1),
+            (this.first = !0);
+        }
+        function r(r, e) {
+          var i,
+            s = _(r);
+          if (((r = s[0]), s[1])) {
+            var h,
+              n = [],
+              a = r.length,
+              o = 0;
+            for (i = 0; i < a; ++i)
+              (h = r.charCodeAt(i)) < 128
+                ? (n[o++] = h)
+                : h < 2048
+                ? ((n[o++] = 192 | (h >>> 6)), (n[o++] = 128 | (63 & h)))
+                : h < 55296 || h >= 57344
+                ? ((n[o++] = 224 | (h >>> 12)),
+                  (n[o++] = 128 | ((h >>> 6) & 63)),
+                  (n[o++] = 128 | (63 & h)))
+                : ((h =
+                    65536 + (((1023 & h) << 10) | (1023 & r.charCodeAt(++i)))),
+                  (n[o++] = 240 | (h >>> 18)),
+                  (n[o++] = 128 | ((h >>> 12) & 63)),
+                  (n[o++] = 128 | ((h >>> 6) & 63)),
+                  (n[o++] = 128 | (63 & h)));
+            r = n;
+          }
+          r.length > 64 && (r = new t(!0).update(r).array());
+          var f = [],
+            u = [];
+          for (i = 0; i < 64; ++i) {
+            var c = r[i] || 0;
+            (f[i] = 92 ^ c), (u[i] = 54 ^ c);
+          }
+          t.call(this, e),
+            this.update(u),
+            (this.oKeyPad = f),
+            (this.inner = !0),
+            (this.sharedMemory = e);
+        }
+        var e = "input is invalid type",
+          i = "object" == typeof window,
+          s = i ? window : {};
+        s.JS_MD5_NO_WINDOW && (i = !1);
+        var h = !i && "object" == typeof self,
+          n =
+            !s.JS_MD5_NO_NODE_JS &&
+            "object" == typeof process &&
+            process.versions &&
+            process.versions.node;
+        n ? (s = global) : h && (s = self);
+        var a,
+          o =
+            !s.JS_MD5_NO_COMMON_JS &&
+            "object" == typeof module &&
+            module.exports,
+          f = "function" == typeof define && define.amd,
+          u = !s.JS_MD5_NO_ARRAY_BUFFER && "undefined" != typeof ArrayBuffer,
+          c = "0123456789abcdef".split(""),
+          y = [128, 32768, 8388608, -2147483648],
+          p = [0, 8, 16, 24],
+          d = ["hex", "array", "digest", "buffer", "arrayBuffer", "base64"],
+          l =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".split(
+              ""
+            ),
+          b = [];
+        if (u) {
+          var v = new ArrayBuffer(68);
+          (a = new Uint8Array(v)), (b = new Uint32Array(v));
+        }
+        var w = Array.isArray;
+        (!s.JS_MD5_NO_NODE_JS && w) ||
+          (w = function (t) {
+            return "[object Array]" === Object.prototype.toString.call(t);
+          });
+        var A = ArrayBuffer.isView;
+        !u ||
+          (!s.JS_MD5_NO_ARRAY_BUFFER_IS_VIEW && A) ||
+          (A = function (t) {
+            return (
+              "object" == typeof t &&
+              t.buffer &&
+              t.buffer.constructor === ArrayBuffer
+            );
+          });
+        var _ = function (t) {
+            var r = typeof t;
+            if ("string" === r) return [t, !0];
+            if ("object" !== r || null === t) throw new Error(e);
+            if (u && t.constructor === ArrayBuffer)
+              return [new Uint8Array(t), !1];
+            if (!w(t) && !A(t)) throw new Error(e);
+            return [t, !1];
+          },
+          B = function (r) {
+            return function (e) {
+              return new t(!0).update(e)[r]();
+            };
+          },
+          g = function (t) {
+            var r,
+              i = require("crypto"),
+              h = require("buffer").Buffer;
+            r =
+              h.from && !s.JS_MD5_NO_BUFFER_FROM
+                ? h.from
+                : function (t) {
+                    return new h(t);
+                  };
+            return function (s) {
+              if ("string" == typeof s)
+                return i.createHash("md5").update(s, "utf8").digest("hex");
+              if (null === s || void 0 === s) throw new Error(e);
+              return (
+                s.constructor === ArrayBuffer && (s = new Uint8Array(s)),
+                w(s) || A(s) || s.constructor === h
+                  ? i.createHash("md5").update(r(s)).digest("hex")
+                  : t(s)
+              );
+            };
+          },
+          m = function (t) {
+            return function (e, i) {
+              return new r(e, !0).update(i)[t]();
+            };
+          };
+        (t.prototype.update = function (t) {
+          if (this.finalized) throw new Error("finalize already called");
+          var r = _(t);
+          t = r[0];
+          for (
+            var e,
+              i,
+              s = r[1],
+              h = 0,
+              n = t.length,
+              a = this.blocks,
+              o = this.buffer8;
+            h < n;
+
+          ) {
+            if (
+              (this.hashed &&
+                ((this.hashed = !1),
+                (a[0] = a[16]),
+                (a[16] =
+                  a[1] =
+                  a[2] =
+                  a[3] =
+                  a[4] =
+                  a[5] =
+                  a[6] =
+                  a[7] =
+                  a[8] =
+                  a[9] =
+                  a[10] =
+                  a[11] =
+                  a[12] =
+                  a[13] =
+                  a[14] =
+                  a[15] =
+                    0)),
+              s)
+            )
+              if (u)
+                for (i = this.start; h < n && i < 64; ++h)
+                  (e = t.charCodeAt(h)) < 128
+                    ? (o[i++] = e)
+                    : e < 2048
+                    ? ((o[i++] = 192 | (e >>> 6)), (o[i++] = 128 | (63 & e)))
+                    : e < 55296 || e >= 57344
+                    ? ((o[i++] = 224 | (e >>> 12)),
+                      (o[i++] = 128 | ((e >>> 6) & 63)),
+                      (o[i++] = 128 | (63 & e)))
+                    : ((e =
+                        65536 +
+                        (((1023 & e) << 10) | (1023 & t.charCodeAt(++h)))),
+                      (o[i++] = 240 | (e >>> 18)),
+                      (o[i++] = 128 | ((e >>> 12) & 63)),
+                      (o[i++] = 128 | ((e >>> 6) & 63)),
+                      (o[i++] = 128 | (63 & e)));
+              else
+                for (i = this.start; h < n && i < 64; ++h)
+                  (e = t.charCodeAt(h)) < 128
+                    ? (a[i >>> 2] |= e << p[3 & i++])
+                    : e < 2048
+                    ? ((a[i >>> 2] |= (192 | (e >>> 6)) << p[3 & i++]),
+                      (a[i >>> 2] |= (128 | (63 & e)) << p[3 & i++]))
+                    : e < 55296 || e >= 57344
+                    ? ((a[i >>> 2] |= (224 | (e >>> 12)) << p[3 & i++]),
+                      (a[i >>> 2] |= (128 | ((e >>> 6) & 63)) << p[3 & i++]),
+                      (a[i >>> 2] |= (128 | (63 & e)) << p[3 & i++]))
+                    : ((e =
+                        65536 +
+                        (((1023 & e) << 10) | (1023 & t.charCodeAt(++h)))),
+                      (a[i >>> 2] |= (240 | (e >>> 18)) << p[3 & i++]),
+                      (a[i >>> 2] |= (128 | ((e >>> 12) & 63)) << p[3 & i++]),
+                      (a[i >>> 2] |= (128 | ((e >>> 6) & 63)) << p[3 & i++]),
+                      (a[i >>> 2] |= (128 | (63 & e)) << p[3 & i++]));
+            else if (u)
+              for (i = this.start; h < n && i < 64; ++h) o[i++] = t[h];
+            else
+              for (i = this.start; h < n && i < 64; ++h)
+                a[i >>> 2] |= t[h] << p[3 & i++];
+            (this.lastByteIndex = i),
+              (this.bytes += i - this.start),
+              i >= 64
+                ? ((this.start = i - 64), this.hash(), (this.hashed = !0))
+                : (this.start = i);
+          }
+          return (
+            this.bytes > 4294967295 &&
+              ((this.hBytes += (this.bytes / 4294967296) << 0),
+              (this.bytes = this.bytes % 4294967296)),
+            this
+          );
+        }),
+          (t.prototype.finalize = function () {
+            if (!this.finalized) {
+              this.finalized = !0;
+              var t = this.blocks,
+                r = this.lastByteIndex;
+              (t[r >>> 2] |= y[3 & r]),
+                r >= 56 &&
+                  (this.hashed || this.hash(),
+                  (t[0] = t[16]),
+                  (t[16] =
+                    t[1] =
+                    t[2] =
+                    t[3] =
+                    t[4] =
+                    t[5] =
+                    t[6] =
+                    t[7] =
+                    t[8] =
+                    t[9] =
+                    t[10] =
+                    t[11] =
+                    t[12] =
+                    t[13] =
+                    t[14] =
+                    t[15] =
+                      0)),
+                (t[14] = this.bytes << 3),
+                (t[15] = (this.hBytes << 3) | (this.bytes >>> 29)),
+                this.hash();
+            }
+          }),
+          (t.prototype.hash = function () {
+            var t,
+              r,
+              e,
+              i,
+              s,
+              h,
+              n = this.blocks;
+            this.first
+              ? (r =
+                  ((((r =
+                    ((t =
+                      ((((t = n[0] - 680876937) << 7) | (t >>> 25)) -
+                        271733879) <<
+                      0) ^
+                      ((e =
+                        ((((e =
+                          (-271733879 ^
+                            ((i =
+                              ((((i =
+                                (-1732584194 ^ (2004318071 & t)) +
+                                n[1] -
+                                117830708) <<
+                                12) |
+                                (i >>> 20)) +
+                                t) <<
+                              0) &
+                              (-271733879 ^ t))) +
+                          n[2] -
+                          1126478375) <<
+                          17) |
+                          (e >>> 15)) +
+                          i) <<
+                        0) &
+                        (i ^ t))) +
+                    n[3] -
+                    1316259209) <<
+                    22) |
+                    (r >>> 10)) +
+                    e) <<
+                  0)
+              : ((t = this.h0),
+                (r = this.h1),
+                (e = this.h2),
+                (r =
+                  ((((r +=
+                    ((t =
+                      ((((t +=
+                        ((i = this.h3) ^ (r & (e ^ i))) + n[0] - 680876936) <<
+                        7) |
+                        (t >>> 25)) +
+                        r) <<
+                      0) ^
+                      ((e =
+                        ((((e +=
+                          (r ^
+                            ((i =
+                              ((((i +=
+                                (e ^ (t & (r ^ e))) + n[1] - 389564586) <<
+                                12) |
+                                (i >>> 20)) +
+                                t) <<
+                              0) &
+                              (t ^ r))) +
+                          n[2] +
+                          606105819) <<
+                          17) |
+                          (e >>> 15)) +
+                          i) <<
+                        0) &
+                        (i ^ t))) +
+                    n[3] -
+                    1044525330) <<
+                    22) |
+                    (r >>> 10)) +
+                    e) <<
+                  0)),
+              (r =
+                ((((r +=
+                  ((t =
+                    ((((t += (i ^ (r & (e ^ i))) + n[4] - 176418897) << 7) |
+                      (t >>> 25)) +
+                      r) <<
+                    0) ^
+                    ((e =
+                      ((((e +=
+                        (r ^
+                          ((i =
+                            ((((i += (e ^ (t & (r ^ e))) + n[5] + 1200080426) <<
+                              12) |
+                              (i >>> 20)) +
+                              t) <<
+                            0) &
+                            (t ^ r))) +
+                        n[6] -
+                        1473231341) <<
+                        17) |
+                        (e >>> 15)) +
+                        i) <<
+                      0) &
+                      (i ^ t))) +
+                  n[7] -
+                  45705983) <<
+                  22) |
+                  (r >>> 10)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((t =
+                    ((((t += (i ^ (r & (e ^ i))) + n[8] + 1770035416) << 7) |
+                      (t >>> 25)) +
+                      r) <<
+                    0) ^
+                    ((e =
+                      ((((e +=
+                        (r ^
+                          ((i =
+                            ((((i += (e ^ (t & (r ^ e))) + n[9] - 1958414417) <<
+                              12) |
+                              (i >>> 20)) +
+                              t) <<
+                            0) &
+                            (t ^ r))) +
+                        n[10] -
+                        42063) <<
+                        17) |
+                        (e >>> 15)) +
+                        i) <<
+                      0) &
+                      (i ^ t))) +
+                  n[11] -
+                  1990404162) <<
+                  22) |
+                  (r >>> 10)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((t =
+                    ((((t += (i ^ (r & (e ^ i))) + n[12] + 1804603682) << 7) |
+                      (t >>> 25)) +
+                      r) <<
+                    0) ^
+                    ((e =
+                      ((((e +=
+                        (r ^
+                          ((i =
+                            ((((i += (e ^ (t & (r ^ e))) + n[13] - 40341101) <<
+                              12) |
+                              (i >>> 20)) +
+                              t) <<
+                            0) &
+                            (t ^ r))) +
+                        n[14] -
+                        1502002290) <<
+                        17) |
+                        (e >>> 15)) +
+                        i) <<
+                      0) &
+                      (i ^ t))) +
+                  n[15] +
+                  1236535329) <<
+                  22) |
+                  (r >>> 10)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((i =
+                    ((((i +=
+                      (r ^
+                        (e &
+                          ((t =
+                            ((((t += (e ^ (i & (r ^ e))) + n[1] - 165796510) <<
+                              5) |
+                              (t >>> 27)) +
+                              r) <<
+                            0) ^
+                            r))) +
+                      n[6] -
+                      1069501632) <<
+                      9) |
+                      (i >>> 23)) +
+                      t) <<
+                    0) ^
+                    (t &
+                      ((e =
+                        ((((e += (t ^ (r & (i ^ t))) + n[11] + 643717713) <<
+                          14) |
+                          (e >>> 18)) +
+                          i) <<
+                        0) ^
+                        i))) +
+                  n[0] -
+                  373897302) <<
+                  20) |
+                  (r >>> 12)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((i =
+                    ((((i +=
+                      (r ^
+                        (e &
+                          ((t =
+                            ((((t += (e ^ (i & (r ^ e))) + n[5] - 701558691) <<
+                              5) |
+                              (t >>> 27)) +
+                              r) <<
+                            0) ^
+                            r))) +
+                      n[10] +
+                      38016083) <<
+                      9) |
+                      (i >>> 23)) +
+                      t) <<
+                    0) ^
+                    (t &
+                      ((e =
+                        ((((e += (t ^ (r & (i ^ t))) + n[15] - 660478335) <<
+                          14) |
+                          (e >>> 18)) +
+                          i) <<
+                        0) ^
+                        i))) +
+                  n[4] -
+                  405537848) <<
+                  20) |
+                  (r >>> 12)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((i =
+                    ((((i +=
+                      (r ^
+                        (e &
+                          ((t =
+                            ((((t += (e ^ (i & (r ^ e))) + n[9] + 568446438) <<
+                              5) |
+                              (t >>> 27)) +
+                              r) <<
+                            0) ^
+                            r))) +
+                      n[14] -
+                      1019803690) <<
+                      9) |
+                      (i >>> 23)) +
+                      t) <<
+                    0) ^
+                    (t &
+                      ((e =
+                        ((((e += (t ^ (r & (i ^ t))) + n[3] - 187363961) <<
+                          14) |
+                          (e >>> 18)) +
+                          i) <<
+                        0) ^
+                        i))) +
+                  n[8] +
+                  1163531501) <<
+                  20) |
+                  (r >>> 12)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((i =
+                    ((((i +=
+                      (r ^
+                        (e &
+                          ((t =
+                            ((((t +=
+                              (e ^ (i & (r ^ e))) + n[13] - 1444681467) <<
+                              5) |
+                              (t >>> 27)) +
+                              r) <<
+                            0) ^
+                            r))) +
+                      n[2] -
+                      51403784) <<
+                      9) |
+                      (i >>> 23)) +
+                      t) <<
+                    0) ^
+                    (t &
+                      ((e =
+                        ((((e += (t ^ (r & (i ^ t))) + n[7] + 1735328473) <<
+                          14) |
+                          (e >>> 18)) +
+                          i) <<
+                        0) ^
+                        i))) +
+                  n[12] -
+                  1926607734) <<
+                  20) |
+                  (r >>> 12)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((h =
+                    (i =
+                      ((((i +=
+                        ((s = r ^ e) ^
+                          (t =
+                            ((((t += (s ^ i) + n[5] - 378558) << 4) |
+                              (t >>> 28)) +
+                              r) <<
+                            0)) +
+                        n[8] -
+                        2022574463) <<
+                        11) |
+                        (i >>> 21)) +
+                        t) <<
+                      0) ^ t) ^
+                    (e =
+                      ((((e += (h ^ r) + n[11] + 1839030562) << 16) |
+                        (e >>> 16)) +
+                        i) <<
+                      0)) +
+                  n[14] -
+                  35309556) <<
+                  23) |
+                  (r >>> 9)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((h =
+                    (i =
+                      ((((i +=
+                        ((s = r ^ e) ^
+                          (t =
+                            ((((t += (s ^ i) + n[1] - 1530992060) << 4) |
+                              (t >>> 28)) +
+                              r) <<
+                            0)) +
+                        n[4] +
+                        1272893353) <<
+                        11) |
+                        (i >>> 21)) +
+                        t) <<
+                      0) ^ t) ^
+                    (e =
+                      ((((e += (h ^ r) + n[7] - 155497632) << 16) |
+                        (e >>> 16)) +
+                        i) <<
+                      0)) +
+                  n[10] -
+                  1094730640) <<
+                  23) |
+                  (r >>> 9)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((h =
+                    (i =
+                      ((((i +=
+                        ((s = r ^ e) ^
+                          (t =
+                            ((((t += (s ^ i) + n[13] + 681279174) << 4) |
+                              (t >>> 28)) +
+                              r) <<
+                            0)) +
+                        n[0] -
+                        358537222) <<
+                        11) |
+                        (i >>> 21)) +
+                        t) <<
+                      0) ^ t) ^
+                    (e =
+                      ((((e += (h ^ r) + n[3] - 722521979) << 16) |
+                        (e >>> 16)) +
+                        i) <<
+                      0)) +
+                  n[6] +
+                  76029189) <<
+                  23) |
+                  (r >>> 9)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((h =
+                    (i =
+                      ((((i +=
+                        ((s = r ^ e) ^
+                          (t =
+                            ((((t += (s ^ i) + n[9] - 640364487) << 4) |
+                              (t >>> 28)) +
+                              r) <<
+                            0)) +
+                        n[12] -
+                        421815835) <<
+                        11) |
+                        (i >>> 21)) +
+                        t) <<
+                      0) ^ t) ^
+                    (e =
+                      ((((e += (h ^ r) + n[15] + 530742520) << 16) |
+                        (e >>> 16)) +
+                        i) <<
+                      0)) +
+                  n[2] -
+                  995338651) <<
+                  23) |
+                  (r >>> 9)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((i =
+                    ((((i +=
+                      (r ^
+                        ((t =
+                          ((((t += (e ^ (r | ~i)) + n[0] - 198630844) << 6) |
+                            (t >>> 26)) +
+                            r) <<
+                          0) |
+                          ~e)) +
+                      n[7] +
+                      1126891415) <<
+                      10) |
+                      (i >>> 22)) +
+                      t) <<
+                    0) ^
+                    ((e =
+                      ((((e += (t ^ (i | ~r)) + n[14] - 1416354905) << 15) |
+                        (e >>> 17)) +
+                        i) <<
+                      0) |
+                      ~t)) +
+                  n[5] -
+                  57434055) <<
+                  21) |
+                  (r >>> 11)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((i =
+                    ((((i +=
+                      (r ^
+                        ((t =
+                          ((((t += (e ^ (r | ~i)) + n[12] + 1700485571) << 6) |
+                            (t >>> 26)) +
+                            r) <<
+                          0) |
+                          ~e)) +
+                      n[3] -
+                      1894986606) <<
+                      10) |
+                      (i >>> 22)) +
+                      t) <<
+                    0) ^
+                    ((e =
+                      ((((e += (t ^ (i | ~r)) + n[10] - 1051523) << 15) |
+                        (e >>> 17)) +
+                        i) <<
+                      0) |
+                      ~t)) +
+                  n[1] -
+                  2054922799) <<
+                  21) |
+                  (r >>> 11)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((i =
+                    ((((i +=
+                      (r ^
+                        ((t =
+                          ((((t += (e ^ (r | ~i)) + n[8] + 1873313359) << 6) |
+                            (t >>> 26)) +
+                            r) <<
+                          0) |
+                          ~e)) +
+                      n[15] -
+                      30611744) <<
+                      10) |
+                      (i >>> 22)) +
+                      t) <<
+                    0) ^
+                    ((e =
+                      ((((e += (t ^ (i | ~r)) + n[6] - 1560198380) << 15) |
+                        (e >>> 17)) +
+                        i) <<
+                      0) |
+                      ~t)) +
+                  n[13] +
+                  1309151649) <<
+                  21) |
+                  (r >>> 11)) +
+                  e) <<
+                0),
+              (r =
+                ((((r +=
+                  ((i =
+                    ((((i +=
+                      (r ^
+                        ((t =
+                          ((((t += (e ^ (r | ~i)) + n[4] - 145523070) << 6) |
+                            (t >>> 26)) +
+                            r) <<
+                          0) |
+                          ~e)) +
+                      n[11] -
+                      1120210379) <<
+                      10) |
+                      (i >>> 22)) +
+                      t) <<
+                    0) ^
+                    ((e =
+                      ((((e += (t ^ (i | ~r)) + n[2] + 718787259) << 15) |
+                        (e >>> 17)) +
+                        i) <<
+                      0) |
+                      ~t)) +
+                  n[9] -
+                  343485551) <<
+                  21) |
+                  (r >>> 11)) +
+                  e) <<
+                0),
+              this.first
+                ? ((this.h0 = (t + 1732584193) << 0),
+                  (this.h1 = (r - 271733879) << 0),
+                  (this.h2 = (e - 1732584194) << 0),
+                  (this.h3 = (i + 271733878) << 0),
+                  (this.first = !1))
+                : ((this.h0 = (this.h0 + t) << 0),
+                  (this.h1 = (this.h1 + r) << 0),
+                  (this.h2 = (this.h2 + e) << 0),
+                  (this.h3 = (this.h3 + i) << 0));
+          }),
+          (t.prototype.hex = function () {
+            this.finalize();
+            var t = this.h0,
+              r = this.h1,
+              e = this.h2,
+              i = this.h3;
+            return (
+              c[(t >>> 4) & 15] +
+              c[15 & t] +
+              c[(t >>> 12) & 15] +
+              c[(t >>> 8) & 15] +
+              c[(t >>> 20) & 15] +
+              c[(t >>> 16) & 15] +
+              c[(t >>> 28) & 15] +
+              c[(t >>> 24) & 15] +
+              c[(r >>> 4) & 15] +
+              c[15 & r] +
+              c[(r >>> 12) & 15] +
+              c[(r >>> 8) & 15] +
+              c[(r >>> 20) & 15] +
+              c[(r >>> 16) & 15] +
+              c[(r >>> 28) & 15] +
+              c[(r >>> 24) & 15] +
+              c[(e >>> 4) & 15] +
+              c[15 & e] +
+              c[(e >>> 12) & 15] +
+              c[(e >>> 8) & 15] +
+              c[(e >>> 20) & 15] +
+              c[(e >>> 16) & 15] +
+              c[(e >>> 28) & 15] +
+              c[(e >>> 24) & 15] +
+              c[(i >>> 4) & 15] +
+              c[15 & i] +
+              c[(i >>> 12) & 15] +
+              c[(i >>> 8) & 15] +
+              c[(i >>> 20) & 15] +
+              c[(i >>> 16) & 15] +
+              c[(i >>> 28) & 15] +
+              c[(i >>> 24) & 15]
+            );
+          }),
+          (t.prototype.toString = t.prototype.hex),
+          (t.prototype.digest = function () {
+            this.finalize();
+            var t = this.h0,
+              r = this.h1,
+              e = this.h2,
+              i = this.h3;
+            return [
+              255 & t,
+              (t >>> 8) & 255,
+              (t >>> 16) & 255,
+              (t >>> 24) & 255,
+              255 & r,
+              (r >>> 8) & 255,
+              (r >>> 16) & 255,
+              (r >>> 24) & 255,
+              255 & e,
+              (e >>> 8) & 255,
+              (e >>> 16) & 255,
+              (e >>> 24) & 255,
+              255 & i,
+              (i >>> 8) & 255,
+              (i >>> 16) & 255,
+              (i >>> 24) & 255,
+            ];
+          }),
+          (t.prototype.array = t.prototype.digest),
+          (t.prototype.arrayBuffer = function () {
+            this.finalize();
+            var t = new ArrayBuffer(16),
+              r = new Uint32Array(t);
+            return (
+              (r[0] = this.h0),
+              (r[1] = this.h1),
+              (r[2] = this.h2),
+              (r[3] = this.h3),
+              t
+            );
+          }),
+          (t.prototype.buffer = t.prototype.arrayBuffer),
+          (t.prototype.base64 = function () {
+            for (var t, r, e, i = "", s = this.array(), h = 0; h < 15; )
+              (t = s[h++]),
+                (r = s[h++]),
+                (e = s[h++]),
+                (i +=
+                  l[t >>> 2] +
+                  l[63 & ((t << 4) | (r >>> 4))] +
+                  l[63 & ((r << 2) | (e >>> 6))] +
+                  l[63 & e]);
+            return (t = s[h]), (i += l[t >>> 2] + l[(t << 4) & 63] + "==");
+          }),
+          ((r.prototype = new t()).finalize = function () {
+            if ((t.prototype.finalize.call(this), this.inner)) {
+              this.inner = !1;
+              var r = this.array();
+              t.call(this, this.sharedMemory),
+                this.update(this.oKeyPad),
+                this.update(r),
+                t.prototype.finalize.call(this);
+            }
+          });
+        var O = (function () {
+          var r = B("hex");
+          n && (r = g(r)),
+            (r.create = function () {
+              return new t();
+            }),
+            (r.update = function (t) {
+              return r.create().update(t);
+            });
+          for (var e = 0; e < d.length; ++e) {
+            var i = d[e];
+            r[i] = B(i);
+          }
+          return r;
+        })();
+        (O.md5 = O),
+          (O.md5.hmac = (function () {
+            var t = m("hex");
+            (t.create = function (t) {
+              return new r(t);
+            }),
+              (t.update = function (r, e) {
+                return t.create(r).update(e);
+              });
+            for (var e = 0; e < d.length; ++e) {
+              var i = d[e];
+              t[i] = m(i);
+            }
+            return t;
+          })()),
+          o
+            ? (module.exports = O)
+            : ((s.md5 = O),
+              f &&
+                define(function () {
+                  return O;
+                }));
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">
+        <img
+          style="margin-right: 10px"
+          src="data:image/png;base64,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"
+        />
+        <span id="title">Safeline Waf Auth</span>
+      </div>
+      <form id="form" action="#" class="form" onsubmit="return submit()">
+        <div class="form-title" id="form-title">Login</div>
+        <div class="form-error" id="form-error">
+          Invalie username or password
+        </div>
+        <div class="form-field">
+          <svg
+            t="1705642150496"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="2388"
+            width="16"
+            height="16"
+          >
+            <path
+              d="M215.771429 983.771429A142.628571 142.628571 0 0 1 73.142857 840.996571V541.403429a142.628571 142.628571 0 0 1 142.628572-142.628572h27.355428v-130.194286A268.873143 268.873143 0 0 1 511.707429 0a268.873143 268.873143 0 0 1 268.580571 268.580571v130.194286h27.867429A142.628571 142.628571 0 0 1 950.857143 541.549714V841.142857a142.628571 142.628571 0 0 1-142.628572 142.628572h-592.457142zM168.228571 541.330286V841.142857a47.542857 47.542857 0 0 0 47.542858 47.542857h592.384a47.542857 47.542857 0 0 0 47.542857-47.542857V541.403429a47.542857 47.542857 0 0 0-47.542857-47.542858H215.771429a47.542857 47.542857 0 0 0-47.542858 47.616z m516.900572-142.628572v-130.194285A173.714286 173.714286 0 0 0 511.780571 95.085714a173.714286 173.714286 0 0 0-173.568 173.494857v130.194286h346.916572zM464.457143 616.082286a47.542857 47.542857 0 1 1 95.085714 0v132.681143a47.542857 47.542857 0 1 1-95.085714 0V616.082286z"
+              p-id="2389"
+            ></path>
+          </svg>
+          <input
+            id="username"
+            class="form-input"
+            required
+            placeholder="Username"
+          />
+        </div>
+        <div class="form-field">
+          <svg
+            t="1705641856405"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="2238"
+            width="16"
+            height="16"
+          >
+            <path
+              d="M405.230669 310.341694a44.509778 44.509778 0 0 0-44.441511 44.441511v46.62604a44.509778 44.509778 0 0 0 88.951289 0v-46.62604a44.509778 44.509778 0 0 0-44.509778-44.441511z m214.493438 135.577329c24.575951 0 44.509778-19.933827 44.509777-44.509778v-46.62604a44.509778 44.509778 0 0 0-88.951288 0v46.62604c0 24.575951 19.933827 44.509778 44.441511 44.509778z"
+              p-id="2239"
+            ></path>
+            <path
+              d="M841.38553 894.088793a213.26464 213.26464 0 0 0-60.415879-116.6675 185.958028 185.958028 0 0 0-38.229257-29.218075c20.889558-14.335971 40.550319-30.719939 58.914015-48.947102A406.936786 406.936786 0 0 0 921.598703 409.601229c0-109.499514-42.598315-212.308909-119.944294-289.654888A406.936786 406.936786 0 0 0 511.999522 0.002048C402.500008 0.002048 299.690613 42.600363 222.344635 119.946341A406.936786 406.936786 0 0 0 102.400341 409.601229c0 109.499514 42.598315 212.308909 119.944294 289.654887 18.227164 18.227164 38.024457 34.611131 58.982282 48.947102-13.38024 7.850651-25.941281 17.612765-37.341792 29.081542a218.794229 218.794229 0 0 0-58.367883 118.510696l-8.191984 70.860659a44.509778 44.509778 0 0 0 88.405156 10.376512l7.987184-69.768394c11.332244-64.375338 56.66122-93.661679 94.139546-93.661679h2.321062l54.067091-2.867194 2.321062-0.136533a412.807708 412.807708 0 0 0 170.666326 0l2.730661 0.273066 53.52096 2.867194h2.321062c49.493234 0 87.790758 46.079908 96.801939 91.272351l6.826653 71.133724c2.047996 22.937554 21.43569 40.277253 44.168445 40.277253l4.300792-0.068266a44.373245 44.373245 0 0 0 40.004186-48.469237l-6.621853-73.796119z m-402.840794-169.437528a40.277253 40.277253 0 0 0-11.059178-2.730661 321.330557 321.330557 0 0 1-144.042379-83.626499 321.46709 321.46709 0 0 1-94.82221-228.829409c0-86.493694 33.723666-167.730865 94.890477-228.829409a321.46709 321.46709 0 0 1 228.761142-94.890477c86.493694 0 167.730865 33.791932 228.829409 94.890477a321.46709 321.46709 0 0 1 94.890477 228.829409 320.989225 320.989225 0 0 1-95.02701 228.692876 321.398824 321.398824 0 0 1-144.588511 83.763032 38.638856 38.638856 0 0 0-8.874649 2.321062 328.771609 328.771609 0 0 1-148.957568 0.409599z"
+              p-id="2240"
+            ></path>
+          </svg>
+          <input
+            id="password"
+            class="form-input"
+            type="password"
+            required
+            placeholder="Password"
+          />
+        </div>
+        <button class="form-submit" id="form-submit">Submit</button>
+      </form>
+    </div>
+    <script>
+      function g(id) {
+        return document.getElementById(id);
+      }
+      function R(id, text) {
+        var el = document.getElementById(id);
+        if (el) el.innerText = text;
+      }
+
+      if (navigator.language.startsWith("zh")) {
+        document.title = "雷池 Waf 授权";
+        R("title", "雷池 Waf 授权");
+        R("form-title", "账号登录");
+        R("form-submit", "登录");
+
+        g("username").placeholder = "用户名";
+        g("password").placeholder = "密码";
+      }
+
+      // show auth error
+      if (document.cookie.indexOf("sl_auth_verify_error=true") > -1) {
+        g("form-error").style.display = "block";
+      }
+
+      // disable form auto submit
+      g("form").onsubmit = function submit() {
+        var u = g("username").value;
+        var p = g("password").value;
+
+        document.cookie = "sl_auth_verify_error=false; max-age=1;"
+
+        var validCookie =
+          "sl_auth_hash=" + hash(u + hash(p)) + "; path=/; max-age=86400;";
+
+        try {
+          // add addtional properties in iframe
+          if (window != top) validCookie += " SameSite=None; Secure";
+        } catch (e) {
+          console.error(e);
+        }
+        document.cookie = validCookie;
+
+        location.reload();
+        return false;
+      };
+
+      function hash(s) {
+        var h = md5.create();
+        h.update(s);
+        return h.hex();
+      }
+    </script>
+  </body>
+</html>
