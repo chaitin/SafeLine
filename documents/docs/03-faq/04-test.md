@@ -18,7 +18,7 @@ title: "防护问题"
 
 ## 如何记录所有访问雷池的请求 （如何开启访问日志）
 
-默认情况下雷池是并不会保存请求记录的，如果需要保存请求记录，可以修改安装路径下的**resources/nginx/nginx.conf**
+默认情况下雷池是并不会保存请求记录的，如果需要保存请求记录，可以修改waf的安装目录下的**resources/nginx/nginx.conf**
 
 ![config_access_log.png](/images/docs/config_access_log.png)
 
