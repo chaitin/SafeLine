@@ -104,7 +104,7 @@ openSUSE Leap 15.2、openSUSE Leap 15.3
 2.firewalld, 使用 sudo systemctl stop firewalld && sudo systemctl disable firewalld
 ```
 
-## 如何对站点开启强制hppts访问、开启IPV6监听、使用HTTP/2
+## 如何对站点开启强制https访问、开启IPV6监听、使用HTTP/2
 
 根据站点需求开启
 
