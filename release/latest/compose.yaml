@@ -36,7 +36,6 @@ services:
       - ${MGT_PORT:-9443}:1443
     environment:
       - MGT_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce?sslmode=disable
-      - MGT_LICENSE_SERVER=https://safeline-ce-4463.rivers.chaitin.cn/
     depends_on:
       - postgres
       - fvm
@@ -47,6 +46,10 @@ services:
       - 1.2.4.8
       - 114.114.114.114
       - 8.8.8.8
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "10"
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.4
@@ -116,3 +119,26 @@ services:
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.8
+  bridge:
+    container_name: safeline-bridge
+    restart: always
+    image: ${IMAGE_PREFIX}/safeline-bridge:${IMAGE_TAG}
+    command:
+      - /app/bridge
+      - serve
+      - -n
+      - unix
+      - -a
+      - /app/run/safeline.sock
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run:/app/run
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "10"
+    networks:
+      safeline-ce:
+        ipv4_address: ${SUBNET_PREFIX}.9
+    depends_on:
+      - mgt
