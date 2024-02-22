@@ -33,11 +33,11 @@ const Illustrate = ({ text }: { text: string }) => {
 
 const versions = [
   { title: '社区版', key: 'experience' },
-  // { title: '专业版', key: 'major' },
+  { title: '专业版', key: 'major' },
   { title: '企业版', key: 'basics' },
 ]
 
-const colors = ['light', 'main'] // 'lighter', 
+const colors = ['lighter', 'light', 'main']
 
 const FunctionTable = () => {
   const [open, setOpen] = useState<string[]>([
@@ -77,7 +77,7 @@ const FunctionTable = () => {
           basics: <Support />,
         },
         {
-          name: "人机验证",
+          name: "爬虫防护 / 人机验证",
           experience: <Support />,
           major: <Support />,
           basics: <Support />,
@@ -91,31 +91,43 @@ const FunctionTable = () => {
         {
           name: "威胁情报",
           experience: <Illustrate text="社区共享威胁 IP" />,
-          major: <Support />,
+          major: <Illustrate text="专业版威胁 IP" />,
           basics: <Illustrate text="高级威胁情报" />,
+        },
+        {
+          name: "商业地理位置封禁",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "应急补充规则",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
         },
         {
           name: "高级 Bot 防护、API 防护",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "网页防篡改",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "灵活可编程插件",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "精细化引擎调节",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
       ],
@@ -133,13 +145,13 @@ const FunctionTable = () => {
         {
           name: "高级统计分析与报告",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "实时可视化大屏",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
       ],
@@ -148,22 +160,28 @@ const FunctionTable = () => {
       title: "系统管理",
       data: [
         {
+          name: "自定义拦截页面",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
           name: "多设备集中管理",
           tip: "",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "多租户管理",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "安全合规与审计",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
       ],
@@ -178,39 +196,39 @@ const FunctionTable = () => {
           basics: <Support />,
         },
         {
-          name: "旁路、透明代理、路由等复杂接入方式",
-          experience: <NotSupport />,
-          major: <Support />,
-          basics: <Support />,
-        },
-        {
-          name: "集群式可扩展部署",
-          experience: <NotSupport />,
-          major: <Support />,
-          basics: <Support />,
-        },
-        {
           name: "负载均衡",
           experience: <NotSupport />,
           major: <Support />,
           basics: <Support />,
         },
         {
+          name: "旁路、透明代理、路由等复杂接入方式",
+          experience: <NotSupport />,
+          major: <NotSupport />,
+          basics: <Support />,
+        },
+        {
+          name: "集群式可扩展部署",
+          experience: <NotSupport />,
+          major: <NotSupport />,
+          basics: <Support />,
+        },
+        {
           name: "紧急模式 / Bypass",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "硬件形态交付",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "高可用 / HA",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
       ],
@@ -227,19 +245,19 @@ const FunctionTable = () => {
         {
           name: "漏洞应急服务",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "产品销售许可证",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
           name: "定制化",
           experience: <NotSupport />,
-          major: <Support />,
+          major: <NotSupport />,
           basics: <Support />,
         },
       ],
@@ -271,9 +289,9 @@ const FunctionTable = () => {
         >
           <TableHead sx={{ background: "transparent" }}>
             <TableRow sx={{ border: "0" }}>
-              <TableCell sx={{ width: { xs: "50%", sm: "33%" }}}/>
+              <TableCell sx={{ width: { xs: "25%" }}}/>
               {versions.map((item, index) => (
-                <TableCell key={item.title} align="center" sx={{ width: { xs: "25%", sm: "33%" }, fontSize: "16px" }}>
+                <TableCell key={item.title} align="center" sx={{ width: { xs: "25%" }, fontSize: "16px" }}>
                   <Box
                     sx={(theme) => ({
                       display: "flex",
@@ -354,13 +372,13 @@ const FunctionTable = () => {
                 >
                   {data.data.map((item) => (
                     <TableRow key={item.name}>
-                      <TableCell sx={{ width: { xs: "50%", sm: "33%" }}}>
+                      <TableCell sx={{ width: { xs: "25%" }}}>
                         <Box>
                           <Typography variant="h6" sx={{ fontWeight: 400 }}>{item.name}</Typography>
                         </Box>
                       </TableCell>
                       {versions.map((v, index) => (
-                        <TableCell key={index} sx={{ width: { xs: "25%", sm: "33%" } }} align="center">
+                        <TableCell key={index} sx={{ width: { xs: "25%" } }} align="center">
                          {item[v.key as 'experience' | 'major' | 'basics']}
                        </TableCell>
                       ))}
