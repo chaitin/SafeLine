@@ -6,6 +6,16 @@ title: "版本更新记录"
 
 [版本升级方法](/guide/upgrade)
 
+### [4.3.3] - 2024-02-22
+
+#### 优化
+
+- 人机验证拦截页面，增加 Content-Security-Policy 策略配置，加强安全性 ([#685](https://github.com/chaitin/SafeLine/issues/685))
+
+#### 修复
+
+- 修复左侧菜单滚动条样式错误的问题
+
 ### [4.3.2] - 2024-02-06
 
 #### 修复
