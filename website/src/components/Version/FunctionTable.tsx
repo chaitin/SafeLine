@@ -249,7 +249,7 @@ const FunctionTable = () => {
           basics: <Support />,
         },
         {
-          name: "产品销售许可证",
+          name: "等保合规",
           experience: <NotSupport />,
           major: <NotSupport />,
           basics: <Support />,
