@@ -40,9 +40,9 @@ const LINKS = [
 ];
 
 export const items = [
-  { to: "/community", label: "开发计划" },
-  { to: "/version", label: "付费版本" },
-  { to: "", label: "用户协议" },
+  { to: "/community", label: "开发计划", target: "_self" },
+  { to: "/version", label: "付费版本", target: "_self" },
+  { to: "https://github.com/chaitin/SafeLine/blob/main/LICENSE.md", label: "用户协议", target: "_blank" },
 ];
 
 export default function Footer() {
@@ -88,7 +88,7 @@ export default function Footer() {
                 {items.map((item, index) => (
                   <Box key={index} component="span" mr={5}>
                     {item.to ? (
-                      <Link sx={{ fontSize: '16px', fontWeight: 600, color: "common.white" }} href={item.to} rel={item.label}>
+                      <Link sx={{ fontSize: '16px', fontWeight: 600, color: "common.white" }} href={item.to} rel={item.label} target={item.target}>
                         {item.label}
                       </Link>
                     ) : (

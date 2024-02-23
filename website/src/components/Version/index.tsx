@@ -1,7 +1,8 @@
 import React from "react";
-import { alpha, Box, Button, Typography } from "@mui/material";
+import { alpha, Box, Button, Typography, Stack } from "@mui/material";
 import dynamic from 'next/dynamic';
 import FunctionTable from "./FunctionTable";
+import Image from "next/image";
 
 const Consultation = dynamic(() => import('./Consultation'), {
   ssr: false,
@@ -14,7 +15,7 @@ const VERSION_LIST = [
     apply_desc: "适合小型个人网站或业余爱好项目",
     fee: "免费",
     fee_desc: "",
-    desc: "无限站点，无限规则",
+    desc: "",
     operation: (
       <Button
         variant="contained"
@@ -30,58 +31,73 @@ const VERSION_LIST = [
       </Button>
     ),
     functions: [
-      "语义分析防护",
-      "自定义规则",
-      "访问频率限制",
-      "人机验证",
-      "社区 IP 情报",
+      "Web 攻击防护",
+      "爬虫防护 / 人机验证",
+      "Web 访问控制 / Web 身份认证",
+      "CC 攻击防护 / 频率限制",
+      "黑 IP 情报防护",
+      "0 Day 漏洞情报防护",
     ],
   },
-  // {
-  //   name: "专业版",
-  //   name_bg: "/images/professional-version.png",
-  //   apply_desc: "适合专业网站与关键业务",
-  //   fee: "¥88",
-  //   fee_desc: "/月 按年订阅",
-  //   desc: "¥118 按月订阅",
-  //   operation: (
-  //     <Button
-  //       variant="contained"
-  //       target="_blank"
-  //       sx={{
-  //         width: 146,
-  //         my: 4,
-  //         boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
-  //       }}
-  //       href="https://stack.chaitin.com/tool/detail?id=717"
-  //     >
-  //       立即购买
-  //     </Button>
-  //   ),
-  //   functions: [
-  //     "所有社区版能力",
-  //     "自定义阻断页面",
-  //     "自定义相应动作",
-  //     "根据地区封禁",
-  //     "......",
-  //   ],
-  // },
+  {
+    name: "专业版",
+    name_bg: "/images/professional-version.png",
+    apply_desc: "适合专业网站与小微企业",
+    fee: "¥1799",
+    fee_desc: "/年",
+    desc: (
+      <Stack direction="row" justifyContent="center">
+        <Typography variant="subtitle2" mr={1} sx={{ color: alpha("#000", 0.5), textDecoration: "line-through", lineHeight: "20px" }}>
+          原价 ¥3600 /年
+        </Typography>
+        <Image
+          src="/images/discount.svg"
+          alt="限时特惠"
+          width={76}
+          height={20}
+        />
+      </Stack>
+    ),
+    operation: (
+      <Button
+        variant="contained"
+        // target="_blank"
+        sx={{
+          width: 146,
+          my: 4,
+          boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
+        }}
+        // href="https://rivers.chaitin.cn/app/safeline-cloud-12338/auth"
+      >
+        即将开放
+      </Button>
+    ),
+    functions: [
+      "所有社区版能力",
+      "Web 攻击加强防护",
+      "黑 IP 加强情报防护",
+      "自定义拦截页面",
+      "基于地理位置的访问控制",
+      "上游服务器负载均衡",
+    ],
+  },
   {
     name: "企业版",
     name_bg: "/images/enterprise-version.svg",
-    apply_desc: "适合小微到中大型企业",
-    fee: "按需定制",
+    apply_desc: "适合中大型企业",
+    fee: "定制包价",
     fee_desc: "",
     desc: "",
     operation: (
       <Consultation />
     ),
     functions: [
-      "所有社区版能力",
-      "高级统计分析与报告",
-      "智能业务建模",
-      "高级 Bot 防护、API 防护",
-      "......",
+      "所有专业版能力",
+      "软件、硬件、云原生等交付形式",
+      "反代、透明、路由、桥接、旁挂等方式部署",
+      "多活、主备、Bypass 等高可用形式",
+      "动态防护、拟态防护等高级防护形式",
+      "分布式集群部署，检测超大规模流量",
     ],
   },
 ]
@@ -101,7 +117,7 @@ const Version = () => {
           <Box
             key={item.name}
             sx={{
-              width: { xs: "100%", sm: "42%" },
+              width: { xs: "100%", md: "30.7%" },
               flexShrink: 0,
               height: { xs: "auto" },
               borderRadius: "12px",
@@ -151,6 +167,9 @@ const Version = () => {
                   </Typography>
                 )}
               </Typography>
+              <Box sx={{ height: "20px" }}>
+                {item.desc}
+              </Box>
               <Box>{item.operation}</Box>
               <FunctionItems items={item.functions} />
             </Box>
@@ -185,16 +204,18 @@ const FunctionItems: React.FC<{ items: any[] }> = ({ items }) => {
             py: 2,
             position: "relative",
             pl: 2,
-            "&:before": {
-              content: "' '",
-              position: "absolute",
-              left: 0,
-              top: "22px",
-              width: 4,
-              height: 4,
-              borderRadius: "50%",
-              backgroundColor: "success.main",
-            },
+            fontSize: "14px",
+            textAlign: "center",
+            // "&:before": {
+            //   content: "' '",
+            //   position: "absolute",
+            //   left: 0,
+            //   top: "22px",
+            //   width: 4,
+            //   height: 4,
+            //   borderRadius: "50%",
+            //   backgroundColor: "success.main",
+            // },
           }}
         >
           {f}
