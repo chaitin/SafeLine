@@ -3,6 +3,7 @@ import { alpha, Box, Button, Typography, Stack } from "@mui/material";
 import dynamic from 'next/dynamic';
 import FunctionTable from "./FunctionTable";
 import Image from "next/image";
+import Icon from "@/components/Icon";
 
 const Consultation = dynamic(() => import('./Consultation'), {
   ssr: false,
@@ -85,7 +86,12 @@ const VERSION_LIST = [
     name: "企业版",
     name_bg: "/images/enterprise-version.svg",
     apply_desc: "适合中大型企业",
-    fee: "定制包价",
+    fee: (
+      <Stack direction="row" alignItems="center">
+        <Icon type="icon-zixun" color="#0FC6C2" />
+        <Typography variant="h3" sx={{ lineHeight: "46px", ml: 1 }}>按需定制</Typography>
+      </Stack>
+    ),
     fee_desc: "",
     desc: "",
     operation: (
@@ -128,7 +134,7 @@ const Version = () => {
               transition: "all 0.5s ease", 
               "&:hover": {
                 boxShadow: "0px 30px 40px 0px rgba(145,158,171,0.11)",
-                bottom: 16,
+                transform: "translateY(-16px)"
               },
             }}
           >
