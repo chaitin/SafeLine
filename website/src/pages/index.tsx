@@ -20,7 +20,7 @@ const ARTICLES = [
   { title: '《阮一峰·科技爱好者周刊》', href: "https://www.ruanyifeng.com/blog/2023/11/weekly-issue-276.html", width: 250 },
   { title: '《Hello Github 月刊》', href: "https://hellogithub.com/repository/0d07cfe266af4c25ba3eadf2c3d06f50", width: 206 },
   { title: '《Apache APISIX》', href: "https://zhuanlan.zhihu.com/p/655041825", width: 186 },
-  { title: '《科技 lion》', href: "https://kejilion.blogspot.com/2023/11/npm-waf.html", width: 250 },
+  { title: '《科技 lion》', href: "https://blog.kejilion.pro/leichi-waf/", width: 250 },
   { title: '《Github 爱好者》', href: "https://mp.weixin.qq.com/s/CO-k2nv-PK0Ij-V5lTbUEQ", width: 206 },
   { title: '《GitHub Daily》', href: "https://zhuanlan.zhihu.com/p/656047298", width: 186 },
 ];
