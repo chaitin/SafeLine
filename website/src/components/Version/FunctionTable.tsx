@@ -237,10 +237,10 @@ const FunctionTable = () => {
       title: "服务",
       data: [
         {
-          name: "专业技术支持服务",
-          experience: <NotSupport />,
-          major: <Support />,
-          basics: <Support />,
+          name: "技术支持服务",
+          experience: <Illustrate text="社区技术支持" />,
+          major: <Illustrate text="社区优先技术支持" />,
+          basics: <Illustrate text="专家点对点技术支持（7*24服务）" />,
         },
         {
           name: "漏洞应急服务",
