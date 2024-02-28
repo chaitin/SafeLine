@@ -16,12 +16,12 @@ const ABILITY_LIST = [
   },
   {
     title: "APISIX 插件集成",
-    href: "/docs/about/apisix",
+    href: "/docs/practice/apisix",
     img: "/images/ability/ability_apisix.svg",
   },
   {
     title: "长亭社区恶意 IP 情报",
-    href: "/docs/about/IpIntelligence",
+    href: "/docs/practice/IpIntelligence",
     img: "/images/ability/ability_maliciousip.svg",
   },
   {
@@ -126,7 +126,7 @@ const AbilityItem: React.FC<ItemProps> = ({
           width: { xs: "100%", lg: "274px" },
         }}
         onMouseEnter={() => handleIconHover(ability.img)}
-        onMouseLeave={() => {}}
+        onMouseLeave={() => { }}
         onClick={() => handleIconHover(ability.img)}
       >
         {ability.href ? (
