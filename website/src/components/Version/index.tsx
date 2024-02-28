@@ -68,9 +68,9 @@ const VERSION_LIST = [
           my: 4,
           boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
         }}
-        // href="https://rivers.chaitin.cn/app/safeline-cloud-12338/auth"
+        href="https://rivers.chaitin.cn/?share=85db8d21d63711ee91390242c0a8176b"
       >
-        即将开放
+        立即购买
       </Button>
     ),
     functions: [
@@ -128,10 +128,10 @@ const Version = () => {
               height: { xs: "auto" },
               borderRadius: "12px",
               mb: { xs: 2, sm: 2, md: 2 },
-              mr: index < VERSION_LIST.length - 1 ?  { xs: 0, sm: 2, md: 4 } : { xs: 0, sm: 0, md: 0 },
+              mr: index < VERSION_LIST.length - 1 ? { xs: 0, sm: 2, md: 4 } : { xs: 0, sm: 0, md: 0 },
               position: "relative",
               bottom: 0,
-              transition: "all 0.5s ease", 
+              transition: "all 0.5s ease",
               "&:hover": {
                 boxShadow: "0px 30px 40px 0px rgba(145,158,171,0.11)",
                 transform: "translateY(-16px)"
