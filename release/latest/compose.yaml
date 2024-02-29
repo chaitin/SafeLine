@@ -110,7 +110,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${SAFELINE_DIR}/resources/luigi:/app/data
     depends_on:
-      - detector
+      - detect
       - mgt
     networks:
       safeline-ce:
