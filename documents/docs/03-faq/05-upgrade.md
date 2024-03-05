@@ -18,7 +18,7 @@ title: "升级问题"
 
 备份：备份安装目录的全部文件,默认目录为：/data/safeline
 
-恢复（还原）：在备份的文件目录执行 `docker compose up -d`，启动雷池
+恢复（还原）：把备份的内容放回安装目录执行 `docker compose down && docker compose up -d`，重新启动雷池
 
 
 ## 升级过程中下载超时
