@@ -22,7 +22,7 @@ title: "购买专业版"
 
 ### 按需购买
 
-进入应用后点击购买，根据需求完成购买
+进入应用后点击购买，根据需求完成购买，如有开票需求单独找社区管理
 
 ![Alt text](/images/docs/guide_config/professional-4.png)
 
@@ -48,6 +48,8 @@ title: "购买专业版"
 
 ## 使用云托管自动进行授权
 
+什么是雷池云托管？请参考 [雷池云托管](/practice/safeline-cloud)
+
 ### 获取云托管安装命令
 
 点击获取云托管的安装命令
@@ -57,7 +59,6 @@ title: "购买专业版"
 ![Alt text](/images/docs/guide_config/professional-12.png)
 
 ### 完成云托管安装
-
 
 完成安装后可以看到设备的基本信息
 
