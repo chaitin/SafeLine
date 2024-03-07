@@ -6,16 +6,38 @@ title: "版本更新记录"
 
 [版本升级方法](/guide/upgrade)
 
+### [4.4.1] - 2024-03-07
+
+#### 优化
+
+- 专业版支持在明亮主题和黑金主题之间切换
+- 优化人机验证（[#693](https://github.com/chaitin/SafeLine/issues/693)，云端更新，历史版本也生效）
+    - 降低旋转图片的误差要求
+    - 图片不容易对齐时，支持刷新图片
+    - 修复一些低版本浏览器转不动图片的问题
+    - 删除某些特别难对齐的图片
+- 优化一些界面 UI 和交互细节
+
+#### 修复
+
+- 修复防护配置某些极端情况下会失效的问题
+- 修复向 luigi 发大量日志后，CPU 占用畸高不下的问题
+- 修复升级或重启后限频可能失效，直到修改任意防护配置的问题
+- 修复站点选择证书后再直接关闭 SSL，证书管理处 “使用站点”
+  仍然显示该站点的问题（[#656](https://github.com/chaitin/SafeLine/issues/656)）
+- 修复攻击事件页面中，允许把 IP 加入至内置 IP 组的问题
+- 修复其他一些已知问题
+
 ### [4.4.0] - 2024-02-29
 
 #### 新增
 
 - 支持升级至专业版，包含内容：
-  - 自定义拦截页面
-  - 商用地理位置库
-  - 额外补充规则
-  - 节点负载均衡
-  - 专属黑金主题
+    - 自定义拦截页面
+    - 商用地理位置库
+    - 额外补充规则
+    - 节点负载均衡
+    - 专属黑金主题
 
 #### 优化
 
@@ -25,7 +47,8 @@ title: "版本更新记录"
 
 #### 优化
 
-- 人机验证拦截页面，增加 Content-Security-Policy 策略配置，加强安全性 ([#685](https://github.com/chaitin/SafeLine/issues/685))
+- 人机验证拦截页面，增加 Content-Security-Policy
+  策略配置，加强安全性 ([#685](https://github.com/chaitin/SafeLine/issues/685))
 
 #### 修复
 
@@ -46,7 +69,8 @@ title: "版本更新记录"
 #### 修复
 
 - 修复日志详情中，“补充规则” 的防护模块名字未正确显示的问题
-- 修复有时候添加 http 站点后，站点会错误地显示到 证书管理->使用站点 处的问题（[#656](https://github.com/chaitin/SafeLine/issues/656)）
+- 修复有时候添加 http 站点后，站点会错误地显示到 证书管理->使用站点
+  处的问题（[#656](https://github.com/chaitin/SafeLine/issues/656)）
 
 ### [4.3.0] - 2024-02-02
 
@@ -75,13 +99,14 @@ title: "版本更新记录"
 - 新增补充规则，可以一览系统当前的通用漏洞规则：
   ![](/images/docs/about_changelog/4.2.0-2.png)
 - 黑白名单、人机验证新增匹配方式，包括：
-  - IP 不等于
-  - Host 不等于
-  - Header 某个参数的内容不等于、包含、不包含
+    - IP 不等于
+    - Host 不等于
+    - Header 某个参数的内容不等于、包含、不包含
 
 #### 优化
 
-- 代理时开启 SNI，避免访问上游服务时无法获取正确的证书   （[#491](https://github.com/chaitin/SafeLine/issues/491)、[#609](https://github.com/chaitin/SafeLine/issues/609)）
+- 代理时开启
+  SNI，避免访问上游服务时无法获取正确的证书 （[#491](https://github.com/chaitin/SafeLine/issues/491)、[#609](https://github.com/chaitin/SafeLine/issues/609)）
 - 当尝试在同一端口同时监听 http 和 https 时，给出更具体的错误提示
 - 优化英文英文模式下中国省份的显示（[#512](https://github.com/chaitin/SafeLine/issues/512)）
 - 优化英文模式下攻击事件页 tab 按钮的对齐（[#604](https://github.com/chaitin/SafeLine/issues/604)）
@@ -137,14 +162,16 @@ title: "版本更新记录"
 - 完整支持 **流式语义分析检测**，包含 协议解析、解码、模式匹配 三个阶段的改造，解决经典 “大包绕过” 问题
 - IP 组支持通过 URL 在线订阅内容（[#414](https://github.com/chaitin/SafeLine/issues/414)）：
   ![](/images/docs/about_changelog/ip_group_url.png)
-- 新增 “搜索引擎爬虫 IP”，包含 Google、Bing、百度、360 的爬虫 IP（[#374](https://github.com/chaitin/SafeLine/issues/374)、[#399](https://github.com/chaitin/SafeLine/issues/399)）：
+- 新增 “搜索引擎爬虫 IP”，包含 Google、Bing、百度、360 的爬虫
+  IP（[#374](https://github.com/chaitin/SafeLine/issues/374)、[#399](https://github.com/chaitin/SafeLine/issues/399)）：
   ![](/images/docs/about_changelog/ip_group_builtin.png)
 - 出厂预置 “搜索引擎爬虫白名单” 和 “长亭社区恶意 IP 情报黑名单”，方便配置
 
 #### 优化
 
 - 支持类 ChatGPT 应用的流式 HTTP 响应（[#513](https://github.com/chaitin/SafeLine/issues/513)）
-- 在 证书管理 编辑证书后，若证书正被站点使用，自动重启 nginx 使新证书生效（[#534](https://github.com/chaitin/SafeLine/issues/534)）
+- 在 证书管理 编辑证书后，若证书正被站点使用，自动重启 nginx
+  使新证书生效（[#534](https://github.com/chaitin/SafeLine/issues/534)）
 - safeline-fvm 容器体积减小 60%
 - safeline-mgt 服务减少宿主机文件依赖
 - safeline-mgt 服务日志全部写入 docker 标准输出，默认仅输出启动信息和错误日志，减小磁盘占用
@@ -153,13 +180,13 @@ title: "版本更新记录"
 - 增加新统计服务 safeline-luigi，为更精细的统计能力做准备
 - 优化若干 UI 交互、文字描述、英文翻译的细节（感谢国际友人的帮助）
 - 修复 3.16 以及之前版本的一些问题：
-  - safeline-tcd 启动时因启动顺序导致输出错误提示
-  - http 强制跳转到 https 功能未生效
+    - safeline-tcd 启动时因启动顺序导致输出错误提示
+    - http 强制跳转到 https 功能未生效
 - 修复 4.0.0-beta.x 版本中的一些问题：
-  - 登录雷池失败，提示 HTTP/2 协议错误（[#564](https://github.com/chaitin/SafeLine/issues/564)）
-  - 升级脚本未正常检测到雷池安装目录（[#561](https://github.com/chaitin/SafeLine/pull/561)，感谢热心网友 nmgliangwei）
-  - safeline-mgt 持续输出版本号错误日志
-  - 拦截页面未显示时间
+    - 登录雷池失败，提示 HTTP/2 协议错误（[#564](https://github.com/chaitin/SafeLine/issues/564)）
+    - 升级脚本未正常检测到雷池安装目录（[#561](https://github.com/chaitin/SafeLine/pull/561)，感谢热心网友 nmgliangwei）
+    - safeline-mgt 持续输出版本号错误日志
+    - 拦截页面未显示时间
 
 ### [4.0.0-beta.3] - 2023-12-28
 
@@ -283,7 +310,8 @@ title: "版本更新记录"
 
 #### 修复
 
-- 修复重启 docker （包括雷池升级）后，站点通用配置和拦截页面附加说明没有被正确载入的问题 （[#438](https://github.com/chaitin/SafeLine/issues/438) [#446](https://github.com/chaitin/SafeLine/issues/446)）
+- 修复重启 docker
+  （包括雷池升级）后，站点通用配置和拦截页面附加说明没有被正确载入的问题 （[#438](https://github.com/chaitin/SafeLine/issues/438) [#446](https://github.com/chaitin/SafeLine/issues/446)）
 
 ### [3.12.1] - 2023-11-16
 
@@ -294,8 +322,10 @@ title: "版本更新记录"
 
 #### 优化
 
-- 修复证书在添加一段时间后，证书类型统一变成 “上传已有证书” ，编辑时也看不到证书内容的问题。（免费证书需要手动再切换到免费证书申请一下，后续才能自动续期。只影响列表管理，不影响网站上的证书）
-- 开启 “强制 HTTPS” 时，HSTS 删去 preload 参数，并改为只在 https 端口下返回 （[#407](https://github.com/chaitin/SafeLine/issues/407)）
+- 修复证书在添加一段时间后，证书类型统一变成 “上传已有证书”
+  ，编辑时也看不到证书内容的问题。（免费证书需要手动再切换到免费证书申请一下，后续才能自动续期。只影响列表管理，不影响网站上的证书）
+- 开启 “强制 HTTPS” 时，HSTS 删去 preload 参数，并改为只在 https
+  端口下返回 （[#407](https://github.com/chaitin/SafeLine/issues/407)）
 - 修复添加、编辑站点有时出现 “Service abnormal” 异常的问题
 - 修复 “申请免费证书” 类型的证书，在证书列表上显示成 “上传已有证书” 的问题
 - 优化一些样式交互细节
@@ -345,13 +375,15 @@ title: "版本更新记录"
 - 人机验证的客户端文件从 138k 减小到 78k，提高加载速度
 - 人机验证 cookie 改为 httpOnly 模式，避免在 JavaScript 运行时泄露
 - 人机验证防止简单绕过 （[#405](https://github.com/chaitin/SafeLine/issues/405)）
-- 修复站点详情中，资源 “今日请求” 的总和大于站点 “今日请求总量” 的问题（[#410](https://github.com/chaitin/SafeLine/issues/410)）
+- 修复站点详情中，资源 “今日请求” 的总和大于站点 “今日请求总量”
+  的问题（[#410](https://github.com/chaitin/SafeLine/issues/410)）
 
 ### [3.9.0] - 2023-10-26
 
 #### 优化
 
-- 人机验证页面增加响应头 Cache-Control，向下游声明不希望被缓存，避免被 CDN 缓存导致不断重复验证（[#402](https://github.com/chaitin/SafeLine/issues/402) ）
+- 人机验证页面增加响应头 Cache-Control，向下游声明不希望被缓存，避免被 CDN
+  缓存导致不断重复验证（[#402](https://github.com/chaitin/SafeLine/issues/402) ）
 - 修复人机验证在 iframe 中会不断重复验证的问题（[#397](https://github.com/chaitin/SafeLine/issues/397) ）
 - 修复人机验证在 alook 浏览器中页面空白的问题（[#393](https://github.com/chaitin/SafeLine/issues/393) ）
 - 修复添加、编辑站点有时出现 “Service abnormal” 异常的问题
@@ -399,9 +431,9 @@ title: "版本更新记录"
 #### 优化
 
 - 优化人机验证
-  - 简化配置，不再区分交互、非交互
-  - 区分站点，验证通过的结果只能在一个站点（按域名或 IP 区分）上生效了
-  - 降低算力要求，解决部分移动端验证时间过长的问题
+    - 简化配置，不再区分交互、非交互
+    - 区分站点，验证通过的结果只能在一个站点（按域名或 IP 区分）上生效了
+    - 降低算力要求，解决部分移动端验证时间过长的问题
 - 配置站点时，“上游服务器” 的服务器地址部分支持填写主机名，例如 http://localhost:8080
 - 站点的运行模式为 “观察” 时，黑名单、限频、人机 改为**都不拦截**。其中黑名单会记录 “放行” 的日志；限频会持续计入统计，但限制结果不会对观察中的站点生效
 - 修复证书管理中，泛域名的证书显示 “域名不匹配” 问题（[#368](https://github.com/chaitin/SafeLine/issues/368)）
@@ -498,7 +530,8 @@ title: "版本更新记录"
 
 - 当网站域名不匹配的时候，返回 “网站不存在” ，提示更清晰（[#58](https://github.com/chaitin/SafeLine/issues/58)）
 - 修复 攻击事件->原始日志 的 “攻击地址” 中显示额外的转义符的问题
-- 修复站点详情中 “今日总请求量” 和站点列表的 “今日访问量” 不一致的问题（[#279](https://github.com/chaitin/SafeLine/issues/279)）
+- 修复站点详情中 “今日总请求量” 和站点列表的 “今日访问量”
+  不一致的问题（[#279](https://github.com/chaitin/SafeLine/issues/279)）
 - 频率限制后直接封禁的拦截状态码改为 429，和普通拦截 403 区分开，方便排查拦截原因
 - 加强后台登录安全性（感谢微信交流 20 群「千年之狐」提供的建议）
 - 优化安装/升级时 CPU ssse3 指令集的检查方式（[#273](https://github.com/chaitin/SafeLine/issues/273)）
@@ -531,7 +564,8 @@ title: "版本更新记录"
 
 #### 新增
 
-- 新增证书管理。自动判断域名与过期状态，配置站点时可以直接选择（[#111](https://github.com/chaitin/SafeLine/issues/111)），还可以修改管理后台的证书（[#201](https://github.com/chaitin/SafeLine/issues/201)）
+- 新增证书管理。自动判断域名与过期状态，配置站点时可以直接选择（[#111](https://github.com/chaitin/SafeLine/issues/111)
+  ），还可以修改管理后台的证书（[#201](https://github.com/chaitin/SafeLine/issues/201)）
   ![](/images/docs/about_changelog/mgt_cert.png)
 - 新增系统信息
 
@@ -556,24 +590,26 @@ title: "版本更新记录"
 #### 新增
 
 - 新增站点详情，能自动从流量中记录网站资源，一览资源的存活、访问情况
-  - PS. 考虑机器资源消耗问题，当前版本每个站点下最多记录 250 个资源
+    - PS. 考虑机器资源消耗问题，当前版本每个站点下最多记录 250 个资源
 
 ![](/images/docs/about_changelog/api_assets.png)
 
 - 站点支持输入多个域名、端口（[#162](https://github.com/chaitin/safeline/issues/162)）
 - 通用配置中新增 “站点通用配置”，支持一键开启：
-  - 强制 HTTPS（[#67](https://github.com/chaitin/safeline/issues/67)）
-  - 使用 HTTP/2（[#161](https://github.com/chaitin/safeline/issues/161)）
-  - 监听 IPv6（[#166](https://github.com/chaitin/safeline/issues/166)）
-  - 传递客户端连接的 Host 和协议，方便后续服务器处理
+    - 强制 HTTPS（[#67](https://github.com/chaitin/safeline/issues/67)）
+    - 使用 HTTP/2（[#161](https://github.com/chaitin/safeline/issues/161)）
+    - 监听 IPv6（[#166](https://github.com/chaitin/safeline/issues/166)）
+    - 传递客户端连接的 Host 和协议，方便后续服务器处理
 
 ![](/images/docs/about_changelog/site_config.png)
 
 #### 优化
 
 - 优化限频配置的默认值
-- 增加 HTTP 497 错误重定向。当以 HTTP 协议访问 HTTPS 端口时，将重定向到 HTTPS（[#186](https://github.com/chaitin/safeline/issues/186)）
-- 默认拒绝 IP 和其他非指定域名的访问。如果需要通过 IP 访问站点，可以给站点添加一个 "\*" 域名（[#58](https://github.com/chaitin/safeline/issues/58)）
+- 增加 HTTP 497 错误重定向。当以 HTTP 协议访问 HTTPS 端口时，将重定向到
+  HTTPS（[#186](https://github.com/chaitin/safeline/issues/186)）
+- 默认拒绝 IP 和其他非指定域名的访问。如果需要通过 IP 访问站点，可以给站点添加一个 "\*"
+  域名（[#58](https://github.com/chaitin/safeline/issues/58)）
 - 优化若干 UI 交互细节和文字提示
 
 ### [2.6.0] - 2023-08-10
@@ -740,9 +776,9 @@ title: "版本更新记录"
 
 - 更新语义引擎版本，优化了一大批检测逻辑，降低误报
 - 优化了部分操作提示信息：
-  - IP 组正在使用时，无法被删除的提示
-  - 未创建 IP 组时，在黑白名单中无法选择属于 IP 组的提示
-  - 添加站点时，域名格式错误的提示
+    - IP 组正在使用时，无法被删除的提示
+    - 未创建 IP 组时，在黑白名单中无法选择属于 IP 组的提示
+    - 添加站点时，域名格式错误的提示
 
 ### [1.7.1] - 2023-06-05
 
