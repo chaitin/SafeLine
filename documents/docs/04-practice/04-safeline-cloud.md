@@ -51,7 +51,6 @@ title: "雷池云托管"
 在“详情”页面点击“在线终端”图标按钮，进入终端界面。
 
 ![Alt text](/images/docs/parctice_safeline_cloud/safeline_cloud_5.png)
-![Alt text](image.png)
 
 ![Alt text](/images/docs/parctice_safeline_cloud/safeline_cloud_8.png)
 ### 其他 
