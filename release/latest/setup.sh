@@ -9,7 +9,7 @@ echo "
 "
 
 export STREAM=${STREAM:-0}
-export CDN=${CDN:-0}
+export CDN=${CDN:-1}
 
 qrcode() {
     echo "█████████████████████████████████████████"
