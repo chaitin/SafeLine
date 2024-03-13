@@ -1,59 +1,241 @@
-## 软件许可证
+# 软件许可协议
 
-本许可证（以下简称“许可证”）适用于您所获取的软件（以下简称“软件”），请您在使用本软件前仔细阅读以下条款。使用本软件表示您同意并接受本许可证的条款。
+本软件许可协议（以下简称"本协议"）是您与北京长亭科技有限公司（以下简称"长亭"）订立的具有法律约束力的协议，约束您对长亭发布的雷池社区版软件（以下简称"雷池"）的安装与使用。**请您在使用本软件前仔细阅读以下条款，特别是免除或者限制责任的条款。安装、使用本软件表示您同意并接受本协议的条款。如果您不同意本协议条款，您应当立即卸载并停止使用雷池。**
 
-1. **版权声明**  
-本产品的所有代码、镜像、文件其版权均属于北京长亭科技有限公司。
+**【协议的有效期】** 本协议将持续有效，直至您卸载和删除您下载或控制的雷池社区版软件的所有副本。
 
-2. **使用许可**  
-在遵守本许可证条款的前提下，您有权在单一设备上安装、运行本软件，仅用于个人非商业目的。
+**【协议的修改与更新】** 长亭将不时对本协议予以更新，更新内容一经正式发布即成为本协议不可分割的组成部分。**在更新内容发布后继续使用雷池即表示您同意新的条款；如果您不同意新的条款，您应当卸载并停止使用雷池。**
 
-3. **禁止事项**  
-您不得对本软件进行以下行为：
-    a) 破解、逆向工程、反编译、反汇编等行为；
-    b) 二次包装、修改、改编、复制、翻译、再许可或制作衍生作品；
-    c) 用于商业用途或任何盈利活动；
-    d) 未经授权的传播、分发、出售、出租本软件；
-    e) 将本软件与侵犯他人知识产权或违反法律法规的内容、行为结合。
+**【术语的翻译】** 如果长亭为您提供了这些条款的英文版本的翻译，您同意该翻译仅为您提供方便，并且这些条款的英文版本将同样约束您与长亭的关系。如果这些条款的中文版本与英文版本之间存在任何矛盾，以中文版本为准。
 
-4. **保留权利**  
-本软件的版权归原作者所有，除本许可证明确授权外，所有其他权利均由原作者保留。未经原作者明确授权，您不得行使本许可证未明确授权的其他权利。如超出授权使用，原作者保留追究法律责任的权利。
+**【许可范围】**
 
-5. **免责声明**  
-本软件按“现状”提供，不提供任何形式的保证，包括但不限于对适销性、适用于特定用途、无侵权等方面的保证。原作者对于因使用本软件而造成的任何损失、损害、诉讼等不承担责任。
+1.  在遵守本协议条款的前提下，您有权在单一设备上安装、运行本软件。
 
-6. **终止条款**
-本许可证自您接受之日起生效，直至终止。如您未遵守本许可证的任何条款，原作者有权随时终止本许可证。一旦许可证终止，您必须停止使用本软件，并销毁您拥有或控制的所有副本。
+2.  雷池社区版软件是许可给您的，而非出售给您的。在本协议有效期内，并且在您遵守本协议的前提下，长亭授予您非排他性，不可转让，不可分配，不可再许可，可撤销的许可。
 
-7. **适用法律与争议解决**
-本许可证受原作者所在国家或司法管辖区法律的约束并依据其解释。任何因本许可证引起的或与其相关的争议应通过协商解决。如协商无果，任何一方均可将争议提交原作者所在国家或司法管辖区的有管辖权的法院解决。
+**【知识产权声明】** 本软件的所有代码、镜像、文件其版权、商标等知识产权均属于北京长亭科技有限公司。
 
-## License
+**【禁止事项】** 您不得、也不得促使、协助或授权他人对本软件进行以下行为：
 
-This License (hereinafter referred to as "License") applies to the software you have obtained (hereinafter referred to as "Software"). Please read the following terms carefully before using the Software. Using the Software indicates your agreement and acceptance of the terms of this License.
+1.  破解、逆向工程、反编译、反汇编、转换为其他编程语言等以尝试获取本软件的源代码或本软件所产生的内在数据文件；
 
-1. **Copyright Notice**  
-All codes, images, and files of this product are copyrighted by Beijing Chaitin Future Technology Co.,Ltd
+2.  二次包装、修改、改编、复制、翻译、再许可或制作衍生作品；
 
-2. **Usage Permission**  
-Subject to compliance with the terms of this License, you are granted the right to install and run the Software on a single device for personal non-commercial purposes only.
+3.  出租、出售、再许可、分发、传播、直接共享、商品化、转让本软件；
 
-3. **Prohibitions**  
-You shall not engage in the following activities in relation to the Software:
-    a) Cracking, reverse engineering, decompiling, disassembling, or other similar actions;
-    b) Repackaging, modifying, adapting, copying, translating, sublicensing, or creating derivative works;
-    c) Using for commercial purposes or any profit-making activities;
-    d) Unauthorized dissemination, distribution, sale, or rental of the Software;
-    e) Combining the Software with content or actions that infringe upon the intellectual property rights of others or violate laws and regulations.
+4.  解决或绕过本软件中的任何技术限制；
 
-4. **Reservation of Rights**  
-The copyright of the Software belongs to the original author. All other rights not expressly granted in this License are reserved by the original author. You may not exercise any other rights not expressly granted in this License without the explicit authorization of the original author.If used beyond the scope of the authorization, the original author reserves the right to pursue legal liability.
+5.  修改或删除本软件上关于本软件的版权声明、商标或其他知识产权声明；
 
-5. **Disclaimers**  
-The Software is provided "as is" without any warranties of any kind, including but not limited to warranties of merchantability, fitness for a particular purpose, or non-infringement. The original author shall not be liable for any loss, damage, litigation, or any other consequences resulting from the use of the Software.
+6.  以本软件为基础和主要技术能力输出物，提供商业化的云服务或网络服务；
 
-6. **Termination**  
-This License shall be effective upon your acceptance and shall continue in effect until terminated. The original author reserves the right to terminate this License at any time if you fail to comply with any of the terms and conditions of this License. Upon termination, you must cease all use of the Software and destroy all copies in your possession or control.
+7.  对本软件作出任何陈述或保证；
 
-7. **Applicable Law and Dispute Resolution**  
-This License shall be governed by and construed in accordance with the laws of the country or jurisdiction where the original author is located. Any disputes arising from or in connection with this License shall be resolved through negotiation. In case no settlement can be reached through negotiation, either party may submit the dispute to the competent court of the country or jurisdiction where the original author is located.
+8.  将本软件与侵犯他人知识产权或违反法律法规的内容、行为结合。例如：（1）利用本软件发表、传送、传播、储存违反国家法律、危害国家安全、社会稳定、公序良俗的内容，或任何不当的、侮辱诽谤的、淫秽的、暴力的及任何违反国家法律法规政策的内容；（2）违法使用本软件，包括但不限于侵犯、挪用或以其他方式侵犯任何第三方的任何合法权利。
+
+**【免责声明】**
+
+**本软件是按照现有技术和条件所能达到的现状提供的，长亭不提供任何形式的保证，** 包括但不限于：
+
+1. 对于因使用或无法使用本软件而造成的任何直接、间接、附带、特殊或重大损害、利润损失或业务中断，长亭不承担任何责任，即使长亭已被告知相关损害；
+
+2. 长亭无组织本软件的交流社区的义务与责任，不承担因技术交流导致某一方故障而产生的经济损失以及相关责任；
+
+3. 长亭不对本软件的无故障、适用性、可用性、准确性、质量满意度等做任何形式的保证；
+
+4. 长亭不保证该本软件可以满足您的要求，也不保证其操作不会中断或没有错误，或者将纠正缺陷；
+
+5. 长亭对本软件提供的任何信息或建议均不构成任何担保；
+
+6. 用户因使用本软件违反国家法律法规的，长亭不承担任何责任。
+
+**【软件的获取】** 您可直接从长亭官方认证的渠道获取本软件。如果您从非长亭官方认证的第三方获取本软件或与本软件名称相同的安装程序，长亭无法保证该软件能够正常使用，并对因此给您造成的损失不承担责任。
+
+**【软件的更新】** 为了完善用户体验，增强雷池社区版软件的功能及性能，长亭将会不断努力开发新的功能，并为您不定期提供软件更新。新版本发布后，旧版本的软件可能无法使用。长亭不保证旧版雷池社区版软件的稳定性和可使用性，请您随时核对并下载最新版本。
+
+**【信息收集】** 在本软件安装和使用的过程中，长亭将收集部分数据和信息，如本软件的版本、语言、IP地址等，但长亭不会收集个人身份信息、个人生物识别信息等足以识别出特定自然人的信息，长亭仅将收集的信息用于确认您使用的雷池版本情况和雷池功能板块的使用频率，从而改善和优化软件功能。
+
+**【数据安全保证】** 长亭在使用过程中不会收集、传输、存储其安装载体中的具体数据，您需要自行负责您的数据安全与备份。您理解并同意长亭无法提供找回丢失数据等服务。
+
+**【权利保留】** 本软件的版权归长亭所有，除本协议明确授权外，所有其他权利均由长亭保留。未经长亭明确授权，您不得行使本协议未明确授权的其他权利。如超出授权使用，长亭保留追究法律责任的权利。
+
+**【责任范围】** 在法律允许的最大范围内，在任何情况下，长亭均不对任何直接的，附带的，特殊的，间接的或后果性的损失或利润损失，数据损失，商誉损失，业务中断或任何其他形式的损失负责，对由您的使用或无法使用雷池社区版软件引起或与之相关的其他损害或损失概不负责。
+
+**【法律适用与争议解决】** 本协议受中华人民共和国大陆地区（不含港澳台地区）法律管辖，并按之解释。因本协议引起的或与本协议有关的任何争议应优先通过协商解决。如协商无果，任何一方可将争议提交长亭所在地人民法院通过诉讼方式解决。
+
+**【条款可分离】** 如本协议的任何条款被视作无效或无法执行，则上述条款可被分离，其余部分则仍具有法律效力。
+
+**【专业版】** 雷池商业/企业版本（非社区版）的权利受单独条款的约束。
+
+### The license agreement
+
+This software license agreement (hereinafter referred to as \"the
+agreement\") is a legally binding agreement between you and Beijing
+Chaitin Technology Co., Ltd (hereinafter referred to as \"Chaitin\"),
+which governs your installation and use of the Leichi Community Edition
+software (hereinafter referred to as \"Leichi\") released by Chaitin.
+**Please read the following terms carefully before using this software,
+especially the terms disclaiming or limiting liability. Installing and
+using this software indicates your agreement and acceptance of the terms
+of this agreement. If you do not agree to the terms of this agreement,
+you should immediately uninstall and stop using Leichi.**
+
+**\[Validity of the Agreement\]** This Agreement will remain in effect
+until you uninstall and delete all copies of the Leichi Community
+Edition software you downloaded or controlled.
+
+**\[Modification and update of the agreement\]** Chaitin will update
+this agreement from time to time, and the updated content will become an
+integral part of this agreement once it is officially released.
+**Continuing to use Leichi after the updated content is released means
+that you agree to the new terms; if you do not agree to the new terms,
+you should uninstall and stop using Leichi.**
+
+**\[Translation of Terms\]** If Chaitin provides you with a translation
+of the English version of these Terms, you agree that the translation is
+only for your convenience, and the English version of these Terms will
+also govern your relationship with Chaitin. If there is any conflict
+between the Chinese version and the English version of these Terms, the
+Chinese version shall prevail.
+
+**\[Permission Scope\]**
+
+1. Subject to the terms of this agreement, you have the right to
+   install and run this software on a single device.
+
+2. Leichi Community Edition software is licensed to you, not sold to you.
+   During the term of this Agreement and on the premise that you comply
+   with this Agreement, Chaitin grants you a non-exclusive,
+   non-transferable, non-assignable, non-sublicensable, revocable license.
+
+**\[Intellectual Property Statement\]** The copyright, trademark and
+other intellectual property rights of all codes, images and files of
+this software belong to Beijing Chaitin Technology Co., Ltd.
+
+**\[Prohibited Behavior\]** You may not, nor may you prompt, assist or
+authorize others to perform the following actions on this software:
+
+1. Crack, reverse engineer, decompile, disassemble, convert to other
+   programming languages, etc. in an attempt to obtain the source code of
+   the software or the inherent data files generated by the software;
+
+2. Repackage, modify, adapt, copy, translate, sublicense or create
+   derivative works;
+
+3. Rent, sell, sublicense, distribute, disseminate, directly share,
+   commercialize, and transfer this software;
+
+4. Solve or bypass any technical limitations in the software;
+
+5. Modify or delete the copyright statement, trademark or other
+   intellectual property statement regarding this software on the software;
+
+6. Provide commercial cloud services or network services based on this
+   software and the main technical capability output;
+
+7. Make any representation or warranty regarding the Software;
+
+8. Combine this software with content or behavior that infringes on the
+   intellectual property rights of others or violates laws and regulations.
+   For example: (1) Use this software to publish, transmit, disseminate,
+   and store content that violates national laws, endangers national
+   security, social stability, public order and good morals, or any
+   inappropriate, insulting, defamatory, obscene, violent, or anything that
+   violates national laws and regulations The content of the policy; (2)
+   Illegal use of this software, including but not limited to infringement,
+   misappropriation or other infringement of any legal rights of any third
+   party.
+
+**\[Disclaimer\]**
+
+**This software is provided according to the status quo that the
+existing technology and conditions can achieve. Chaitin does not provide
+any form of guarantee,** including but not limited to:
+
+1. Chaitin does not assume any responsibility for any direct, indirect,
+   incidental, special or significant damages, loss of profits or business
+   interruption caused by the use or inability to use this software, even
+   if Chaitin has been informed of the relevant damages;
+
+2. Chaitin has no obligation or responsibility to organize a
+   communication community for this software, and does not assume any
+   economic losses or related responsibilities arising from the failure of
+   any party due to technical exchanges;
+
+3. Chaitin does not make any form of guarantee regarding the
+   fault-freeness, applicability, availability, accuracy, quality
+   satisfaction, etc. of this software;
+
+4. Chaitin does not guarantee that the software can meet your
+   requirements, nor does it guarantee that its operation will be
+   uninterrupted or error-free, or that defects will be corrected;
+
+5. Any information or suggestions provided by Chaitin does not
+   constitute any guarantee for this software;
+
+6. Chaitin does not assume any responsibility if the user violates
+   national laws and regulations by using this software.
+
+**\[Acquisition of software\]** You can obtain this software directly
+from Chaitin's official certified channels. If you obtain this software
+or an installation program with the same name as this software from a
+third party that is not officially certified by Chaitin, Chaitin cannot
+guarantee that the software can be used normally and is not responsible
+for any losses caused to you.
+
+**\[Software Updates\]** In order to improve the user experience and
+enhance the functions and performance of the Leichi Community Edition
+software, Chaitin will continue to work hard to develop new features and
+provide you with software updates from time to time. After a new version
+is released, older versions of the software may become unusable. Chaitin
+does not guarantee the stability and usability of the old version of the
+Leichi Community Edition software. Please check and download the latest
+version at any time.
+
+**\[Information Collection\]** During the installation and use of this
+software, Chaitin will collect some data and information, such as the
+version of the software, language, IP address, etc., but Chaitin will
+not collect personal identity information, personal biometric
+information, etc. that are sufficient to identify To obtain the
+information of specific natural persons, Chaitin will only use the
+collected information to confirm the version of Leichi you are using and
+the frequency of use of the Leichi function section, so as to improve
+and optimize the software functions.
+
+**\[Data Security Guarantee\]** Chaitin will not collect, transmit, or
+store specific data in its installation carrier during use. You are
+responsible for the security and backup of your data. You understand and
+agree that Chaitin cannot provide services such as retrieval of lost
+data.
+
+**\[Rights reserved\]** The copyright of this software belongs to
+Chaitin. Except as expressly authorized by this agreement, all other
+rights are reserved by Chaitin. Without express authorization from
+Chaitin, you may not exercise other rights not expressly authorized by
+this Agreement. If the use exceeds the authorized use, Chaitin reserves
+the right to pursue legal liability.
+
+**\[Scope of Liability\]** To the maximum extent permitted by law, under
+no circumstances shall Chaitin be liable for any direct, incidental,
+special, indirect or consequential losses or loss of profits, loss of
+data, loss of goodwill, business interruption or any other form of loss,
+and is not responsible for other damages or losses arising out of or
+related to your use of or inability to use the Leichi Community Edition
+software.
+
+**\[Law Application and Dispute Resolution\]** This agreement shall be
+governed by and construed in accordance with the laws of the mainland of
+the People\'s Republic of China (excluding Hong Kong, Macao and Taiwan).
+Any disputes arising out of or in connection with this Agreement shall
+be resolved first through negotiation. If the negotiation fails, either
+party may submit the dispute to the People\'s Court where Chaitin is
+located for settlement through litigation.
+
+**\[Terms can be severed\]** If any term of this agreement is deemed to
+be invalid or unenforceable, the above terms can be severed and the
+remaining parts will still have legal effect.
+
+**\[Professional Edition\]** The rights of the Leichi
+commercial/enterprise version (non-community version) are subject to
+separate terms.
