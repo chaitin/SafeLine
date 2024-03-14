@@ -42,6 +42,23 @@ command_exists() {
 	command -v "$1" 2>&1
 }
 
+check_container_health() {
+    local container_name=$1
+    local max_retry=30
+    local retry=0
+    local health_status="unhealthy"
+    echo "Waiting for $container_name to be healthy"
+    while [[ "$health_status" == "unhealthy" && $retry -lt $max_retry ]]; do
+        health_status=$(docker inspect --format='{{.State.Health.Status}}' $container_name 2>/dev/null || echo 'unhealthy')
+        sleep 1
+        retry=$((retry+1))
+    done
+    if [[ "$health_status" == "unhealthy" ]]; then
+        abort "Container $container_name is unhealthy"
+    fi
+    echo "Container $container_name is healthy"
+}
+
 space_left() {
     dir="$1"
     while [ ! -d "$dir" ]; do
@@ -232,6 +249,9 @@ if [ $? -ne "0" ]; then
 fi
 
 qrcode
+
+check_container_health safeline-mgt
+docker exec safeline-mgt /app/mgt-cli reset-admin --once
 
 warning "雷池 WAF 社区版安装成功，请访问以下地址访问控制台"
 warning "https://0.0.0.0:9443/"
