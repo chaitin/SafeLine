@@ -9,7 +9,7 @@ export default function MyApp({ Component, pageProps }: any) {
   return (
     <div className='overflow-x-hidden'>
       <Head>
-        <title>雷池 WAF 社区版 | 下一代 Web 应用防火墙 | 免费安装</title>
+        <title>雷池 WAF 社区版 | 下一代 Web 应用防火墙 | 免费使用</title>
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="keywords" content="WAF,雷池,长亭,社区版,免费,开源,网站防护"></meta>
