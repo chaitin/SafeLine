@@ -108,7 +108,7 @@ title: "配置其他"
 
 #### Syslog 设置
 
-让雷池发送syslog到设置的服务器
+让雷池发送syslog到设置的服务器，**当前只支持UDP协议**
 
 ![Alt text](/images/docs/guide_config/other_config6.png)
 
