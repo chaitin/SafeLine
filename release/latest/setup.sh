@@ -250,6 +250,7 @@ fi
 
 qrcode
 
+check_container_health safeline-pg
 check_container_health safeline-mgt
 docker exec safeline-mgt /app/mgt-cli reset-admin --once
 
