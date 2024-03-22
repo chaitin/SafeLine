@@ -268,12 +268,14 @@ $compose_command down --remove-orphans && $compose_command up -d
 if [ $? -ne "0" ]; then
     abort "替换 Docker 容器失败"
 fi
-info "雷池升级成功"
 
 qrcode
 
+check_container_health safeline-pg
 check_container_health safeline-mgt
 docker exec safeline-mgt /app/mgt-cli reset-admin --once
+
+info "雷池升级成功"
 
 warning "雷池 WAF 社区版安装成功, 请访问以下地址访问控制台"
 warning "https://0.0.0.0:9443/"

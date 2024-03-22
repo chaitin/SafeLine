@@ -25,6 +25,8 @@ services:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.2
     command: [postgres, -c, max_connections=200]
+    healthcheck:
+      test: pg_isready -U safeline-ce -d safeline-ce
   mgt:
     container_name: safeline-mgt
     restart: always
