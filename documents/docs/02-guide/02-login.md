@@ -16,7 +16,7 @@ title: "登录雷池"
 
 ![Alt text](/images/docs/guide_config/login_1.png)
 
-若忘记查看，需手生执行命令重置获得初始密码
+若忘记查看，需手动执行重置命令获得初始密码
 
 `docker exec safeline-mgt resetadmin`
 

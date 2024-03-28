@@ -12,7 +12,7 @@ title: "升级问题"
 
 正常情况升级时shell会自动输出新密码
 
-若非在线升级，需手生重置获得初始密码
+若非在线升级，需手动执行重置命令获得密码
 
 重置密码命令:`docker exec safeline-mgt resetadmin`
 
