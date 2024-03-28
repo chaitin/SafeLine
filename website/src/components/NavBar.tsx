@@ -1,10 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { AppBar, Drawer, Grid, Toolbar, Typography, Button, Box, Container, Link, List, ListItem, ListItemText, Stack, IconButton } from '@mui/material';
-import Image from 'next/image';
-import dynamic from 'next/dynamic';
+import React, { useEffect, useState } from "react";
+import {
+  AppBar,
+  Drawer,
+  Grid,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Container,
+  Link,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+  IconButton,
+} from "@mui/material";
+import Image from "next/image";
+import dynamic from "next/dynamic";
 import Icon from "@/components/Icon";
-import CloseIcon from '@mui/icons-material/Close';
-import usePopupState, { bindPopover, bindHover } from '@/components/Popover/usePopupState'
+import CloseIcon from "@mui/icons-material/Close";
+import usePopupState, {
+  bindPopover,
+  bindHover,
+} from "@/components/Popover/usePopupState";
 
 const navs = [
   { to: "/docs", label: "帮助文档", target: "_blank" },
@@ -14,61 +32,142 @@ const navs = [
 
 const menus = [
   ...navs,
-  { to: "https://github.com/chaitin/SafeLine", label: "GitHub", target: "_blank" },
-  { to: "https://demo.waf-ce.chaitin.cn:9443/dashboard", label: "演示 Demo", target: "_blank" },
+  {
+    to: "https://github.com/chaitin/SafeLine",
+    label: "GitHub",
+    target: "_blank",
+  },
+  {
+    to: "https://demo.waf-ce.chaitin.cn:9443/dashboard",
+    label: "演示 Demo",
+    target: "_blank",
+  },
 ];
 
-const HoverPopover = dynamic(() => import('@/components/Popover/HoverPopover'), {
-  ssr: false,
-});
+const HoverPopover = dynamic(
+  () => import("@/components/Popover/HoverPopover"),
+  {
+    ssr: false,
+  }
+);
 
 export default function NavBar() {
   const [isSticky, setIsSticky] = useState(false);
   const [open, setOpen] = useState(false);
 
   const popoverState = usePopupState({
-    popupId: "wechat-qrcode-popover"
-  })
+    popupId: "wechat-qrcode-popover",
+  });
+
+  const popoverState1 = usePopupState({
+    popupId: "bounty-popover",
+  });
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
       setIsSticky(scrollTop > 0);
     };
-    handleScroll()
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   return (
     <>
-      <AppBar position='fixed' color='transparent'
+      <AppBar
+        position="fixed"
+        color="transparent"
         sx={{
-          boxShadow: 'none',
-          ...(isSticky ? { backdropFilter: 'blur(8px)', background: 'rgba(255,255,255,0.8)' }  : {}),
-          alignItems: 'center'
+          boxShadow: "none",
+          ...(isSticky
+            ? {
+                backdropFilter: "blur(8px)",
+                background: "rgba(255,255,255,0.8)",
+              }
+            : {}),
+          alignItems: "center",
         }}
       >
         <Container maxWidth="lg" sx={{ mx: 0 }}>
-          <Toolbar sx={{ backgroundColor: 'transparent', py: 1, ml: 2, px: { sm: 0 } }}>
+          <Toolbar
+            sx={{ backgroundColor: "transparent", py: 1, ml: 2, px: { sm: 0 } }}
+          >
             <Grid container justifyContent="space-around">
               <Grid item xs={10} md={6} display="flex">
                 <Box display="flex" alignItems="center">
                   <SafelineTitle />
-                  <Box display={{ xs: 'none', md: 'flex' }} alignItems="center">
+                  <Box display={{ xs: "none", md: "flex" }} alignItems="center">
                     {navs.map((nav, index) => (
                       <Box component="span" key={index} mr={3.5}>
-                        <Link key={index} href={nav.to} sx={{ color: "common.black" }} target={nav.target}>{nav.label}</Link>
+                        <Link
+                          key={index}
+                          href={nav.to}
+                          sx={{ color: "common.black" }}
+                          target={nav.target}
+                        >
+                          {nav.label}
+                        </Link>
                       </Box>
                     ))}
                   </Box>
                 </Box>
               </Grid>
               <Grid item xs={2} md={6} display="flex" justifyContent="flex-end">
-                <Box sx={{ fontSize: "16px", display: { xs: "none", md: "flex" }, alignItems: "center" }}>
+                <Box
+                  sx={{
+                    fontSize: "16px",
+                    display: { xs: "none", md: "flex" },
+                    alignItems: "center",
+                  }}
+                >
+                  <Box mr={3.5}>
+                    <Typography
+                      {...bindHover(popoverState1 as any)}
+                      variant="body1"
+                      sx={{
+                        color: popoverState1.isOpen
+                          ? "primary.main"
+                          : "common.black",
+                        cursor: "pointer",
+                        "&:hover": {
+                          color: "primary.main",
+                          backgroundColor: "transparent",
+                        },
+                        transition: "unset",
+                      }}
+                    >
+                      <Image
+                        src="/images/bounty_btn.png"
+                        alt="wechat"
+                        width={93}
+                        height={22}
+                        style={{ cursor: "pointer", marginTop: '3px' }}
+                      />
+                    </Typography>
+                    <HoverPopover
+                      {...bindPopover(popoverState1)}
+                      anchorOrigin={{
+                        vertical: 42,
+                        horizontal: "left",
+                      }}
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "left",
+                      }}
+                      marginThreshold={16}
+                    >
+                      <Image
+                        src="/images/bounty.png"
+                        alt="wechat"
+                        width={672}
+                        height={491}
+                      />
+                    </HoverPopover>
+                  </Box>
                   <Link
                     href="https://github.com/chaitin/SafeLine"
                     target="_blank"
@@ -87,15 +186,17 @@ export default function NavBar() {
                   <Box mr={3.5}>
                     <Typography
                       {...bindHover(popoverState as any)}
-                      variant='body1'
+                      variant="body1"
                       sx={{
-                        color: popoverState.isOpen ? 'primary.main' : 'common.black',
+                        color: popoverState.isOpen
+                          ? "primary.main"
+                          : "common.black",
                         cursor: "pointer",
-                        '&:hover': {
+                        "&:hover": {
                           color: "primary.main",
                           backgroundColor: "transparent",
                         },
-                        transition: 'unset',
+                        transition: "unset",
                       }}
                     >
                       微信讨论组
@@ -104,11 +205,11 @@ export default function NavBar() {
                       {...bindPopover(popoverState)}
                       anchorOrigin={{
                         vertical: 42,
-                        horizontal: 'left',
+                        horizontal: "left",
                       }}
                       transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'left',
+                        vertical: "top",
+                        horizontal: "left",
                       }}
                       marginThreshold={16}
                     >
@@ -120,7 +221,14 @@ export default function NavBar() {
                       />
                     </HoverPopover>
                   </Box>
-                  <Link href="https://demo.waf-ce.chaitin.cn:9443/dashboard" sx={{ color: "common.black" }} mr={3.5} target="_blank">演示 Demo</Link>
+                  <Link
+                    href="https://demo.waf-ce.chaitin.cn:9443/dashboard"
+                    sx={{ color: "common.black" }}
+                    mr={3.5}
+                    target="_blank"
+                  >
+                    演示 Demo
+                  </Link>
                   <Button
                     variant="contained"
                     target="_blank"
@@ -147,18 +255,25 @@ export default function NavBar() {
         </Container>
       </AppBar>
       <Drawer
-        anchor='right'
+        anchor="right"
         sx={{ width: "100%" }}
         variant="temporary"
         open={open}
         PaperProps={{
           style: {
-            width: '100%',
+            width: "100%",
           },
         }}
         onClose={() => setOpen(false)}
       >
-        <Stack direction="row" justifyContent="space-between" pl={4} pr={0.5} py={1} sx={{ boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px" }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          pl={4}
+          pr={0.5}
+          py={1}
+          sx={{ boxShadow: "rgba(0, 0, 0, 0.1) 0px 1px 2px 0px" }}
+        >
           <Box>
             <SafelineTitle />
           </Box>
@@ -191,8 +306,18 @@ export default function NavBar() {
 export const SafelineTitle: React.FC = () => {
   return (
     <Link href="/">
-      <Grid container flexDirection="row" display="flex" spacing={2} sx={{ marginTop: '0px', minWidth: "192px" }}>
-        <Box width={{ xs: "40px", md: "24px" }} height={{ xs: "43px", md: "26px" }} position="relative">
+      <Grid
+        container
+        flexDirection="row"
+        display="flex"
+        spacing={2}
+        sx={{ marginTop: "0px", minWidth: "192px" }}
+      >
+        <Box
+          width={{ xs: "40px", md: "24px" }}
+          height={{ xs: "43px", md: "26px" }}
+          position="relative"
+        >
           <Image
             src="/images/safeline.svg"
             alt="SafeLine Logo"
@@ -207,8 +332,8 @@ export const SafelineTitle: React.FC = () => {
             ml: { xs: 2, md: 1 },
             mr: { xs: 0, md: 7 },
             fontSize: { xs: "24px", md: "16px" },
-            display: 'flex',
-            alignItems: 'center',
+            display: "flex",
+            alignItems: "center",
             fontFamily: "AlimamaShuHeiTi-Bold",
           }}
         >
