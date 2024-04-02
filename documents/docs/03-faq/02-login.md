@@ -6,6 +6,16 @@ title: "登录问题"
 
 记录常见的登录问题
 
+## admin密码错误
+
+### 使用命令重置
+
+需手动执行重置命令获得初始密码
+
+```
+docker exec safeline-mgt resetadmin
+```
+
 ## 动态口令错误
 
 ### 时间不一致
@@ -30,7 +40,7 @@ TOTP 动态口令只有 30 秒的有效期，如果认证失败，请在动态�
 命令执行完成后打开雷池页面重新绑定即可。
 
 ```
-docker exec safeline-mgt resetadmin
+docker exec safeline-mgt resettotp
 ```
 
 **注意：重置动态口令后要尽快完成绑定，别被其他人捷足先登了。**
