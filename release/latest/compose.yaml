@@ -24,7 +24,7 @@ services:
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.2
-    command: [postgres, -c, max_connections=200]
+    command: [postgres, -c, max_connections=600]
     healthcheck:
       test: pg_isready -U safeline-ce -d safeline-ce
   mgt:
