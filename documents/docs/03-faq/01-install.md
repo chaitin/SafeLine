@@ -26,9 +26,8 @@ title: "安装问题"
 
 需要安装 docker。尝试 `curl -fLsS https://get.docker.com/ | sh` 或者 [Install Docker Engine](https://docs.docker.com/engine/install/)。
 
-#### 报错：docker not found, unable to deploy
+#### 报错：failed to create network safeline-ce
 
-failed to create network safeline-ce
 safeline-ce 是雷池部署时候创建的 network，出现类似报错，先重启下 dockerd 之后重试
 
 需要启动 docker daemon 才能执行相关的命令。尝试 `systemctl start docker`。
@@ -36,10 +35,6 @@ safeline-ce 是雷池部署时候创建的 network，出现类似报错，先重
 #### 报错：docker compose v2 not found, unable to deploy
 
 需要安装 `docker compose v2`。尝试 `[Install Docker Compose](https://docs.docker.com/compose/install/)`。
-
-#### 报错： `failed to create network safeline-ce`
-
-safeline-ce 是雷池部署时候创建的 network，出现类似报错，先重启下 dockerd 之后重试。
 
 #### 报错： safeline-tengine 出现 Address already in use
 
@@ -103,8 +98,11 @@ security_opt:
 
 在安装目录(默认 safeline)下
 
-根据本地的compose版本，执行 `docker compose down` 或者 `docker-compose down`
+1.根据本地的compose版本，执行 `docker compose down` 或者 `docker-compose down` 停止容器
 
+2.手动删除镜像
+
+3.动手删除目录
 
 
 ## 问题无法解决
