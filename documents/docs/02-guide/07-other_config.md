@@ -95,7 +95,9 @@ title: "配置其他"
 
 2.自定义拦截页面（专业版），可以修改替或换拦截页面
 
-#### 钉钉告警（专业版）
+#### 攻击告警（专业版）
+
+支持钉钉、飞书、企业微信
 
 支持发送（攻击、频率限制）告警到钉钉
 
@@ -131,6 +133,72 @@ title: "配置其他"
 
 ![Alt text](/images/docs/guide_config/other_config7.png)
 
+```
+#syslog 内容详情
+{
+  "scheme": "http",                 // 请求协议为 HTTP
+  "src_ip": "12.123.123.123",       // 源 IP 地址
+  "src_port": 53008,                // 源端口号
+  "socket_ip": "10.2.71.103",       // Socket IP 地址
+  "upstream_addr": "10.2.34.20",    // 上游地址
+  "req_start_time": 1712819316749,  // 请求开始时间
+  "rsp_start_time": null,           // 响应开始时间
+  "req_end_time": 1712819316749,    // 请求结束时间
+  "rsp_end_time": null,             // 响应结束时间
+  "host": "safeline-ce.chaitin.net",// 主机名
+  "method": "GET",                  // 请求方法为 GET
+  "query_string": "",               // 查询字符串
+  "event_id": "32be0ce3ba6c44be9ed7e1235f9eebab",            // 事件 ID
+  "session": "",                    // 会话
+  "site_uuid": "35",                // 站点 UUID
+  "site_url": "http://safeline-ce.chaitin.net:8083",         // 站点 URL
+  "req_detector_name": "1276d0f467e4",                       // 请求检测器名称
+  "req_detect_time": 286,           // 请求检测时间
+  "req_proxy_name": "16912fe30d8f", // 请求代理名称
+  "req_rule_id": "m_rule/9bf31c7ff062936a96d3c8bd1f8f2ff3",  // 请求规则 ID
+  "req_location": "urlpath",        // 请求位置为 URL 路径
+  "req_payload": "",                // 请求负载为空
+  "req_decode_path": "",            // 请求解码路径
+  "req_rule_module": "m_rule",      // 请求规则模块为 m_rule
+  "req_http_body_is_truncate": 0,   // 请求 HTTP 主体
+  "rsp_http_body_is_truncate": 0,   // 响应 HTTP 主体
+  "req_skynet_rule_id_list": [      // 请求 Skynet 规则 ID 列表
+    65595,
+    65595
+  ],
+  "http_body_is_abandoned": 0,      // HTTP 主体
+  "country": "US",                  // 国家
+  "province": "",                   // 省份
+  "city": "",                       // 城市
+  "timestamp": 1712819316,          // 时间戳
+  "payload": "",  
+  "location": "urlpath",            // 位置为 URL 路径
+  "rule_id": "m_rule/9bf31c7ff062936a96d3c8bd1f8f2ff3",     / 规则 ID
+  "decode_path": "",                // 解码路径
+  "cookie": "sl-session=Z0WLa8mjGGZPki+QHX+HNQ==",          // Cookie
+  "user_agent": "PostmanRuntime/7.28.4",                    // 用户代理
+  "referer": "",                    // 引用页
+  "timestamp_human": "2024-04-11 15:08:36",                 // 时间戳
+  "resp_reason_phrase": "",         // 响应
+  "module": "m_rule",               // 模块为 m_rule
+  "reason": "",                     // 原因
+  "proxy_name": "16912fe30d8f",     // 代理名称
+  "node": "1276d0f467e4",           // 节点
+  "dest_port": 8083,                // 目标端口号
+  "dest_ip": "10.2.34.20",          // 目标 IP 地址
+  "urlpath": "/webshell.php",       // URL 路径
+  "protocol": "http",               // 协议为 HTTP
+  "attack_type": "backdoor",        // 攻击类型
+  "risk_level": "high",             // 风险级别
+  "action": "deny",                 // 动作
+  "req_header_raw": "GET /webshell.php HTTP/1.1\r\nHost: safeline-ce.chaitin.net:8083\r\nUser-Agent: PostmanRuntime/7.28.4\r\nAccept: */*\r\nAccept-Encoding: gzip, deflate, br\r\nCache-Control: no-cache\r\nCookie: sl-session=Z0WLa8mjGGZPki+QHX+HNQ==\r\nPostman-Token: 8e67bec1-6e79-458c-8ee5-0498f3f724db\r\nX-Real-Ip: 12.123.123.123\r\nSL-CE-SUID: 35\r\n\r\n",                      // 请求头原始内容
+  "body": "",                       // 主体
+  "req_block_reason": "web",        // 请求阻止原因
+  "req_attack_type": "backdoor",    // 请求攻击类型
+  "req_risk_level": "high",         // 请求风险级别
+  "req_action": "deny"              // 动作
+}
+```
 
 #### 系统信息
 
