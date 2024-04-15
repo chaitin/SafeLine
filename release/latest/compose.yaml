@@ -24,7 +24,7 @@ services:
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.2
-    command: [postgres, -c, max_connections=200]
+    command: [postgres, -c, max_connections=600]
     healthcheck:
       test: pg_isready -U safeline-ce -d safeline-ce
   mgt:
@@ -82,6 +82,10 @@ services:
       - LOG_DIR=/logs/mario
       - GOGC=100
       - DATABASE_URL=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "10"
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.6
@@ -113,6 +117,10 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${SAFELINE_DIR}/resources/luigi:/app/data
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "10"
     depends_on:
       - detect
       - mgt
@@ -125,6 +133,10 @@ services:
     image: ${IMAGE_PREFIX}/safeline-fvm:${IMAGE_TAG}
     volumes:
       - /etc/localtime:/etc/localtime:ro
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "10"
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.8

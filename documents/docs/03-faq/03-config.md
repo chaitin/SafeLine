@@ -81,10 +81,16 @@ title: "配置问题"
 
 ## 配置完成后，测试时返回 400 Request Header Or Cookie Too Large
 
-请麻烦检查是否形成了环路，即：雷池将请求转发给上游服务器后，上游服务器又将请求转发回雷池。
+检查是否形成了环路，即：雷池将请求转发给上游服务器后，上游服务器又将请求转发回雷池。
+
+重新修改配置后再次测试
 
 ## 不同版本关闭防火墙的命令
    
+默认使用雷池不需要关闭防火墙，配置对应的开放规则即可 
+
+如果需要直接关闭防火墙可以参考
+
 Ubuntu 18.04 LTS 、 Ubuntu 20.04 LTS 、 Ubuntu 22.04 LTS
 
 Debian 9 (Stretch)、Debian 10 (Buster)、Debian 11 (Bullseye)
