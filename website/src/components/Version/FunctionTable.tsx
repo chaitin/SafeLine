@@ -145,7 +145,7 @@ const FunctionTable = () => {
         {
           name: "高级统计分析与报告",
           experience: <NotSupport />,
-          major: <NotSupport />,
+          major: <Illustrate text="高级统计" />,
           basics: <Support />,
         },
         {
