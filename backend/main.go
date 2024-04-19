@@ -54,6 +54,7 @@ func main() {
 	safelineHandler := handler.NewSafelineHandler(safelineService)
 	v1.GET("/safeline/count", safelineHandler.GetInstallerCount)
 	v1.POST("/exist", safelineHandler.Exist)
+	v1.POST("/behavior", safelineHandler.Behavior)
 
 	docs.SwaggerInfo.BasePath = v1.BasePath()
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
