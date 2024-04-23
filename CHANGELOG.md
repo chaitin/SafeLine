@@ -1,5 +1,15 @@
 # SAFELINE-CE CHANGELOG
 
+## [5.3.3] - 2024-04-18
+
+### 优化
+* 日志列表不返回 IP 组全部内容，降低访问耗时
+* 修复基础统计 -> 4xx 数量中，把人机验证拦截也计入了的问题
+* 修复高级统计 -> 来源域名、来源页面中，把内部跳转也计入了的问题
+* 修复上游有多个域名时，获取不到正确 title 和 icon 的问题（[#821](https://github.com/chaitin/SafeLine/issues/821)）
+* 修复筛选 UI 错位问题（[#789](https://github.com/chaitin/SafeLine/issues/789)）
+* 修复其他一些已知问题
+
 ## [5.3.2] - 2024-04-12
 
 ### 修复
