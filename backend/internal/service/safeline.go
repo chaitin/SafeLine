@@ -4,9 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 )
@@ -33,25 +31,50 @@ func NewSafelineService(host string) *SafelineService {
 	}
 }
 
+type response[T any] struct {
+	Code int `json:"code"`
+	Data T   `json:"data"`
+}
+
+func (s *SafelineService) request(req *http.Request, data any) error {
+	res, err := s.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return fmt.Errorf("request failed, status_code: %d", res.StatusCode)
+	}
+
+	if data == nil {
+		return nil
+	}
+
+	err = json.NewDecoder(res.Body).Decode(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *SafelineService) GetInstallerCount(ctx context.Context) (InstallerCount, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, s.APIHost+"/api/v1/public/safeline/count", nil)
 	if err != nil {
 		return cacheCount, err
 	}
-	res, err := s.client.Do(req)
-	if err != nil {
-		return cacheCount, err
-	}
-	defer res.Body.Close()
-	var r map[string]interface{}
-	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		return cacheCount, err
-	}
-	if r["code"].(float64) != 0 {
+
+	var r response[struct {
+		Total int `json:"total"`
+	}]
+
+	err = s.request(req, &r)
+	if r.Code != 0 {
 		return cacheCount, nil
 	}
 	cacheCount = InstallerCount{
-		Total: int(r["data"].(map[string]interface{})["total"].(float64)),
+		Total: r.Data.Total,
 	}
 	return cacheCount, nil
 }
@@ -63,21 +86,43 @@ func (s *SafelineService) GetExist(ctx context.Context, id string, token string)
 	if err != nil {
 		return "", err
 	}
-	res, err := s.client.Do(req)
+
+	var r response[struct {
+		IP string `json:"ip"`
+	}]
+
+	err = s.request(req, &r)
 	if err != nil {
 		return "", err
 	}
-	defer res.Body.Close()
-	if res.StatusCode != http.StatusOK {
-		raw, _ := io.ReadAll(res.Body)
-		return "", errors.New(string(raw))
-	}
-	var r map[string]interface{}
-	if err := json.NewDecoder(res.Body).Decode(&r); err != nil {
-		return "", err
-	}
-	if r["code"].(float64) != 0 {
+
+	if r.Code != 0 {
 		return "", nil
 	}
-	return r["data"].(map[string]interface{})["ip"].(string), nil
+	return r.Data.IP, nil
+}
+
+type BehaviorType uint64
+
+const (
+	BehaviorTypeMin BehaviorType = iota + 1000
+	BehaviorTypePurchase
+	BehaviorTypeConsult
+	BehaviorTypeMax
+)
+
+func (s *SafelineService) PostBehavior(ctx context.Context, behaviorType BehaviorType) error {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.APIHost+"/api/v1/public/safeline/behavior",
+		strings.NewReader(fmt.Sprintf(`{"type": %d}`, behaviorType)),
+	)
+	if err != nil {
+		return err
+	}
+
+	err = s.request(req, nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
