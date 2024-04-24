@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -64,7 +65,8 @@ func (h *SafelineHandler) Exist(c *gin.Context) {
 }
 
 type BehaviorReq struct {
-	Type service.BehaviorType `json:"type"`
+	Source string               `json:"source"`
+	Type   service.BehaviorType `json:"type"`
 }
 
 // Behavior record user behavior
@@ -78,12 +80,23 @@ type BehaviorReq struct {
 // @Router /behavior [post]
 func (h *SafelineHandler) Behavior(c *gin.Context) {
 	req := &BehaviorReq{}
-	if err := c.ShouldBindJSON(req); err != nil {
+	if err := c.BindJSON(req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	err := h.safelineService.PostBehavior(c, req.Type)
+	if req.Type >= service.BehaviorTypeMax || req.Type <= service.BehaviorTypeMin {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid behavior type"})
+		return
+	}
+
+	byteReq, err := json.Marshal(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = h.safelineService.PostBehavior(c, byteReq)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
