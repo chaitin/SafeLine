@@ -1,11 +1,12 @@
 import React from "react";
 import { alpha, Box, Button, Typography, Stack } from "@mui/material";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import FunctionTable from "./FunctionTable";
 import Image from "next/image";
 import Icon from "@/components/Icon";
+import { detectorPoint } from "@/api";
 
-const Consultation = dynamic(() => import('./Consultation'), {
+const Consultation = dynamic(() => import("./Consultation"), {
   ssr: false,
 });
 
@@ -48,7 +49,15 @@ const VERSION_LIST = [
     fee_desc: "/年",
     desc: (
       <Stack direction="row" justifyContent="center">
-        <Typography variant="subtitle2" mr={1} sx={{ color: alpha("#000", 0.5), textDecoration: "line-through", lineHeight: "20px" }}>
+        <Typography
+          variant="subtitle2"
+          mr={1}
+          sx={{
+            color: alpha("#000", 0.5),
+            textDecoration: "line-through",
+            lineHeight: "20px",
+          }}
+        >
           原价 ¥3600 /年
         </Typography>
         <Image
@@ -68,7 +77,14 @@ const VERSION_LIST = [
           my: 4,
           boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
         }}
-        href="https://rivers.chaitin.cn/?share=85db8d21d63711ee91390242c0a8176b"
+        onClick={() => {
+          detectorPoint({
+            type: 1001,
+          });
+          window.open(
+            "https://rivers.chaitin.cn/?share=85db8d21d63711ee91390242c0a8176b"
+          );
+        }}
       >
         立即购买
       </Button>
@@ -89,14 +105,14 @@ const VERSION_LIST = [
     fee: (
       <Stack direction="row" alignItems="center">
         <Icon type="icon-zixun" color="#0FC6C2" />
-        <Typography variant="h3" sx={{ lineHeight: "46px", ml: 1 }}>按需定制</Typography>
+        <Typography variant="h3" sx={{ lineHeight: "46px", ml: 1 }}>
+          按需定制
+        </Typography>
       </Stack>
     ),
     fee_desc: "",
     desc: "",
-    operation: (
-      <Consultation />
-    ),
+    operation: <Consultation />,
     functions: [
       "所有专业版能力",
       "软件、硬件、云原生等交付形式",
@@ -106,7 +122,7 @@ const VERSION_LIST = [
       "分布式集群部署，检测超大规模流量",
     ],
   },
-]
+];
 
 const Version = () => {
   return (
@@ -128,13 +144,16 @@ const Version = () => {
               height: { xs: "auto" },
               borderRadius: "12px",
               mb: { xs: 2, sm: 2, md: 2 },
-              mr: index < VERSION_LIST.length - 1 ? { xs: 0, sm: 2, md: 4 } : { xs: 0, sm: 0, md: 0 },
+              mr:
+                index < VERSION_LIST.length - 1
+                  ? { xs: 0, sm: 2, md: 4 }
+                  : { xs: 0, sm: 0, md: 0 },
               position: "relative",
               bottom: 0,
               transition: "all 0.5s ease",
               "&:hover": {
                 boxShadow: "0px 30px 40px 0px rgba(145,158,171,0.11)",
-                transform: "translateY(-16px)"
+                transform: "translateY(-16px)",
               },
             }}
           >
@@ -142,14 +161,17 @@ const Version = () => {
               sx={{
                 px: 3,
                 py: 2,
-                borderRadius: '12px 12px 0px 0px',
+                borderRadius: "12px 12px 0px 0px",
                 backgroundSize: "cover",
                 backgroundPosition: "center center",
                 textAlign: "center",
                 backgroundImage: `url(${item.name_bg})`,
               }}
             >
-              <Typography variant="h4" sx={{ fontWeight: 500, color: "common.white" }}>
+              <Typography
+                variant="h4"
+                sx={{ fontWeight: 500, color: "common.white" }}
+              >
                 {item.name}
               </Typography>
             </Box>
@@ -160,7 +182,7 @@ const Version = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 border: "1px solid #E3E8EF",
-                borderRadius: '0px 0px 12px 12px ',
+                borderRadius: "0px 0px 12px 12px ",
                 borderTop: "none",
               }}
             >
@@ -168,14 +190,16 @@ const Version = () => {
               <Typography variant="h3" sx={{ mt: 3, lineHeight: "46px" }}>
                 {item.fee}
                 {item.fee_desc && (
-                  <Typography component="span" variant="subtitle2" sx={{ color: alpha("#000", 0.5), height: "20px" }}>
+                  <Typography
+                    component="span"
+                    variant="subtitle2"
+                    sx={{ color: alpha("#000", 0.5), height: "20px" }}
+                  >
                     {item.fee_desc}
                   </Typography>
                 )}
               </Typography>
-              <Box sx={{ height: "20px" }}>
-                {item.desc}
-              </Box>
+              <Box sx={{ height: "20px" }}>{item.desc}</Box>
               <Box>{item.operation}</Box>
               <FunctionItems items={item.functions} />
             </Box>
@@ -198,7 +222,6 @@ const Version = () => {
 };
 
 export default Version;
-
 
 const FunctionItems: React.FC<{ items: any[] }> = ({ items }) => {
   return (
@@ -233,10 +256,11 @@ const FunctionItems: React.FC<{ items: any[] }> = ({ items }) => {
 
 const Description: React.FC<{ content: string }> = ({ content }) => {
   return (
-    <Typography variant="subtitle2" sx={{ color: alpha("#000", 0.5), height: "20px" }}>
+    <Typography
+      variant="subtitle2"
+      sx={{ color: alpha("#000", 0.5), height: "20px" }}
+    >
       {content}
     </Typography>
   );
 };
-
-
