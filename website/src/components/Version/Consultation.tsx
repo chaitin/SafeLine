@@ -1,8 +1,9 @@
-import React from 'react'
+import React from "react";
 import { useState, useEffect } from "react";
 import Message from "@/components/Message";
 import Modal from "@/components/Modal";
 import { Box, TextField, Typography, Button } from "@mui/material";
+import { detectorPoint } from "@/api";
 
 function Consultation() {
   const [text, setText] = useState("");
@@ -59,7 +60,10 @@ function Consultation() {
           mb: 4,
           boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
         }}
-        onClick={() => setConsultOpen(true)}
+        onClick={() => {
+          detectorPoint({ type: 1002 });
+          setConsultOpen(true);
+        }}
       >
         立即咨询
       </Button>
@@ -78,9 +82,7 @@ function Consultation() {
               fullWidth
               size="small"
               label="手机号"
-              helperText={
-                wrongPhoneNumber ? "手机号格式不正确" : ""
-              }
+              helperText={wrongPhoneNumber ? "手机号格式不正确" : ""}
               variant="outlined"
               value={text}
               onChange={(e) => textHandler(e.target.value)}
