@@ -38,6 +38,6 @@ function detectorPoint(query: { source?: string; type: 1001 | 1002 }) {
   const search = new URLSearchParams(location.search);
   query.source = search.get("source") || document.referrer;
   return fetch(
-    getAPIUrl() + "/api/behavior?" + new URLSearchParams(query as any)
+    getAPIUrl() + "/api/behavior?" + new URLSearchParams(query as any), {method: 'POST'}
   ).then((res) => res.json());
 }
