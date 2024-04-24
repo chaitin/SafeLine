@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bytes"
 	"context"
 	"crypto/tls"
 	"encoding/json"
@@ -111,10 +112,8 @@ const (
 	BehaviorTypeMax
 )
 
-func (s *SafelineService) PostBehavior(ctx context.Context, behaviorType BehaviorType) error {
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.APIHost+"/api/v1/public/safeline/behavior",
-		strings.NewReader(fmt.Sprintf(`{"type": %d}`, behaviorType)),
-	)
+func (s *SafelineService) PostBehavior(ctx context.Context, body []byte) error {
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.APIHost+"/api/v1/public/safeline/behavior", bytes.NewReader(body))
 	if err != nil {
 		return err
 	}
