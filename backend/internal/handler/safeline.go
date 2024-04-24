@@ -62,3 +62,32 @@ func (h *SafelineHandler) Exist(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{"ip": ip})
 }
+
+type BehaviorReq struct {
+	Type service.BehaviorType `json:"type"`
+}
+
+// Behavior record user behavior
+// @Summary record user behavior
+// @Description record user behavior
+// @Tags Safeline
+// @Accept json
+// @Produce json
+// @Param body body BehaviorReq true "body"
+// @Success 200 {object} string
+// @Router /behavior [post]
+func (h *SafelineHandler) Behavior(c *gin.Context) {
+	req := &BehaviorReq{}
+	if err := c.ShouldBindJSON(req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := h.safelineService.PostBehavior(c, req.Type)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{})
+}
