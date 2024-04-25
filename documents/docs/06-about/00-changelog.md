@@ -10,8 +10,10 @@ title: "版本更新记录"
 
 #### 新增
 * 源 IP 获取方式增加 XFF
+
 ![](/images/docs/about_changelog/5.4.0-1.png)
 * 专业版增加 系统设置->检测引擎性能配置，可以根据设备的配置等级选择不同的性能模式
+
 ![](/images/docs/about_changelog/5.4.0-2.png)
 
 #### 优化
