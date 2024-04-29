@@ -335,6 +335,7 @@ export const SafelineTitle: React.FC = () => {
             display: "flex",
             alignItems: "center",
             fontFamily: "AlimamaShuHeiTi-Bold",
+            fontWeight: 500,
           }}
         >
           雷池 SafeLine
