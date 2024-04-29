@@ -62,7 +62,7 @@ table {
 
 body {
   color: rgb(var(--foreground-rgb));
-	font-family: 'PingFang SC, Microsoft YaHei, Hiragino Sans GB, Helvetica Nene, Helvetica, Arial',
+	font-family: PingFang SC, Microsoft YaHei, Hiragino Sans GB, Helvetica Nene, Helvetica, Arial;
 }
 
 a:-webkit-any-link {
@@ -70,7 +70,7 @@ a:-webkit-any-link {
 }
 
 @font-face {
-  font-family: 'AlimamaShuHeiTi-Bold';
+  font-family: AlimamaShuHeiTi-Bold;
   src: url('/fonts/AlimamaShuHeiTi-Bold.ttf') format('truetype');
 	font-display: swap;
 }
