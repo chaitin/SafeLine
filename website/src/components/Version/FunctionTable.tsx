@@ -136,16 +136,22 @@ const FunctionTable = () => {
       title: "统计分析",
       data: [
         {
-          name: "基础统计图表",
+          name: "统计图表",
           tip: "",
-          experience: <Support />,
+          experience: <Illustrate text="基础统计分析" />,
+          major: <Illustrate text="高级统计分析" />,
+          basics: <Illustrate text="企业级防护数据仪表盘" />,
+        },
+        {
+          name: "攻击日志导出",
+          experience: <NotSupport />,
           major: <Support />,
           basics: <Support />,
         },
         {
-          name: "高级统计分析与报告",
+          name: "防护报告导出",
           experience: <NotSupport />,
-          major: <Illustrate text="高级统计" />,
+          major: <NotSupport />,
           basics: <Support />,
         },
         {
@@ -161,6 +167,30 @@ const FunctionTable = () => {
       data: [
         {
           name: "自定义拦截页面",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "检测引擎性能配置",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "Syslog 转发",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "钉钉、飞书、企微告警",
+          experience: <NotSupport />,
+          major: <Support />,
+          basics: <Support />,
+        },
+        {
+          name: "多用户管理",
           experience: <NotSupport />,
           major: <Support />,
           basics: <Support />,
