@@ -34,7 +34,14 @@ title: "配置其他"
 
 ## 防护配置
 
-### 黑白名单
+### 自定义规则
+
+新版本自定义规则把原黑白名单、人机验证、身份认证都合并一起管理，可以通过页面进行筛选
+
+
+![Alt text](/images/docs/guide_config/other_config1.png)
+
+#### 类型：黑、白名单 
 
 黑名单：拦截
 
@@ -42,7 +49,23 @@ title: "配置其他"
 
 注意：条件 AND 是指同时符合，如果希望多个匹配条件需要增加多条黑名单或者白名单
 
-![Alt text](/images/docs/guide_config/other_config1.png)
+#### 类型：人机验证
+
+人机验证的有效时间默认是一个小时，未来可能会支持配置，敬请期待。
+
+详情查看 [人机验证 2.0](/about/challenge)
+
+#### 类型：身份认证
+
+可以通过添加认证规则，对雷池保护的站点额外增加身份认证功能。
+
+![Alt text](/images/docs/guide_config/other_config4.png)
+
+如图，触发身份认证规则后需要使用账户密码登录后继续访问网站。
+
+![Alt text](/images/docs/guide_config/other_config5.png)
+
+
 
 ### 频率限制
 
@@ -52,11 +75,6 @@ title: "配置其他"
 
 ![Alt text](/images/docs/guide_config/other_config2.png)
 
-### 人机验证
-
-人机验证的有效时间默认是一个小时，未来可能会支持配置，敬请期待。
-
-详情查看 [人机验证 2.0](/about/challenge)
 
 ### 语义分析
 
@@ -70,15 +88,6 @@ title: "配置其他"
 
 ![Alt text](/images/docs/guide_config/other_config3.png)
 
-### 身份认证
-
-可以通过添加认证规则，对雷池保护的站点额外增加身份认证功能。
-
-![Alt text](/images/docs/guide_config/other_config4.png)
-
-如图，触发身份认证规则后需要使用账户密码登录后继续访问网站。
-
-![Alt text](/images/docs/guide_config/other_config5.png)
 
 ### 通用配置
 

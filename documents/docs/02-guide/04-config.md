@@ -103,6 +103,24 @@ title: "配置站点"
 
 ![Alt text](/images/docs/guide_config/deploy_with_other_server.png)
 
+
+## 高级防护
+
+新版本增加单个站点的高级防护配置，支持对单个站点进行额外的防护配置
+
+注意：自定义规则不受到当前开关影响
+
+![Alt text](/images/docs/guide_config/config_site4.png)
+
+### 人机验证
+
+点击后可以开启单个站点的人机验证
+
+### 身份认证
+
+点击可以为当前站点额外配置一个身份认证规则
+
+
 ## 常见配置问题
 
 请参考 [配置问题](/faq/config)
