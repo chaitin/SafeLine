@@ -1,6 +1,6 @@
 {
     "label": "社区投稿",
-    "collapsed": false,
+    "collapsed": true,
     "link": {
         "type": "generated-index"
     }
