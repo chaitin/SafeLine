@@ -210,6 +210,7 @@ info "创建安装目录 '$safeline_path' 成功"
 cd "$safeline_path"
 
 curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o compose.yaml
+curl "https://waf-ce.chaitin.cn/release/latest/reset_tengine.sh" -sSLk -o reset_tengine.sh
 
 if [ $? -ne "0" ]; then
     abort "下载 compose.yaml 脚本失败"
