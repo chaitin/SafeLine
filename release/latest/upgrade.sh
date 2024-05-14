@@ -212,6 +212,7 @@ fi
 mv $compose_name $compose_name.old
 
 curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o $compose_name
+curl "https://waf-ce.chaitin.cn/release/latest/reset_tengine.sh" -sSLk -o reset_tengine.sh
 
 if [ $? -ne "0" ]; then
     abort "下载 compose.yaml 脚本失败"
