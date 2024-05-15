@@ -16,6 +16,10 @@ apisix：https://github.com/apache/apisix
 
 ## 使用方式
 
+### 版本要求
+* APISIX >= 3.5.0
+* Safeline >= 5.6.0
+
 ### 准备工作
 
 社区版雷池的检测引擎默认以 unix socket 的方式提供服务，我们需要把他修改为 tcp 方式，供 t1k 插件调用。
