@@ -34,6 +34,9 @@ a:hover {
 aside.theme-doc-sidebar-container {
   width: 240px !important;
 }
+aside.theme-doc-sidebar-container>div>div {
+  width: 240px !important;
+}
 
 /* .navbar__toggle.clean-btn svg {
   color: white;

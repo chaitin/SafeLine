@@ -75,6 +75,11 @@ const config = {
     ({
       // Replace with your project's social card
       image: "images/safeline.svg",
+      docs: {
+        sidebar: {
+          autoCollapseCategories: true,
+        },
+      },
       navbar: {
         title: "",
         logo: { alt: "Logo", src: "images/safeline.svg", href: "https://waf-ce.chaitin.cn" },
