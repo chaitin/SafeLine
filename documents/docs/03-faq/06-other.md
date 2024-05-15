@@ -191,6 +191,28 @@ docker exec safeline-tengine nginx -s reload
 
 ![fake_host.jpg](/images/docs/fake_host.jpg)
 
+## 查看容器日志根据错误日志进行排查（通用）
+
+1. 查看容器状态
+
+  ```shell
+  docker ps
+  ```
+
+2. 查看tengine日志
+
+ ```shell
+  docker logs -f safeline-tengine
+  ```
+
+3. 查看mgt日志
+
+ ```shell
+  docker logs -f safeline-mgt
+  ```
+
+
+根据错误日志的信息进行排查
 
 
 ## 是否支持 WebSocket ？
