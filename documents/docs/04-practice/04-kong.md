@@ -41,11 +41,12 @@ kong restart
 
 ### 使用 Kong 插件
 在某个 service 上启用 safeline 插件：
+> config 中的 detector_host 和 safeline_port 是雷池检测引擎的地址和端口，是在准备工作中配置的。
 ```shell
 curl -X POST http://localhost:8001/services/{service}/plugins \
     --data "name=safeline" \
-    --data "config.safeline_host=<your_detector_host>" \
-    --data "config.safeline_port=<your_detector_port>"
+    --data "config.safeline_host=<detector_host>" \
+    --data "config.safeline_port=<detector_port>"
 ```
 
 ### 测试防护效果
