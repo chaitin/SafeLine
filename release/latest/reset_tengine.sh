@@ -17,7 +17,7 @@ confirm() {
     esac
 }
 
-if ! confirm "是否清空所有 tengine 的所有站点配置(清空后需要在管理页面重新生成站点配置)"; then
+if ! confirm "是否重新生成 tengine 的所有配置"; then
     exit 0
 fi
 
@@ -28,4 +28,6 @@ fi
 
 mv "${SCRIPT_DIR}"/resources/nginx "${SCRIPT_DIR}"/resources/nginx."$(date +%s)"
 
-docker restart safeline-tengine
+docker restart safeline-tengine > /dev/null
+
+docker exec safeline-mgt gentenginewebsite
