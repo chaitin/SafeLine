@@ -16,38 +16,13 @@ apisix：https://github.com/apache/apisix
 
 ## 使用方式
 
-### 安装 APISIX
+### 版本要求
+* APISIX >= 3.5.0
+* Safeline >= 5.6.0
 
-> 注意，要使用 APISIX 3.5.0 及以上版本
+### 准备工作
 
-本文使用 apisix 的 docker 版本来做演示，克隆 apisix-docker 仓库，运行以下命令来安装：
-
-```
-git clone <https://github.com/apache/apisix-docker>
-cd apisix-docker/compose
-echo 'APISIX_DOCKER_TAG=3.5.0-debian' >> .env
-docker compose -f docker-compose-release.yaml up -d
-```
-
-业务地址：http://127.0.0.1:9080/
-
-管理地址：http://127.0.0.1:9180/
-
-### 安装雷池
-
-使用雷池官方提供的一句话安装命令即可：
-
-```
-bash -c "$(curl -fsSLk <https://waf-ce.chaitin.cn/release/latest/setup.sh>)"
-```
-
-不出意外的话，一路回车就能安装成功。
-
-安装目录：/data/safeline/
-
-### 修改雷池检测引擎的工作模式
-
-社区版雷池的检测引擎默认以 unix socket 的方式提供服务，我们需要把他修改为 tcp 方式，供 APISIX 调用。
+社区版雷池的检测引擎默认以 unix socket 的方式提供服务，我们需要把他修改为 tcp 方式，供 t1k 插件调用。
 
 进入雷池检测引擎的配置目录：
 
@@ -62,14 +37,13 @@ bind_addr: 0.0.0.0
 listen_port: 8000
 ```
 
-detector配置的属性值将覆盖容器内默认配置文件的同名属性值。这样我们就把雷池引擎的服务监听到了 8000 端口，现在只需要把容器内的 8000 端口映射到宿主机即可。
+detector配置的属性值将覆盖容器内默认配置文件的同名属性值。这样我们就把雷池引擎的服务监听到了 8000 端口。
 
-进入雷池的安装目录
-
-> cd /data/safeline/
-> 用文本编辑器打开目录里的 compose.yaml 文件，为 detector 容器增加 ports 字段，暴露其 8000
-
-端口，参考如下：
+现在只需要把容器内的 8000 端口映射到宿主机即可，首先进入雷池的安装目录
+```
+cd /data/safeline/
+```
+然后用文本编辑器打开目录里的 compose.yaml 文件，为 detector 容器增加 ports 字段，暴露其 8000 端口，参考如下：
 
 ```
 ......
@@ -94,6 +68,23 @@ docker compose up -d
 雷池和 apisix 默认都监听 9443 端口，如果在同一台机器上安装，需要修改雷池的默认端口。
 
 在雷池的安装目录下，有一个名为 .env 的隐藏文件，其中的 MGT_PORT 字段，修改这里后使用上面的方法再重启雷池即可生效。
+
+### 安装 APISIX
+
+> 注意，要使用 APISIX 3.5.0 及以上版本
+
+本文使用 apisix 的 docker 版本来做演示，克隆 apisix-docker 仓库，运行以下命令来安装：
+
+```
+git clone <https://github.com/apache/apisix-docker>
+cd apisix-docker/compose
+echo 'APISIX_DOCKER_TAG=3.5.0-debian' >> .env
+docker compose -f docker-compose-release.yaml up -d
+```
+
+业务地址：http://127.0.0.1:9080/
+
+管理地址：http://127.0.0.1:9180/
 
 ### 在 apisix 里绑定雷池
 
