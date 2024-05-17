@@ -226,7 +226,7 @@ const FunctionTable = () => {
           basics: <Support />,
         },
         {
-          name: "负载均衡",
+          name: "upstream 负载均衡",
           experience: <NotSupport />,
           major: <Support />,
           basics: <Support />,
