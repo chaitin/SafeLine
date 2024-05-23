@@ -20,8 +20,7 @@ title: "测试防护"
 
 整体监测流程参考：
 
-![flow.png](/images/docs/flow.svg)
-
+![Alt text](/images/docs/flow.png)
 
 ## 尝试手动模拟攻击
 
