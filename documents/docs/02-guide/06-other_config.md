@@ -63,10 +63,6 @@ title: "配置其他"
 
 如图，触发身份认证规则后需要使用账户密码登录后继续访问网站。
 
-![Alt text](/images/docs/guide_config/other_config5.png)
-
-
-
 ### 频率限制
 
 通过开启频率限制功能封锁恶意 IP
