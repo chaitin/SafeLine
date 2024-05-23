@@ -115,7 +115,8 @@ bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ## 🏘️ 联系我们
 
 1. 可以通过 GitHub Issue 直接进行 Bug 反馈和功能建议
-2. 可以扫描下方二维码加入雷池社区版用户讨论群
+2. 点击 <a href="https://discord.gg/wyshSVuvxC">链接</a> 加入雷池 Discord 聊天室
+3. 扫描下方二维码加入雷池社区版用户讨论群
 
 <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/wechat-230825.png" width="30%" />
 
