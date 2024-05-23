@@ -1,7 +1,12 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/403.svg" width="120">
+  <a href="./">中文</a> | 
+  <a href="./README_EN.md">English</a>
 </p>
 <h1 align="center">雷池 - 广受好评的社区 WAF</h1>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/403.svg" width="120">
+</p>
 <br>
 <p align="center">
   <img src="https://img.shields.io/badge/SafeLine-BEST_WAF-blue">
@@ -14,8 +19,7 @@
 <p align="center">
   <a href="https://waf-ce.chaitin.cn/">官方网站</a> | 
   <a href="https://demo.waf-ce.chaitin.cn:9443/dashboard">在线 Demo</a> | 
-  <a href="https://waf-ce.chaitin.cn/posts/guide_introduction">技术文档</a> | 
-  <a href="README_EN.md">For English</a>
+  <a href="https://waf-ce.chaitin.cn/posts/guide_introduction">技术文档</a>
 </p>
 
 一款足够简单、足够好用、足够强的免费 WAF。基于业界领先的语义引擎检测技术，作为反向代理接入，保护你的网站不受黑客攻击。
@@ -34,7 +38,7 @@
   <a href="https://github.com/chaitin/yanshi">语义分析自动机引擎</a> | 
   <a href="https://github.com/chaitin/safeline-open-platform">流量分析插件</a> | 
   <a href="https://github.com/chaitin/lua-resty-t1k">T1K 协议</a> |
-  <a href="https://github.com/chaitin/blazehttp">测试工具</a>
+  <a href="https://github.com/chaitin/blazehttp">WAF 测试工具</a>
 </p>
 
 ## 相关特性
@@ -64,7 +68,6 @@
 - 软件依赖：Docker 20.10.6 版本以上
 - 软件依赖：Docker Compose 2.0.0 版本以上
 - 最小化环境：1 核 CPU / 1 GB 内存 / 10 GB 磁盘
-
 
 ### 一键安装
 
