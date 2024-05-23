@@ -116,7 +116,7 @@ Use the following step to simulate hacker attack and see how effective the prote
 ## 🏘️ Talk Group
 
 1. Bug feedback and feature suggestions can be directly submitted through GitHub Issues.
-2. Join <a href="https://discord.gg/wyshSVuvxC">SafeLine Discord</a> for more discussions.
+2. Join <a target="_blank" href="https://discord.gg/wyshSVuvxC">SafeLine Discord</a> for more discussions.
 
 ## Star History <a name="star-history"></a>
 
