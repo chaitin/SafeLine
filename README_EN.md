@@ -1,8 +1,12 @@
 <p align="center">
-  <img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_logo.png" width="120">
+  <a href="./">中文</a> | 
+  <a href="./README_EN.md">English</a>
 </p>
-<h1 align="center">SafeLine Community Edition</h1>
-<h3 align="center">Keep hackers at bay</h3>
+<h1 align="center">SafeLine - The Best WAF For Community</h1>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/403.svg" width="120">
+</p>
 <br>
 <p align="center">
   <img src="https://img.shields.io/badge/SafeLine-BEST_WAF-blue">
@@ -12,101 +16,110 @@
   <img src="https://img.shields.io/github/stars/chaitin/safeline?style=social">
 </p>
 
-<p align="center"> <a href="https://waf-ce.chaitin.cn/">Official Website</a> </p>
-<p align="center"> English | <a href="README_CN.md">中文文档</a> </p>
+<p align="center">
+  <a href="https://waf-ce.chaitin.cn/">Home Page</a> | 
+  <a href="https://demo.waf-ce.chaitin.cn:9443/dashboard">Online Demo</a> | 
+  <a href="https://waf-ce.chaitin.cn/posts/guide_introduction">Documents</a>
+</p>
 
-A simple and easy to use WAF tool. Built on [Chaitin Technology](https://www.chaitin.cn/en/)'s ace 🤖️Intelligent Semantic Analysis algorithm🤖️, designed for the community.
+A simple, easy-to-use, and powerful free WAF. Based on the industry-leading semantic engine detection technology, it serves as a reverse proxy access to protect your website.
 
-## ✨ Demo
+- Cumulative installations exceed 130,000 units
+- Protecting websites over 1,000,000
+- Processing HTTP requests over 30,000,000,000 times per day
+- Intercepting attacks over 50,000,000 times per day
 
-### 🔥🔥🔥 Online Demo: https://demo.waf-ce.chaitin.cn:9443/
+The core detection capability is driven by intelligent semantic analysis algorithms, tailored for the community, keep hackers away from you.
 
-There is a simple http server, listened on `http://127.0.0.1:8889`, can be used as for testing.
+<img src="./images/safeline_en.png" />
 
-![](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_detect_log.gif)
+<h4 align="center">Related Repo</h4>
+<p align="center">
+  <a href="https://github.com/chaitin/yanshi">Automaton Generator</a> | 
+  <a href="https://github.com/chaitin/safeline-open-platform">Lua Plugin</a> | 
+  <a href="https://github.com/chaitin/lua-resty-t1k">T1K Protocol</a> |
+  <a href="https://github.com/chaitin/blazehttp">WAF Test Tool</a>
+</p>
 
-![](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_website.gif)
+## Features
 
-## 🚀 Installation
+#### Convenience
 
-### 1. Make sure [Docker](https://docs.docker.com/engine/install/) and [Compose V2](https://docs.docker.com/compose/install/) are installed correctly on the machine 
-```shell
-docker info # >= 20.10.6
-docker compose version # >= 2.0.0
+Adopting containerized deployment, installation can be completed with one command at zero cost. Security configurations are ready to use out of the box, requiring no manual maintenance and enabling secure and effortless management.
+
+#### Security
+
+Pioneering industry-leading intelligent semantic analysis algorithms for precise detection, low false positives, and resistance to circumvention. Unconstrained by rules, the semantic analysis algorithm equips users to confidently confront unknown 0day attack features.
+
+#### High Performance
+
+Ruleless engine, linear security detection algorithm, with an average request detection latency at the millisecond level. Strong concurrency capability, effortlessly detecting 2000+ TPS on a single core; with sufficient hardware, there is no upper limit to the supported traffic scale.
+
+#### High Availability
+
+The traffic processing engine is developed based on Nginx, guaranteeing both performance and stability. It incorporates a comprehensive health check mechanism, ensuring a service availability of up to 99.99%.
+
+
+## 🚀 Get Started
+
+### Environment
+
+- Operating System: Linux
+- Instruction Architecture: x86_64
+- Software Dependencies: Docker version 20.10.6 or higher
+- Software Dependencies: Docker Compose version 2.0.0 or higher
+- Minimum Environment: 1 core CPU / 1 GB memory / 10 GB disk
+
+### 一键安装
+
+```
+bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ```
 
-### 2. Setup and deploy
+> 更多安装方式请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_install">安装雷池</a>
 
-```shell
-mkdir -p safeline && cd safeline
-# setup
-curl -kfLsS https://waf-ce.chaitin.cn/release/latest/setup.sh | bash
+## 🕹️ 快速使用
 
-# launch
-sudo docker compose up -d
-```
+### 登录
 
-#### Upgrade
+After opening the backend management page in the browser at `https://<IP-or-HOSTNAME>:9443`, follow the on-screen instructions to scan the QR code using an authentication app that supports TOTP, and then enter the dynamic password to log in.
 
-**WARN: SafeLine will be restarted and your traffic will be unavailable for a short period of time. You may need to choose a proper time for upgration.**
+![login.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/login.gif)
 
-```shell
-curl -kfLsS https://waf-ce.chaitin.cn/release/latest/upgrade.sh | bash
+### 配置防护站点
 
-# delete the old used image layers if necessary.
-docker rmi $(docker images | grep "safeline" | grep "none" | awk '{print $3}')
-```
+SafeLine is accessed in reverse proxy mode, receiving traffic before the web server, detecting and cleaning attack behavior in the traffic, and then forwarding the cleaned traffic to the web server.
 
-## 🕹️ Quick Start
+![config.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/config_site.gif)
 
-### 1. Login
+<font color=grey>💡 TIPS: After adding, executing `curl -H "Host: <domain>" http://<IP-or-HOSTNAME>:<port>` should be able to get the response of the website.
 
-Open admin page `https://<waf-ip>:9443` and scan qrcode with any authenticator Apps that support TOTP, enter the code to login.
+### test
 
-![safeline_login.gif](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_login.gif)
+使用以下方式尝试模拟黑客攻击，看看雷池的防护效果如何
 
-### 2. Create website
+- access `http://<IP-or-HOSTNAME>:<PORT>/?id=1%20AND%201=1`
+- access `http://<IP-or-HOSTNAME>:<PORT>/?a=<script>alert(1)</script>`
 
-![safeline_website.gif](https://ctstack-oss.oss-cn-beijing.aliyuncs.com/veinmind/safeline-assets/safeline_website.gif)
+![log.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/detect_log.gif)
 
-<font color=grey>💡 TIPS: After creating website，execute `curl -H "Host: <Domain>" http://<WAF IP>:<Port>` to check if you can get correct response from web server.</font>
+> more test for <a href="https://waf-ce.chaitin.cn/posts/guide_test">测试防护效果</a>
 
-### 3. Deploy your website to SafeLine
+### FAQ
 
-- If your website is hosted by DNS, just modify your DNS record to WAF
-- If your website is behind any reverse-proxy like nginx, you can modify your nginx conf and set upstream to WAF
+- [SETUP](https://waf-ce.chaitin.cn/posts/faq_install)
+- [LOGIN](https://waf-ce.chaitin.cn/posts/faq_login)
+- [PROXY](https://waf-ce.chaitin.cn/posts/faq_access)
+- [SETTINGS](https://waf-ce.chaitin.cn/posts/faq_config)
+- [OTHERS](https://waf-ce.chaitin.cn/posts/faq_other)
 
-### 4. Protected!👌
+## 🏘️ Talk Group
 
-Try these:
-
-- `http://<IP or Domain>:<Port>/webshell.php`
-- `http://<IP or Domain>:<Port>/?id=1%20AND%201=1`
-- `http://<IP or Domain>:<Port>/?a=<script>alert(1)</script>`
-
-## 📖 FAQ
-
-Please refer to our [FAQ](FAQ.md) first if you have any questions.
-
-For examples:
-- [docker compose or docker-compose?](FAQ.md#docker-compose-or-docker-compose)
-- [website configurations](FAQ.md#站点配置问题)
-- [website not working / not correctly response](FAQ.md#配置完成之后还是没有成功访问到上游服务器)
-
-## 🏘️ Contact Us
-
-1. You can make bug feedback and feature suggestions directly through GitHub Issues.
-2. By scanning the QR code below (use wechat or qq), you can join the discussion group of SafeLine users for detailed discussions.
-
-<img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/wechat-230825.png" width="30%" />
-
-## ✨ CTStack
-<img src="https://ctstack-oss.oss-cn-beijing.aliyuncs.com/CT%20Stack-2.png" width="30%" />
-
-SafeLine has already joined [CTStack](https://stack.chaitin.com/tool/detail?id=717) community.
+1. Bug feedback and feature suggestions can be directly submitted through GitHub Issues.
+2. Join <a href="https://discord.gg/r97FKm7u">SafeLine Discord</a> for more discussions."
 
 ## Star History <a name="star-history"></a>
 
 <a href="https://github.com/chaitin/safeline/stargazers">
-        <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=chaitin/safeline&type=Date">
-      </a> 
+    <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=chaitin/safeline&type=Date">
+</a> 
