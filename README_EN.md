@@ -24,10 +24,10 @@
 
 A simple, easy-to-use, and powerful free WAF. Based on the industry-leading semantic engine detection technology, it serves as a reverse proxy access to protect your website.
 
-- Cumulative installations exceed 130,000 units
-- Protecting websites over 1,000,000
-- Processing HTTP requests over 30,000,000,000 times per day
-- Intercepting attacks over 50,000,000 times per day
+- Cumulative installations exceed **130,000** units
+- Protecting websites over **1,000,000**
+- Processing HTTP requests over **30,000,000,000** times per day
+- Intercepting attacks over **50,000,000** times per day
 
 The core detection capability is driven by intelligent semantic analysis algorithms, tailored for the community, keep hackers away from you.
 
@@ -70,23 +70,23 @@ The traffic processing engine is developed based on Nginx, guaranteeing both per
 - Software Dependencies: Docker Compose version 2.0.0 or higher
 - Minimum Environment: 1 core CPU / 1 GB memory / 10 GB disk
 
-### 一键安装
+### Setup
 
 ```
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ```
 
-> 更多安装方式请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_install">安装雷池</a>
+> for information for <a href="https://waf-ce.chaitin.cn/posts/guide_install">安装雷池</a>
 
-## 🕹️ 快速使用
+## 🕹️ use SafeLine
 
-### 登录
+### Login
 
 After opening the backend management page in the browser at `https://<IP-or-HOSTNAME>:9443`, follow the on-screen instructions to scan the QR code using an authentication app that supports TOTP, and then enter the dynamic password to log in.
 
 ![login.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/login.gif)
 
-### 配置防护站点
+### Settings
 
 SafeLine is accessed in reverse proxy mode, receiving traffic before the web server, detecting and cleaning attack behavior in the traffic, and then forwarding the cleaned traffic to the web server.
 
@@ -96,7 +96,7 @@ SafeLine is accessed in reverse proxy mode, receiving traffic before the web ser
 
 ### test
 
-使用以下方式尝试模拟黑客攻击，看看雷池的防护效果如何
+Use the following step to simulate hacker attack and see how effective the protection of the SafeLine is.
 
 - access `http://<IP-or-HOSTNAME>:<PORT>/?id=1%20AND%201=1`
 - access `http://<IP-or-HOSTNAME>:<PORT>/?a=<script>alert(1)</script>`
@@ -116,7 +116,7 @@ SafeLine is accessed in reverse proxy mode, receiving traffic before the web ser
 ## 🏘️ Talk Group
 
 1. Bug feedback and feature suggestions can be directly submitted through GitHub Issues.
-2. Join <a href="https://discord.gg/r97FKm7u">SafeLine Discord</a> for more discussions."
+2. Join <a href="https://discord.gg/r97FKm7u">SafeLine Discord</a> for more discussions.
 
 ## Star History <a name="star-history"></a>
 
