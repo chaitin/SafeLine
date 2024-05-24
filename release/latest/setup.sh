@@ -38,39 +38,6 @@ qrcode() {
     echo "微信扫描上方二维码加入雷池项目讨论组"
 }
 
-command_exists() {
-	command -v "$1" 2>&1
-}
-
-check_container_health() {
-    local container_name=$1
-    local max_retry=30
-    local retry=0
-    local health_status="unhealthy"
-    echo "Waiting for $container_name to be healthy"
-    while [[ "$health_status" == "unhealthy" && $retry -lt $max_retry ]]; do
-        health_status=$(docker inspect --format='{{.State.Health.Status}}' $container_name 2>/dev/null || echo 'unhealthy')
-        sleep 1
-        retry=$((retry+1))
-    done
-    if [[ "$health_status" == "unhealthy" ]]; then
-        abort "Container $container_name is unhealthy"
-    fi
-    echo "Container $container_name is healthy"
-}
-
-space_left() {
-    dir="$1"
-    while [ ! -d "$dir" ]; do
-        dir=`dirname "$dir"`;
-    done
-    echo `df -h "$dir" --output='avail' | tail -n 1`
-}
-
-start_docker() {
-    systemctl start docker && systemctl enable docker
-}
-
 confirm() {
     echo -e -n "\033[34m[SafeLine] $* \033[1;36m(Y/n)\033[0m"
     read -n 1 -s opt
@@ -96,6 +63,58 @@ abort() {
     qrcode
     echo -e "\033[31m[SafeLine] $*\033[0m"
     exit 1
+}
+
+command_exists() {
+	command -v "$1" 2>&1
+}
+
+check_container_health() {
+    local container_name=$1
+    local max_retry=30
+    local retry=0
+    local health_status="unhealthy"
+    info "Waiting for $container_name to be healthy"
+    while [[ "$health_status" == "unhealthy" && $retry -lt $max_retry ]]; do
+        health_status=$(docker inspect --format='{{.State.Health.Status}}' $container_name 2>/dev/null || info 'unhealthy')
+        sleep 1
+        retry=$((retry+1))
+    done
+    if [[ "$health_status" == "unhealthy" ]]; then
+        abort "Container $container_name is unhealthy"
+    fi
+    info "Container $container_name is healthy"
+}
+
+space_left() {
+    dir="$1"
+    while [ ! -d "$dir" ]; do
+        dir=`dirname "$dir"`;
+    done
+    echo `df -h "$dir" --output='avail' | tail -n 1`
+}
+
+local_ips() {
+    if [ -z `command_exists ip` ]; then
+        ip_cmd="ip addr show"
+    else
+        ip_cmd="ifconfig -a"
+    fi
+
+    echo $($ip_cmd | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | awk '{print $2}')
+}
+
+ips=`local_ips`
+subnets="192.168.222 172.22.222 169.254.222"
+
+for subnet in $subnets; do
+    if [[ $ips != *$subnet* ]]; then
+        SUBNET_PREFIX=$subnet
+    fi
+done
+
+start_docker() {
+    systemctl start docker && systemctl enable docker
 }
 
 trap 'onexit' INT
@@ -233,7 +252,7 @@ fi
 
 echo "MGT_PORT=9443" >> .env
 echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
-echo "SUBNET_PREFIX=172.22.222" >> .env
+echo "SUBNET_PREFIX=$SUBNET_PREFIX" >> .env
 
 if [ $CDN -eq 0 ]; then
     echo "IMAGE_PREFIX=chaitin" >>".env"
@@ -257,4 +276,6 @@ docker exec safeline-mgt /app/mgt-cli reset-admin --once
 
 warning "雷池 WAF 社区版安装成功，请访问以下地址访问控制台"
 warning "https://0.0.0.0:9443/"
-
+for ip in $ips; do
+    warning https://$ip:9443/
+done
