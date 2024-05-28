@@ -105,11 +105,12 @@ local_ips() {
 }
 
 ips=`local_ips`
-subnets="192.168.222 172.22.222 169.254.222"
+subnets="172.22.222 169.254.222 192.168.222"
 
 for subnet in $subnets; do
     if [[ $ips != *$subnet* ]]; then
         SUBNET_PREFIX=$subnet
+        break
     fi
 done
 
