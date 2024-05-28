@@ -124,50 +124,21 @@ export default function NavBar() {
                     alignItems: "center",
                   }}
                 >
-                  <Box mr={3.5}>
-                    <Typography
-                      {...bindHover(popoverState1 as any)}
-                      variant="body1"
-                      sx={{
-                        color: popoverState1.isOpen
-                          ? "primary.main"
-                          : "common.black",
-                        cursor: "pointer",
-                        "&:hover": {
-                          color: "primary.main",
-                          backgroundColor: "transparent",
-                        },
-                        transition: "unset",
-                      }}
-                    >
-                      <Image
-                        src="/images/bounty_btn.png"
-                        alt="wechat"
-                        width={93}
-                        height={22}
-                        style={{ cursor: "pointer", marginTop: '3px' }}
-                      />
-                    </Typography>
-                    <HoverPopover
-                      {...bindPopover(popoverState1)}
-                      anchorOrigin={{
-                        vertical: 42,
-                        horizontal: "left",
-                      }}
-                      transformOrigin={{
-                        vertical: "top",
-                        horizontal: "left",
-                      }}
-                      marginThreshold={16}
-                    >
-                      <Image
-                        src="/images/bounty.png"
-                        alt="wechat"
-                        width={672}
-                        height={491}
-                      />
-                    </HoverPopover>
-                  </Box>
+                  <Link
+                    href="https://discord.gg/wyshSVuvxC"
+                    target="_blank"
+                    sx={{
+                      color: "common.black",
+                      display: "flex",
+                      "&:hover": {
+                        color: "primary.main",
+                      },
+                    }}
+                    mr={3.5}
+                  >
+                    <Icon type="icon-discord1" sx={{ mr: 1 }} />
+                    Discord
+                  </Link>
                   <Link
                     href="https://github.com/chaitin/SafeLine"
                     target="_blank"
