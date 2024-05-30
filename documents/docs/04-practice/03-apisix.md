@@ -48,7 +48,7 @@ cd /data/safeline/
 ```
 ......
 
-detector:
+detect:
     ......
     ports:
     - 8000:8000
@@ -150,3 +150,31 @@ curl '<http://127.0.0.1:9080/>' -d 'a=1 and 1=1'
 ```
 
 打开雷池的控制台界面，可以看到雷池记录了完整的攻击信息
+
+### 让 WAF 本身的站点拦截同时工作
+
+由于更改了 detector 的监听方式，通过雷池控制台界面配置的站点将无法正常拦截恶意请求，需要在 nginx 配置中将检测引擎地址改为 http 方式。
+
+首先拷贝一份 nginx 配置文件
+
+```shell
+cp /data/safeline/resources/nginx/safeline_unix.conf /data/safeline/resources/nginx/safeline_http.conf
+```
+
+编辑 nginx.conf 文件，将里面的 `include /etc/nginx/safeline_unix.conf;` 注释掉，添加下面的一行
+
+```shell
+# nginx.conf
+include /etc/nginx/conf.d/*.conf;
+include /etc/nginx/sites-enabled/generated;
+# include /etc/nginx/safeline_unix.conf; 
+include /etc/nginx/safeline_http.conf;
+```
+
+通过 docker inspect 获取 detector 的 ip
+
+```shell
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' safeline-detector
+```
+
+编辑 safeline_http.conf 文件，将里面的 `unix:/data/safeline/resources/detector/detector.sock` 改为 `http://${detector_ip}:8000`
