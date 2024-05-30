@@ -54,7 +54,7 @@ check_container_health() {
     echo "Waiting for $container_name to be healthy"
     while [[ "$health_status" == "unhealthy" && $retry -lt $max_retry ]]; do
         health_status=$(docker inspect --format='{{.State.Health.Status}}' $container_name 2>/dev/null || echo 'unhealthy')
-        sleep 1
+        sleep 5
         retry=$((retry+1))
     done
     if [[ "$health_status" == "unhealthy" ]]; then
@@ -181,9 +181,9 @@ container_id=$(docker ps -n 1 --filter name=.*safeline-mgt.* --format '{{.ID}}')
 safeline_path=$(docker inspect --format '{{index .Config.Labels "com.docker.compose.project.working_dir"}}' $container_id)
 
 while [ -z "$safeline_path" ]; do
-    echo -e -n "\033[34m[SafeLine] 未发现正在运行的雷池，请输入雷池安装路径 (留空则为 '$(pwd)'): \033[0m"
+    echo -e -n "\033[34m[SafeLine] 未发现正在运行的雷池，请输入雷池安装路径 (留空则为 '/data/safeline'): \033[0m"
     read input_path
-    [[ -z "$input_path" ]] && input_path=$(pwd)
+    [[ -z "$input_path" ]] && input_path='/data/safeline'
 
     if [[ ! $input_path == /* ]]; then
         warning "'$input_path' 不是合法的绝对路径"
@@ -203,13 +203,7 @@ fi
 compose_name=$(ls docker-compose.yaml compose.yaml 2>/dev/null)
 compose_path=$safeline_path/$compose_name
 
-if [ -f "$compose_path" ]; then
-    info "发现位于 '$safeline_path' 的雷池环境"
-else
-    abort "没有发现位于 $safeline_path 的雷池环境"
-fi
-
-mv $compose_name $compose_name.old
+mv $compose_name $compose_name.old || true
 
 curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o $compose_name
 curl "https://waf-ce.chaitin.cn/release/latest/reset_tengine.sh" -sSLk -o reset_tengine.sh

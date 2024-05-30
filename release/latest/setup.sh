@@ -77,7 +77,7 @@ check_container_health() {
     info "Waiting for $container_name to be healthy"
     while [[ "$health_status" == "unhealthy" && $retry -lt $max_retry ]]; do
         health_status=$(docker inspect --format='{{.State.Health.Status}}' $container_name 2>/dev/null || info 'unhealthy')
-        sleep 1
+        sleep 5
         retry=$((retry+1))
     done
     if [[ "$health_status" == "unhealthy" ]]; then
