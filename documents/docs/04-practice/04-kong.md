@@ -58,3 +58,9 @@ $ curl -X POST http://localhost:8000?1=1%20and%202=2
 {"code": 403, "success":false, "message": "blocked by Chaitin SafeLine Web Application Firewall", "event_id": "8b41a021ea9541c89bb88f3773b4da24"}
 ```
 打开雷池的控制台界面，可以看到雷池记录了完整的攻击信息。
+
+### 问题答疑
+
+如果在使用过程中遇到问题，可以在加入 SDK 讨论群
+
+![雷池SDK讨论群](/images/docs/sdk_chat.png)

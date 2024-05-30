@@ -177,4 +177,18 @@ include /etc/nginx/safeline_http.conf;
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' safeline-detector
 ```
 
-编辑 safeline_http.conf 文件，将里面的 `unix:/data/safeline/resources/detector/detector.sock` 改为 `http://${detector_ip}:8000`
+编辑 safeline_http.conf 文件做出如下修改
+```yaml
+# safeline_http.conf
+  upstream detector_server {
+    keepalive   256;
+    #server      unix:/resources/detector/snserver.sock;
+    server      detector_ip:8000; # 这里填写上面获取到的 detector 的 ip
+}
+```
+
+### 问题答疑
+
+如果在使用过程中遇到问题，可以在加入 SDK 讨论群
+
+![雷池SDK讨论群](/images/docs/sdk_chat.png)
