@@ -156,3 +156,16 @@ services:
         ipv4_address: ${SUBNET_PREFIX}.9
     depends_on:
       - mgt
+  chaos:
+    container_name: safeline-chaos
+    restart: always
+    image: ${IMAGE_PREFIX}/safeline-chaos:${IMAGE_TAG}
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "10"
+    ports:
+      - 23333:23333
+    networks:
+      safeline-ce:
+        ipv4_address: ${SUBNET_PREFIX}.10

@@ -214,10 +214,36 @@ docker exec safeline-tengine nginx -s reload
 
 根据错误日志的信息进行排查
 
+## 紧急恢复 tengine
+问题表现：重启或升级后编辑任何站点配置都报错，后台 tengine 一直在重启。
+
+一般原因是 tengine 配置在当前设备环境上不合法，导致 tengine 无法以原配置启动，例如重启过程中网站端口被其他进程所占用、网站 dns 配置异常导致解析不到 IP 等。
+
+解决方案：可以通过查看 tengine 容器的日志，排查问题，也可以使用安装目录下的 `reset_tengine.sh` 脚本重置 tengine 容器配置。
+```shell
+# 执行时间根据网站数量和配置情况而定， 请耐心等待
+cd /data/safeline && bash reset_tengine.sh
+```
+执行成功后会有如下输出，此时可以尝试重新编辑站点配置，观察是否正常。
+```shell
+[SafeLine] 是否重新生成 tengine 的所有配置 (Y/n)
+
+重新生成 tengine 配置完成
+```
 
 ## 是否支持 WebSocket ？
 
 默认支持
+
+## 内网需要加白哪些公网地址？
+| 地址                           | 端口    | 说明                 |
+|------------------------------|-------|--------------------|
+| waf-ce.chaitin.cn            | 443   | 搜索引擎爬虫白名单、左下角的更新提示 |
+| challenge.rivers.chaitin.cn  | 443   | 恶意 IP 情报           |
+| safeline-cloud.chaitin.com   | 50052 | 专业版授权              |
+| acme-v02.api.letsencrypt.org | 443   | acme 证书申请          |
+| rivers.chaitin.cn            | 443   | 百川推荐工具（浏览器使用）      |
+
 
 ## 是否可以给客户/朋友推荐或安装社区版？
 
