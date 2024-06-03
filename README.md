@@ -1,8 +1,8 @@
 <p align="center">
-  <a href="./">中文</a> | 
-  <a href="./README_EN.md">English</a>
+  <a href="./README_EN.md">English</a> | 
+  <a href="./">中文</a>
 </p>
-<h1 align="center">雷池 - 广受好评的社区 WAF</h1>
+<h1 align="center">SafeLine - The Best WAF For Community</h1>
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/403.svg" width="120">
@@ -17,108 +17,106 @@
 </p>
 
 <p align="center">
-  <a href="https://waf-ce.chaitin.cn/">官方网站</a> | 
-  <a href="https://demo.waf-ce.chaitin.cn:9443/dashboard">在线 Demo</a> | 
-  <a href="https://waf-ce.chaitin.cn/posts/guide_introduction">技术文档</a>
+  <a href="https://waf-ce.chaitin.cn/">Home Page</a> | 
+  <a href="https://demo.waf-ce.chaitin.cn:9443/dashboard">Online Demo</a> | 
+  <a href="https://waf-ce.chaitin.cn/posts/guide_introduction">Documents</a>
 </p>
 
-一款足够简单、足够好用、足够强的免费 WAF。基于业界领先的语义引擎检测技术，作为反向代理接入，保护你的网站不受黑客攻击。
+A simple, easy-to-use, and powerful free WAF. Based on the industry-leading semantic engine detection technology, it serves as a reverse proxy access to protect your website.
 
-- **累计安装**超过 130,000 台
-- **保护网站**超过 1,000,000 个
-- 每天**处理 HTTP 请求**超过 30,000,000,000 次
-- 每天**拦截攻击**超过 50,000,000 次 
+- Cumulative installations exceed **130,000** units
+- Protecting websites over **1,000,000**
+- Processing HTTP requests over **30,000,000,000** times per day
+- Intercepting attacks over **50,000,000** times per day
 
-核心检测能力由智能语义分析算法驱动，专为社区而生，不让黑客越雷池半步。
+The core detection capability is driven by intelligent semantic analysis algorithms, tailored for the community, keep hackers away from you.
 
-<img src="./images/safeline.png" />
+<img src="./images/safeline_en.png" />
 
-<h4 align="center">相关源码仓库</h4>
+<h4 align="center">Related Repo</h4>
 <p align="center">
-  <a href="https://github.com/chaitin/yanshi">语义分析自动机引擎</a> | 
-  <a href="https://github.com/chaitin/safeline-open-platform">流量分析插件</a> | 
-  <a href="https://github.com/chaitin/lua-resty-t1k">T1K 协议</a> |
-  <a href="https://github.com/chaitin/blazehttp">WAF 测试工具</a>
+  <a href="https://github.com/chaitin/yanshi">Automaton Generator</a> | 
+  <a href="https://github.com/chaitin/safeline-open-platform">Lua Plugin</a> | 
+  <a href="https://github.com/chaitin/lua-resty-t1k">T1K Protocol</a> |
+  <a href="https://github.com/chaitin/blazehttp">WAF Test Tool</a>
 </p>
 
-## 相关特性
+## Features
 
-#### 便捷性
+#### Convenience
 
-采用容器化部署，一条命令即可完成安装，0 成本上手。安全配置开箱即用，无需人工维护，可实现安全躺平式管理。
+Adopting containerized deployment, installation can be completed with one command at zero cost. Security configurations are ready to use out of the box, requiring no manual maintenance and enabling secure and effortless management.
 
-#### 安全性
+#### Security
 
-首创业内领先的智能语义分析算法，精准检测、低误报、难绕过。语义分析算法无规则，面对未知特征的 0day 攻击不再手足无措。
+Pioneering industry-leading intelligent semantic analysis algorithms for precise detection, low false positives, and resistance to circumvention. Unconstrained by rules, the semantic analysis algorithm equips users to confidently confront unknown 0day attack features.
 
-#### 高性能
+#### High Performance
 
-无规则引擎，线性安全检测算法，平均请求检测延迟在 1 毫秒级别。并发能力强，单核轻松检测 2000+ TPS，只要硬件足够强，可支撑的流量规模无上限。
+Ruleless engine, linear security detection algorithm, with an average request detection latency at the millisecond level. Strong concurrency capability, effortlessly detecting 2000+ TPS on a single core; with sufficient hardware, there is no upper limit to the supported traffic scale.
 
-#### 高可用
+#### High Availability
 
-流量处理引擎基于 Nginx 开发，性能与稳定性均可得到保障。内置完善的健康检查机制，服务可用性高达 99.99%。
+The traffic processing engine is developed based on Nginx, guaranteeing both performance and stability. It incorporates a comprehensive health check mechanism, ensuring a service availability of up to 99.99%.
 
-## 🚀 安装
 
-### 配置需求
+## 🚀 Get Started
 
-- 操作系统：Linux
-- 指令架构：x86_64
-- 软件依赖：Docker 20.10.6 版本以上
-- 软件依赖：Docker Compose 2.0.0 版本以上
-- 最小化环境：1 核 CPU / 1 GB 内存 / 10 GB 磁盘
+### Environment
 
-### 一键安装
+- Operating System: Linux
+- Instruction Architecture: x86_64
+- Software Dependencies: Docker version 20.10.6 or higher
+- Software Dependencies: Docker Compose version 2.0.0 or higher
+- Minimum Environment: 1 core CPU / 1 GB memory / 10 GB disk
+
+### Setup
 
 ```
 bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
 ```
 
-> 更多安装方式请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_install">安装雷池</a>
+> for information for <a href="https://waf-ce.chaitin.cn/posts/guide_install">安装雷池</a>
 
-## 🕹️ 快速使用
+## 🕹️ use SafeLine
 
-### 登录
+### Login
 
-浏览器打开后台管理页面 `https://<waf-ip>:9443`。根据界面提示，使用 **支持 TOTP 的认证软件** 扫描二维码，然后输入动态口令登录：
+After opening the backend management page in the browser at `https://<IP-or-HOSTNAME>:9443`, follow the on-screen instructions to scan the QR code using an authentication app that supports TOTP, and then enter the dynamic password to log in.
 
 ![login.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/login.gif)
 
-### 配置防护站点
+### Settings
 
-雷池以反向代理方式接入，优先于网站服务器接收流量，对流量中的攻击行为进行检测和清洗，将清洗过后的流量转发给网站服务器。
+SafeLine is accessed in reverse proxy mode, receiving traffic before the web server, detecting and cleaning attack behavior in the traffic, and then forwarding the cleaned traffic to the web server.
 
 ![config.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/config_site.gif)
 
-<font color=grey>💡 TIPS: 添加后，执行 `curl -H "Host: <域名>" http://<WAF IP>:<端口>` 应能获取到业务网站的响应。</font>
+<font color=grey>💡 TIPS: After adding, executing `curl -H "Host: <domain>" http://<IP-or-HOSTNAME>:<port>` should be able to get the response of the website.
 
-### 测试效果
+### test
 
-使用以下方式尝试模拟黑客攻击，看看雷池的防护效果如何
+Use the following step to simulate hacker attack and see how effective the protection of the SafeLine is.
 
-- 浏览器访问 `http://<IP或域名>:<端口>/?id=1%20AND%201=1`
-- 浏览器访问 `http://<IP或域名>:<端口>/?a=<script>alert(1)</script>`
+- access `http://<IP-or-HOSTNAME>:<PORT>/?id=1%20AND%201=1`
+- access `http://<IP-or-HOSTNAME>:<PORT>/?a=<script>alert(1)</script>`
 
 ![log.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/detect_log.gif)
 
-> 如果你需要进行深度测试，请参考 <a href="https://waf-ce.chaitin.cn/posts/guide_test">测试防护效果</a>
+> more test for <a href="https://waf-ce.chaitin.cn/posts/guide_test">测试防护效果</a>
 
 ### FAQ
 
-- [安装问题](https://waf-ce.chaitin.cn/posts/faq_install)
-- [登录问题](https://waf-ce.chaitin.cn/posts/faq_login)
-- [网站无法访问](https://waf-ce.chaitin.cn/posts/faq_access)
-- [配置问题](https://waf-ce.chaitin.cn/posts/faq_config)
-- [其他问题](https://waf-ce.chaitin.cn/posts/faq_other)
+- [SETUP](https://waf-ce.chaitin.cn/posts/faq_install)
+- [LOGIN](https://waf-ce.chaitin.cn/posts/faq_login)
+- [PROXY](https://waf-ce.chaitin.cn/posts/faq_access)
+- [SETTINGS](https://waf-ce.chaitin.cn/posts/faq_config)
+- [OTHERS](https://waf-ce.chaitin.cn/posts/faq_other)
 
-## 🏘️ 联系我们
+## 🏘️ Talk Group
 
-1. 可以通过 GitHub Issue 直接进行 Bug 反馈和功能建议
-2. 点击 <a href="https://discord.gg/wyshSVuvxC">链接</a> 加入雷池 Discord 聊天室
-3. 扫描下方二维码加入雷池社区版用户讨论群
-
-<img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/wechat-230825.png" width="30%" />
+1. Bug feedback and feature suggestions can be directly submitted through GitHub Issues.
+2. Join <a target="_blank" href="https://discord.gg/wyshSVuvxC">SafeLine Discord</a> for more discussions.
 
 ## Star History <a name="star-history"></a>
 
