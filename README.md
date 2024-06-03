@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="./README_EN.md">English</a> | 
-  <a href="./">中文</a>
+  English | 
+  <a href="./README_CN.md">中文</a>
 </p>
 <h1 align="center">SafeLine - The Best WAF For Community</h1>
 
