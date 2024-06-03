@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="76px" height="20px" viewBox="0 0 76 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>编组 4</title>
+    <defs>
+        <linearGradient x1="-4.93008412e-13%" y1="46.5373961%" x2="90.5986697%" y2="53.4626039%" id="linearGradient-1">
+            <stop stop-color="#FFC193" offset="0%"></stop>
+            <stop stop-color="#FF5A5E" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="官网设计" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="版本（专业版特惠）" transform="translate(-1012.000000, -737.000000)">
+            <g id="编组-4" transform="translate(1012.000000, 737.000000)">
+                <path d="M8,0 L66,0 C71.5228475,-1.01453063e-15 76,4.4771525 76,10 C76,15.5228475 71.5228475,20 66,20 L0,20 L0,20 L0,8 C-5.41083001e-16,3.581722 3.581722,8.11624501e-16 8,0 Z" id="矩形" fill="url(#linearGradient-1)"></path>
+                <g id="人气、热度" transform="translate(8.000000, 5.000000)" fill="#FFDF00" fill-rule="nonzero">
+                    <path d="M6.40193705,3.27637496 C6.08232446,3.79522657 5.66447596,4.06226219 5.66447596,4.06226219 C6.43652715,0.986509858 3.28052577,0 3.28052577,0 C4.21445866,3.40781736 0,3.66793497 0,6.41438948 C0,9.160844 3.22241439,9.63818748 3.22241439,9.63818748 C0.437218955,6.56658596 4,4.82324455 4,4.82324455 C4,4.82324455 3.37737807,5.72120374 4.83708059,7.12002767 C5.86786579,8.10653753 4.73607748,9.63403667 4.73607748,9.63403667 C5.78623314,9.64787271 8,8.26565202 8,6.388101 C8,4.51193359 6.40193705,3.27637496 6.40193705,3.27637496 Z" id="路径"></path>
+                </g>
+                <text id="限时特惠" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" line-spacing="20" fill="#FFFFFF">
+                    <tspan x="20" y="14">限时特惠</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>
