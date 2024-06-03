@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+Disallow: 
+
+# Host
+Host: https://waf-ce.chaitin.cn
+
+# Sitemaps
+Sitemap: https://waf-ce.chaitin.cn/sitemap.xml

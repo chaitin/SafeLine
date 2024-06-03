@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920px" height="343px" viewBox="0 0 1920 343" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>企业版底图</title>
+    <defs>
+        <linearGradient x1="100%" y1="48.4042833%" x2="50%" y2="51.5957167%" id="linearGradient-1">
+            <stop stop-color="#D5F6E4" offset="0%"></stop>
+            <stop stop-color="#0FC6C2" offset="99.9180507%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="1920" height="343"></rect>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="70.5207199%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="官网设计" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="企业版底图">
+            <mask id="mask-3" fill="white">
+                <use xlink:href="#path-2"></use>
+            </mask>
+            <use id="蒙版" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+            <path d="M775.722398,244.134104 L984.709001,367.11642 L750.711155,499.925604 L512.147585,367.11642 L512.147585,250.149971 L584.561532,293.722483 L584.561532,324.723672 L750.711155,418.984941 L842.888792,367.11642 L700.59358,283.891362 L775.722398,244.134104 Z M746.145431,-24.0743962 L984.709001,108.734788 L984.709001,225.062047 L912.295054,182.128725 L912.295054,151.127536 L746.145431,56.8662666 L653.967794,108.734788 L796.263006,191.959846 L721.134188,231.717103 L512.147585,108.734788 L746.145431,-24.0743962 Z" id="形状结合" fill="url(#linearGradient-4)" opacity="0.245047433" mask="url(#mask-3)"></path>
+        </g>
+    </g>
+</svg>
