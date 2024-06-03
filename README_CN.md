@@ -1,6 +1,6 @@
 <p align="center">
-  <a href="./">中文</a> | 
-  <a href="./README_EN.md">English</a>
+  <a href="./">English</a> | 
+  中文
 </p>
 <h1 align="center">雷池 - 广受好评的社区 WAF</h1>
 
