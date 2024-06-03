@@ -8,8 +8,8 @@
             <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
             <feColorMatrix values="0 0 0 0 0.568627451   0 0 0 0 0.619607843   0 0 0 0 0.670588235  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
         </filter>
-        <rect id="path-3" x="17" y="174" width="159" height="51" rx="25.5"></rect>
-        <filter x="-44.0%" y="-98.0%" width="188.1%" height="374.5%" filterUnits="objectBoundingBox" id="filter-4">
+        <rect id="path-3" x="17" y="174" width="195" height="51" rx="25.5"></rect>
+        <filter x="-35.9%" y="-98.0%" width="171.8%" height="374.5%" filterUnits="objectBoundingBox" id="filter-4">
             <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
             <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
             <feColorMatrix values="0 0 0 0 1   0 0 0 0 0.352941176   0 0 0 0 0.368627451  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
@@ -21,16 +21,16 @@
             <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"></feComposite>
             <feColorMatrix values="0 0 0 0 0.568627451   0 0 0 0 0.619607843   0 0 0 0 0.670588235  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
         </filter>
-        <rect id="path-7" x="329" y="255" width="214" height="114" rx="12"></rect>
-        <filter x="-32.7%" y="-43.9%" width="165.4%" height="222.8%" filterUnits="objectBoundingBox" id="filter-8">
+        <rect id="path-7" x="329" y="234" width="214" height="135" rx="12"></rect>
+        <filter x="-32.7%" y="-37.0%" width="165.4%" height="203.7%" filterUnits="objectBoundingBox" id="filter-8">
             <feOffset dx="0" dy="20" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
             <feGaussianBlur stdDeviation="20" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
             <feColorMatrix values="0 0 0 0 0.568627451   0 0 0 0 0.619607843   0 0 0 0 0.670588235  0 0 0 0.2 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
         </filter>
     </defs>
     <g id="官网设计" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="白色版本3" transform="translate(-977.000000, -1250.000000)">
-            <g id="语义分析" transform="translate(1000.000000, 1250.000000)">
+        <g id="官网英文版" transform="translate(-977.000000, -1114.000000)">
+            <g id="语义分析" transform="translate(1000.000000, 1114.000000)">
                 <rect id="矩形" fill-opacity="0" fill="#D8D8D8" x="0" y="0" width="560" height="400"></rect>
                 <g id="矩形">
                     <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
@@ -47,8 +47,8 @@
                     <use fill="black" fill-opacity="1" filter="url(#filter-6)" xlink:href="#path-5"></use>
                     <use fill-opacity="0.89767264" fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-5"></use>
                 </g>
-                <text id="0day-攻击" font-family="PingFangSC-Medium, PingFang SC" font-size="24" font-weight="400" line-spacing="36" fill="#FFFFFF">
-                    <tspan x="41" y="206">0day 攻击</tspan>
+                <text id="0day-attacks" font-family="Gilroy-Medium, Gilroy" font-size="24" font-weight="400" line-spacing="36" fill="#FFFFFF">
+                    <tspan x="41" y="204">0day attacks</tspan>
                 </text>
                 <circle id="椭圆形" fill-opacity="0.8" fill="#FF7777" cx="93" cy="67" r="3"></circle>
                 <circle id="椭圆形备份" fill="#FFC641" cx="103" cy="67" r="3"></circle>
@@ -64,23 +64,24 @@
                 <rect id="矩形备份-33" fill="#F7F8FA" x="306" y="128" width="176" height="7" rx="3.5"></rect>
                 <rect id="矩形备份-32" fill="#F7F8FA" x="98" y="151" width="176" height="7" rx="3.5"></rect>
                 <rect id="矩形备份-38" fill="#F7F8FA" x="306" y="151" width="176" height="7" rx="3.5"></rect>
-                <text id="多维-Web-应用防护" font-family="PingFangSC-Regular, PingFang SC" font-size="12" font-weight="normal" line-spacing="20" fill="#000000" fill-opacity="0.5">
-                    <tspan x="345" y="284">多维 Web 应用防护</tspan>
+                <text id="Multidimensional-Web" font-family="Gilroy-Regular, Gilroy" font-size="12" font-weight="normal" line-spacing="20" fill="#000000" fill-opacity="0.5">
+                    <tspan x="345" y="261">Multidimensional Web </tspan>
+                    <tspan x="345" y="281">Application Protection</tspan>
                 </text>
-                <text id="SQL-注入" font-family="PingFangSC-Regular, PingFang SC" font-size="10" font-weight="normal" line-spacing="10" fill="#52C41A">
-                    <tspan x="361" y="309">SQL 注入</tspan>
+                <text id="SQL-injection" font-family="Gilroy-Regular, Gilroy" font-size="10" font-weight="normal" line-spacing="10" fill="#52C41A">
+                    <tspan x="361" y="308">SQL injection</tspan>
                 </text>
-                <text id="XSS" font-family="PingFangSC-Regular, PingFang SC" font-size="10" font-weight="normal" line-spacing="10" fill="#FFC641">
-                    <tspan x="361" y="331">XSS</tspan>
+                <text id="XSS" font-family="Gilroy-Regular, Gilroy" font-size="10" font-weight="normal" line-spacing="10" fill="#FFC641">
+                    <tspan x="361" y="330">XSS</tspan>
                 </text>
-                <text id="SSRF" font-family="PingFangSC-Regular, PingFang SC" font-size="10" font-weight="normal" line-spacing="10" fill="#FFC641">
-                    <tspan x="454" y="331">SSRF</tspan>
+                <text id="SSRF" font-family="Gilroy-Regular, Gilroy" font-size="10" font-weight="normal" line-spacing="10" fill="#FFC641">
+                    <tspan x="454" y="330">SSRF</tspan>
                 </text>
-                <text id="CSRF" font-family="PingFangSC-Regular, PingFang SC" font-size="10" font-weight="normal" line-spacing="10" fill="#52C41A">
-                    <tspan x="454" y="309">CSRF</tspan>
+                <text id="CSRF" font-family="Gilroy-Regular, Gilroy" font-size="10" font-weight="normal" line-spacing="10" fill="#52C41A">
+                    <tspan x="454" y="308">CSRF</tspan>
                 </text>
-                <text id="……" font-family="PingFangSC-Regular, PingFang SC" font-size="10" font-weight="normal" line-spacing="20" fill="#FFC641">
-                    <tspan x="360" y="344">……</tspan>
+                <text id="……" font-family="Gilroy-Regular, Gilroy" font-size="10" font-weight="normal" line-spacing="20" fill="#FFC641">
+                    <tspan x="361" y="343">……</tspan>
                 </text>
                 <circle id="椭圆形" stroke="#52C41A" stroke-width="2" cx="349" cy="303" r="3"></circle>
                 <circle id="椭圆形备份-2885" stroke="#FFC641" stroke-width="2" cx="349" cy="325" r="3"></circle>

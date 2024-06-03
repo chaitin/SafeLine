@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: Gilroy;
+  src: url('/fonts/gilroy-regular-3.otf');
+}
+
+@font-face {
+  font-family: GilroyBold;
+  src: url('/fonts/gilroy-bold-4.otf');
+}
+
+@font-face {
+  font-family: GilroyThin;
+  src: url('/fonts/Gilroy-Thin-13-4.otf');
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -62,7 +77,7 @@ table {
 
 body {
   color: rgb(var(--foreground-rgb));
-	font-family: PingFang SC, Microsoft YaHei, Hiragino Sans GB, Helvetica Nene, Helvetica, Arial;
+	font-family: Gilroy PingFang SC, Microsoft YaHei, Hiragino Sans GB, Helvetica Nene, Helvetica, Arial;
 }
 
 a:-webkit-any-link {

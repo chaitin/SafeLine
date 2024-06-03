@@ -5,44 +5,44 @@ import Icon from "@/components/Icon";
 
 const ABILITY_LIST = [
   {
-    title: "人机验证",
+    title: "Human machine verification",
     href: "/docs/about/challenge",
     img: "/images/ability/ability_verification.png",
   },
   {
-    title: "百川网站监控联动",
+    title: "Rivers website monitoring linkage",
     href: "/docs/practice/monitor",
     img: "/images/ability/ability_rivers.png",
   },
   {
-    title: "APISIX 插件集成",
+    title: "APISIX plugin integration",
     href: "/docs/practice/apisix",
-    img: "/images/ability/ability_apisix.svg",
+    img: "/images/ability/ability_apisix.png",
   },
   {
-    title: "长亭社区恶意 IP 情报",
+    title: "Malicious IP Intelligence",
     href: "/docs/practice/IpIntelligence",
-    img: "/images/ability/ability_maliciousip.svg",
+    img: "/images/ability/ability_maliciousip.png",
   },
   {
-    title: "申请免费证书",
+    title: "Apply for a free certificate",
     href: "",
-    img: "/images/ability/ability_cert.svg",
+    img: "/images/ability/ability_cert.png",
   },
   {
-    title: "站点资源一览",
+    title: "Overview of Site Resources",
     href: "",
     img: "/images/ability/ability_asset.png",
   },
   {
-    title: "CC 攻击防护",
+    title: "CC attack protection",
     href: "",
-    img: "/images/ability/ability_CC.svg",
+    img: "/images/ability/ability_CC.png",
   },
   {
-    title: "一键强制 HTTPS",
+    title: "One click force HTTPS",
     href: "",
-    img: "/images/ability/ability_HTTPS.svg",
+    img: "/images/ability/ability_HTTPS.png",
   },
 ];
 
@@ -64,13 +64,19 @@ const Abilities = () => {
         pt: { xs: 8, md: 18 },
         pb: { xs: 8, md: 27 },
         px: 2,
+        fontFamily: 'Gilroy'
       }}
     >
       <Container maxWidth="lg">
         <Grid container alignItems="center">
-          <Grid item xs={12} md={6}>
-            <Typography variant="h2" mb={4.5} textAlign={{ xs: "center", md: "left" }} fontSize={{ xs: "32px", md: "48px" }}>
-              多维能力拓展
+          <Grid item xs={12} md={6} sx={{overflow: 'visible', whiteSpace: 'nowrap'}}>
+            <Typography
+              variant="h2"
+              mb={4.5}
+              textAlign={{ xs: "center", md: "left" }}
+              fontSize={{ xs: "32px", md: "48px" }}
+            >
+              Multidimensional capability expansion
             </Typography>
             <Grid container spacing={2}>
               {ABILITY_LIST.map((ability) => (
@@ -106,7 +112,7 @@ const Abilities = () => {
 export default Abilities;
 
 interface ItemProps {
-  ability: any
+  ability: any;
   hoveredUrl?: string;
   handleIconHover: Function;
 }
@@ -126,7 +132,7 @@ const AbilityItem: React.FC<ItemProps> = ({
           width: { xs: "100%", lg: "274px" },
         }}
         onMouseEnter={() => handleIconHover(ability.img)}
-        onMouseLeave={() => { }}
+        onMouseLeave={() => {}}
         onClick={() => handleIconHover(ability.img)}
       >
         {ability.href ? (
@@ -134,13 +140,14 @@ const AbilityItem: React.FC<ItemProps> = ({
             <Typography
               variant="h6"
               px={3}
-              py={3}
+              py={1}
               sx={{
                 fontSize: "20px",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
                 color: "common.white",
+                whiteSpace: 'normal',
                 "&:hover": {
                   backgroundColor: "primary.main",
                   boxShadow: "0px 4px 10px 0px rgba(3,13,23,0.6)",

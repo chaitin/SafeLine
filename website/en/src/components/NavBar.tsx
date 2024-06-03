@@ -25,8 +25,12 @@ import usePopupState, {
 } from "@/components/Popover/usePopupState";
 
 const navs = [
-  { to: "https://docs.waf.chaitin.com/", label: "帮助文档", target: "_blank" },
-  { to: "/community", label: "开发计划", target: "_self" },
+  {
+    to: "https://docs.waf.chaitin.com/",
+    label: "Help document",
+    target: "_blank",
+  },
+  { to: "/community", label: "Developer", target: "_self" },
 ];
 
 const menus = [
@@ -89,6 +93,7 @@ export default function NavBar() {
               }
             : {}),
           alignItems: "center",
+          fontFamily: "Gilroy",
         }}
       >
         <Container maxWidth="lg" sx={{ mx: 0 }}>
@@ -159,15 +164,18 @@ export default function NavBar() {
                     mr={3.5}
                     target="_blank"
                   >
-                    演示 Demo
+                    Demo
                   </Link>
                   <Button
                     variant="contained"
                     target="_blank"
-                    sx={{ width: { xs: "100%", sm: "auto" } }}
+                    sx={{
+                      width: { xs: "100%", sm: "auto" },
+                      fontFamily: "Gilroy",
+                    }}
                     href="/docs/guide/install"
                   >
-                    立即安装
+                    Start
                   </Button>
                 </Box>
                 <Stack justifyContent="center">
@@ -266,11 +274,11 @@ export const SafelineTitle: React.FC = () => {
             fontSize: { xs: "24px", md: "16px" },
             display: "flex",
             alignItems: "center",
-            fontFamily: "AlimamaShuHeiTi-Bold",
+            fontFamily: "GilroyBold",
             fontWeight: 500,
           }}
         >
-          雷池 SafeLine
+          SafeLine WAF
         </Typography>
       </Grid>
     </Link>

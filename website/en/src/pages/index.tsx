@@ -17,12 +17,36 @@ import {
 import Image from "next/image";
 
 const ARTICLES = [
-  { title: '《阮一峰·科技爱好者周刊》', href: "https://www.ruanyifeng.com/blog/2023/11/weekly-issue-276.html", width: 250 },
-  { title: '《Hello Github 月刊》', href: "https://hellogithub.com/repository/0d07cfe266af4c25ba3eadf2c3d06f50", width: 206 },
-  { title: '《Apache APISIX》', href: "https://zhuanlan.zhihu.com/p/655041825", width: 186 },
-  { title: '《科技 lion》', href: "https://blog.kejilion.pro/leichi-waf/", width: 250 },
-  { title: '《Github 爱好者》', href: "https://mp.weixin.qq.com/s/CO-k2nv-PK0Ij-V5lTbUEQ", width: 206 },
-  { title: '《GitHub Daily》', href: "https://zhuanlan.zhihu.com/p/656047298", width: 186 },
+  {
+    title: "《阮一峰·科技爱好者周刊》",
+    href: "https://www.ruanyifeng.com/blog/2023/11/weekly-issue-276.html",
+    width: 250,
+  },
+  {
+    title: "《Hello Github 月刊》",
+    href: "https://hellogithub.com/repository/0d07cfe266af4c25ba3eadf2c3d06f50",
+    width: 206,
+  },
+  {
+    title: "《Apache APISIX》",
+    href: "https://zhuanlan.zhihu.com/p/655041825",
+    width: 186,
+  },
+  {
+    title: "《科技 lion》",
+    href: "https://blog.kejilion.pro/leichi-waf/",
+    width: 250,
+  },
+  {
+    title: "《Github 爱好者》",
+    href: "https://mp.weixin.qq.com/s/CO-k2nv-PK0Ij-V5lTbUEQ",
+    width: 206,
+  },
+  {
+    title: "《GitHub Daily》",
+    href: "https://zhuanlan.zhihu.com/p/656047298",
+    width: 186,
+  },
 ];
 
 const totalSx = {
@@ -41,11 +65,13 @@ export async function getServerSideProps() {
   let total = 48750;
   let starCount = 6.5;
   const promises = [
-    getSetupCount().then((result) => total = result.total),
-    getReposInfo().then((result) => starCount = formatStarNumber(result.star_count)),
+    getSetupCount().then((result) => (total = result.total)),
+    getReposInfo().then(
+      (result) => (starCount = formatStarNumber(result.star_count))
+    ),
   ];
   try {
-    await Promise.allSettled(promises)
+    await Promise.allSettled(promises);
   } finally {
     return {
       props: {
@@ -56,7 +82,13 @@ export async function getServerSideProps() {
   }
 }
 
-export default function Home({ total, starCount }: { total: number, starCount: number }) {
+export default function Home({
+  total,
+  starCount,
+}: {
+  total: number;
+  starCount: number;
+}) {
   const totalRef = useRef(null);
   const startRef = useRef(null);
 
@@ -89,6 +121,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
             width: "100%",
             height: "866px",
             position: "relative",
+            fontFamily: "Gilroy",
           }}
         >
           <Image
@@ -100,13 +133,17 @@ export default function Home({ total, starCount }: { total: number, starCount: n
             quality={100}
             // unoptimized={true}
           />
-          <Box pt={{ xs: 21, md: 26.5 }} className="relative" display={{ xs: "none", sm: "block" }}>
+          <Box
+            pt={{ xs: 21, md: 26.5 }}
+            className="relative"
+            display={{ xs: "none", sm: "block" }}
+          >
             <Box alignItems="center">
               <Stack
                 direction="row"
                 sx={{
                   color: "#86909C",
-                  letterSpacing: { xs: 4, md: 8 },
+                  letterSpacing: { xs: 3, md: 3 },
                 }}
                 justifyContent="center"
               >
@@ -116,18 +153,20 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                     mr: { xs: 22, md: 36.5 },
                     fontWeight: 400,
                     fontSize: { xs: "16px", md: "24px" },
+                    fontFamily: "GilroyThin",
                   }}
                 >
-                  基于智能语义分析的
+                  Developed based on Nginx
                 </Typography>
                 <Typography
                   variant="h5"
                   sx={{
                     fontWeight: 400,
                     fontSize: { xs: "16px", md: "24px" },
+                    fontFamily: "GilroyThin",
                   }}
                 >
-                  下一代 Web 应用防火墙
+                  and Connected as a reverse proxy
                 </Typography>
               </Stack>
               <Stack
@@ -135,9 +174,10 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                 mt={2}
                 justifyContent="center"
                 sx={{
-                  fontFamily: "AlimamaShuHeiTi-Bold",
-                  letterSpacing: { xs: 5, md: 10 },
-                  background: "linear-gradient(90deg, #160847 0%, #0A7977 100%)",
+                  fontFamily: "GilroyBold",
+                  letterSpacing: { xs: 5, lg: 5 },
+                  background:
+                    "linear-gradient(90deg, #160847 0%, #0A7977 100%)",
                   "-webkit-background-clip": "text",
                   "-webkit-text-fill-color": "transparent",
                 }}
@@ -145,19 +185,28 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                 <Typography
                   variant="h1"
                   sx={{
-                    mr: { xs: 13.5, md: 15.5 },
-                    fontSize: { xs: "48px", md: "80px" },
+                    mr: { xs: 13.5, lg: 22.5 },
+                    fontSize: { xs: "28px", lg: "51px", xl: "70px" },
                   }}
                 >
-                  不让黑客
+                  Simple,Secure
                 </Typography>
-                <Typography variant="h1" sx={{ fontSize: { xs: "48px", md: "80px" }, }}>
-                  越雷池一步
+                <Typography
+                  variant="h1"
+                  sx={{
+                    fontSize: { xs: "28px", lg: "50px", xl: "70px" },
+                  }}
+                >
+                  lightweight WAF
                 </Typography>
               </Stack>
             </Box>
           </Box>
-          <Box pt={{ xs: 16 }} className="relative" display={{ xs: "block", sm: "none" }}>
+          <Box
+            pt={{ xs: 16 }}
+            className="relative"
+            display={{ xs: "block", sm: "none" }}
+          >
             <Stack alignItems="center">
               <Typography
                 variant="h1"
@@ -165,7 +214,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                   fontSize: "32px",
                 }}
               >
-                不让黑客，越雷池一步
+                Simple,Secure lightweight WAF
               </Typography>
               <Typography
                 variant="h5"
@@ -176,7 +225,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                   color: "#86909C",
                 }}
               >
-                基于智能语义分析的，下一代 Web 应用防火墙
+                Developed based on Nginx and Connected as a reverse proxy
               </Typography>
             </Stack>
           </Box>
@@ -219,7 +268,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                 }}
                 href="/docs/guide/install"
               >
-                立即安装
+                Start
               </Button>
             </Box>
           </Container>
@@ -237,7 +286,7 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                     >
                       -
                     </Typography>
-                    <Typography variant="h5">装机量</Typography>
+                    <Typography variant="h5">Installed capacity</Typography>
                   </Stack>
                 </Grid>
                 <Grid
@@ -255,10 +304,16 @@ export default function Home({ total, starCount }: { total: number, starCount: n
                     <Stack direction="row" justifyContent="center">
                       <Stack spacing={2} alignItems="center">
                         <Stack direction="row" sx={{ ...totalSx }}>
-                          <Typography variant="h1" ref={startRef} fontSize="70px">
+                          <Typography
+                            variant="h1"
+                            ref={startRef}
+                            fontSize="70px"
+                          >
                             -
                           </Typography>
-                          <Typography variant="h1" fontSize="70px">k</Typography>
+                          <Typography variant="h1" fontSize="70px">
+                            k
+                          </Typography>
                         </Stack>
                         <Typography variant="h5">GitHub Star</Typography>
                       </Stack>
@@ -275,54 +330,12 @@ export default function Home({ total, starCount }: { total: number, starCount: n
               </Grid>
             </Box>
           </Container>
-          <Container>
-            <Box mt={7}>
-              <Grid container spacing={2}>
-                {ARTICLES.map((article, index) => (
-                  <Grid
-                    key={article.title}
-                    item
-                    xs={6}
-                    sm={4}
-                    display="flex"
-                    justifyContent={{ xs: 'flex-start', sm: justifyContents[index % 3] }}
-                  >
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        width: article.width + "px",
-                        textAlign: "left",
-                      }}
-                    >
-                      <Link
-                        sx={{ color: "#86909C", fontFamily: "AlimamaShuHeiTi-Bold", fontSize: { xs: "14px", sm: "20px" }}}
-                        target="_blank"
-                        href={article.href}
-                      >
-                        {article.title}
-                      </Link>
-                    </Typography>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          </Container>
-          <Container sx={{ pb: 3, mb: 3, mt: { xs: 10, md: 18 }}}>
+          <Container
+            sx={{ pb: 3, mb: 3, mt: { xs: 10, md: 18 }, fontFamily: "Gilroy" }}
+          >
             <Features />
           </Container>
           <Abilities />
-          <Box
-            sx={{ position: "relative" }}
-          >
-            <Image
-              src="/images/partner-bg.png"
-              alt="partner bg"
-              layout="fill"
-              objectFit="cover"
-              objectPosition="center"
-            />
-            <Partner />
-          </Box>
           <Version />
         </Box>
       </Box>

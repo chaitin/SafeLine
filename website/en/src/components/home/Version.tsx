@@ -8,7 +8,6 @@ const Version = () => {
       sx={{
         width: "100%",
         height: { xs: "205px", md: "343px" },
-        mt: 19,
         backgroundImage: "url(/images/enterprise-bg.svg)",
         backgroundSize: "cover",
         backgroundPosition: "center center",
@@ -23,11 +22,11 @@ const Version = () => {
               fontWeight: 400,
               color: "common.white",
               fontSize: { xs: "24px", md: "28px" },
-              fontFamily: "AlimamaShuHeiTi-Bold",
+              fontFamily: "GilroyBold",
               letterSpacing: "2px",
             }}
           >
-            欢迎使用雷池其他版本
+            Welcome to other versions of Safeline WAF
           </Typography>
           <Button
             variant="outlined"
@@ -37,6 +36,7 @@ const Version = () => {
               mt: 4,
               backgroundColor: "common.white",
               fontSize: { xs: "24px", md: "16px" },
+              fontFamily: 'GilroyBold',
               "&:hover": {
                 color: "#0A8A87",
                 backgroundColor: "common.white",
@@ -44,7 +44,7 @@ const Version = () => {
             }}
             href="/version"
           >
-            付费版本
+            Version
           </Button>
         </Stack>
         <Box
