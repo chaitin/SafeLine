@@ -17,7 +17,7 @@
   <a target="_blank" href="https://demo.waf.chaitin.com:9443/dashboard">Demo</a> | 
   <a target="_blank" href="https://docs.waf.chaitin.com/">Docs</a> | 
   <a target="_blank" href="https://discord.gg/wyshSVuvxC">Discord</a> |
-  <a href="./README_CN.md">中文版</a>
+  <a target="_blank" href="https://waf-ce.chaitin.cn/">中文版</a>
 </p>
 
 SafeLine is a simple, lightweight, locally deployable WAF, it is the best waf for webmaster.
