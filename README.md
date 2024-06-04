@@ -53,7 +53,8 @@ to see [Documentation](https://docs.waf.chaitin.com/en/toturials/install)
 
 Open the web console page `https://<safeline-ip>:9443/` in the browser, then you will see below.
 
-![login.png](/images/login.png)
+
+<img width="400" src="/images/login.png">
 
 Execute the following command to get administrator account
 
