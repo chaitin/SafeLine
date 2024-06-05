@@ -1,4 +1,4 @@
-<h1 align="center">SafeLine, The Best WAF For Webmaster</h1>
+<h1 align="center">SafeLine, The Best Free WAF For Webmaster</h1>
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/403.svg" width="160">
