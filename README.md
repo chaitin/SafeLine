@@ -34,12 +34,14 @@ It serves as a reverse proxy access to protect your website from network attacks
 
 ## Installation
 
+**中国大陆用户安装国际版可能会导致无法连接云服务，请查看 [中文版安装文档](https://waf-ce.chaitin.cn/docs/guide/install)**
+
 > Recommended
 
 Use the following command to start the automated installation of SafeLine. (This process requires root privileges)
 
 ```bash
-bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
+bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/setup.sh)"
 ```
 
 After the command is executed, it means the installation is successfully. Please go to "Use Web UI" directly.
@@ -73,6 +75,60 @@ After the command is successfully executed, you will see the following content
 ```
 
 Enter the password in the previous step and you will successfully logged into SafeLine.
+
+## Protecting a website
+
+### How SafeLine works
+
+SafeLine is a web application firewall developed based on nginx, designed to help websites defend against network attacks.
+
+Its principle is to act as an http/https reverse proxy, receive network traffic for the original website, then clean the malicious attack traffic and forward the safe and reliable traffic to the original website.
+
+<img src="/images/safeline-as-proxy.png" width=400>
+
+### Proxy a website in SafeLine
+
+Log into the SafeLine Web Admin Console, go to the "Site" -> "Website" page and click the "Add Site" button in the upper right corner.
+
+<img src="/images/add-site-1.png" width=800>
+
+In the next dialog box, enter the information to the original website.    
+
+- **Domain**: domain name of your original website, or hostname, or ip address, for example: `www.chaitin.com`
+- **Port**: port that SafeLine will listen, such as 80 or 443. (for `https` websites, please check the `SSL` option)
+- **Upstream**: real address of your original website, through which SafeLine will forward traffic to it
+
+After completing the above settings, please resolve the domain name you just entered to the IP address of the server where SafeLine is located.
+
+<img src="/images/add-site-2.png" width=400>
+
+Then you can access the website protected by the SafeLine through the domain name like this.
+
+<img src="/images/safeline-as-proxy-2.png" width=400>
+
+## Try to attack your website
+
+Now, your website is protected by SafeLine, let’s try tp attack it and see what happens.
+
+If https://chaitin.com is a website protected by SafeLine, here are some test cases for common attacks:
+
+- SQL Injection: `https://chaitin.com/?id=1+and+1=2+union+select+1`
+- XSS: `https://chaitin.com/?id=<img+src=x+onerror=alert()>`
+- Path Traversal: `https://chaitin.com/?id=../../../../etc/passwd`
+- Code Injection: `https://chaitin.com/?id=phpinfo();system('id')`
+- XXE: `https://chaitin.com/?id=<?xml+version="1.0"?><!DOCTYPE+foo+SYSTEM+"">`
+
+Replace `chaitin.com` in the above cases with your website domain name and try to access it.
+
+<img src="/images/blocked.png" width=400>
+
+Check the web console of SafeLine to see the attack list
+
+<img src="/images/log-list.png" width=800>
+
+To view the specific details of the attack, click "detail"
+
+<img src="/images/log-detail.png" width=600>
 
 ## Core Capabilities
 
