@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { useEffect } from "react";
-import Script from "next/script";
+import CssBaseline from '@mui/material/CssBaseline';
 
 import "@/css/lineicons.css";
 import "bootstrap/dist/css/bootstrap.css";
@@ -28,7 +28,7 @@ function MyApp({ Component }) {
         ></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script
-          src="https://at.alicdn.com/t/c/font_4031246_dv8ag8nlrz.js?spm=a313x.manage_type_myprojects.i1.13.51b53a81rteUu4&file=font_4031246_dv8ag8nlrz.js"
+          src="https://at.alicdn.com/t/c/font_4031246_8o6dgtp7wm5.js?spm=a313x.manage_type_myprojects.i1.13.5f303a813w1hKj&file=font_4031246_8o6dgtp7wm5.js"
           defer
         />
         <script
@@ -39,6 +39,7 @@ function MyApp({ Component }) {
 
         <link rel="shortcut icon" type="image/x-icon" href="/favicon.png" />
       </Head>
+      <CssBaseline />
       <Component />
     </>
   );

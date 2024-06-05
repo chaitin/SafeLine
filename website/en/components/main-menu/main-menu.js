@@ -63,7 +63,7 @@ export default function ManiMenu() {
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
+        aria-cpontrols="navbarSupportedContent"
         aria-expanded="false"
         aria-label="Toggle navigation"
         onClick={() => setMenuActive(!isMenuActive)}
@@ -117,7 +117,7 @@ export default function ManiMenu() {
                 >
                   <use xlinkHref="#icon-github-fill" />
                 </svg>
-                Gitlub 10k+
+                GitHub 10k+
                 <svg
                   className="icon_svg"
                   style={{ width: "16px", height: "16px", marginLeft: "8px" }}

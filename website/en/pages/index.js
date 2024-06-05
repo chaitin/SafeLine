@@ -2,12 +2,12 @@ import Features from "@/components/landing-page-sections/features";
 import Hero from "@/components/landing-page-sections/hero";
 import Footer from "@/components/footer-section";
 import TwoColumnWithImage from "@/components/landing-page-sections/two-column-with-image";
-
+import { Box } from "@mui/material";
 import HeaderSection from "@/components/header-section";
 
 function MyApp() {
   return (
-    <>
+    <Box sx={{ overflow: "auto", height: "100%", width: "100%" }} id='next_container'>
       <HeaderSection />
       <Hero />
       <Features />
@@ -51,8 +51,8 @@ function MyApp() {
       ].map((item) => (
         <TwoColumnWithImage key={item.headline} {...item} />
       ))}
-      <Footer/>
-    </>
+      <Footer />
+    </Box>
   );
 }
 

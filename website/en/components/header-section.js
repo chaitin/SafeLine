@@ -1,24 +1,43 @@
-import { useEffect, useState, useRef } from "react";
-
-import Image from "next/image";
+import { Box, MenuItem, Stack } from "@mui/material";
+import Select from "@mui/material/Select";
+import { useEffect, useRef, useState } from "react";
 
 import MainMenu from "./main-menu/main-menu";
 
 export default function HeaderSection() {
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const navbarAreaEl = useRef(null);
+  const [lang, setLang] = useState("en");
+  const handleOpen = () => {
+    setLangOpen(true);
+  };
+  const handleClose = () => {
+    setLangOpen(false);
+  };
+  const handleChange = (event) => {
+    window.open("https://waf-ce.chaitin.cn/");
+  };
 
   function fixNavBar() {
     if (navbarAreaEl.current) {
-      setIsNavbarSticky(window.pageYOffset > navbarAreaEl.current.offsetTop);
+      setIsNavbarSticky(
+        document.getElementById("next_container").scrollTop >
+          navbarAreaEl.current.offsetTop
+      );
     }
   }
 
   useEffect(() => {
-    window.addEventListener("scroll", fixNavBar);
+    if (document.getElementById("next_container"))
+      document
+        .getElementById("next_container")
+        .addEventListener("scroll", fixNavBar);
 
     return () => {
-      window.removeEventListener("scroll", fixNavBar);
+      document
+        .getElementById("next_container")
+        .removeEventListener("scroll", fixNavBar);
     };
   }, []);
 
@@ -40,8 +59,73 @@ export default function HeaderSection() {
                   style={{
                     maxWidth: "100%",
                     height: "auto",
+                    marginRight: "24px",
                   }}
                 />
+
+                <Select
+                  value={lang}
+                  label=""
+                  onChange={handleChange}
+                  size="small"
+                  open={langOpen}
+                  onMouseEnter={handleOpen}
+                  onClose={handleClose}
+                  onOpen={handleOpen}
+                  MenuProps={{
+                    PaperProps: {
+                      onMouseLeave: handleClose,
+                    },
+                  }}
+                  renderValue={(v) => {
+                    return (
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <svg
+                          className="icon_svg"
+                          style={{ width: "16px", height: "16px" }}
+                        >
+                          <use xlinkHref="#icon-diqiuyangshi1" />
+                        </svg>
+                        <Box>EN</Box>
+                      </Stack>
+                    );
+                  }}
+                  sx={{
+                    border: "none",
+                    fontFamily: "GilroyBold",
+                    px: "4px",
+                    "& fieldset": {
+                      border: langOpen
+                        ? "2px solid rgba(15,198,194,0.1)!important"
+                        : "none",
+                    },
+                    "& .MuiSelect-select": { px: "12px" },
+                  }}
+                  className="lang_select"
+                >
+                  <MenuItem
+                    value="en"
+                    sx={{
+                      "&.Mui-selected": {
+                        bgcolor: "rgba(15,198,194,0.1)!important",
+                      },
+                      "&:hover": { bgcolor: "rgba(15,198,194,0.1)" },
+                    }}
+                  >
+                    English
+                  </MenuItem>
+                  <MenuItem
+                    value="cn"
+                    sx={{
+                      "&.Mui-selected": {
+                        bgcolor: "rgba(15,198,194,0.1)!important",
+                      },
+                      "&:hover": { bgcolor: "rgba(15,198,194,0.1)" },
+                    }}
+                  >
+                    简体中文
+                  </MenuItem>
+                </Select>
                 <MainMenu />
               </nav>
             </div>

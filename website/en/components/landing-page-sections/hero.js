@@ -31,7 +31,7 @@ export default function Hero({ scrollAnchorId }) {
               <h1
                 style={{
                   fontFamily: "GilroyBold",
-                  fontSize: 70,
+                  fontSize: 64,
                   marginBottom: "3px",
                 }}
               >
@@ -40,11 +40,11 @@ export default function Hero({ scrollAnchorId }) {
               <h2
                 style={{
                   fontFamily: "GilroyBold",
-                  fontSize: 36,
+                  fontSize: 28,
                   margin: "4px auto 14px auto",
                 }}
               >
-                The Best WAF For Webmaster
+                The Best Free WAF For Webmaster
               </h2>
               <p style={{ letterSpacing: "1px", color: "rgba(0, 0, 0, 0.7)" }}>
                 SafeLine is a simple, lightweight, locally deployable WAF that

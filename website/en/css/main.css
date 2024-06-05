@@ -17,6 +17,8 @@
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
+  width: 100%;
 }
 
 body {
@@ -24,7 +26,9 @@ body {
   font-weight: normal;
   font-style: normal;
   color: rgba(0, 0, 0, 0.7);
-  overflow-x: hidden;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
 }
 
 * {
@@ -128,6 +132,9 @@ h2 {
     padding: 5px 12px 5px 12px !important;
     margin-top: 10px;
   }
+  .lang_select{
+    margin-right: 40px;
+  }
 }
 
 h3,
@@ -206,7 +213,7 @@ p {
   padding: 18px 28px;
   font-size: 18px;
   line-height: 1;
-  border-radius: 10px;
+  border-radius: 6px;
   color: #fff;
   cursor: pointer;
   z-index: 5;
@@ -2824,4 +2831,26 @@ h2 {
 }
 .nav-item_tooltip:hover .nav-btn_tooltip {
   display: block;
+}
+
+.nav-item__i18n {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 18px;
+  flex-grow: 0;
+  width: 140px;
+}
+
+.form-select:focus {
+  box-shadow: unset !important;
+}
+
+.MuiPaper-elevation8 {
+  box-shadow: 0px 25px 50px rgba(145, 158, 171, 0.2);
+}
+
+#__next {
+  overflow: auto;
+  height: 100%;
+  width: 100%;
 }
