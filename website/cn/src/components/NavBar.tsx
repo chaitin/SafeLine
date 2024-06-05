@@ -14,6 +14,8 @@ import {
   ListItemText,
   Stack,
   IconButton,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -54,7 +56,17 @@ const HoverPopover = dynamic(
 export default function NavBar() {
   const [isSticky, setIsSticky] = useState(false);
   const [open, setOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
 
+  const handleOpen = () => {
+    setLangOpen(true);
+  };
+  const handleClose = () => {
+    setLangOpen(false);
+  };
+  const handleChange = () => {
+    window.open("https://waf.chaitin.com/");
+  };
   const popoverState = usePopupState({
     popupId: "wechat-qrcode-popover",
   });
@@ -75,7 +87,79 @@ export default function NavBar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
+  const langRender = () => (
+    <Select
+      value={"cn"}
+      label=""
+      onChange={handleChange}
+      size="small"
+      open={langOpen}
+      onMouseEnter={handleOpen}
+      onClose={handleClose}
+      onOpen={handleOpen}
+      MenuProps={{
+        PaperProps: {
+          onMouseLeave: handleClose,
+        },
+      }}
+      renderValue={() => {
+        return (
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            sx={{ ml: "auto" }}
+          >
+            <Box display={{ xs: "none", md: "flex" }}>
+              <svg
+                className="icon_svg"
+                style={{ width: "16px", height: "16px" }}
+              >
+                <use xlinkHref="#icon-diqiuyangshi1" />
+              </svg>
+            </Box>
+            <Box>中文</Box>
+          </Stack>
+        );
+      }}
+      sx={{
+        border: "none",
+        fontFamily: "GilroyBold",
+        px: "4px",
+        ml: { sx: "auto", md: 1 },
+        "& fieldset": {
+          border: langOpen
+            ? "2px solid rgba(15,198,194,0.1)!important"
+            : "none",
+        },
+        "& .MuiSelect-select": { px: "12px" },
+      }}
+      className="lang_select"
+    >
+      <MenuItem
+        value="en"
+        sx={{
+          "&.Mui-selected": {
+            bgcolor: "rgba(15,198,194,0.1)!important",
+          },
+          "&:hover": { bgcolor: "rgba(15,198,194,0.1)" },
+        }}
+      >
+        English
+      </MenuItem>
+      <MenuItem
+        value="cn"
+        sx={{
+          "&.Mui-selected": {
+            bgcolor: "rgba(15,198,194,0.1)!important",
+          },
+          "&:hover": { bgcolor: "rgba(15,198,194,0.1)" },
+        }}
+      >
+        简体中文
+      </MenuItem>
+    </Select>
+  );
   return (
     <>
       <AppBar
@@ -98,8 +182,9 @@ export default function NavBar() {
           >
             <Grid container justifyContent="space-around">
               <Grid item xs={10} md={6} display="flex">
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" sx={{ width: "100%" }}>
                   <SafelineTitle />
+                  {langRender()}
                   <Box display={{ xs: "none", md: "flex" }} alignItems="center">
                     {navs.map((nav, index) => (
                       <Box component="span" key={index} mr={3.5}>
@@ -192,21 +277,16 @@ export default function NavBar() {
                       />
                     </HoverPopover>
                   </Box>
-                  <Link
-                    href="https://demo.waf-ce.chaitin.cn:9443/dashboard"
-                    sx={{ color: "common.black" }}
-                    mr={3.5}
-                    target="_blank"
-                  >
-                    演示 Demo
-                  </Link>
                   <Button
                     variant="contained"
                     target="_blank"
-                    sx={{ width: { xs: "100%", sm: "auto" } }}
-                    href="/docs/guide/install"
+                    sx={{
+                      width: { xs: "100%", sm: "auto" },
+                      textTransform: "none",
+                    }}
+                    href="https://demo.waf-ce.chaitin.cn:9443/dashboard"
                   >
-                    立即安装
+                    Demo
                   </Button>
                 </Box>
                 <Stack justifyContent="center">
@@ -282,27 +362,27 @@ export const SafelineTitle: React.FC = () => {
         flexDirection="row"
         display="flex"
         spacing={2}
-        sx={{ marginTop: "0px", minWidth: "192px" }}
+        sx={{ marginTop: "0px", flexWrap: "nowrap" }}
       >
         <Box
-          width={{ xs: "40px", md: "24px" }}
-          height={{ xs: "43px", md: "26px" }}
+          width={{ xs: "30px", md: "24px" }}
+          height={{ xs: "33px", md: "26px" }}
           position="relative"
         >
           <Image
             src="/images/safeline.svg"
             alt="SafeLine Logo"
             layout="responsive"
-            width={40}
-            height={43}
+            width={30}
+            height={33}
           />
         </Box>
         <Typography
           variant="h6"
           sx={{
-            ml: { xs: 2, md: 1 },
-            mr: { xs: 0, md: 7 },
-            fontSize: { xs: "24px", md: "16px" },
+            ml: { xs: "4px", md: 1 },
+            mr: { xs: 0, md: 0 },
+            fontSize: { xs: "20px", md: "16px" },
             display: "flex",
             alignItems: "center",
             fontFamily: "AlimamaShuHeiTi-Bold",
