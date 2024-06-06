@@ -91,6 +91,7 @@ services:
       - /etc/resolv.conf:/etc/resolv.conf:ro
       - ${SAFELINE_DIR}/resources/nginx:/etc/nginx
       - ${SAFELINE_DIR}/resources/detector:/resources/detector
+      - ${SAFELINE_DIR}/resources/chaos:/resources/chaos
       - ${SAFELINE_DIR}/logs/nginx:/var/log/nginx
       - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
     environment:
@@ -164,8 +165,8 @@ services:
       options:
         max-size: "100m"
         max-file: "10"
-    ports:
-      - 23333:23333
+    volumes:
+      - ${SAFELINE_DIR}/resources/chaos:/app/chaos
     networks:
       safeline-ce:
         ipv4_address: ${SUBNET_PREFIX}.10

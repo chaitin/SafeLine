@@ -209,6 +209,7 @@ curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o $compose_n
 curl "https://waf-ce.chaitin.cn/release/latest/reset_tengine.sh" -sSLk -o reset_tengine.sh
 
 if [ $? -ne "0" ]; then
+    mv $compose_name.old $compose_name || true
     abort "下载 compose.yaml 脚本失败"
 fi
 info "下载 compose.yaml 脚本成功"
@@ -250,6 +251,7 @@ info "即将开始下载新版本 Docker 镜像"
 
 $compose_command pull
 if [ $? -ne "0" ]; then
+    mv $compose_name.old $compose_name || true
     abort "下载新版本 Docker 镜像失败"
 fi
 info "下载新版本 Docker 镜像成功"
@@ -261,6 +263,7 @@ docker rm -f safeline-redis &>/dev/null
 
 $compose_command down --remove-orphans && $compose_command up -d
 if [ $? -ne "0" ]; then
+    mv $compose_name.old $compose_name || true
     abort "替换 Docker 容器失败"
 fi
 
