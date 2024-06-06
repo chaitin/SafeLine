@@ -49,7 +49,7 @@ After the command is executed, it means the installation is successfully. Please
 
 ## Mannually Deploy
 
-to see [Documentation](https://docs.waf.chaitin.com/en/toturials/install)
+to see [Documentation](https://docs.waf.chaitin.com/en/tutorials/install)
 
 ## Use Web UI
 
