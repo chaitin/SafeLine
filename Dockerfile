@@ -93,7 +93,7 @@ directory   = /srv/documents        \n\
                                     \n\
 [program:front]                     \n\
 command     = npm start             \n\
-directory   = /srv/website          \n\
+directory   = /srv/website/cn       \n\
                                     \n\
 [program:server]                    \n\
 command     = /srv/server           \n\
@@ -108,7 +108,7 @@ RUN npm ci; npm run build
 
 ENV TARGET=http://localhost:8080
 COPY website /srv/website
-WORKDIR /srv/website
+WORKDIR /srv/website/cn
 RUN npm ci; npm run build
 # npm start
 
