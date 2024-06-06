@@ -9,7 +9,6 @@ title: "安装雷池"
 - [环境检测](#环境检测) : 查看环境是否符合安装要求
 - [在线安装](#在线安装) : 推荐方式，一行命令完成安装
 - [离线安装](#离线安装) : 下载离线安装包，轻松完成安装
-- [其他方式安装](#使用牧云助手安装) : 使用牧云助手，点击即可完安装
 
 ## 在线安装（推荐）
 
@@ -89,20 +88,6 @@ style={{ width: '100%', height: '350px' }}
 style={{ width: '100%', height: '350px' }}
 > 
 </iframe>
-
-## 使用牧云助手安装
-
-使用 [牧云主机管理助手](https://collie.chaitin.cn/) 进行一键安装
-
-直接点击应用市场的安装按钮安装
-
-![](/images/docs/guide_install/collie_apps.png)
-
-### 助手安装演示
-
-<iframe src="//player.bilibili.com/player.html?aid=613778738&bvid=BV1sh4y1t7Pk&cid=1134834926&p=1&autoplay=0"  scrolling="no" border="0" frameBorder="no" framespacing="0" allowFullScreen="{true}"
-style={{ width: '100%', height: '350px' }}
-> </iframe>
 
 ## 环境检测
 
