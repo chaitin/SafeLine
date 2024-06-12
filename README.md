@@ -1,40 +1,49 @@
-<h1 align="center">SafeLine, The Best Free WAF For Webmaster</h1>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/403.svg" width="160">
-</p>
+# SafeLine, the best free WAF for webmaster
 
-<p align="center">
-  <a target="_blank" href="https://waf.chaitin.com/">Home</a> | 
-  <a target="_blank" href="https://docs.waf.chaitin.com/">Docs</a> | 
-  <a target="_blank" href="https://demo.waf.chaitin.com:9443/dashboard">Demo</a> | 
+<img src="/documents/static/images/403.svg" align="right" width="200" />
+
+SafeLine is a web security gateway to protect your websites from attacks and exploits.
+
+It defenses for all of web attacks, such as sql injection, code injection, os command injection, CRLF injection, ldap injection, xpath injection, rce, xss, xxe, ssrf, path traversal, backdoor, bruteforce, http-flood, bot abused and so on.
+
+<p align="left">
+  <a target="_blank" href="https://waf.chaitin.com/">🏠Home</a> &nbsp; | &nbsp;
+  <a target="_blank" href="https://docs.waf.chaitin.com/">📖Documentation</a> &nbsp; | &nbsp;
+  <a target="_blank" href="https://demo.waf.chaitin.com:9443/dashboard">🔍Live Demo</a> &nbsp; | &nbsp;
   <a target="_blank" href="https://waf-ce.chaitin.cn/">中文版</a>
 </p>
 
-<p align="center">
-  <a target="_blank" href="https://discord.gg/wyshSVuvxC"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white"></a>
-  <a target="_blank" href="https://x.com/safeline_waf"><img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white"></a>
-  <a target="_blank" href="https://t.me/safeline_waf"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white"></a>
-  <a target="_blank" href="/documents/static/images/wechat-230825.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=for-the-badge&logo=wechat&logoColor=white"></a>
+<p align="left">
+  <a target="_blank" href="https://discord.gg/wyshSVuvxC"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white"></a> &nbsp;
+  <a target="_blank" href="https://x.com/safeline_waf"><img src="https://img.shields.io/badge/X-000000?style=flat&logo=x&logoColor=white"></a> &nbsp;
+  <a target="_blank" href="https://t.me/safeline_waf"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white"></a> &nbsp;
+  <a target="_blank" href="/documents/static/images/wechat-230825.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
 </p>
 
-SafeLine is a simple, lightweight, locally deployable WAF, it is the best waf for webmaster.
+# Screenshots
 
-It serves as a reverse proxy access to protect your website from network attacks that including OWASP attacks, zero-day attacks, web crawlers, vulnerability scanning, vulnerability exploit, http flood and so on.
+<img src="./images/safeline_en.png" width=600 />
 
-- Cumulative installations exceed **130,000** units
-- Protecting websites over **1,000,000**
-- Processing HTTP requests over **30,000,000,000** times per day
-- Intercepting attacks over **50,000,000** times per day
+# How It Works
 
-<img src="./images/safeline_en.png" />
+<img src="/images/safeline-as-proxy.png" align="right" width=400 />
 
+SafeLine is developed based on nginx, it serves as a reverse proxy middleware to detect and cleans web attacks, its core capabilities include:
 
-## Installation
+- Defenses for web attacks
+- Proactive bot abused defense 
+- HTML & JS code encryption
+- IP-based rate limiting
+- Web Access Control List
 
-**中国大陆用户安装国际版可能会导致无法连接云服务，请查看 [中文版安装文档](https://waf-ce.chaitin.cn/docs/guide/install)**
+# Installation
 
-> Recommended
+**中国大陆用户安装国际版可能会导致无法连接云服务，请查看** [中文版安装文档](https://docs.waf-ce.chaitin.cn/zh/%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/%E5%AE%89%E8%A3%85%E9%9B%B7%E6%B1%A0)
+
+## Automatic Deploy
+
+> 👍Recommended
 
 Use the following command to start the automated installation of SafeLine. (This process requires root privileges)
 
@@ -49,10 +58,11 @@ After the command is executed, it means the installation is successfully. Please
 
 to see [Documentation](https://docs.waf.chaitin.com/en/tutorials/install)
 
-## Use Web UI
+# Usage
+
+## Login
 
 Open the web console page `https://<safeline-ip>:9443/` in the browser, then you will see below.
-
 
 <img width="400" src="/images/login.png">
 
@@ -75,16 +85,6 @@ After the command is successfully executed, you will see the following content
 Enter the password in the previous step and you will successfully logged into SafeLine.
 
 ## Protecting a website
-
-### How SafeLine works
-
-SafeLine is a web application firewall developed based on nginx, designed to help websites defend against network attacks.
-
-Its principle is to act as an http/https reverse proxy, receive network traffic for the original website, then clean the malicious attack traffic and forward the safe and reliable traffic to the original website.
-
-<img src="/images/safeline-as-proxy.png" width=400>
-
-### Proxy a website in SafeLine
 
 Log into the SafeLine Web Admin Console, go to the "Site" -> "Website" page and click the "Add Site" button in the upper right corner.
 
@@ -128,59 +128,7 @@ To view the specific details of the attack, click "detail"
 
 <img src="/images/log-detail.png" width=600>
 
-## Core Capabilities
-
-#### Defenses For OWASP Attacks
-
-SafeLine use as an important tool to defense against OWASP Top 10 Attack, such as SQL injection, XSS, Insecure deserialization etc.
-
-#### Defenses For 0-Day Attacks
-
-SafeLine use intelligent rule-free detection algorithm to against 0-Day attacks with unknown attack signatures.
-
-#### Proactive Bot defense
-
-SafeLine uses advanced algorithms to send capthcha challenge for suspicious users to against automated robot attacks.
-
-#### In-Browser Code Encryption
-
-SafeLine can dynamically encrypt and obfuscate static code in the browser (such as HTML, JavaScript) to against reverse engineering.
-
-#### Web Authentication
-
-SafeLine prompting the user for authentication to web apps that lacks valid authentication credentials, Illegal users will be blocked.
-
-#### Web Access Control List
-
-SafeLine offering fine-grained control over traffic allows you to define a set of rules that determine which requests are allowed or denied.
-
-## Features
-
-#### Easy To Use
-
-Deployed by Docker, one command can complete the installation, and you can get started at 0 cost.
-
-The security configuration is ready to use, no manual maintenance is required, and safe lying management can be achieved.
-
-#### High Security Efficacy
-
-The first intelligent semantic analysis algorithm in the industry, accurate detection, low false alarm, and difficult to bypass.
-
-The semantic analysis algorithm has no rules, and you are no longer at a loss when facing 0-day attacks with unknown features.
-
-#### High Performance
-
-Ruleless engine, linear security detection algorithm, average request detection delay at 1 millisecond level.
-
-Strong concurrency, single core easily detects 2000+ TPS, as long as the hardware is strong enough, there is no upper limit to the traffic scale that can be supported.
-
-#### High Availability
-
-The traffic processing engine is developed based on Nginx, and both performance and stability can be guaranteed.
-
-Built-in complete health check mechanism, service availability is as high as 99.99%.
-
-## Star History <a name="star-history"></a>
+## Star History
 
 <a href="https://github.com/chaitin/safeline/stargazers">
     <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=chaitin/safeline&type=Date">
