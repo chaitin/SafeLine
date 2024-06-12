@@ -16,8 +16,14 @@
   <a target="_blank" href="https://waf.chaitin.com/">Home</a> | 
   <a target="_blank" href="https://demo.waf.chaitin.com:9443/dashboard">Demo</a> | 
   <a target="_blank" href="https://docs.waf.chaitin.com/">Docs</a> | 
-  <a target="_blank" href="https://discord.gg/wyshSVuvxC">Discord</a> |
   <a target="_blank" href="https://waf-ce.chaitin.cn/">中文版</a>
+</p>
+
+<p align="center">
+  <a target="_blank" href="https://discord.gg/wyshSVuvxC">Discord</a> |
+  <a target="_blank" href="https://x.com/safeline_waf">X</a> |
+  <a target="_blank" href="https://t.me/safeline_waf">Telegram</a> |
+  <a target="_blank" href="/documents/static/images/wechat-230825.png">WeChat</a>
 </p>
 
 SafeLine is a simple, lightweight, locally deployable WAF, it is the best waf for webmaster.
