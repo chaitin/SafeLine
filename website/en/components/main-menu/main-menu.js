@@ -1,7 +1,7 @@
 import { Tooltip } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
-const contactInfo = [
+export const contactInfo = [
   {
     title: "Discord",
     icon: "icon-icon-17",

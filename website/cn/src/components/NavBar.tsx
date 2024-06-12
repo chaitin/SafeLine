@@ -139,7 +139,7 @@ export default function NavBar() {
                     }}
                     mr={3.5}
                   >
-                    <Icon type="icon-discord1" sx={{ mr: 1 }} />
+                    <Icon type="icon-icon-17" sx={{ mr: 1 }} />
                     Discord
                   </Link>
                   <Link
@@ -154,7 +154,7 @@ export default function NavBar() {
                     }}
                     mr={3.5}
                   >
-                    <Icon type="icon-tuite" sx={{ mr: 1, fontSize: '16px' }} />
+                    <Icon type="icon-tuite3" sx={{ mr: 1, fontSize: '16px' }} />
                     X
                   </Link>
                   <Link

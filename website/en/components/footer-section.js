@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { contactInfo } from "./main-menu/main-menu";
 
 export default function FooterSection({}) {
   const links = [].map((link) => ({
@@ -26,13 +27,16 @@ export default function FooterSection({}) {
               </div>
               <p className="desc">The Best WAF for Webmaster</p>
               <ul className="social-links">
-                <li>
-                  <a href="https://discord.gg/wyshSVuvxC" target="_blank">
-                    <svg className="icon_svg" width="24px">
-                      <use xlinkHref="#icon-discord" />
-                    </svg>
-                  </a>
-                </li>
+                {contactInfo.map((i) => (
+                  <li key={i.icon}>
+                    <a href={i.link} target="_blank">
+                      <svg className="icon_svg" width="24px">
+                        <use xlinkHref={'#'+i.icon} />
+                      </svg>
+                    </a>
+                  </li>
+                ))}
+
                 <li>
                   <a href="https://github.com/chaitin/SafeLine" target="_blank">
                     <svg className="icon_svg" width="24px">
