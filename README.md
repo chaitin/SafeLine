@@ -3,27 +3,19 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/403.svg" width="160">
 </p>
-<br>
-<p align="center">
-  <img src="https://img.shields.io/badge/SafeLine-BEST_WAF-blue">
-  <img src="https://img.shields.io/github/release/chaitin/safeline.svg?color=blue" />
-  <img src="https://img.shields.io/github/release-date/chaitin/safeline.svg?color=blue&label=update" />
-  <img src="https://img.shields.io/docker/v/chaitin/safeline-mgt-api?color=blue">
-  <img src="https://img.shields.io/github/stars/chaitin/safeline?style=social">
-</p>
 
 <p align="center">
   <a target="_blank" href="https://waf.chaitin.com/">Home</a> | 
-  <a target="_blank" href="https://demo.waf.chaitin.com:9443/dashboard">Demo</a> | 
   <a target="_blank" href="https://docs.waf.chaitin.com/">Docs</a> | 
+  <a target="_blank" href="https://demo.waf.chaitin.com:9443/dashboard">Demo</a> | 
   <a target="_blank" href="https://waf-ce.chaitin.cn/">中文版</a>
 </p>
 
 <p align="center">
-  <a target="_blank" href="https://discord.gg/wyshSVuvxC">Discord</a> |
-  <a target="_blank" href="https://x.com/safeline_waf">X</a> |
-  <a target="_blank" href="https://t.me/safeline_waf">Telegram</a> |
-  <a target="_blank" href="/documents/static/images/wechat-230825.png">WeChat</a>
+  <a target="_blank" href="https://discord.gg/wyshSVuvxC"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white"></a>
+  <a target="_blank" href="https://x.com/safeline_waf"><img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white"></a>
+  <a target="_blank" href="https://t.me/safeline_waf"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white"></a>
+  <a target="_blank" href="/documents/static/images/wechat-230825.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=for-the-badge&logo=wechat&logoColor=white"></a>
 </p>
 
 SafeLine is a simple, lightweight, locally deployable WAF, it is the best waf for webmaster.
