@@ -6,22 +6,22 @@ import Icon from "@/components/Icon";
 const ABILITY_LIST = [
   {
     title: "人机验证",
-    href: "/docs/about/challenge",
+    href: "https://docs.waf-ce.chaitin.cn/zh/%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/%E5%BF%AB%E9%80%9F%E9%85%8D%E7%BD%AE",
     img: "/images/ability/ability_verification.png",
   },
   {
     title: "百川网站监控联动",
-    href: "/docs/practice/monitor",
+    href: "https://docs.waf-ce.chaitin.cn/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/%E7%99%BE%E5%B7%9D%E7%BD%91%E7%AB%99%E7%9B%91%E6%B5%8B",
     img: "/images/ability/ability_rivers.png",
   },
   {
     title: "APISIX 插件集成",
-    href: "/docs/practice/apisix",
+    href: "https://docs.waf-ce.chaitin.cn/zh/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/%E8%81%94%E5%8A%A8APISIX",
     img: "/images/ability/ability_apisix.svg",
   },
   {
     title: "长亭社区恶意 IP 情报",
-    href: "/docs/practice/IpIntelligence",
+    href: "https://docs.waf-ce.chaitin.cn/",
     img: "/images/ability/ability_maliciousip.svg",
   },
   {
