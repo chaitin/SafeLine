@@ -1,14 +1,24 @@
-import { useEffect, useState, useRef } from "react";
+import { Tooltip } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 
+const contactInfo = [
+  {
+    title: "Discord",
+    icon: "icon-icon-17",
+    link: "https://discord.gg/wyshSVuvxC",
+  },
+  {
+    title: "x.com",
+    icon: "icon-tuite3",
+    link: "https://x.com/safeline_waf",
+  },
+  {
+    title: "Telegram",
+    icon: "icon-telegram1",
+    link: "https://t.me/safeline_waf",
+  },
+];
 export default function ManiMenu() {
-  const mainMenuLinks = [
-    { meta: { id: 740351 }, label: "Docs", url: "#home" },
-    { meta: { id: 740352 }, label: "Pricing", url: "#about" },
-    { meta: { id: 740353 }, label: "Discord", url: "#features" },
-    { meta: { id: 740354 }, label: "GitHub", url: "#tryit" },
-    { meta: { id: 740355 }, label: "Demo", url: "#testimonials" },
-  ];
-
   function highlightLinks() {
     const sections = document.querySelectorAll(".page-scroll");
     const scrollPos =
@@ -92,21 +102,37 @@ export default function ManiMenu() {
               <a style={{ color: "rgba(0,0,0,0.2)" }}>Pricing</a>
               <div className="nav-btn_tooltip">Comming soon...</div>
             </li>
+            <li
+              className="nav-item"
+              style={{ display: "flex", marginLeft: "17px",marginRight: '2px', }}
+            >
+              {contactInfo.map((i) => (
+                <a
+                  key={i.icon}
+                  target="_blank"
+                  className="nav-item_icon"
+                  href={i.link}
+                  style={{ padding: "4px" }}
+                >
+                  <Tooltip title={i.title}>
+                    <svg
+                      className="icon_svg"
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        marginRight: "4px",
+                      }}
+                    >
+                      <use xlinkHref={"#" + i.icon} />
+                    </svg>
+                  </Tooltip>
+                </a>
+              ))}
+            </li>
 
             <li className="nav-item">
               <a
-                target="_blank"
-                className="nav-item_icon"
-                href="https://discord.gg/wyshSVuvxC"
-              >
-                <svg className="icon_svg">
-                  <use xlinkHref="#icon-discord" />
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
+                style={{ paddingLeft: 0 }}
                 className="nav-item_icon"
                 href="https://github.com/chaitin/SafeLine"
                 target="_blank"

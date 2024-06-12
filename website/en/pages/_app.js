@@ -28,7 +28,7 @@ function MyApp({ Component }) {
         ></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <script
-          src="https://at.alicdn.com/t/c/font_4031246_8o6dgtp7wm5.js?spm=a313x.manage_type_myprojects.i1.13.5f303a813w1hKj&file=font_4031246_8o6dgtp7wm5.js"
+          src="https://at.alicdn.com/t/c/font_4031246_7817adaym49.js?spm=a313x.manage_type_myprojects.i1.13.6acd3a81HVUoaB&file=font_4031246_7817adaym49.js"
           defer
         />
         <script
