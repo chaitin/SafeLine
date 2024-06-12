@@ -53,7 +53,7 @@ export default function Hero({ scrollAnchorId }) {
                 vulnerability exploit, http flood and so on.
               </p>
               <a
-                href="https://docs.waf.chaitin.com/en/toturials/install"
+                href="https://docs.waf.chaitin.com/en/tutorials/install"
                 className="main-btn btn-hover"
                 target="_blank"
               >
