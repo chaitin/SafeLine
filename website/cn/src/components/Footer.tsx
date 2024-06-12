@@ -8,7 +8,7 @@ const LINKS = [
     items: [
       {
         label: "技术文档",
-        to: "/docs",
+        to: "https://docs.waf-ce.chaitin.cn/zh/home",
       },
       {
         label: "教学视频",
@@ -16,11 +16,11 @@ const LINKS = [
       },
       {
         label: "学习资料",
-        to: "/docs",
+        to: "https://docs.waf-ce.chaitin.cn/zh/home",
       },
       {
         label: "更新日志",
-        to: "/docs/about/changelog",
+        to: "https://docs.waf-ce.chaitin.cn/zh/%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E8%AE%B0%E5%BD%95",
       },
     ],
   },

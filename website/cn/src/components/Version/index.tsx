@@ -27,7 +27,7 @@ const VERSION_LIST = [
           my: 4,
           boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
         }}
-        href="/docs/guide/install"
+        href="https://docs.waf-ce.chaitin.cn/zh/%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/%E5%AE%89%E8%A3%85%E9%9B%B7%E6%B1%A0"
       >
         立即安装
       </Button>

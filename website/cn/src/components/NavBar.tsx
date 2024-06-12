@@ -14,8 +14,6 @@ import {
   ListItemText,
   Stack,
   IconButton,
-  MenuItem,
-  Select,
 } from "@mui/material";
 import Image from "next/image";
 import dynamic from "next/dynamic";
@@ -27,9 +25,9 @@ import usePopupState, {
 } from "@/components/Popover/usePopupState";
 
 const navs = [
-  { to: "/docs", label: "帮助文档", target: "_blank" },
-  { to: "/community", label: "开发计划", target: "_self" },
-  { to: "/version", label: "付费版本", target: "_self" },
+  { to: "https://docs.waf-ce.chaitin.cn/zh/home", label: "帮助文档", target: "_blank", new: true },
+  { to: "/community", label: "开发计划", target: "_self", new: false },
+  { to: "/version", label: "付费版本", target: "_self", new: false },
 ];
 
 const menus = [
@@ -38,11 +36,13 @@ const menus = [
     to: "https://github.com/chaitin/SafeLine",
     label: "GitHub",
     target: "_blank",
+    new: false,
   },
   {
     to: "https://demo.waf-ce.chaitin.cn:9443/dashboard",
     label: "演示 Demo",
     target: "_blank",
+    new: false,
   },
 ];
 
@@ -56,17 +56,7 @@ const HoverPopover = dynamic(
 export default function NavBar() {
   const [isSticky, setIsSticky] = useState(false);
   const [open, setOpen] = useState(false);
-  const [langOpen, setLangOpen] = useState(false);
 
-  const handleOpen = () => {
-    setLangOpen(true);
-  };
-  const handleClose = () => {
-    setLangOpen(false);
-  };
-  const handleChange = () => {
-    window.open("https://waf.chaitin.com/");
-  };
   const popoverState = usePopupState({
     popupId: "wechat-qrcode-popover",
   });
@@ -87,79 +77,7 @@ export default function NavBar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-  const langRender = () => (
-    <Select
-      value={"cn"}
-      label=""
-      onChange={handleChange}
-      size="small"
-      open={langOpen}
-      onMouseEnter={handleOpen}
-      onClose={handleClose}
-      onOpen={handleOpen}
-      MenuProps={{
-        PaperProps: {
-          onMouseLeave: handleClose,
-        },
-      }}
-      renderValue={() => {
-        return (
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={1}
-            sx={{ ml: "auto" }}
-          >
-            <Box display={{ xs: "none", md: "flex" }}>
-              <svg
-                className="icon_svg"
-                style={{ width: "16px", height: "16px" }}
-              >
-                <use xlinkHref="#icon-diqiuyangshi1" />
-              </svg>
-            </Box>
-            <Box>中文</Box>
-          </Stack>
-        );
-      }}
-      sx={{
-        border: "none",
-        fontFamily: "GilroyBold",
-        px: "4px",
-        ml: { sx: "auto", md: 1 },
-        "& fieldset": {
-          border: langOpen
-            ? "2px solid rgba(15,198,194,0.1)!important"
-            : "none",
-        },
-        "& .MuiSelect-select": { px: "12px" },
-      }}
-      className="lang_select"
-    >
-      <MenuItem
-        value="en"
-        sx={{
-          "&.Mui-selected": {
-            bgcolor: "rgba(15,198,194,0.1)!important",
-          },
-          "&:hover": { bgcolor: "rgba(15,198,194,0.1)" },
-        }}
-      >
-        English
-      </MenuItem>
-      <MenuItem
-        value="cn"
-        sx={{
-          "&.Mui-selected": {
-            bgcolor: "rgba(15,198,194,0.1)!important",
-          },
-          "&:hover": { bgcolor: "rgba(15,198,194,0.1)" },
-        }}
-      >
-        简体中文
-      </MenuItem>
-    </Select>
-  );
+
   return (
     <>
       <AppBar
@@ -182,19 +100,19 @@ export default function NavBar() {
           >
             <Grid container justifyContent="space-around">
               <Grid item xs={10} md={6} display="flex">
-                <Box display="flex" alignItems="center" sx={{ width: "100%" }}>
+                <Box display="flex" alignItems="center">
                   <SafelineTitle />
-                  {langRender()}
                   <Box display={{ xs: "none", md: "flex" }} alignItems="center">
                     {navs.map((nav, index) => (
                       <Box component="span" key={index} mr={3.5}>
                         <Link
                           key={index}
                           href={nav.to}
-                          sx={{ color: "common.black" }}
+                          sx={{ color: "common.black",lineHeight: '45px' }}
                           target={nav.target}
                         >
                           {nav.label}
+                          {nav.new && <Icon type="icon-new" sx={{ ml: '4px', fontSize: '26px' }} />}
                         </Link>
                       </Box>
                     ))}
@@ -223,6 +141,21 @@ export default function NavBar() {
                   >
                     <Icon type="icon-discord1" sx={{ mr: 1 }} />
                     Discord
+                  </Link>
+                  <Link
+                    href="https://x.com/safeline_waf"
+                    target="_blank"
+                    sx={{
+                      color: "common.black",
+                      display: "flex",
+                      "&:hover": {
+                        color: "primary.main",
+                      },
+                    }}
+                    mr={3.5}
+                  >
+                    <Icon type="icon-tuite" sx={{ mr: 1, fontSize: '16px' }} />
+                    X
                   </Link>
                   <Link
                     href="https://github.com/chaitin/SafeLine"
@@ -280,10 +213,7 @@ export default function NavBar() {
                   <Button
                     variant="contained"
                     target="_blank"
-                    sx={{
-                      width: { xs: "100%", sm: "auto" },
-                      textTransform: "none",
-                    }}
+                    sx={{ width: { xs: "100%", sm: "auto" } }}
                     href="https://demo.waf-ce.chaitin.cn:9443/dashboard"
                   >
                     Demo
@@ -362,27 +292,27 @@ export const SafelineTitle: React.FC = () => {
         flexDirection="row"
         display="flex"
         spacing={2}
-        sx={{ marginTop: "0px", flexWrap: "nowrap" }}
+        sx={{ marginTop: "0px", minWidth: "192px" }}
       >
         <Box
-          width={{ xs: "30px", md: "24px" }}
-          height={{ xs: "33px", md: "26px" }}
+          width={{ xs: "40px", md: "24px" }}
+          height={{ xs: "43px", md: "26px" }}
           position="relative"
         >
           <Image
             src="/images/safeline.svg"
             alt="SafeLine Logo"
             layout="responsive"
-            width={30}
-            height={33}
+            width={40}
+            height={43}
           />
         </Box>
         <Typography
           variant="h6"
           sx={{
-            ml: { xs: "4px", md: 1 },
-            mr: { xs: 0, md: 0 },
-            fontSize: { xs: "20px", md: "16px" },
+            ml: { xs: 2, md: 1 },
+            mr: { xs: 0, md: 7 },
+            fontSize: { xs: "24px", md: "16px" },
             display: "flex",
             alignItems: "center",
             fontFamily: "AlimamaShuHeiTi-Bold",
