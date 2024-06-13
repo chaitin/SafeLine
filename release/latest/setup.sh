@@ -156,14 +156,125 @@ if [ "$EUID" -ne "0" ]; then
 fi
 info "脚本调用方式确认正常"
 
+install_docker() {
+    if [[ $(curl -s ipinfo.io/country) == "CN" ]]; then
+        sources=(
+            "https://mirrors.aliyun.com/docker-ce"
+            "https://mirrors.tencent.com/docker-ce"
+            "https://mirrors.163.com/docker-ce"
+            "https://mirrors.cernet.edu.cn/docker-ce"
+        )
+
+        docker_install_scripts=(
+            "https://get.docker.com"
+            "https://testingcf.jsdelivr.net/gh/docker/docker-install@master/install.sh"
+            "https://cdn.jsdelivr.net/gh/docker/docker-install@master/install.sh"
+            "https://fastly.jsdelivr.net/gh/docker/docker-install@master/install.sh"
+            "https://gcore.jsdelivr.net/gh/docker/docker-install@master/install.sh"
+            "https://raw.githubusercontent.com/docker/docker-install/master/install.sh"
+        )
+
+        get_average_delay() {
+            local source=$1
+            local total_delay=0
+            local iterations=3
+
+            for ((i = 0; i < iterations; i++)); do
+                delay=$(curl -o /dev/null -s -w "%{time_total}\n" "$source")
+                total_delay=$(awk "BEGIN {print $total_delay + $delay}")
+            done
+
+            average_delay=$(awk "BEGIN {print $total_delay / $iterations}")
+            echo "$average_delay"
+        }
+
+        min_delay=${#sources[@]}
+        selected_source=""
+
+        for source in "${sources[@]}"; do
+            average_delay=$(get_average_delay "$source")
+
+            if (( $(awk 'BEGIN { print '"$average_delay"' < '"$min_delay"' }') )); then
+                min_delay=$average_delay
+                selected_source=$source
+            fi
+        done
+
+        if [ -n "$selected_source" ]; then
+            echo "选择延迟最低的源 $selected_source，延迟为 $min_delay 秒"
+            export DOWNLOAD_URL="$selected_source"
+            
+            for alt_source in "${docker_install_scripts[@]}"; do
+                echo "尝试从备选链接 $alt_source 下载 Docker 安装脚本..."
+                if curl -fsSL --retry 2 --retry-delay 3 --connect-timeout 5 --max-time 10 "$alt_source" -o get-docker.sh; then
+                    echo "成功从 $alt_source 下载安装脚本"
+                    break
+                else
+                    echo "从 $alt_source 下载安装脚本失败，尝试下一个备选链接"
+                fi
+            done
+            
+            if [ ! -f "get-docker.sh" ]; then
+                echo "所有下载尝试都失败了。您可以尝试手动安装 Docker，运行以下命令："
+                echo "bash <(curl -sSL https://linuxmirrors.cn/docker.sh)"
+                exit 1
+            fi
+
+            sh get-docker.sh
+
+            echo "启动 docker"
+            systemctl enable docker
+            systemctl daemon-reload
+            systemctl start docker
+
+            docker_config_folder="/etc/docker"
+            if [[ ! -d "$docker_config_folder" ]]; then
+                mkdir -p "$docker_config_folder"
+            fi
+
+            docker version >/dev/null 2>&1
+            if [[ $? -ne 0 ]]; then
+                echo "Docker 安装失败，您可以尝试手动安装 Docker，运行以下命令："
+                echo "bash <(curl -sSL https://linuxmirrors.cn/docker.sh)"
+                exit 1
+            else
+                echo "docker 安装成功"
+            fi
+        else
+            echo "无法选择源进行安装"
+            exit 1
+        fi
+    else
+        echo "非中国大陆地区，无需更改源"
+        export DOWNLOAD_URL="https://download.docker.com"
+        curl -fsSL "https://get.docker.com" -o get-docker.sh
+        sh get-docker.sh
+
+        echo "启动 docker"
+        systemctl enable docker
+        systemctl daemon-reload
+        systemctl start docker
+
+        docker_config_folder="/etc/docker"
+        if [[ ! -d "$docker_config_folder" ]]; then
+            mkdir -p "$docker_config_folder"
+        fi
+
+        docker version >/dev/null 2>&1
+        if [[ $? -ne 0 ]]; then
+            echo "Docker 安装失败，您可以尝试手动安装 Docker，运行以下命令："
+            echo "bash <(curl -sSL https://linuxmirrors.cn/docker.sh)"
+            exit 1
+        else
+            echo "docker 安装成功"
+        fi
+    fi
+}
 if [ -z `command_exists docker` ]; then
     warning "缺少 Docker 环境"
     if confirm "是否需要自动安装 Docker"; then
-        curl -sSLk https://get.docker.com/ | bash
-        if [ $? -ne "0" ]; then
-            abort "Docker 安装失败"
-        fi
-        info "Docker 安装完成"
+        install_docker
+
     else
         abort "中止安装"
     fi
@@ -186,7 +297,7 @@ else
     if [ -z `command_exists "docker-compose"` ]; then
         warning "未发现 docker-compose 组件"
         if confirm "是否需要自动安装 Docker Compose Plugin"; then
-            curl -sSLk https://get.docker.com/ | bash
+            install_docker
             if [ $? -ne "0" ]; then
                 abort "Docker Compose Plugin 安装失败"
             fi
