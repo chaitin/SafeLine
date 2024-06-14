@@ -144,7 +144,7 @@ case "$mirror" in
 	"")
 		;;
 	*)
-		>&2 echo "unknown mirror '$mirror': use either 'Aliyun', or 'AzureChinaCloud'."
+		>&2 echo "unknown mirror '$mirror': use either 'Aliyun', 'Tencent' or 'AzureChinaCloud'."
 		exit 1
 		;;
 esac
