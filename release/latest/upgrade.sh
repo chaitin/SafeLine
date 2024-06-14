@@ -93,6 +93,7 @@ warning() {
 }
 
 abort() {
+    mv $compose_name.old $compose_name 2>/dev/null || true
     qrcode
     echo -e "\033[31m[SafeLine] $*\033[0m"
     exit 1
@@ -104,78 +105,118 @@ onexit() {
     abort "用户手动结束升级"
 }
 
-# CPU ssse3 指令集检查
-support_ssse3=1
-lscpu | grep ssse3 >/dev/null 2>&1
-if [ $? -ne "0" ]; then
-    echo "not found info in lscpu"
-    support_ssse3=0
-fi
-
-cat /proc/cpuinfo | grep ssse3 >/dev/null 2>&1
-if [ $support_ssse3 -eq "0" -a $? -ne "0" ]; then
-    abort "雷池需要运行在支持 ssse3 指令集的 CPU 上，虚拟机请自行配置开启 CPU ssse3 指令集支持"
-fi
-
-if [ -z "$BASH" ]; then
-    abort "请用 bash 执行本脚本, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
-fi
-
-if [ ! -t 0 ]; then
-    abort "STDIN 不是标准的输入设备, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
-fi
-
-if [ "$#" -ne "0" ]; then
-    abort "当前脚本无需任何参数, 请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
-fi
-
-if [ "$EUID" -ne "0" ]; then
-    abort "请以 root 权限运行"
-fi
-info "脚本调用方式确认正常"
-
-if [ -z $(command_exists docker) ]; then
-    warning "缺少 Docker 环境"
-    if confirm "是否需要自动安装 Docker"; then
-        curl -sSLk https://get.docker.com/ | bash
-        if [ $? -ne "0" ]; then
-            abort "Docker 安装失败"
+install_docker() {
+    curl -fsSL "https://waf-ce.chaitin.cn/release/latest/get-docker.sh" -o get-docker.sh
+    # try install with different mirror
+    mirrors=(
+        "Aliyun"
+        "Tencent"
+        "AzureChinaCloud"
+        ""
+    )
+    for mirror in "${mirrors[@]}"; do
+        if [ -n "$mirror" ]; then
+            bash get-docker.sh --mirror $mirror
+        else
+            bash get-docker.sh
         fi
-        info "Docker 安装完成"
-    else
-        abort "中止安装"
+        if [ $? -eq "0" ]; then
+            break
+        fi
+    done
+
+    docker version > /dev/null 2>&1
+    if [ $? -ne "0" ]; then
+        echo "Docker 安装失败, 请检查网络连接或手动安装 Docker"
+        echo "参考文档: https://docs.docker.com/engine/install/"
+        abort "Docker 安装失败"
     fi
-fi
-info "发现 Docker 环境: '$(command -v docker)'"
+    info "Docker 安装成功"
+}
 
-docker version >/dev/null 2>&1
-if [ $? -ne "0" ]; then
-    abort "Docker 服务工作异常"
-fi
-info "Docker 工作状态正常"
+start_docker() {
+    echo "start docker"
+    systemctl enable docker
+    systemctl daemon-reload
+    systemctl start docker
+}
 
-compose_command="docker compose"
-if $compose_command version; then
-    info "发现 Docker Compose Plugin"
-else
-    warning "未发现 Docker Compose Plugin"
-    compose_command="docker-compose"
-    if [ -z $(command_exists "docker-compose") ]; then
-        warning "未发现 docker-compose 组件"
+check_depend() {
+    # CPU ssse3 指令集检查
+    support_ssse3=1
+    lscpu | grep ssse3 > /dev/null 2>&1
+    if [ $? -ne "0" ]; then
+        echo "not found info in lscpu"
+        support_ssse3=0
+    fi
+    cat /proc/cpuinfo | grep ssse3 > /dev/null 2>&1
+    if [ $support_ssse3 -eq "0" -a $? -ne "0" ]; then
+      abort "雷池需要运行在支持 ssse3 指令集的 CPU 上，虚拟机请自行配置开启 CPU ssse3 指令集支持"
+    fi
+    if [ -z "$BASH" ]; then
+        abort "请用 bash 执行本脚本，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
+    fi
+
+    if [ ! -t 0 ]; then
+        abort "STDIN 不是标准的输入设备，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
+    fi
+
+    if [ "$EUID" -ne "0" ]; then
+        abort "请以 root 权限运行"
+    fi
+
+    if [ -z `command_exists docker` ]; then
+        warning "缺少 Docker 环境"
+        if confirm "是否需要自动安装 Docker"; then
+            install_docker
+        else
+            abort "中止安装"
+        fi
+    fi
+
+    info "发现 Docker 环境: '`command -v docker`'"
+
+    docker version > /dev/null 2>&1
+    if [ $? -ne "0" ]; then
+        abort "Docker 服务工作异常"
+    fi
+
+    compose_command="docker compose"
+    if $compose_command version; then
+        info "发现 Docker Compose Plugin"
+    else
+        warning "未发现 Docker Compose Plugin"
         if confirm "是否需要自动安装 Docker Compose Plugin"; then
-            curl -sSLk https://get.docker.com/ | bash
+            install_docker
             if [ $? -ne "0" ]; then
                 abort "Docker Compose Plugin 安装失败"
             fi
             info "Docker Compose Plugin 安装完成"
-            compose_command="docker compose"
         else
             abort "中止安装"
         fi
-    else
-        info "发现 docker-compose 组件: '$(command -v docker-compose)'"
     fi
-fi
+
+    # check docker compose support -d
+    if ! $compose_command up -d --help > /dev/null 2>&1; then
+        warning "Docker Compose Plugin 不支持 '-d' 参数"
+        if confirm "是否需要自动升级 Docker Compose Plugin"; then
+            install_docker
+            if [ $? -ne "0" ]; then
+                abort "Docker Compose Plugin 升级失败"
+            fi
+            info "Docker Compose Plugin 升级完成"
+        else
+            abort "中止安装"
+        fi
+    fi
+
+    start_docker
+
+    info "安装环境确认正常"
+}
+
+check_depend
 
 container_id=$(docker ps -n 1 --filter name=.*safeline-mgt.* --format '{{.ID}}')
 safeline_path=$(docker inspect --format '{{index .Config.Labels "com.docker.compose.project.working_dir"}}' $container_id)
@@ -209,7 +250,6 @@ curl "https://waf-ce.chaitin.cn/release/latest/compose.yaml" -sSLk -o $compose_n
 curl "https://waf-ce.chaitin.cn/release/latest/reset_tengine.sh" -sSLk -o reset_tengine.sh
 
 if [ $? -ne "0" ]; then
-    mv $compose_name.old $compose_name || true
     abort "下载 compose.yaml 脚本失败"
 fi
 info "下载 compose.yaml 脚本成功"
@@ -251,7 +291,6 @@ info "即将开始下载新版本 Docker 镜像"
 
 $compose_command pull
 if [ $? -ne "0" ]; then
-    mv $compose_name.old $compose_name || true
     abort "下载新版本 Docker 镜像失败"
 fi
 info "下载新版本 Docker 镜像成功"
@@ -263,7 +302,6 @@ docker rm -f safeline-redis &>/dev/null
 
 $compose_command down --remove-orphans && $compose_command up -d
 if [ $? -ne "0" ]; then
-    mv $compose_name.old $compose_name || true
     abort "替换 Docker 容器失败"
 fi
 
