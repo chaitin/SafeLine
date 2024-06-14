@@ -135,7 +135,7 @@ case "$mirror" in
 	Aliyun)
 		DOWNLOAD_URL="https://mirrors.aliyun.com/docker-ce"
 		;;
- Tencent)
+  Tencent)
     DOWNLOAD_URL="https://mirrors.tencent.com/docker-ce"
     ;;
 	AzureChinaCloud)
