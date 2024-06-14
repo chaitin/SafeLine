@@ -135,16 +135,13 @@ case "$mirror" in
 	Aliyun)
 		DOWNLOAD_URL="https://mirrors.aliyun.com/docker-ce"
 		;;
-  Tencent)
-    DOWNLOAD_URL="https://mirrors.tencent.com/docker-ce"
-    ;;
 	AzureChinaCloud)
 		DOWNLOAD_URL="https://mirror.azure.cn/docker-ce"
 		;;
 	"")
 		;;
 	*)
-		>&2 echo "unknown mirror '$mirror': use either 'Aliyun', 'Tencent' or 'AzureChinaCloud'."
+		>&2 echo "unknown mirror '$mirror': use either 'Aliyun', or 'AzureChinaCloud'."
 		exit 1
 		;;
 esac
