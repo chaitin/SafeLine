@@ -185,15 +185,20 @@ check_depend() {
     if $compose_command version; then
         info "发现 Docker Compose Plugin"
     else
-        warning "未发现 Docker Compose Plugin"
-        if confirm "是否需要自动安装 Docker Compose Plugin"; then
-            install_docker
-            if [ $? -ne "0" ]; then
-                abort "Docker Compose Plugin 安装失败"
-            fi
-            info "Docker Compose Plugin 安装完成"
+        compose_command="docker-compose"
+        if $compose_command version; then
+            info "发现 Docker Compose"
         else
-            abort "中止安装"
+            warning "未发现 Docker Compose"
+            if confirm "是否需要自动安装 Docker Compose"; then
+                install_docker
+                if [ $? -ne "0" ]; then
+                    abort "Docker Compose 安装失败"
+                fi
+                info "Docker Compose 安装完成"
+            else
+                abort "中止安装"
+            fi
         fi
     fi
 
