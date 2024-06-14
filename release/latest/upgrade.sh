@@ -272,6 +272,13 @@ grep "MGT_PORT" ".env" >/dev/null || echo "MGT_PORT=9443" >>".env"
 grep "POSTGRES_PASSWORD" ".env" >/dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >>".env"
 grep "SUBNET_PREFIX" ".env" >/dev/null || echo "SUBNET_PREFIX=172.22.222" >>".env"
 
+if [ -z "$CDN" ]; then
+    if [[ $(curl -s ipinfo.io/country) == "CN" ]]; then
+        CDN=1
+    else
+        CDN=0
+    fi
+fi
 
 if [ $CDN -eq 0 ]; then
     sed -i "s/IMAGE_PREFIX=.*/IMAGE_PREFIX=chaitin/g" ".env"

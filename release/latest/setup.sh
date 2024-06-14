@@ -292,6 +292,14 @@ echo "MGT_PORT=9443" >> .env
 echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
 echo "SUBNET_PREFIX=$SUBNET_PREFIX" >> .env
 
+if [ -z "$CDN" ]; then
+    if [[ $(curl -s ipinfo.io/country) == "CN" ]]; then
+        CDN=1
+    else
+        CDN=0
+    fi
+fi
+
 if [ $CDN -eq 0 ]; then
     echo "IMAGE_PREFIX=chaitin" >>".env"
 else
