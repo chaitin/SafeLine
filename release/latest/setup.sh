@@ -104,25 +104,47 @@ local_ips() {
     echo $($ip_cmd | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | awk '{print $2}')
 }
 
+get_average_delay() {
+    local source=$1
+    local total_delay=0
+    local iterations=3
+
+    for ((i = 0; i < iterations; i++)); do
+        # check timeout
+        if ! curl -o /dev/null -m 1 -s -w "%{http_code}\n" "$source" > /dev/null; then
+            delay=999
+        else
+            delay=$(curl -o /dev/null -s -w "%{time_total}\n" "$source")
+        fi
+        total_delay=$(awk "BEGIN {print $total_delay + $delay}")
+    done
+
+    average_delay=$(awk "BEGIN {print $total_delay / $iterations}")
+    echo "$average_delay"
+}
+
 install_docker() {
     curl -fsSL "https://waf-ce.chaitin.cn/release/latest/get-docker.sh" -o get-docker.sh
-    # try install with different mirror
-    mirrors=(
-        "Aliyun"
-        "Tencent"
-        "AzureChinaCloud"
-        ""
+    sources=(
+        "https://mirrors.aliyun.com/docker-ce"
+        "https://mirrors.tencent.com/docker-ce"
+        "https://mirror.azure.cn/docker-ce"
+        "https://download.docker.com"
     )
-    for mirror in "${mirrors[@]}"; do
-        if [ -n "$mirror" ]; then
-            bash get-docker.sh --mirror $mirror
-        else
-            bash get-docker.sh
-        fi
-        if [ $? -eq "0" ]; then
-            break
+    min_delay=${#sources[@]}
+    selected_source=""
+    for source in "${sources[@]}"; do
+        average_delay=$(get_average_delay "$source")
+        echo "source: $source, delay: $average_delay"
+        if (( $(awk 'BEGIN { print '"$average_delay"' < '"$min_delay"' }') )); then
+            min_delay=$average_delay
+            selected_source=$source
         fi
     done
+
+    echo "selected source: $selected_source"
+    export DOWNLOAD_URL="$selected_source"
+    bash get-docker.sh
 
     docker version > /dev/null 2>&1
     if [ $? -ne "0" ]; then
