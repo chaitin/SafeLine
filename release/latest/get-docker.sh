@@ -589,7 +589,7 @@ do_install() {
 				if ! is_dry_run; then
 					set -x
 				fi
-				$sh_c "$pkg_manager $pkg_manager_flags install -y -q $pre_reqs"
+				$sh_c "$pkg_manager $pkg_manager_flags install -y $pre_reqs"
 				$sh_c "$config_manager --add-repo $repo_file_url"
 
 				if [ "$CHANNEL" != "stable" ]; then
@@ -642,7 +642,7 @@ do_install() {
 				if ! is_dry_run; then
 					set -x
 				fi
-				$sh_c "$pkg_manager $pkg_manager_flags install -y -q $pkgs"
+				$sh_c "$pkg_manager $pkg_manager_flags install -y $pkgs"
 			)
 			echo_docker_as_nonroot
 			exit 0
