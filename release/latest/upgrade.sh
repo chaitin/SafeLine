@@ -300,10 +300,11 @@ grep "POSTGRES_PASSWORD" ".env" >/dev/null || echo "POSTGRES_PASSWORD=$(LC_ALL=C
 grep "SUBNET_PREFIX" ".env" >/dev/null || echo "SUBNET_PREFIX=172.22.222" >>".env"
 
 if [ -z "$CDN" ]; then
-    if [[ $(curl -s ipinfo.io/country) == "CN" ]]; then
-        CDN=1
-    else
+    if ping -c 1 -W 1 docker.com > /dev/null 2>&1; then
         CDN=0
+    else
+        CDN=1
+        echo "检测到你的网络环境不支持直接访问 Docker Hub， 镜像将从华为云镜像仓库下载"
     fi
 fi
 

@@ -9,7 +9,6 @@ echo "
 "
 
 export STREAM=${STREAM:-0}
-export CDN=${CDN:-1}
 
 qrcode() {
     echo "█████████████████████████████████████████"
@@ -314,10 +313,11 @@ echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)"
 echo "SUBNET_PREFIX=$SUBNET_PREFIX" >> .env
 
 if [ -z "$CDN" ]; then
-    if [[ $(curl -s ipinfo.io/country) == "CN" ]]; then
-        CDN=1
-    else
+    if ping -c 1 -W 1 docker.com > /dev/null 2>&1; then
         CDN=0
+    else
+        CDN=1
+        echo "检测到你的网络环境不支持直接访问 Docker Hub， 镜像将从华为云镜像仓库下载"
     fi
 fi
 
