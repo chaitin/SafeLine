@@ -49,7 +49,7 @@ const VERSION_LIST = [
     fee: "¥1799",
     fee_desc: "/年",
     desc: (
-      <Stack direction="row" justifyContent="center">
+      <Stack direction="row" justifyContent="center" sx={{position: 'relative'}}>
         <Typography
           variant="subtitle2"
           mr={1}
@@ -62,10 +62,17 @@ const VERSION_LIST = [
           原价 ¥3600 /年
         </Typography>
         <Image
-          src="/images/discount.svg"
+          src="/images/discount_end_tip.png"
           alt="限时特惠"
-          width={76}
-          height={20}
+          width={106}
+          height={22}
+        />
+        <Image
+          src="/images/discount_end_balloon.png"
+          alt="限时特惠"
+          width={60}
+          height={50}
+          style={{position: 'absolute',right: -34, top: -55}}
         />
       </Stack>
     ),
