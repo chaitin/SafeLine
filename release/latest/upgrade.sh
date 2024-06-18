@@ -129,7 +129,6 @@ install_docker() {
     sources=(
         "https://mirrors.aliyun.com/docker-ce"
         "https://mirrors.tencent.com/docker-ce"
-        "https://mirror.azure.cn/docker-ce"
         "https://download.docker.com"
     )
     min_delay=${#sources[@]}
