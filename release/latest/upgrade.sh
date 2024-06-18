@@ -146,6 +146,7 @@ install_docker() {
     export DOWNLOAD_URL="$selected_source"
     bash get-docker.sh
 
+    start_docker
     docker version > /dev/null 2>&1
     if [ $? -ne "0" ]; then
         echo "Docker 安装失败, 请检查网络连接或手动安装 Docker"
