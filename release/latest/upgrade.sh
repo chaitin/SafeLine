@@ -9,7 +9,6 @@ echo "
 "
 
 export STREAM=${STREAM:-0}
-export CDN=${CDN:-1}
 
 echo $1
 
