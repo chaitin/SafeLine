@@ -505,7 +505,7 @@ do_install() {
 					set -x
 				fi
 				$sh_c 'apt-get update >/dev/null'
-				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y $pre_reqs >/dev/null"
+				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y $pre_reqs"
 				$sh_c 'install -m 0755 -d /etc/apt/keyrings'
 				$sh_c "curl -fsSL \"$DOWNLOAD_URL/linux/$lsb_dist/gpg\" -o /etc/apt/keyrings/docker.asc"
 				$sh_c "chmod a+r /etc/apt/keyrings/docker.asc"
@@ -552,7 +552,7 @@ do_install() {
 				if ! is_dry_run; then
 					set -x
 				fi
-				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y $pkgs >/dev/null"
+				$sh_c "DEBIAN_FRONTEND=noninteractive apt-get install -y $pkgs"
 			)
 			echo_docker_as_nonroot
 			exit 0
