@@ -262,11 +262,6 @@ done
 
 cd "$safeline_path"
 
-grep COLLIE .env >/dev/null 2>&1
-if [ $? -eq "0" ]; then
-    abort "检测到你的环境通过牧云主机助手安装，请使用牧云主机助手-应用市场进行升级."
-fi
-
 compose_name=$(ls docker-compose.yaml compose.yaml 2>/dev/null)
 compose_path=$safeline_path/$compose_name
 
