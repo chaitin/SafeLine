@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "
-  ____             __          _       _                
- / ___|    __ _   / _|   ___  | |     (_)  _ __     ___ 
+  ____             __          _       _
+ / ___|    __ _   / _|   ___  | |     (_)  _ __     ___
  \___ \   / _\` | | |_   / _ \ | |     | | | '_ \   / _ \\
   ___) | | (_| | |  _| |  __/ | |___  | | | | | | |  __/
  |____/   \__,_| |_|    \___| |_____| |_| |_| |_|  \___|
@@ -94,7 +94,7 @@ space_left() {
 }
 
 local_ips() {
-    if [ -z `command_exists ip` ]; then
+    if command_exists ip; then
         ip_cmd="ip addr show"
     else
         ip_cmd="ifconfig -a"
