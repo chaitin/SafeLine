@@ -216,7 +216,7 @@ export default function NavBar() {
                     sx={{ width: { xs: "100%", sm: "auto" } }}
                     href="https://demo.waf-ce.chaitin.cn:9443/dashboard"
                   >
-                    Demo
+                    演示环境
                   </Button>
                 </Box>
                 <Stack justifyContent="center">

@@ -242,7 +242,6 @@ const FunctionItems: React.FC<{ items: any[] }> = ({ items }) => {
           sx={{
             py: 2,
             position: "relative",
-            pl: 2,
             fontSize: "14px",
             textAlign: "center",
             minHeight: '14px',
