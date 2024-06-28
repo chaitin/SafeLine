@@ -27,7 +27,7 @@ const VERSION_LIST = [
           my: 4,
           boxShadow: "0px 15px 25px 0px rgba(15,198,194,0.3)",
         }}
-        href="/docs/guide/install"
+        href="https://docs.waf-ce.chaitin.cn/zh/%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/%E5%AE%89%E8%A3%85%E9%9B%B7%E6%B1%A0"
       >
         立即安装
       </Button>
@@ -49,7 +49,7 @@ const VERSION_LIST = [
     fee: "¥1799",
     fee_desc: "/年",
     desc: (
-      <Stack direction="row" justifyContent="center">
+      <Stack direction="row" justifyContent="center" sx={{position: 'relative'}}>
         <Typography
           variant="subtitle2"
           mr={1}
@@ -62,10 +62,17 @@ const VERSION_LIST = [
           原价 ¥3600 /年
         </Typography>
         <Image
-          src="/images/discount.svg"
+          src="/images/discount_end_tip.png"
           alt="限时特惠"
-          width={76}
-          height={20}
+          width={106}
+          height={22}
+        />
+        <Image
+          src="/images/discount_end_balloon.png"
+          alt="限时特惠"
+          width={60}
+          height={50}
+          style={{position: 'absolute',right: -34, top: -55}}
         />
       </Stack>
     ),
@@ -235,7 +242,6 @@ const FunctionItems: React.FC<{ items: any[] }> = ({ items }) => {
           sx={{
             py: 2,
             position: "relative",
-            pl: 2,
             fontSize: "14px",
             textAlign: "center",
             minHeight: '14px',

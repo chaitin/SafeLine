@@ -1,125 +1,143 @@
-<p align="center">
-  <a href="./README_EN.md">English</a> | 
-  <a href="./">中文</a>
-</p>
-<h1 align="center">SafeLine - The Best WAF For Community</h1>
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/403.svg" width="120">
-</p>
-<br>
-<p align="center">
-  <img src="https://img.shields.io/badge/SafeLine-BEST_WAF-blue">
-  <img src="https://img.shields.io/github/release/chaitin/safeline.svg?color=blue" />
-  <img src="https://img.shields.io/github/release-date/chaitin/safeline.svg?color=blue&label=update" />
-  <img src="https://img.shields.io/docker/v/chaitin/safeline-mgt-api?color=blue">
-  <img src="https://img.shields.io/github/stars/chaitin/safeline?style=social">
+# SafeLine, the best free WAF for webmaster
+
+<img src="/documents/static/images/403.svg" align="right" width="200" />
+
+SafeLine is a web security gateway to protect your websites from attacks and exploits.
+
+It defenses for all of web attacks, such as sql injection, code injection, os command injection, CRLF injection, ldap injection, xpath injection, rce, xss, xxe, ssrf, path traversal, backdoor, bruteforce, http-flood, bot abused and so on.
+
+<p align="left">
+  <a target="_blank" href="https://waf.chaitin.com/">🏠Home</a> &nbsp; | &nbsp;
+  <a target="_blank" href="https://docs.waf.chaitin.com/">📖Documentation</a> &nbsp; | &nbsp;
+  <a target="_blank" href="https://demo.waf.chaitin.com:9443/dashboard">🔍Live Demo</a> &nbsp; | &nbsp;
+  <a target="_blank" href="https://waf-ce.chaitin.cn/">中文版</a>
 </p>
 
-<p align="center">
-  <a href="https://waf-ce.chaitin.cn/">Home Page</a> | 
-  <a href="https://demo.waf-ce.chaitin.cn:9443/dashboard">Online Demo</a> | 
-  <a href="https://waf-ce.chaitin.cn/posts/guide_introduction">Documents</a>
+<p align="left">
+  <a target="_blank" href="https://discord.gg/wyshSVuvxC"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white"></a> &nbsp;
+  <a target="_blank" href="https://x.com/safeline_waf"><img src="https://img.shields.io/badge/X-000000?style=flat&logo=x&logoColor=white"></a> &nbsp;
+  <a target="_blank" href="https://t.me/safeline_waf"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white"></a> &nbsp;
+  <a target="_blank" href="/documents/static/images/wechat-230825.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
 </p>
 
-A simple, easy-to-use, and powerful free WAF. Based on the industry-leading semantic engine detection technology, it serves as a reverse proxy access to protect your website.
+# Screenshots
 
-- Cumulative installations exceed **130,000** units
-- Protecting websites over **1,000,000**
-- Processing HTTP requests over **30,000,000,000** times per day
-- Intercepting attacks over **50,000,000** times per day
+<img src="./images/safeline_en.png" width=600 />
 
-The core detection capability is driven by intelligent semantic analysis algorithms, tailored for the community, keep hackers away from you.
+# How It Works
 
-<img src="./images/safeline_en.png" />
+<img src="/images/safeline-as-proxy.png" align="right" width=400 />
 
-<h4 align="center">Related Repo</h4>
-<p align="center">
+SafeLine is developed based on nginx, it serves as a reverse proxy middleware to detect and cleans web attacks, its core capabilities include:
+
+- Defenses for web attacks
+- Proactive bot abused defense 
+- HTML & JS code encryption
+- IP-based rate limiting
+- Web Access Control List
+
+# Installation
+
+**中国大陆用户安装国际版可能会导致无法连接云服务，请查看** [中文版安装文档](https://docs.waf-ce.chaitin.cn/zh/%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/%E5%AE%89%E8%A3%85%E9%9B%B7%E6%B1%A0)
+
+## Automatic Deploy
+
+> 👍Recommended
+
+Use the following command to start the automated installation of SafeLine. (This process requires root privileges)
+
+```bash
+bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/setup.sh)"
+```
+
+After the command is executed, it means the installation is successfully. Please go to "Use Web UI" directly.
+
+
+## Mannually Deploy
+
+to see [Documentation](https://docs.waf.chaitin.com/en/tutorials/install)
+
+# Usage
+
+## Login
+
+Open the web console page `https://<safeline-ip>:9443/` in the browser, then you will see below.
+
+<img width="400" src="/images/login.png">
+
+Execute the following command to get administrator account
+
+```bash
+docker exec safeline-mgt /app/mgt-cli reset-admin --once
+```
+
+After the command is successfully executed, you will see the following content
+
+> Please must remember this content
+
+```text
+[SafeLine] Initial username：admin
+[SafeLine] Initial password：**********
+[SafeLine] Done
+```
+
+Enter the password in the previous step and you will successfully logged into SafeLine.
+
+## Protecting a website
+
+Log into the SafeLine Web Admin Console, go to the "Site" -> "Website" page and click the "Add Site" button in the upper right corner.
+
+<img src="/images/add-site-1.png" width=800>
+
+In the next dialog box, enter the information to the original website.    
+
+- **Domain**: domain name of your original website, or hostname, or ip address, for example: `www.chaitin.com`
+- **Port**: port that SafeLine will listen, such as 80 or 443. (for `https` websites, please check the `SSL` option)
+- **Upstream**: real address of your original website, through which SafeLine will forward traffic to it
+
+After completing the above settings, please resolve the domain name you just entered to the IP address of the server where SafeLine is located.
+
+<img src="/images/add-site-2.png" width=400>
+
+Then you can access the website protected by the SafeLine through the domain name like this.
+
+<img src="/images/safeline-as-proxy-2.png" width=400>
+
+## Try to attack your website
+
+Now, your website is protected by SafeLine, let’s try tp attack it and see what happens.
+
+If https://chaitin.com is a website protected by SafeLine, here are some test cases for common attacks:
+
+- SQL Injection: `https://chaitin.com/?id=1+and+1=2+union+select+1`
+- XSS: `https://chaitin.com/?id=<img+src=x+onerror=alert()>`
+- Path Traversal: `https://chaitin.com/?id=../../../../etc/passwd`
+- Code Injection: `https://chaitin.com/?id=phpinfo();system('id')`
+- XXE: `https://chaitin.com/?id=<?xml+version="1.0"?><!DOCTYPE+foo+SYSTEM+"">`
+
+Replace `chaitin.com` in the above cases with your website domain name and try to access it.
+
+<img src="/images/blocked.png" width=400>
+
+Check the web console of SafeLine to see the attack list
+
+<img src="/images/log-list.png" width=800>
+
+To view the specific details of the attack, click "detail"
+
+<img src="/images/log-detail.png" width=600>
+
+## Star History
+
+<a href="https://github.com/chaitin/safeline/stargazers">
+    <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=chaitin/safeline&type=Date">
+</a> 
+
+## Related Repo
+<p >
   <a href="https://github.com/chaitin/yanshi">Automaton Generator</a> | 
   <a href="https://github.com/chaitin/safeline-open-platform">Lua Plugin</a> | 
   <a href="https://github.com/chaitin/lua-resty-t1k">T1K Protocol</a> |
   <a href="https://github.com/chaitin/blazehttp">WAF Test Tool</a>
 </p>
-
-## Features
-
-#### Convenience
-
-Adopting containerized deployment, installation can be completed with one command at zero cost. Security configurations are ready to use out of the box, requiring no manual maintenance and enabling secure and effortless management.
-
-#### Security
-
-Pioneering industry-leading intelligent semantic analysis algorithms for precise detection, low false positives, and resistance to circumvention. Unconstrained by rules, the semantic analysis algorithm equips users to confidently confront unknown 0day attack features.
-
-#### High Performance
-
-Ruleless engine, linear security detection algorithm, with an average request detection latency at the millisecond level. Strong concurrency capability, effortlessly detecting 2000+ TPS on a single core; with sufficient hardware, there is no upper limit to the supported traffic scale.
-
-#### High Availability
-
-The traffic processing engine is developed based on Nginx, guaranteeing both performance and stability. It incorporates a comprehensive health check mechanism, ensuring a service availability of up to 99.99%.
-
-
-## 🚀 Get Started
-
-### Environment
-
-- Operating System: Linux
-- Instruction Architecture: x86_64
-- Software Dependencies: Docker version 20.10.6 or higher
-- Software Dependencies: Docker Compose version 2.0.0 or higher
-- Minimum Environment: 1 core CPU / 1 GB memory / 10 GB disk
-
-### Setup
-
-```
-bash -c "$(curl -fsSLk https://waf-ce.chaitin.cn/release/latest/setup.sh)"
-```
-
-> for information for <a href="https://waf-ce.chaitin.cn/posts/guide_install">安装雷池</a>
-
-## 🕹️ use SafeLine
-
-### Login
-
-After opening the backend management page in the browser at `https://<IP-or-HOSTNAME>:9443`, follow the on-screen instructions to scan the QR code using an authentication app that supports TOTP, and then enter the dynamic password to log in.
-
-![login.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/login.gif)
-
-### Settings
-
-SafeLine is accessed in reverse proxy mode, receiving traffic before the web server, detecting and cleaning attack behavior in the traffic, and then forwarding the cleaned traffic to the web server.
-
-![config.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/config_site.gif)
-
-<font color=grey>💡 TIPS: After adding, executing `curl -H "Host: <domain>" http://<IP-or-HOSTNAME>:<port>` should be able to get the response of the website.
-
-### test
-
-Use the following step to simulate hacker attack and see how effective the protection of the SafeLine is.
-
-- access `http://<IP-or-HOSTNAME>:<PORT>/?id=1%20AND%201=1`
-- access `http://<IP-or-HOSTNAME>:<PORT>/?a=<script>alert(1)</script>`
-
-![log.gif](https://raw.githubusercontent.com/chaitin/SafeLine/main/documents/static/images/gif/detect_log.gif)
-
-> more test for <a href="https://waf-ce.chaitin.cn/posts/guide_test">测试防护效果</a>
-
-### FAQ
-
-- [SETUP](https://waf-ce.chaitin.cn/posts/faq_install)
-- [LOGIN](https://waf-ce.chaitin.cn/posts/faq_login)
-- [PROXY](https://waf-ce.chaitin.cn/posts/faq_access)
-- [SETTINGS](https://waf-ce.chaitin.cn/posts/faq_config)
-- [OTHERS](https://waf-ce.chaitin.cn/posts/faq_other)
-
-## 🏘️ Talk Group
-
-1. Bug feedback and feature suggestions can be directly submitted through GitHub Issues.
-2. Join <a target="_blank" href="https://discord.gg/wyshSVuvxC">SafeLine Discord</a> for more discussions.
-
-## Star History <a name="star-history"></a>
-
-<a href="https://github.com/chaitin/safeline/stargazers">
-    <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=chaitin/safeline&type=Date">
-</a> 

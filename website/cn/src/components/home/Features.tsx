@@ -42,7 +42,7 @@ const FEATURE_LIST = [
                 mb: { xs: 2, sm: 0 },
                 fontSize: { xs: "24px", sm: "14px" },
               }}
-              href="/docs/about/syntaxanalysis"
+              href="https://docs.waf-ce.chaitin.cn/"
             >
               了解详情
             </Button>

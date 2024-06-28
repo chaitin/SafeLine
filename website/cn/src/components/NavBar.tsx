@@ -25,9 +25,9 @@ import usePopupState, {
 } from "@/components/Popover/usePopupState";
 
 const navs = [
-  { to: "/docs", label: "帮助文档", target: "_blank" },
-  { to: "/community", label: "开发计划", target: "_self" },
-  { to: "/version", label: "付费版本", target: "_self" },
+  { to: "https://docs.waf-ce.chaitin.cn/zh/home", label: "帮助文档", target: "_blank", new: true },
+  { to: "/community", label: "开发计划", target: "_self", new: false },
+  { to: "/version", label: "付费版本", target: "_self", new: false },
 ];
 
 const menus = [
@@ -36,11 +36,13 @@ const menus = [
     to: "https://github.com/chaitin/SafeLine",
     label: "GitHub",
     target: "_blank",
+    new: false,
   },
   {
     to: "https://demo.waf-ce.chaitin.cn:9443/dashboard",
     label: "演示 Demo",
     target: "_blank",
+    new: false,
   },
 ];
 
@@ -106,10 +108,11 @@ export default function NavBar() {
                         <Link
                           key={index}
                           href={nav.to}
-                          sx={{ color: "common.black" }}
+                          sx={{ color: "common.black",lineHeight: '45px' }}
                           target={nav.target}
                         >
                           {nav.label}
+                          {nav.new && <Icon type="icon-new" sx={{ ml: '4px', fontSize: '26px' }} />}
                         </Link>
                       </Box>
                     ))}
@@ -136,8 +139,23 @@ export default function NavBar() {
                     }}
                     mr={3.5}
                   >
-                    <Icon type="icon-discord1" sx={{ mr: 1 }} />
+                    <Icon type="icon-icon-17" sx={{ mr: 1 }} />
                     Discord
+                  </Link>
+                  <Link
+                    href="https://x.com/safeline_waf"
+                    target="_blank"
+                    sx={{
+                      color: "common.black",
+                      display: "flex",
+                      "&:hover": {
+                        color: "primary.main",
+                      },
+                    }}
+                    mr={3.5}
+                  >
+                    <Icon type="icon-tuite3" sx={{ mr: 1, fontSize: '16px' }} />
+                    X
                   </Link>
                   <Link
                     href="https://github.com/chaitin/SafeLine"
@@ -192,21 +210,13 @@ export default function NavBar() {
                       />
                     </HoverPopover>
                   </Box>
-                  <Link
-                    href="https://demo.waf-ce.chaitin.cn:9443/dashboard"
-                    sx={{ color: "common.black" }}
-                    mr={3.5}
-                    target="_blank"
-                  >
-                    演示 Demo
-                  </Link>
                   <Button
                     variant="contained"
                     target="_blank"
                     sx={{ width: { xs: "100%", sm: "auto" } }}
-                    href="/docs/guide/install"
+                    href="https://demo.waf-ce.chaitin.cn:9443/dashboard"
                   >
-                    立即安装
+                    演示环境
                   </Button>
                 </Box>
                 <Stack justifyContent="center">

@@ -1,15 +1,14 @@
 #!/bin/bash
 
 echo "
-  ____             __          _       _                
- / ___|    __ _   / _|   ___  | |     (_)  _ __     ___ 
+  ____             __          _       _
+ / ___|    __ _   / _|   ___  | |     (_)  _ __     ___
  \___ \   / _\` | | |_   / _ \ | |     | | | '_ \   / _ \\
   ___) | | (_| | |  _| |  __/ | |___  | | | | | | |  __/
  |____/   \__,_| |_|    \___| |_____| |_| |_| |_|  \___|
 "
 
 export STREAM=${STREAM:-0}
-export CDN=${CDN:-1}
 
 qrcode() {
     echo "█████████████████████████████████████████"
@@ -95,7 +94,7 @@ space_left() {
 }
 
 local_ips() {
-    if [ -z `command_exists ip` ]; then
+    if command_exists ip; then
         ip_cmd="ip addr show"
     else
         ip_cmd="ifconfig -a"
@@ -103,6 +102,148 @@ local_ips() {
 
     echo $($ip_cmd | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | awk '{print $2}')
 }
+
+get_average_delay() {
+    local source=$1
+    local total_delay=0
+    local iterations=3
+
+    for ((i = 0; i < iterations; i++)); do
+        # check timeout
+        if ! curl -o /dev/null -m 1 -s -w "%{http_code}\n" "$source" > /dev/null; then
+            delay=999
+        else
+            delay=$(curl -o /dev/null -s -w "%{time_total}\n" "$source")
+        fi
+        total_delay=$(awk "BEGIN {print $total_delay + $delay}")
+    done
+
+    average_delay=$(awk "BEGIN {print $total_delay / $iterations}")
+    echo "$average_delay"
+}
+
+install_docker() {
+    curl -fsSL "https://waf-ce.chaitin.cn/release/latest/get-docker.sh" -o get-docker.sh
+    sources=(
+        "https://mirrors.aliyun.com/docker-ce"
+        "https://mirrors.tencent.com/docker-ce"
+        "https://download.docker.com"
+    )
+    min_delay=${#sources[@]}
+    selected_source=""
+    for source in "${sources[@]}"; do
+        average_delay=$(get_average_delay "$source")
+        echo "source: $source, delay: $average_delay"
+        if (( $(awk 'BEGIN { print '"$average_delay"' < '"$min_delay"' }') )); then
+            min_delay=$average_delay
+            selected_source=$source
+        fi
+    done
+
+    echo "selected source: $selected_source"
+    export DOWNLOAD_URL="$selected_source"
+    bash get-docker.sh
+
+    start_docker
+    docker version > /dev/null 2>&1
+    if [ $? -ne "0" ]; then
+        echo "Docker 安装失败, 请检查网络连接或手动安装 Docker"
+        echo "参考文档: https://docs.docker.com/engine/install/"
+        abort "Docker 安装失败"
+    fi
+    info "Docker 安装成功"
+}
+
+start_docker() {
+    systemctl enable docker
+    systemctl daemon-reload
+    systemctl start docker
+}
+
+check_depend() {
+    # CPU ssse3 指令集检查
+    support_ssse3=1
+    lscpu | grep ssse3 > /dev/null 2>&1
+    if [ $? -ne "0" ]; then
+        echo "not found info in lscpu"
+        support_ssse3=0
+    fi
+    cat /proc/cpuinfo | grep ssse3 > /dev/null 2>&1
+    if [ $support_ssse3 -eq "0" -a $? -ne "0" ]; then
+      abort "雷池需要运行在支持 ssse3 指令集的 CPU 上，虚拟机请自行配置开启 CPU ssse3 指令集支持"
+    fi
+    if [ -z "$BASH" ]; then
+        abort "请用 bash 执行本脚本，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
+    fi
+
+    if [ ! -t 0 ]; then
+        abort "STDIN 不是标准的输入设备，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
+    fi
+
+    if [ "$EUID" -ne "0" ]; then
+        abort "请以 root 权限运行"
+    fi
+
+    if [ -z `command_exists docker` ]; then
+        warning "缺少 Docker 环境"
+        if confirm "是否需要自动安装 Docker"; then
+            install_docker
+        else
+            abort "中止安装"
+        fi
+    fi
+
+    info "发现 Docker 环境: '`command -v docker`'"
+
+    docker version > /dev/null 2>&1
+    if [ $? -ne "0" ]; then
+        abort "Docker 服务工作异常"
+    fi
+
+    compose_command="docker compose"
+    if $compose_command version; then
+        info "发现 Docker Compose Plugin"
+    else
+        warning "未发现 Docker Compose Plugin"
+        if confirm "是否需要自动安装 Docker Compose Plugin"; then
+            install_docker
+            if [ $? -ne "0" ]; then
+                abort "Docker Compose Plugin 安装失败"
+            fi
+            info "Docker Compose Plugin 安装完成"
+        else
+            abort "中止安装"
+        fi
+    fi
+
+    # check docker compose support -d
+    if ! $compose_command up -d --help > /dev/null 2>&1; then
+        warning "Docker Compose Plugin 不支持 '-d' 参数"
+        if confirm "是否需要自动升级 Docker Compose Plugin"; then
+            install_docker
+            if [ $? -ne "0" ]; then
+                abort "Docker Compose Plugin 升级失败"
+            fi
+            info "Docker Compose Plugin 升级完成"
+        else
+            abort "中止安装"
+        fi
+    fi
+
+    start_docker
+
+    info "安装环境确认正常"
+}
+
+trap 'onexit' INT
+onexit() {
+    echo
+    abort "用户手动结束安装"
+}
+
+check_depend
+
+docker network rm safeline-ce 2>/dev/null
 
 ips=`local_ips`
 subnets="172.22.222 169.254.222 192.168.222"
@@ -114,91 +255,7 @@ for subnet in $subnets; do
     fi
 done
 
-start_docker() {
-    systemctl start docker && systemctl enable docker
-}
-
-trap 'onexit' INT
-onexit() {
-    echo
-    abort "用户手动结束安装"
-}
-
-# CPU ssse3 指令集检查
-support_ssse3=1
-lscpu | grep ssse3 > /dev/null 2>&1
-if [ $? -ne "0" ]; then
-    echo "not found info in lscpu"
-    support_ssse3=0
-fi
-
-cat /proc/cpuinfo | grep ssse3 > /dev/null 2>&1
-if [ $support_ssse3 -eq "0" -a $? -ne "0" ]; then
-    abort "雷池需要运行在支持 ssse3 指令集的 CPU 上，虚拟机请自行配置开启 CPU ssse3 指令集支持"
-fi
-
 safeline_path='/data/safeline'
-
-if [ -z "$BASH" ]; then
-    abort "请用 bash 执行本脚本，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
-fi
-
-if [ ! -t 0 ]; then
-    abort "STDIN 不是标准的输入设备，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
-fi
-
-if [ "$#" -ne "0" ]; then
-    abort "当前脚本无需任何参数，请参考最新的官方技术文档 https://waf-ce.chaitin.cn/"
-fi
-
-if [ "$EUID" -ne "0" ]; then
-    abort "请以 root 权限运行"
-fi
-info "脚本调用方式确认正常"
-
-if [ -z `command_exists docker` ]; then
-    warning "缺少 Docker 环境"
-    if confirm "是否需要自动安装 Docker"; then
-        curl -sSLk https://get.docker.com/ | bash
-        if [ $? -ne "0" ]; then
-            abort "Docker 安装失败"
-        fi
-        info "Docker 安装完成"
-    else
-        abort "中止安装"
-    fi
-fi
-info "发现 Docker 环境: '`command -v docker`'"
-
-start_docker
-docker version > /dev/null 2>&1
-if [ $? -ne "0" ]; then
-    abort "Docker 服务工作异常"
-fi
-info "Docker 工作状态正常"
-
-compose_command="docker compose"
-if $compose_command version; then
-    info "发现 Docker Compose Plugin"
-else
-    warning "未发现 Docker Compose Plugin"
-    compose_command="docker-compose"
-    if [ -z `command_exists "docker-compose"` ]; then
-        warning "未发现 docker-compose 组件"
-        if confirm "是否需要自动安装 Docker Compose Plugin"; then
-            curl -sSLk https://get.docker.com/ | bash
-            if [ $? -ne "0" ]; then
-                abort "Docker Compose Plugin 安装失败"
-            fi
-            info "Docker Compose Plugin 安装完成"
-            compose_command="docker compose"
-        else
-            abort "中止安装"
-        fi
-    else
-        info "发现 docker-compose 组件: '`command -v docker-compose`'"
-    fi
-fi
 
 while true; do
     echo -e -n "\033[34m[SafeLine] 雷池安装目录 (留空则为 '$safeline_path'): \033[0m"
@@ -254,6 +311,15 @@ fi
 echo "MGT_PORT=9443" >> .env
 echo "POSTGRES_PASSWORD=$(LC_ALL=C tr -dc A-Za-z0-9 </dev/urandom | head -c 32)" >> .env
 echo "SUBNET_PREFIX=$SUBNET_PREFIX" >> .env
+
+if [ -z "$CDN" ]; then
+    if ping -c 1 -W 1 docker.com > /dev/null 2>&1; then
+        CDN=0
+    else
+        CDN=1
+        echo "检测到你的网络环境不支持直接访问 Docker Hub， 镜像将从华为云镜像仓库下载"
+    fi
+fi
 
 if [ $CDN -eq 0 ]; then
     echo "IMAGE_PREFIX=chaitin" >>".env"
