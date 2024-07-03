@@ -1,5 +1,5 @@
 
-# SafeLine, the best free WAF for webmaster
+# SafeLine, make your webserver secure
 
 <img src="/documents/static/images/403.svg" align="right" width="200" />
 
