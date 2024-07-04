@@ -1,7 +1,7 @@
 
 # SafeLine, make your webserver secure
 
-<img src="/documents/static/images/403.svg" align="right" width="200" />
+<img src="/images/403.svg" align="right" width="200" />
 
 SafeLine is a web security gateway to protect your websites from attacks and exploits.
 
@@ -18,7 +18,7 @@ It defenses for all of web attacks, such as sql injection, code injection, os co
   <a target="_blank" href="https://discord.gg/wyshSVuvxC"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white"></a> &nbsp;
   <a target="_blank" href="https://x.com/safeline_waf"><img src="https://img.shields.io/badge/X-000000?style=flat&logo=x&logoColor=white"></a> &nbsp;
   <a target="_blank" href="https://t.me/safeline_waf"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white"></a> &nbsp;
-  <a target="_blank" href="/documents/static/images/wechat-230825.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
+  <a target="_blank" href="/images/wechat-230825.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
 </p>
 
 # Screenshots
