@@ -1,0 +1,5 @@
+# develop use only. For production, refer to `package/build/tengine/tcontrollerd/config.yml`
+log:
+  output: stdout              # "stdout", "stderr" or file path
+  level:  debug               # "debug", "info", "warn" or "error"
+mgt_addr: 169.254.0.4:9002        # gRPC addr of mgt-api webserver

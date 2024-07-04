@@ -1,0 +1,16 @@
+# develop use only. For production, refer to `package/build/mgt-api/webserver/config.yml`
+log:
+  output: stdout              # "stdout", "stderr" or file path
+  level:  debug                # "debug", "info", "warn" or "error"
+server:
+  listen_addr: :9001
+  dev_mode: true
+db:
+  url: postgres://safeline-ce:safeline-ce@127.0.0.1/safeline-ce
+  log_sql: false
+detector:
+  addr: ""
+  fsl_bytecode: fvm/bytecode
+grpc_server:
+  listen_addr: :9002
+

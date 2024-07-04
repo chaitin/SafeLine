@@ -1,0 +1,26 @@
+package api
+
+const (
+	Version             = "/Version"
+	UpgradeTips         = "/UpgradeTips"
+	Login               = "/Login"
+	Logout              = "/Logout"
+	OTPUrl              = "/OTPUrl"
+	User                = "/User"
+	DetectLogList       = "/DetectLogList"
+	DetectLogDetail     = "/DetectLogDetail"
+	Behaviour           = "/Behaviour"
+	FalsePositives      = "/FalsePositives"
+	Website             = "/Website"
+	UploadSSLCert       = "/UploadSSLCert"
+	SSLCert             = "/SSLCert"
+	PolicyRule          = "/PolicyRule"
+	SwitchPolicyRule    = "/SwitchPolicyRule"
+	DashboardCounts     = "/dashboard/counts"
+	DashboardSites      = "/dashboard/sites"
+	DashboardQps        = "/dashboard/qps"
+	DashboardRequests   = "/dashboard/requests"
+	DashboardIntercepts = "/dashboard/intercepts"
+	PolicyGroupGlobal   = "/PolicyGroupGlobal"
+	SrcIPConfig         = "/SrcIPConfig"
+)
