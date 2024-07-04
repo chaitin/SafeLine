@@ -1,0 +1,20 @@
+syntax = "proto3";
+package website;
+option go_package = "proto/website";
+
+service Website {
+  rpc Subscribe(stream Response) returns (stream Event) {}
+}
+
+// From client-side, may be "pong"
+message Response {
+  string type = 1;
+  bytes msg = 2;
+  bool err = 3;
+}
+
+// From server-side, may be "ping"
+message Event {
+  string type = 1;    // ping/website
+  bytes msg = 2;
+}

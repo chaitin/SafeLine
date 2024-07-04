@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/blazehttp" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/lua-resty-t1k" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/plugins" vcs="Git" />
-  </component>
-</project>
