@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Lua
+        uses: leafo/gh-actions-lua@v10
+
+      - name: Install Luarocks
+        uses: leafo/gh-actions-luarocks@v4
+
+      - name: Extract release tag
+        id: release_tag
+        run: |
+          # Extract the tag name from the ref
+          tag="${GITHUB_REF#refs/tags/}"
+          version_without_v="${tag#v}"
+          echo "version=${tag}" >> $GITHUB_ENV
+          echo "version_without_v=${version_without_v}" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.version }}
+          release_name: ${{ env.version }}
+          draft: false
+          prerelease: false
+
+      - name: Upload to luarocks
+        env:
+          LUAROCKS_TOKEN: ${{ secrets.LUAROCKS_TOKEN }}
+        run: |
+          luarocks install dkjson
+          luarocks upload rockspec/lua-resty-t1k-${{ env.version_without_v }}-0.rockspec --api-key=${{ secrets.LUAROCKS_API_KEY }}

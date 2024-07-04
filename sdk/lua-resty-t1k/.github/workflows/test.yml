@@ -1,0 +1,63 @@
+name: Test
+
+on: [ push, pull_request ]
+
+jobs:
+  luacheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: "luajit-openresty"
+      - uses: leafo/gh-actions-luarocks@v4
+      - run: luarocks install luacheck
+      - run: luacheck lib
+
+  run_tests:
+    strategy:
+      matrix:
+        openresty_version:
+          - 1.17.8.2
+          - 1.19.9.1
+          - 1.21.4.3
+          - 1.25.3.1
+
+    services:
+      detector:
+        image: chaitin/safeline-detector:t1k-ci-1.6.0
+
+    runs-on: ubuntu-latest
+    container:
+      image: openresty/openresty:${{ matrix.openresty_version }}-alpine-fat
+      # --init runs tinit as PID 1 and prevents the 'WARNING: killing the child process' spam from the test suite
+      options: --init
+
+    steps:
+      - name: Install deps
+        run: |
+          apk add --no-cache bash bind-tools curl git git-lfs libarchive-tools perl perl-dev wget
+          ln -s /usr/bin/bsdtar /usr/bin/tar
+
+      - name: Install CPAN
+        run: curl -s -L http://xrl.us/cpanm > /bin/cpanm && chmod +x /bin/cpanm
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cpan
+            ~/.cache
+          key: ${{ runner.os }}-${{ matrix.openresty_version }}-cache
+
+      - name: Install Test::Nginx
+        run: cpanm -q -n Test::Nginx
+
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Run tests
+        run: |
+          curl -fs -X POST -H "Content-Type: application/octet-stream" --data-binary "@ci/bytecode" "http://detector:8001/update/policy"
+          env DETECTOR_IP=$(dig detector +short) prove -r t/
