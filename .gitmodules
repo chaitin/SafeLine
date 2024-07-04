@@ -4,6 +4,4 @@
 [submodule "lua-resty-t1k"]
 	path = lua-resty-t1k
 	url = https://github.com/chaitin/lua-resty-t1k
-[submodule "plugins"]
-	path = plugins
-	url = https://github.com/chaitin/safeline-open-platform
+
