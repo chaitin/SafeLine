@@ -1,5 +1,11 @@
-blank_issues_enabled: Ture
+blank_issues_enabled: false
 contact_links:
+  - name: Discord
+    url: https://discord.gg/wyshSVuvxC
+    about: Ask questions and discuss with other SafeLine users in real time.
+  - name: Home page 官网
+    url: https://waf.chaitin.com/
+    about: Get feature descriptions, technical documentation and more information. 获取功能描述、技术文档和更多信息。
   - name: 绕过反馈
     url: https://stack.chaitin.com/security-challenge/safeline/index
     about: Waf 绕过可在 CT Stack 安全挑战赛提交细节

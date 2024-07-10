@@ -1,42 +1,45 @@
-name: Bug
-description: 明确的软件故障或缺陷
+name: Bu
+description: Report a bug
 # Create a report to help us improve
 title: "[Bug] "
 
 body:
-- type: markdown
-  attributes:
-    value: |
-      提示：提问前请先搜索一下是否存在重复问题
-    # Please check for duplicate issue first.
-- type: textarea
-  id: Description
-  attributes:
-    label: 问题描述
-    # Describe the bug
-  validations:
-    required: false
-- type: input
-  id: version
-  attributes:
-    label: 版本号
-    placeholder: 3.0.0
-  validations:
-    required: true
-- type: textarea
-  id: Reproduce
-  attributes:
-    label: 复现方法
-    # To Reproduce
-    placeholder: |
-      1. ...
-      2. ...
-  validations:
-    required: true
-- type: textarea
-  id: Expected
-  attributes:
-    label: 期望的结果
-    # Expected behavior. Descript what you expected to happen.
-  validations:
-    required: true
+  - type: markdown
+    attributes:
+      value: |
+        Please search the [open issues](https://github.com/chaitin/SafeLine/issues) and [discussion](https://github.com/chaitin/SafeLine/discussions) for duplicate issue first. 
+        The more information you share, the faster we can identify and fix the bug.
+      # Please check for duplicate issue first.
+  - type: textarea
+    id: Description
+    attributes:
+      label: What happened?
+      # Describe the bug
+    validations:
+      required: false
+  - type: textarea
+    id: Reproduce
+    attributes:
+      label: How we reproduce?
+      description: |
+        Reports cannot be reproduced will Most likely be closed.
+      # To Reproduce
+      value: |
+        1. ...
+        2. ...
+        3. ...
+  - type: textarea
+    id: Expected
+    attributes:
+      label: Expected behavior
+      # placeholder: |
+      # Descript what you expected to happen.
+      # Expected behavior. Descript what you expected to happen.
+  - type: textarea
+    id: Errorlog
+    attributes:
+      label: Error log
+      placeholder: |
+        Paste the error logs if any.
+      # Expected behavior. Descript what you expected to happen.
+

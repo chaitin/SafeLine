@@ -1,30 +1,31 @@
-name: 功能建议
+name: Suggestio
 # Feature request
-description: 新功能或现有能力的优化建议
-title: "[建议] "
+description: New feature or improvements.
+title: "[Suggestion] "
 
 body:
   - type: markdown
     attributes:
       value: |
-        提示：创建前请搜索一下是否有重复问题。一个 issue 尽量只描述一个问题。简洁、准确的描述有助于集中大家的意见，推进问题尽快解决
-      # Please check for duplicate issue first.
-      # 尽量描述需求的背景、原始问题，避免出现 X-Y 问题，参考： https://coolshell.cn/articles/10804.html
-  - type: textarea
-    id: problem
-    attributes:
-      label: 背景与遇到的问题
-      # Background and the problem that frustrates you
-      placeholder: |
-        例如：我的业务有xxx特性，当我在使用xxx功能的时候，会遇到xxx情况...
-    validations:
-      required: false
+        Please search the [open issues](https://github.com/chaitin/SafeLine/issues) and [discussion](https://github.com/chaitin/SafeLine/discussions) for duplicate issue first.
+        Please rise only one suggestion in an issue.
   - type: textarea
     id: solution
     attributes:
-      label: 建议的解决方案
+      label: What would you like to be added or improved?
       # Describe the solution you'd like
+      # placeholder: |
+      #
+  - type: textarea
+    id: problem
+    attributes:
+      label: Why is it needed?
+      # Background and the specific problem that frustrates you
       placeholder: |
-        例如：建议增加xxx功能；将xxx改为xxx...
+        Background and the problem that frustrates you
+
+    validations:
+      required: false
+
     validations:
       required: false

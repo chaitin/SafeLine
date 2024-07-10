@@ -1,14 +1,12 @@
-name: 其他问题与反馈
-description: 文档、部署失败等其他问题。
+name: Other
+description: Other issues such as Doc
 body:
   - type: markdown
     attributes:
       value: |
-        提示：创建前请先搜索一下是否存在重复问题
-      # Please check for duplicate issue first.
-      # 尽量描述需求的背景、原始问题，避免出现 X-Y 问题，参考： https://coolshell.cn/articles/10804.html
-      # 提問的智慧： https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/main/README-zh_CN.md
+        Please search the [open issues](https://github.com/chaitin/SafeLine/issues) and [discussion](https://github.com/chaitin/SafeLine/discussions) for duplicate issue first. 
+        Please rise only one suggestion in an issue.
   - type: textarea
     id: content
     attributes:
-      label: 反馈内容
+      label: Content
