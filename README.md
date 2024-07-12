@@ -1,5 +1,5 @@
 
-# SafeLine, make your webserver secure
+# SafeLine, make your web app secure default
 
 <img src="/images/403.svg" align="right" width="200" />
 
