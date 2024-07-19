@@ -15,7 +15,7 @@ It defenses for all of web attacks, such as sql injection, code injection, os co
 </p>
 
 <p align="left">
-  <a target="_blank" href="https://discord.gg/WBnHAsGgv7"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white"></a> &nbsp;
+  <a target="_blank" href="https://discord.gg/SVnZGzHFvn"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white"></a> &nbsp;
   <a target="_blank" href="https://x.com/safeline_waf"><img src="https://img.shields.io/badge/X-000000?style=flat&logo=x&logoColor=white"></a> &nbsp;
   <a target="_blank" href="https://t.me/safeline_waf"><img src="https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white"></a> &nbsp;
   <a target="_blank" href="/images/wechat-230825.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
