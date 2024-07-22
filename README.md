@@ -3,7 +3,7 @@
 
 <img src="/images/403.svg" align="right" width="200" />
 
-SafeLine is a self-hosted web application firewall to protect your websites from attacks and exploits.
+SafeLine is a self-hosted **web application firewall** to protect your web apps from attacks and exploits.
 
 It defenses for all of web attacks, such as sql injection, code injection, os command injection, CRLF injection, ldap injection, xpath injection, rce, xss, xxe, ssrf, path traversal, backdoor, bruteforce, http-flood, bot abused and so on.
 
@@ -22,21 +22,18 @@ It defenses for all of web attacks, such as sql injection, code injection, os co
 # Table of Contents
 
 - [Introduction](#Intruction)
-- [Screenshots](#Screenshots)
-- [How It Works](#How-It-Works)
 - [Security Features](#Security-Features)
 - [Quickstart](#Quickstart)
 - [Community](#Community)
 - [More Informations](#More-Informations)
 
-# Screenshots
+# Introduction
 
-| <img src="./images/screenshot-1.png" width=600 /> | <img src="./images/screenshot-2.png" width=600 /> |
-| ------------------------------------------------ | ------------------------------------------------ | 
-| <img src="./images/screenshot-3.png" width=600 /> | <img src="./images/screenshot-4.png" width=600 /> | 
+SafeLine is a self-hosted **web application firewall** to protect your web apps from attacks and exploits.
 
+It defenses for all of web attacks, such as sql injection, code injection, os command injection, CRLF injection, ldap injection, xpath injection, rce, xss, xxe, ssrf, path traversal, backdoor, bruteforce, http-flood, bot abused and so on.
 
-# How It Works
+## How It Works
 
 <img src="/images/safeline-as-proxy.png" align="right" width=400 />
 
@@ -47,6 +44,14 @@ SafeLine is developed based on nginx, it serves as a reverse proxy middleware to
 - HTML & JS code encryption
 - IP-based rate limiting
 - Web Access Control List
+
+## Screenshots
+
+| <img src="./images/screenshot-1.png" width=600 /> | <img src="./images/screenshot-2.png" width=600 /> |
+| ------------------------------------------------ | ------------------------------------------------ | 
+| <img src="./images/screenshot-3.png" width=600 /> | <img src="./images/screenshot-4.png" width=600 /> | 
+
+
 
 # Security Features
 
