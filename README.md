@@ -31,7 +31,7 @@ It defenses for all of web attacks, such as sql injection, code injection, os co
 
 # Screenshots
 
-| <img src="./images/safeline_en.png" width=600 /> | <img src="./images/safeline_en.png" width=600 /> |
+| <img src="./images/screenshot-1.png" width=600 /> | <img src="./images/safeline_en.png" width=600 /> |
 | ------------------------------------------------ | ------------------------------------------------ | 
 | <img src="./images/safeline_en.png" width=600 /> | <img src="./images/safeline_en.png" width=600 /> | 
 
