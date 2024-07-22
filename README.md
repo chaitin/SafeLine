@@ -95,11 +95,21 @@ Replace `chaitin.com` in the above cases with your website domain name and try t
 
 <img src="/images/blocked.png" width=400>
 
-## Star History
+# More Informations
 
-<a href="https://github.com/chaitin/safeline/stargazers">
-    <img width="500" alt="Star History Chart" src="https://api.star-history.com/svg?repos=chaitin/safeline&type=Date">
-</a> 
+## Is SafeLine Production-Ready?
+
+Yes, SafeLine is production-ready.
+
+- Over 180,000 installations worldwide
+- Protecting over 1,000,000 Websites
+- Handling over 30,000,000,000 HTTP Requests Daily
+
+## Pro Version
+
+## Stargazers Over Time
+
+<a href="https://starchart.cc/chaitin/SafeLine"><img src="https://starchart.cc/chaitin/SafeLine.svg?variant=light" width=800></a>
 
 ## Related Repo
 <p >
