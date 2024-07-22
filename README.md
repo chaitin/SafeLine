@@ -1,5 +1,5 @@
 
-# SafeLine, make your web app secure default
+# SafeLine, make your web apps secure
 
 <img src="/images/403.svg" align="right" width="200" />
 
@@ -19,9 +19,22 @@ It defenses for all of web attacks, such as sql injection, code injection, os co
   <a target="_blank" href="/images/wechat-230825.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
 </p>
 
+# Table of Contents
+
+- [Introduction](#Intruction)
+- [Screenshots](#Screenshots)
+- [How It Works](.#How-It-Works)
+- [Security Features](#Security-Features)
+- [Quickstart](#Quickstart)
+- [Community](#Community)
+- [More Informations](#More-Informations)
+
 # Screenshots
 
-<img src="./images/safeline_en.png" width=600 />
+| <img src="./images/safeline_en.png" width=600 /> | <img src="./images/safeline_en.png" width=600 /> |
+| ------------------------------------------------ | ------------------------------------------------ | 
+| <img src="./images/safeline_en.png" width=600 /> | <img src="./images/safeline_en.png" width=600 /> | 
+
 
 # How It Works
 
@@ -35,54 +48,18 @@ SafeLine is developed based on nginx, it serves as a reverse proxy middleware to
 - IP-based rate limiting
 - Web Access Control List
 
-# Installation
+# Security Features
+
+
+# Quickstart
 
 **中国大陆用户安装国际版可能会导致无法连接云服务，请查看** [中文版安装文档](https://docs.waf-ce.chaitin.cn/zh/%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/%E5%AE%89%E8%A3%85%E9%9B%B7%E6%B1%A0)
 
-## Automatic Deploy
+## Installing
 
-> 👍Recommended
+Information on how to install SafeLine can be found in the [Install Guide](https://docs.waf.chaitin.com/en/tutorials/install)
 
-Use the following command to start the automated installation of SafeLine. (This process requires root privileges)
-
-```bash
-bash -c "$(curl -fsSLk https://waf.chaitin.com/release/latest/setup.sh)"
-```
-
-After the command is executed, it means the installation is successfully. Please go to "Use Web UI" directly.
-
-
-## Mannually Deploy
-
-to see [Documentation](https://docs.waf.chaitin.com/en/tutorials/install)
-
-# Usage
-
-## Login
-
-Open the web console page `https://<safeline-ip>:9443/` in the browser, then you will see below.
-
-<img width="400" src="/images/login.png">
-
-Execute the following command to get administrator account
-
-```bash
-docker exec safeline-mgt /app/mgt-cli reset-admin --once
-```
-
-After the command is successfully executed, you will see the following content
-
-> Please must remember this content
-
-```text
-[SafeLine] Initial username：admin
-[SafeLine] Initial password：**********
-[SafeLine] Done
-```
-
-Enter the password in the previous step and you will successfully logged into SafeLine.
-
-## Protecting a website
+## Protecting Web Apps
 
 Log into the SafeLine Web Admin Console, go to the "Site" -> "Website" page and click the "Add Site" button in the upper right corner.
 
@@ -102,9 +79,9 @@ Then you can access the website protected by the SafeLine through the domain nam
 
 <img src="/images/safeline-as-proxy-2.png" width=400>
 
-## Try to attack your website
+## Attack Simulation
 
-Now, your website is protected by SafeLine, let’s try tp attack it and see what happens.
+Now, your website is protected by SafeLine, let’s try to attack it and see what happens.
 
 If https://chaitin.com is a website protected by SafeLine, here are some test cases for common attacks:
 
@@ -117,14 +94,6 @@ If https://chaitin.com is a website protected by SafeLine, here are some test ca
 Replace `chaitin.com` in the above cases with your website domain name and try to access it.
 
 <img src="/images/blocked.png" width=400>
-
-Check the web console of SafeLine to see the attack list
-
-<img src="/images/log-list.png" width=800>
-
-To view the specific details of the attack, click "detail"
-
-<img src="/images/log-detail.png" width=600>
 
 ## Star History
 
