@@ -64,25 +64,20 @@ Rate Limiting protects against denial-of-service attacks, brute force login atte
 
 Choose IP-based Rate Limiting to protect unauthenticated endpoints, limit the number of requests from specific IP addresses, and handle abuse from repeat offenders.
 
-<这里是演示视频>
 
 ## Captcha Challenge
 
 CAPTCHA challenges to protect your website from bot attacks, humen users will be allowed, crawlers and bots will be blocked.
 
-<这里是演示视频>
 
 ## **Authentication Challenge**
 
 when athentication turned on, visitors need to enter the username and password information you configured below, users who do not hold the password will be blocked.
 
-<这里是演示视频>
 
 ## Dynamic Protection
 
 When dynamic protection turned on, the html and javascript codes in your website will be dynamically encrypted into different random result each time you visit, it could effectively block crawlers and attack automated exploit programs.
-
-<这里是演示视频>
 
 After the html code passes through SafeLine's dynamic protection, it will be randomly encrypted and decrypted automatically when used in the browser. Please see the example below.
 
