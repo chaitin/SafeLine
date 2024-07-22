@@ -31,9 +31,9 @@ It defenses for all of web attacks, such as sql injection, code injection, os co
 
 # Screenshots
 
-| <img src="./images/screenshot-1.png" width=600 /> | <img src="./images/safeline_en.png" width=600 /> |
+| <img src="./images/screenshot-1.png" width=600 /> | <img src="./images/screenshot-2.png" width=600 /> |
 | ------------------------------------------------ | ------------------------------------------------ | 
-| <img src="./images/safeline_en.png" width=600 /> | <img src="./images/safeline_en.png" width=600 /> | 
+| <img src="./images/screenshot-3.png" width=600 /> | <img src="./images/screenshot-4.png" width=600 /> | 
 
 
 # How It Works
@@ -54,7 +54,6 @@ SafeLine is developed based on nginx, it serves as a reverse proxy middleware to
 
 SafeLine uses a non-rule detection algorithm based on syntax analysis, and uses the context-free grammar commonly used in programming languages to replace the regular grammar used by traditional WAFs, which greatly improves the accuracy and recall rate of the detection algorithm.
 
-<这里是演示视频>
 
 ## Rate Limiting
 
