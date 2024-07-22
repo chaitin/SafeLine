@@ -3,7 +3,7 @@
 
 <img src="/images/403.svg" align="right" width="200" />
 
-SafeLine is a web security gateway to protect your websites from attacks and exploits.
+SafeLine is a self-hosted web application firewall to protect your websites from attacks and exploits.
 
 It defenses for all of web attacks, such as sql injection, code injection, os command injection, CRLF injection, ldap injection, xpath injection, rce, xss, xxe, ssrf, path traversal, backdoor, bruteforce, http-flood, bot abused and so on.
 
@@ -23,7 +23,7 @@ It defenses for all of web attacks, such as sql injection, code injection, os co
 
 - [Introduction](#Intruction)
 - [Screenshots](#Screenshots)
-- [How It Works](.#How-It-Works)
+- [How It Works](#How-It-Works)
 - [Security Features](#Security-Features)
 - [Quickstart](#Quickstart)
 - [Community](#Community)
@@ -49,6 +49,50 @@ SafeLine is developed based on nginx, it serves as a reverse proxy middleware to
 - Web Access Control List
 
 # Security Features
+
+## Web Attacks
+
+SafeLine uses a non-rule detection algorithm based on syntax analysis, and uses the context-free grammar commonly used in programming languages to replace the regular grammar used by traditional WAFs, which greatly improves the accuracy and recall rate of the detection algorithm.
+
+<这里是演示视频>
+
+## Rate Limiting
+
+Defend your applications and APIs against abuse by throttling traffic that exceeds defined limits
+
+Rate Limiting protects against denial-of-service attacks, brute force login attempts, traffic surges, and other types of abuse targeting APIs and applications.
+
+Choose IP-based Rate Limiting to protect unauthenticated endpoints, limit the number of requests from specific IP addresses, and handle abuse from repeat offenders.
+
+<这里是演示视频>
+
+## Captcha Challenge
+
+CAPTCHA challenges to protect your website from bot attacks, humen users will be allowed, crawlers and bots will be blocked.
+
+<这里是演示视频>
+
+## **Authentication Challenge**
+
+when athentication turned on, visitors need to enter the username and password information you configured below, users who do not hold the password will be blocked.
+
+<这里是演示视频>
+
+## Dynamic Protection
+
+When dynamic protection turned on, the html and javascript codes in your website will be dynamically encrypted into different random result each time you visit, it could effectively block crawlers and attack automated exploit programs.
+
+<这里是演示视频>
+
+After the html code passes through SafeLine's dynamic protection, it will be randomly encrypted and decrypted automatically when used in the browser. Please see the example below.
+
+The left side is before encrypted, and the right side is after encrypted.
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/2f02162d-df95-4b24-9ef0-39f24f015615/077e72f8-ffd9-461f-9a56-2ad3ec03637b/Untitled.png)
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/2f02162d-df95-4b24-9ef0-39f24f015615/e4082371-682c-4c66-9d16-59389afe1106/Untitled.png)
+
+## Web ACL
 
 
 # Quickstart
@@ -83,17 +127,14 @@ Then you can access the website protected by the SafeLine through the domain nam
 
 Now, your website is protected by SafeLine, let’s try to attack it and see what happens.
 
-If https://chaitin.com is a website protected by SafeLine, here are some test cases for common attacks:
+There are some testcases for common attacks:
 
-- SQL Injection: `https://chaitin.com/?id=1+and+1=2+union+select+1`
-- XSS: `https://chaitin.com/?id=<img+src=x+onerror=alert()>`
-- Path Traversal: `https://chaitin.com/?id=../../../../etc/passwd`
-- Code Injection: `https://chaitin.com/?id=phpinfo();system('id')`
-- XXE: `https://chaitin.com/?id=<?xml+version="1.0"?><!DOCTYPE+foo+SYSTEM+"">`
+- SQL Injection: `https://example.com/?id=1+and+1=2+union+select+1`
+- XSS: `https://example.com/?id=<img+src=x+onerror=alert()>`
+- Path Traversal: `https://example.com/?id=../../../../etc/passwd`
+- Code Injection: `https://example.com/?id=phpinfo();system('id')`
 
-Replace `chaitin.com` in the above cases with your website domain name and try to access it.
-
-<img src="/images/blocked.png" width=400>
+Replace `example.com` in the above cases with your website domain name and try to access it. Then you will see that these attacks will be blocked by SafeLine.
 
 # More Informations
 
