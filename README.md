@@ -1,43 +1,34 @@
+<p align="center">
+  <img src="/images/banner.png" width="400" />
+</p>
 
-# SafeLine, make your web apps secure
+<h4 align="center">
+  SafeLine - Make your web apps secure
+</h4>
 
-<img src="/images/403.svg" align="right" width="200" />
-
-SafeLine is a self-hosted **web application firewall** to protect your web apps from attacks and exploits.
-
-It defenses for all of web attacks, such as sql injection, code injection, os command injection, CRLF injection, ldap injection, xpath injection, rce, xss, xxe, ssrf, path traversal, backdoor, bruteforce, http-flood, bot abused and so on.
-
-<p align="left">
-  <a target="_blank" href="https://waf.chaitin.com/">🏠Home</a> &nbsp; | &nbsp;
-  <a target="_blank" href="https://docs.waf.chaitin.com/">📖Documentation</a> &nbsp; | &nbsp;
-  <a target="_blank" href="https://demo.waf.chaitin.com:9443/dashboard">🔍Live Demo</a> &nbsp; | &nbsp;
+<p align="center">
+  <a target="_blank" href="https://waf.chaitin.com/">🏠 Website</a> &nbsp; | &nbsp;
+  <a target="_blank" href="https://docs.waf.chaitin.com/">📖 Docs</a> &nbsp; | &nbsp;
+  <a target="_blank" href="https://demo.waf.chaitin.com:9443/">🔍 Live Demo</a> &nbsp; | &nbsp;
+  <a target="_blank" href="https://discord.gg/SVnZGzHFvn">🙋‍♂️ Discord</a> &nbsp; | &nbsp;
   <a target="_blank" href="https://waf-ce.chaitin.cn/">中文版</a>
 </p>
 
-<p align="left">
-  <a target="_blank" href="https://discord.gg/SVnZGzHFvn"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white"></a> &nbsp;
-  <a target="_blank" href="/images/wechat-230825.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
-</p>
+## 👋 INTRODUCTION
 
-# Table of Contents
+SafeLine is a self-hosted **`WAF(Web Application Firewall)`** to protect your web apps from attacks and exploits.
 
-- [Introduction](#Intruction)
-- [Security Features](#Security-Features)
-- [Quickstart](#Quickstart)
-- [Community](#Community)
-- [More Informations](#More-Informations)
+A web application firewall helps protect web apps by filtering and monitoring HTTP traffic between a web application and the Internet. It typically protects web apps from attacks such as `SQL injection`, `XSS`, `code injection`, `os command injection`, `CRLF injection`, `ldap injection`, `xpath injection`, `RCE`, `XXE`, `SSRF`, `path traversal`, `backdoor`, `bruteforce`, `http-flood`, `bot abused`, among others.
 
-# Introduction
+#### 💡 How It Works
 
-SafeLine is a self-hosted **web application firewall** to protect your web apps from attacks and exploits.
+<img src="/images/how-it-works.png" width="800" />
 
-It defenses for all of web attacks, such as sql injection, code injection, os command injection, CRLF injection, ldap injection, xpath injection, rce, xss, xxe, ssrf, path traversal, backdoor, bruteforce, http-flood, bot abused and so on.
+By deploying a WAF in front of a web application, a shield is placed between the web application and the Internet. While a proxy server protects a client machine’s identity by using an intermediary, a WAF is a type of reverse-proxy, protecting the server from exposure by having clients pass through the WAF before reaching the server.
 
-## How It Works
+A WAF protects your web apps by filtering, monitoring, and blocking any malicious HTTP/S traffic traveling to the web application, and prevents any unauthorized data from leaving the app. It does this by adhering to a set of policies that help determine what traffic is malicious and what traffic is safe. Just as a proxy server acts as an intermediary to protect the identity of a client, a WAF operates in similar fashion but acting as an reverse proxy intermediary that protects the web app server from a potentially malicious client.
 
-<img src="/images/safeline-as-proxy.png" align="right" width=400 />
-
-SafeLine is developed based on nginx, it serves as a reverse proxy middleware to detect and cleans web attacks, its core capabilities include:
+its core capabilities include:
 
 - Defenses for web attacks
 - Proactive bot abused defense 
@@ -45,99 +36,66 @@ SafeLine is developed based on nginx, it serves as a reverse proxy middleware to
 - IP-based rate limiting
 - Web Access Control List
 
-## Screenshots
+#### ⚡️ Screenshots
 
-| <img src="./images/screenshot-1.png" width=600 /> | <img src="./images/screenshot-2.png" width=600 /> |
-| ------------------------------------------------ | ------------------------------------------------ | 
-| <img src="./images/screenshot-3.png" width=600 /> | <img src="./images/screenshot-4.png" width=600 /> | 
+| <img src="./images/screenshot-1.png" width=370 /> | <img src="./images/screenshot-2.png" width=370 /> |
+| ------------------------------------------------- | ------------------------------------------------- | 
+| <img src="./images/screenshot-3.png" width=370 /> | <img src="./images/screenshot-4.png" width=370 /> | 
 
+Get [Live Demo](https://demo.waf.chaitin.com:9443/)
 
+## 🔥 FEATURES
 
-# Security Features
+List of the main features as follows:
 
-## Web Attacks
+- **`Block Web Attacks`**
+  - It defenses for all of web attacks, such as `SQL injection`, `XSS`, `code injection`, `os command injection`, `CRLF injection`, `XXE`, `SSRF`, `path traversal` and so on.
+- **`Rate Limiting`**
+  - Defend your web apps against `DoS attacks`, `bruteforce attempts`, `traffic surges`, and other types of abuse by throttling traffic that exceeds defined limits.
+- **`Captcha Challenge`**
+  - CAPTCHA challenges to protect your website from `bot attacks`, humen users will be allowed, crawlers and bots will be blocked.
+- **`Authentication Challenge`**
+  - When authentication challenge turned on, visitors need to enter the password, otherwise they will be blocked.
+- **`Dynamic Protection`**
+  - When dynamic protection turned on, html and js codes in your web server will be dynamically encrypted by each time you visit.
 
-SafeLine uses a non-rule detection algorithm based on syntax analysis, and uses the context-free grammar commonly used in programming languages to replace the regular grammar used by traditional WAFs, which greatly improves the accuracy and recall rate of the detection algorithm.
+#### 🧩 Showcases
 
+|                               | Legitimate User                                     | Malicious User                                                   |
+| ----------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- | 
+| **`Block Web Attacks`**       | <img src="./images/skeleton.png" width=270 />       | <img src="./images/blocked-for-attack-detected.png" width=270 /> |
+| **`Rate Limiting`**           | <img src="./images/skeleton.png" width=270 />       | <img src="./images/blocked-for-access-too-fast.png" width=270 /> |
+| **`Captcha Challenge`**       | <img src="./images/captcha-1.gif" width=270 />      | <img src="./images/captcha-2.gif" width=270 />                     |
+| **`Auth Challenge`**          | <img src="./images/auth-1.gif" width=270 />         | <img src="./images/auth-2.gif" width=270 />                        |
+| **`HTML Dynamic Protection`** | <img src="./images/dynamic-html-1.png" width=270 /> | <img src="./images/dynamic-html-2.png" width=270 />              |
+| **`JS Dynamic Protection`**   | <img src="./images/dynamic-js-1.png" width=270 />   | <img src="./images/dynamic-js-2.png" width=270 />                | 
 
-## Rate Limiting
+## 🚀 Quickstart
 
-Defend your applications and APIs against abuse by throttling traffic that exceeds defined limits
+> [!WARNING]
+> 中国大陆用户安装国际版可能会导致无法连接云服务，请查看 [中文版安装文档](https://docs.waf-ce.chaitin.cn/zh/%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/%E5%AE%89%E8%A3%85%E9%9B%B7%E6%B1%A0)
 
-Rate Limiting protects against denial-of-service attacks, brute force login attempts, traffic surges, and other types of abuse targeting APIs and applications.
-
-Choose IP-based Rate Limiting to protect unauthenticated endpoints, limit the number of requests from specific IP addresses, and handle abuse from repeat offenders.
-
-
-## Captcha Challenge
-
-CAPTCHA challenges to protect your website from bot attacks, humen users will be allowed, crawlers and bots will be blocked.
-
-
-## **Authentication Challenge**
-
-when athentication turned on, visitors need to enter the username and password information you configured below, users who do not hold the password will be blocked.
-
-
-## Dynamic Protection
-
-When dynamic protection turned on, the html and javascript codes in your website will be dynamically encrypted into different random result each time you visit, it could effectively block crawlers and attack automated exploit programs.
-
-After the html code passes through SafeLine's dynamic protection, it will be randomly encrypted and decrypted automatically when used in the browser. Please see the example below.
-
-The left side is before encrypted, and the right side is after encrypted.
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/2f02162d-df95-4b24-9ef0-39f24f015615/077e72f8-ffd9-461f-9a56-2ad3ec03637b/Untitled.png)
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/2f02162d-df95-4b24-9ef0-39f24f015615/e4082371-682c-4c66-9d16-59389afe1106/Untitled.png)
-
-## Web ACL
-
-
-# Quickstart
-
-**中国大陆用户安装国际版可能会导致无法连接云服务，请查看** [中文版安装文档](https://docs.waf-ce.chaitin.cn/zh/%E4%B8%8A%E6%89%8B%E6%8C%87%E5%8D%97/%E5%AE%89%E8%A3%85%E9%9B%B7%E6%B1%A0)
-
-## Installing
+#### 📦 Installing
 
 Information on how to install SafeLine can be found in the [Install Guide](https://docs.waf.chaitin.com/en/tutorials/install)
 
-## Protecting Web Apps
+#### ⚙️ Protecting Web Apps
 
-Log into the SafeLine Web Admin Console, go to the "Site" -> "Website" page and click the "Add Site" button in the upper right corner.
+to see [Configuration](https://docs.waf.chaitin.com/en/tutorials/Configuration)
 
-<img src="/images/add-site-1.png" width=800>
+## 📋 More Informations
 
-In the next dialog box, enter the information to the original website.    
+#### Effect Evaluation
 
-- **Domain**: domain name of your original website, or hostname, or ip address, for example: `www.chaitin.com`
-- **Port**: port that SafeLine will listen, such as 80 or 443. (for `https` websites, please check the `SSL` option)
-- **Upstream**: real address of your original website, through which SafeLine will forward traffic to it
+| Metric            | ModSecurity, Level 1 | CloudFlare, Free     | SafeLine, Balance      | SafeLine, Strict      |
+| ----------------- | -------------------- | -------------------- | ---------------------- | --------------------- |
+| Total Samples     | 33669                | 33669                | 33669                  | 33669                 |
+| **Detection**     | 69.74%               | 10.70%               | 71.65%                 | **76.17%**            |
+| **False Positive**| 17.58%               | 0.07%                | **0.07%**              | 0.22%                 |
+| **Accuracy**      | 82.20%               | 98.40%               | **99.45%**             | 99.38%                |
 
-After completing the above settings, please resolve the domain name you just entered to the IP address of the server where SafeLine is located.
 
-<img src="/images/add-site-2.png" width=400>
-
-Then you can access the website protected by the SafeLine through the domain name like this.
-
-<img src="/images/safeline-as-proxy-2.png" width=400>
-
-## Attack Simulation
-
-Now, your website is protected by SafeLine, let’s try to attack it and see what happens.
-
-There are some testcases for common attacks:
-
-- SQL Injection: `https://example.com/?id=1+and+1=2+union+select+1`
-- XSS: `https://example.com/?id=<img+src=x+onerror=alert()>`
-- Path Traversal: `https://example.com/?id=../../../../etc/passwd`
-- Code Injection: `https://example.com/?id=phpinfo();system('id')`
-
-Replace `example.com` in the above cases with your website domain name and try to access it. Then you will see that these attacks will be blocked by SafeLine.
-
-# More Informations
-
-## Is SafeLine Production-Ready?
+#### Is SafeLine Production-Ready?
 
 Yes, SafeLine is production-ready.
 
@@ -145,16 +103,26 @@ Yes, SafeLine is production-ready.
 - Protecting over 1,000,000 Websites
 - Handling over 30,000,000,000 HTTP Requests Daily
 
-## Pro Version
+#### 🙋‍♂️ Community
 
-## Stargazers Over Time
+Join our [Discord](https://discord.gg/SVnZGzHFvn) to get community support, the core team members are identified by the STAFF role in Discord.
 
-<a href="https://starchart.cc/chaitin/SafeLine"><img src="https://starchart.cc/chaitin/SafeLine.svg?variant=light" width=800></a>
+- channel [#feedback](https://discord.com/channels/1243085666485534830/1243120292822253598): for new features discussion.
+- channel [#FAQ](https://discord.com/channels/1243085666485534830/1263761679619981413): for FAQ.
+- channel [#general](https://discord.com/channels/1243085666485534830/1243115843919806486): for any other questions.
 
-## Related Repo
-<p >
-  <a href="https://github.com/chaitin/yanshi">Automaton Generator</a> | 
-  <a href="https://github.com/chaitin/safeline-open-platform">Lua Plugin</a> | 
-  <a href="https://github.com/chaitin/lua-resty-t1k">T1K Protocol</a> |
-  <a href="https://github.com/chaitin/blazehttp">WAF Test Tool</a>
+Several contact options exist for our community, the primary one being Discord. These are in addition to GitHub issues for creating a new issue.
+
+<p align="left">
+  <a target="_blank" href="https://discord.gg/SVnZGzHFvn"><img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white"></a> &nbsp;
+  <a target="_blank" href="https://x.com/safeline_waf"><img src="https://img.shields.io/badge/X.com-000000?style=flat&logo=x&logoColor=white"></a> &nbsp;
+  <a target="_blank" href="/images/wechat.png"><img src="https://img.shields.io/badge/WeChat-07C160?style=flat&logo=wechat&logoColor=white"></a>
 </p>
+
+#### 💪 PRO Edition
+
+Coming soon!
+
+#### 📝 License
+
+See [LICENSE](/LICENSE.md) for details.
