@@ -11,7 +11,7 @@
   <a target="_blank" href="https://docs.waf.chaitin.com/">📖 Docs</a> &nbsp; | &nbsp;
   <a target="_blank" href="https://demo.waf.chaitin.com:9443/">🔍 Live Demo</a> &nbsp; | &nbsp;
   <a target="_blank" href="https://discord.gg/SVnZGzHFvn">🙋‍♂️ Discord</a> &nbsp; | &nbsp;
-  <a target="_blank" href="https://waf-ce.chaitin.cn/">中文版</a>
+  <a target="_blank" href="/README_CN.md">中文版</a>
 </p>
 
 ## 👋 INTRODUCTION
