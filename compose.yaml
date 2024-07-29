@@ -40,8 +40,6 @@ services:
     healthcheck:
       test: curl -k -f https://localhost:1443/api/open/health
     environment:
-      - MGT_READ_ONLY=true
-      - MGT_NO_AUTH=true
       - MGT_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce?sslmode=disable
     depends_on:
       - postgres
