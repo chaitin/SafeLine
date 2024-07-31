@@ -25,7 +25,4 @@ body:
         Background and the problem that frustrates you
 
     validations:
-      required: false
-
-    validations:
-      required: false
+      required: true
