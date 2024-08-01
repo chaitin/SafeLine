@@ -108,6 +108,7 @@ services:
     image: ${IMAGE_PREFIX}/safeline-luigi-g:${IMAGE_TAG}
     environment:
       - MGT_IP=${SUBNET_PREFIX}.4
+      - LUIGI_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce?sslmode=disable
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${SAFELINE_DIR}/resources/luigi:/app/data
