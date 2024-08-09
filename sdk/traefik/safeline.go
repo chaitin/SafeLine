@@ -2,12 +2,13 @@ package traefik_safeline
 
 import (
 	"context"
-	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"sync"
 
-	"github.com/xbingW/t1k"
+	t1k "github.com/chaitin/t1k-go"
 )
 
 // Package example a example plugin.
@@ -15,61 +16,84 @@ import (
 // Config the plugin configuration.
 type Config struct {
 	// Addr is the address for the detector
-	Addr string `yaml:"addr"`
-	// Get ip from header, if not set, get ip from remote addr
-	IpHeader string `yaml:"ipHeader"`
-	// When ip_header has multiple ip, use this to get the ip
-	//
-	//for example, X-Forwarded-For: ip1, ip2, ip3
-	// 	when ip_last_index is 0, the client ip is ip3
-	// 	when ip_last_index is 1, the client ip is ip2
-	// 	when ip_last_index is 2, the client ip is ip1
-	IPRightIndex uint `yaml:"ipRightIndex"`
+	Addr     string `yaml:"addr"`
+	PoolSize int    `yaml:"pool_size"`
 }
 
 // CreateConfig creates the default plugin configuration.
 func CreateConfig() *Config {
 	return &Config{
-		Addr:         "",
-		IpHeader:     "",
-		IPRightIndex: 0,
+		Addr:     "",
+		PoolSize: 100,
 	}
 }
 
 // Safeline a plugin.
 type Safeline struct {
 	next   http.Handler
+	server *t1k.Server
 	name   string
 	config *Config
 	logger *log.Logger
+	mu     sync.Mutex
 }
 
 // New created a new plugin.
 func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
+	logger := log.New(os.Stdout, "safeline", log.LstdFlags)
+	logger.Printf("config: %+v", config)
 	return &Safeline{
 		next:   next,
 		name:   name,
 		config: config,
-		logger: log.New(os.Stdout, "safeline", log.LstdFlags),
+		logger: logger,
 	}, nil
 }
 
-func (s *Safeline) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	d := t1k.NewDetector(t1k.Config{
-		Addr:         s.config.Addr,
-		IpHeader:     s.config.IpHeader,
-		IPRightIndex: s.config.IPRightIndex,
-	})
-	resp, err := d.DetectorRequest(req)
-	if err != nil {
-		s.logger.Printf("Failed to detect request: %v", err)
+func (s *Safeline) initServer() error {
+	if s.server != nil {
+		return nil
 	}
-	if resp != nil && !resp.Allowed() {
-		rw.WriteHeader(resp.StatusCode())
-		if err := json.NewEncoder(rw).Encode(resp.BlockMessage()); err != nil {
-			s.logger.Printf("Failed to encode block message: %v", err)
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.server == nil {
+		server, err := t1k.NewWithPoolSize(s.config.Addr, s.config.PoolSize)
+		if err != nil {
+			return err
 		}
+		s.server = server
+	}
+	return nil
+}
+
+func (s *Safeline) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	defer func() {
+		if r := recover(); r != nil {
+			s.logger.Printf("panic: %s", r)
+		}
+	}()
+	if err := s.initServer(); err != nil {
+		s.logger.Printf("error in initServer: %s", err)
+		s.next.ServeHTTP(rw, req)
+		return
+	}
+	rw.Header().Set("X-Chaitin-waf", "safeline")
+	result, err := s.server.DetectHttpRequest(req)
+	if err != nil {
+		s.logger.Printf("error in detection: \n%+v\n", err)
+		s.next.ServeHTTP(rw, req)
+		return
+	}
+	if result.Blocked() {
+		rw.WriteHeader(result.StatusCode())
+		msg := fmt.Sprintf(`{"code": %d, "success":false, "message": "blocked by Chaitin SafeLine Web Application Firewall", "event_id": "%s"}`,
+			result.StatusCode(),
+			result.EventID(),
+		)
+		_, _ = rw.Write([]byte(msg))
 		return
 	}
 	s.next.ServeHTTP(rw, req)
+	//rw.WriteHeader(http.StatusForbidden)
+	//_, _ = rw.Write([]byte("Inject by safeline\n"))
 }

@@ -1,7 +1,7 @@
 displayName: Chaitin Safeline WAF
 type: middleware
 
-import: github.com/xbingW/traefik-safeline
+import: github.com/chaitin/traefik-safeline
 
 summary: 'Traefik plugin to proxy requests to safeline waf.t serves as a reverse proxy access to protect your website from network attacks that including OWASP attacks, zero-day attacks, web crawlers, vulnerability scanning, vulnerability exploit, http flood and so on.'
 

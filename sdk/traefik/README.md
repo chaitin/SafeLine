@@ -29,7 +29,7 @@ The following declaration (given here in YAML) defines a plugin:
 experimental:
   plugins:
     safeline:
-      moduleName: github.com/xbingW/traefik-safeline
+      moduleName: github.com/chaitin/traefik-safeline
       version: v1.0.0
 ```
 
