@@ -52,8 +52,8 @@ List of the main features as follows:
   - It defenses for all of web attacks, such as `SQL injection`, `XSS`, `code injection`, `os command injection`, `CRLF injection`, `XXE`, `SSRF`, `path traversal` and so on.
 - **`Rate Limiting`**
   - Defend your web apps against `DoS attacks`, `bruteforce attempts`, `traffic surges`, and other types of abuse by throttling traffic that exceeds defined limits.
-- **`Captcha Challenge`**
-  - CAPTCHA challenges to protect your website from `bot attacks`, humen users will be allowed, crawlers and bots will be blocked.
+- **`Anti-Bot Challenge`**
+  - Anti-Bot challenges to protect your website from `bot attacks`, humen users will be allowed, crawlers and bots will be blocked.
 - **`Authentication Challenge`**
   - When authentication challenge turned on, visitors need to enter the password, otherwise they will be blocked.
 - **`Dynamic Protection`**
@@ -65,7 +65,7 @@ List of the main features as follows:
 | ----------------------------- | --------------------------------------------------- | ---------------------------------------------------------------- | 
 | **`Block Web Attacks`**       | <img src="./images/skeleton.png" width=270 />       | <img src="./images/blocked-for-attack-detected.png" width=270 /> |
 | **`Rate Limiting`**           | <img src="./images/skeleton.png" width=270 />       | <img src="./images/blocked-for-access-too-fast.png" width=270 /> |
-| **`Captcha Challenge`**       | <img src="./images/captcha-1.gif" width=270 />      | <img src="./images/captcha-2.gif" width=270 />                     |
+| **`Anti-Bot Challenge`**       | <img src="./images/captcha-1.gif" width=270 />      | <img src="./images/captcha-2.gif" width=270 />                     |
 | **`Auth Challenge`**          | <img src="./images/auth-1.gif" width=270 />         | <img src="./images/auth-2.gif" width=270 />                        |
 | **`HTML Dynamic Protection`** | <img src="./images/dynamic-html-1.png" width=270 /> | <img src="./images/dynamic-html-2.png" width=270 />              |
 | **`JS Dynamic Protection`**   | <img src="./images/dynamic-js-1.png" width=270 />   | <img src="./images/dynamic-js-2.png" width=270 />                | 
