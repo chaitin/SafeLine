@@ -35,6 +35,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ${SAFELINE_DIR}/resources/mgt:/app/data
       - ${SAFELINE_DIR}/logs/nginx:/app/log/nginx:z
+      - ${SAFELINE_DIR}/resources/sock:/app/sock
     ports:
       - ${MGT_PORT:-9443}:1443
     healthcheck:
@@ -94,6 +95,7 @@ services:
       - ${SAFELINE_DIR}/resources/detector:/resources/detector
       - ${SAFELINE_DIR}/logs/nginx:/var/log/nginx:z
       - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
+      - ${SAFELINE_DIR}/resources/sock:/app/sock
     environment:
       - TCD_MGT_API=https://${SUBNET_PREFIX}.4:1443/api/open/publish/server
       - TCD_SNSERVER=${SUBNET_PREFIX}.5:8000
