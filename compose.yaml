@@ -75,6 +75,7 @@ services:
       - /etc/resolv.conf:/etc/resolv.conf:ro
       - ${SAFELINE_DIR}/resources/nginx:/etc/nginx
       - ${SAFELINE_DIR}/resources/detector:/resources/detector
+      - ${SAFELINE_DIR}/resources/chaos:/resources/chaos
       - ${SAFELINE_DIR}/logs/nginx:/var/log/nginx:z
       - ${SAFELINE_DIR}/resources/cache:/usr/local/nginx/cache
       - ${SAFELINE_DIR}/resources/sock:/app/sock
