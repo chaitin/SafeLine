@@ -14,7 +14,7 @@ services:
   postgres:
     container_name: safeline-pg
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-postgres:15.2
+    image: ${IMAGE_PREFIX}/safeline-postgres${ARCH_SUFFIX}:15.2
     volumes:
       - ${SAFELINE_DIR}/resources/postgres/data:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
@@ -30,7 +30,7 @@ services:
   mgt:
     container_name: safeline-mgt
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-mgt-g:${IMAGE_TAG:?image tag required}
+    image: ${IMAGE_PREFIX}/safeline-mgt-g${ARCH_SUFFIX}:${IMAGE_TAG:?image tag required}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${SAFELINE_DIR}/resources/mgt:/app/data
@@ -56,7 +56,7 @@ services:
   detect:
     container_name: safeline-detector
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-detector-g:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-detector-g${ARCH_SUFFIX}:${IMAGE_TAG}
     volumes:
       - ${SAFELINE_DIR}/resources/detector:/resources/detector
       - ${SAFELINE_DIR}/logs/detector:/logs/detector
@@ -69,7 +69,7 @@ services:
   tengine:
     container_name: safeline-tengine
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-tengine-g:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-tengine-g${ARCH_SUFFIX}:${IMAGE_TAG}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/resolv.conf:/etc/resolv.conf:ro
@@ -89,7 +89,7 @@ services:
   luigi:
     container_name: safeline-luigi
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-luigi-g:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-luigi-g${ARCH_SUFFIX}:${IMAGE_TAG}
     environment:
       - MGT_IP=${SUBNET_PREFIX}.4
       - LUIGI_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce?sslmode=disable
@@ -109,7 +109,7 @@ services:
   fvm:
     container_name: safeline-fvm
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-fvm-g:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-fvm-g${ARCH_SUFFIX}:${IMAGE_TAG}
     volumes:
       - /etc/localtime:/etc/localtime:ro
     logging:
@@ -122,7 +122,7 @@ services:
   chaos:
     container_name: safeline-chaos
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-chaos-g:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-chaos-g${ARCH_SUFFIX}:${IMAGE_TAG}
     logging:
       options:
         max-size: "100m"
