@@ -129,6 +129,7 @@ services:
         max-size: "100m"
         max-file: "10"
     volumes:
+      - ${SAFELINE_DIR}/resources/sock:/app/sock
       - ${SAFELINE_DIR}/resources/chaos:/app/chaos
     networks:
       safeline-ce:
