@@ -4,7 +4,7 @@ import sys
 import datetime
 import platform
 import os
-from urllib.request import urlopen
+from urllib.request import urlopen, HTTPError
 import re
 import subprocess
 import string
@@ -52,6 +52,10 @@ texts = {
     'input-target-path': {
         'en': 'Input the path to install SafeLine WAF',
         'zh': '请输入雷池 WAF 的安装目录'
+    },
+    'input-mgt-port': {
+        'en': 'Input the mgt port',
+        'zh': '请输入雷池 WAF 的管理端口'
     },
     'python-version-too-low': {
         'en': 'The Python version is too low, Python 3.5 above is required',
@@ -161,6 +165,10 @@ texts = {
         'en': 'Failed to download docker compose script',
         'zh': '下载 docker compose 脚本失败'
     },
+    'fail-to-download-reset-tengine': {
+        'en': 'Failed to download reset_tengine script',
+        'zh': '下载 reset_tengine 脚本失败'
+    },
     'fail-to-create-dir': {
         'en': 'Unable to create the "%s" directory',
         'zh': '无法创建 "%s" 目录'
@@ -169,6 +177,14 @@ texts = {
         'en': 'Pulling Docker image',
         'zh': '正在拉取 Docker 镜像'
     },
+    'try-another-image-source': {
+        'en': 'Try another image source',
+        'zh': '尝试使用其他镜像源'
+    },
+    'image-clean': {
+        'en': 'Cleaning Docker image',
+        "zh": '正在清理 Docker 镜像'
+    },
     'update-config': {
         'en': 'Updating .env configuration files',
         'zh': '正在更新 .env 配置文件'
@@ -176,6 +192,10 @@ texts = {
     'download-compose': {
         'en': 'Downloading the compose.yaml file',
         'zh': '正在下载 compose.yaml 文件'
+    },
+    'download-reset-tengine': {
+        'en': 'Downloading the reset_tengine script',
+        'zh': '正在下载 reset_tengine.sh 文件'
     },
     'fail-to-pull-image': {
         'en': 'Failed to pull Docker image',
@@ -192,6 +212,10 @@ texts = {
     'install-finish': {
         'en': 'SafeLine WAF installation completed',
         'zh': '雷池 WAF 安装完成'
+    },
+    'upgrade-finish': {
+        'en': 'SafeLine WAF upgrade completed',
+        'zh': '雷池 WAF 升级完成'
     },
     'go-to-panel': {
         'en': 'SafeLine WAF management panel: https://%s:%s/',
@@ -220,11 +244,52 @@ texts = {
     'no': {
         'en': 'No',
         'zh': '否'
+    },
+    'fail-to-get-installed-dir': {
+        'en': 'Failed to get installed dir',
+        'zh': '未能找到安装目录',
+    },
+    'fail-to-connect-image-source': {
+        'en': 'Failed to connect image source',
+        'zh': '无法连接到任何镜像源'
+    },
+    'fail-to-connect-docker-source': {
+        'en': 'Failed to connect docker source',
+        'zh': '无法连接到任何 docker 源'
+    },
+    'fail-to-download-docker-installation': {
+        'en': 'Failed to download docker installation',
+        "zh": '下载 docker 安装脚本失败'
+    },
+    'docker-source': {
+        'en': 'Docker source',
+        "zh": 'docker 源'
+    },
+    'reset-admin': {
+        'en': 'Setup admin',
+        "zh": '设置 admin'
+    },
+    'docker-version': {
+        'en': 'Checking docker version',
+        'zh': '检查 docker 版本'
+    },
+    'docker-compose-version': {
+        'en': 'Checking docker compose version',
+        'zh': '检查 docker compose 版本'
+    },
+    'keyboard-interrupt': {
+        'en': 'Installation cancelled',
+        "zh": '取消安装'
+    },
+    'docker-up-iptables-failed': {
+        'en': 'Iptables policy error, try to restart docker',
+        'zh': 'iptables 规则错误，尝试重启 docker'
     }
+
 }
 
 
-lang = os.getenv('lang')
+lang = ''
 
 def text(label, var=()):
     t = texts.get(label, {
@@ -242,6 +307,12 @@ GREEN   = 32
 YELLOW  = 33
 BLUE    = 34
 CYAN    = 36
+
+DEBUG = False
+LTS = False
+IMAGE_CLEAN = False
+EN = False
+INSTALL = False
 
 def color(t, attrs=[], end=True):
     t = '\x1B[%sm%s' % (';'.join([str(i) for i in attrs]), t)
@@ -266,11 +337,12 @@ class log():
     @staticmethod
     def _log(c, l, s):
         t = datetime.datetime.now().strftime('%H:%M:%S')
-        print('\033[0;%dm[%-5s %s]: %s\033[0m' % (c, l, t, s))
+        print('\r\033[0;%dm[%-5s %s]: %s\033[0m' % (c, l, t, s))
 
     @staticmethod
     def debug(s):
-        log._log(DIM, 'DEBUG', s)
+        if DEBUG:
+            log._log(DIM, 'DEBUG', s)
 
     @staticmethod
     def info(s):
@@ -293,14 +365,22 @@ def get_url(url):
         log.error(e)
 
 def ui_read(question, default):
-    sys.stdout.write('%s  %s: ' % (
-        color(question, [GREEN]),
-        color('(%s %s)' % (text('default-value'), default), [YELLOW]),
-        ))
-    r = input().strip()
-    if len(r) == 0:
-        r = default
-    return r
+    while True:
+        if default is None:
+            sys.stdout.write('%s: ' % (
+                color(question, [GREEN]),
+            ))
+        else:
+            sys.stdout.write('%s  %s: ' % (
+                color(question, [GREEN]),
+                color('(%s %s)' % (text('default-value'), default), [YELLOW]),
+                ))
+        r = input().strip()
+        if len(r) == 0:
+            if default is None or len(default) == 0:
+                continue
+            r = default
+        return r
 
 def ui_choice(question, options):
     while True:
@@ -365,33 +445,134 @@ def free_memory():
     t = filter(lambda x: 'MemFree' in x, open('/proc/meminfo', 'r').readlines())
     return int(next(t).split()[1]) * 1024
 
-def exec_command(*args):
+def exec_command(*args,shell=False):
     try:
-        proc = subprocess.run(args, check=False, capture_output=True, universal_newlines=True)
+        proc = subprocess.run(args, check=False, capture_output=True, universal_newlines=True,shell=shell)
+        subprocess_output(proc.stdout.strip())
         return proc.returncode, proc.stdout, proc.stderr
     except Exception as e:
-        return -1, b'', b''
+        return -1, '', str(e)
 
-def exec_command_with_loading(*args):
+def exec_command_with_loading(*args, cwd=None, env=None):
     try:
-        proc = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        loading = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]
-        iloading = 0
-        while proc.poll() is None:
-            sys.stderr.write('\r' + loading[iloading])
-            sys.stderr.flush()
-            iloading = (iloading + 1) % len(loading)
-            time.sleep(0.1)
-        sys.stderr.write('\r')
-        sys.stderr.flush()
-        return proc.returncode, proc.stdout.read(), proc.stderr.read()
+        with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, env=env, cwd=cwd) as proc:
+            if not DEBUG:
+                loading = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]
+                iloading = 0
+                while proc.poll() is None:
+                    sys.stderr.write('\r' + loading[iloading])
+                    sys.stderr.flush()
+                    iloading = (iloading + 1) % len(loading)
+                    time.sleep(0.1)
+                sys.stderr.write('\r')
+                sys.stderr.flush()
+            else:
+                for line in iter(proc.stdout.readline, b''):
+                    if line.strip() != '':
+                        log.debug("  -->> "+line.strip())
+                    if proc.poll() is not None and line == '':
+                        break
+            return proc.returncode, proc.stdout.read(), proc.stderr.read()
     except Exception as e:
-        return -1, b'', str(e)
+        return -1, '', str(e)
+
+def subprocess_output(stdout):
+    if stdout != '':
+        log.debug("  -->> "+stdout)
+    else:
+        log.debug("  -->> subprocess empty output")
+
+def start_docker():
+    return exec_command('systemctl enable docker && systemctl daemon-reload && systemctl restart docker',shell=True)
+
+def check_port(port):
+    if not INSTALL:
+        return True
+
+    try:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(('0.0.0.0', int(port)))
+            return True
+    except Exception as e:
+        log.debug("try listen mgt port failed: "+str(e))
+        return False
 
 def install_docker():
     log.info(text('install-docker'))
-    r = exec_command_with_loading('bash', '-c', 'curl -ssLk https://get.docker.com | bash')
-    return r[0] == 0
+
+    log.debug("downloading get-docker.sh")
+    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/get-docker.sh','get-docker.sh'):
+        raise Exception(text('fail-to-download-docker-installation'))
+
+    source = docker_source()
+    if source == '':
+        raise Exception(text('fail-to-connect-docker-source'))
+
+    log.debug(text('docker-source')+': '+source)
+    env = {
+        "DOWNLOAD_URL": source,
+        "https_proxy": os.environ.get('https_proxy',''),
+    }
+    log.debug("installing docker")
+    r = exec_command_with_loading('bash get-docker.sh',env=env)
+    if r[0] == 0:
+        p = start_docker()
+        subprocess_output(p[1].strip())
+        if p[0] != 0:
+            log.error("start docker failed: "+p[2].strip())
+        return p[0] == 0
+    else:
+        log.error("install docker error: "+r[2].strip())
+    return False
+
+compose_command = ''
+
+def precheck_docker_compose():
+    log.info(text("docker-compose-version"))
+    global compose_command
+
+    while True:
+        version_output = ''
+        proc = exec_command('docker', 'compose', 'version')
+        if proc[0] == 0:
+            help_proc = exec_command('docker', 'compose', 'up', '--help')
+            if help_proc[0] == 0 and '--detach' in help_proc[1]:
+                compose_command = 'docker compose'
+                version_output = proc[1].strip()
+            else:
+                log.debug('docker compose can not find detach argument')
+        else:
+            compose_proc = exec_command('docker-compose', 'version')
+            if compose_proc[0] == 0:
+                help_proc = exec_command('docker-compose', 'up', '--help')
+                if help_proc[0] == 0 and '--detach' in help_proc[1]:
+                    compose_command = 'docker-compose'
+                    version_output = compose_proc[1].strip()
+                else:
+                    log.debug('docker-compose can not find detach argument')
+            else:
+                log.warning(text('docker-compose-not-installed'))
+
+        if version_output != '':
+            t = re.findall(r'^Docker Compose version v(\d+)\.', version_output)
+            if len(t) == 0:
+                log.warning(text('docker-compose-not-installed'))
+            elif int(t[0]) < 2:
+                log.warning(text('docker-version-too-low'))
+            else:
+                return True
+
+        action = ui_choice(text('if-update-docker'), [
+            ('y', text('yes')),
+            ('n', text('no')),
+        ])
+        if action.lower() == 'n':
+            return False
+        elif action.lower() == 'y':
+            if not install_docker():
+                log.warning(text('install-docker-failed'))
+                return False
+
 
 def precheck():
     if platform.machine() in ('x86_64', 'AMD64') and 'ssse3' not in open('/proc/cpuinfo', 'r').read().lower():
@@ -402,6 +583,7 @@ def precheck():
         log.warning(text('insufficient-memory'))
         return False
 
+    log.info(text("docker-version"))
     while True:
         proc = exec_command('docker', '--version')
         if proc[0] == 0:
@@ -422,116 +604,206 @@ def precheck():
         if action.lower() == 'n':
             return False
         elif action.lower() == 'y':
-            r = install_docker()
-            if r == False:
+            if not install_docker():
                 log.warning(text('install-docker-failed'))
                 return False
 
-    while True:
-        proc = exec_command('docker', 'compose', 'version')
-        if proc[0] == 0:
-            t = re.findall(r'^Docker Compose version v(\d+)\.', proc[1])
-            if len(t) == 0:
-                log.warning(text('docker-compose-not-installed'))
-            elif int(t[0]) < 2:
-                log.warning(text('docker-version-too-low'))
-            else:
-                break
-        else:c
-
-        action = ui_choice(text('if-update-docker'), [
-            ('y', text('yes')),
-            ('n', text('no')),
-        ])
-        if action.lower() == 'n':
-            return False
-        elif action.lower() == 'y':
-            r = install_docker()
-            if r == False:
-                log.warning(text('install-docker-failed'))
-                return False
+    log.info(text("docker-compose-version"))
+    if not precheck_docker_compose():
+        return False
             
     return True
 
 def docker_pull(cwd):
     log.info(text('docker-pull'))
     try:
-        subprocess.check_call('docker compose pull', cwd=cwd, shell=True)
+        subprocess.check_call(compose_command+' pull', cwd=cwd, shell=True)
         return True
     except Exception as e:
+        log.warning("docker pull error: "+str(e))
         return False
-    
+
+def image_clean():
+    log.info(text('image-clean'))
+    proc = exec_command('docker image prune -f --filter="label=maintainer=SafeLine-CE"', shell=True)
+    if proc[0] != 0:
+        log.warning("remove docker image failed: "+proc[2])
 
 def docker_up(cwd):
     log.info(text('docker-up'))
-    try:
-        subprocess.check_call('docker compose up -d', cwd=cwd, shell=True)
-        return True
-    except Exception as e:
-        return False
+    while True:
+        p = exec_command_with_loading(compose_command+' up -d --remove-orphans', cwd=cwd)
+        if p[0] == 0:
+            return True
+        if 'iptables failed' in p[2]:
+            log.warning("docker up error: "+p[2])
+            while True:
+                action = ui_choice(text('docker-up-iptables-failed'),[
+                    ('y', text('yes')),
+                    ('n', text('no')),
+                ])
+                if action.lower() == 'y':
+                    start_docker()
+                    break
+                elif action.lower() == 'n':
+                    return False
+        else:
+            log.error("docker up error: "+p[2])
 
-def get_config(path, _config=None):
+def get_url_time(url):
+    now = datetime.datetime.now()
+    try:
+        urlopen(url)
+    except HTTPError as e:
+        log.debug("get url "+url+" status: "+str(e.status))
+        if e.status > 499:
+            return 999999
+    except Exception as e:
+        log.debug("get url "+url+" failed: "+str(e))
+        return 999999
+    return (datetime.datetime.now() - now).microseconds / 1000
+
+def get_avg_delay(url):
+    log.debug("test url avg delay: "+url)
+    total_delay = 0
+    for i in range(3):
+        total_delay += get_url_time(url)
+
+    avg_delay = total_delay / 3
+    log.debug("url "+url+" avg delay: "+str(avg_delay))
+    return avg_delay
+
+pull_failed_prefix = []
+
+def image_source():
+    source = {
+        'https://registry-1.docker.io': 'chaitin',
+        "https://swr.cn-east-3.myhuaweicloud.com": 'swr.cn-east-3.myhuaweicloud.com/chaitin-safeline'
+    }
+
+    min_delay = -1
+    image_prefix = ''
+
+    for url, prefix in source.items():
+        if prefix in pull_failed_prefix:
+            continue
+        delay = get_avg_delay(url)
+        if delay > 0 and (min_delay < 0 or delay < min_delay):
+            min_delay = delay
+            image_prefix = prefix
+
+    log.debug("use image_prefix: "+image_prefix)
+    return image_prefix
+
+def docker_source():
+    sources = [
+        "https://mirrors.aliyun.com/docker-ce/",
+        "https://mirrors.tencent.com/docker-ce/",
+        "https://download.docker.com"
+    ]
+
+    min_delay = -1
+    source = ''
+    for v in sources:
+        delay = get_avg_delay(v)
+        if delay > 0 and (min_delay < 0 or delay < min_delay):
+            min_delay = delay
+            source = v
+    return source
+
+
+def generate_config(path):
     log.info(text('update-config'))
     config = {
-        'SAFELINE_DIR': '',
+        'SAFELINE_DIR': path,
         'POSTGRES_PASSWORD': '',
         'MGT_PORT': '',
-        'ARCH': '',
-        'CHANNEL': '',
+        'RELEASE': '',
         'REGION': '',
         'IMAGE_PREFIX': '',
         'IMAGE_TAG': '',
-        'SUBNET_PREFIX': ''
+        'SUBNET_PREFIX': '',
+        'ARCH_SUFFIX': ''
     }
 
-    if _config is None:
-        with open(path + '/.env', 'r') as f:
+    env_path = os.path.join(path,'.env')
+    if os.path.exists(env_path):
+        with open(env_path, 'r') as f:
             for line in f.readlines():
                 s = line.index('=')
                 if s > 0:
                     k = line[:s].strip()
                     v = line[s + 1:].strip()
                     config[k] = v
-    else:
-        for k in _config:
-            config[k] = _config[k]
 
-    if config['ARCH'] not in ('arm64', 'x86_64'):
-        config['ARCH'] = 'arm64' if platform.machine() == 'aarch64' else 'x86_64'
+    if config['ARCH_SUFFIX'] == '':
+        if platform.machine() == 'aarch64':
+            config['ARCH_SUFFIX'] = '-arm'
 
+    if config['POSTGRES_PASSWORD'] == '':
+        config['POSTGRES_PASSWORD'] = ''.join([random.choice(string.ascii_letters + string.digits) for i in range(20)])
 
-    if config['CHANNEL'] not in ('preview', 'lts'):
-        config['CHANNEL'] = 'preview'
+    if config['SUBNET_PREFIX'] == '':
+        config['SUBNET_PREFIX'] = rand_subnet()
 
-    if not config['MGT_PORT'].isnumeric() or int(config['MGT_PORT']) < 65536:
-        config['MGT_PORT'] = '9443'
+    if config['RELEASE'] == '' and LTS:
+        config['RELEASE'] = '-lts'
 
-    if config['REGION'] not in ('chinese', 'international'):
-        config['REGION'] = 'chinese' if lang == 'zh' else 'international'
+    default_try = False
+    if config['MGT_PORT'] == '9443':
+        default_try = True
+    while not config['MGT_PORT'].isnumeric() or int(config['MGT_PORT']) >= 65536 or int(config['MGT_PORT']) <= 0 or not check_port(config['MGT_PORT']):
+        if not default_try:
+            config['MGT_PORT'] = '9443'
+            default_try = True
+        else:
+            config['MGT_PORT'] = ui_read(text('input-mgt-port'),None)
+
+    if config['REGION'] == '' and EN:
+        config['REGION'] = '-g'
 
     if not config['POSTGRES_PASSWORD'].isalnum():
         log.info(text('pg-pass-contains-invalid-char'))
         raise Exception(text('pg-pass-contains-invalid-char'))
 
-    if config['IMAGE_PREFIX'] not in ('swr.cn-east-3.myhuaweicloud.com/chaitin-safeline', 'chaitin'):
-        config['IMAGE_PREFIX'] = 'swr.cn-east-3.myhuaweicloud.com/chaitin-safeline' if lang == 'zh' else 'chaitin'
+    if config['IMAGE_PREFIX'] == '' or config['IMAGE_PREFIX'] in pull_failed_prefix:
+        config['IMAGE_PREFIX'] = image_source()
+        if config['IMAGE_PREFIX'] == '':
+            raise Exception(text('fail-to-connect-image-source'))
 
     config['IMAGE_TAG'] = 'latest'
 
-    with open(path + '/.env', 'w') as f:
+    with open(env_path, 'w') as f:
         for k in config:
             f.write('%s=%s\n' % (k, config[k]))
-
     return config
 
-def show_address(config):
+def show_address(mgt_port):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     local_ip = s.getsockname()[0]
-    log.info(text('go-to-panel', (local_ip, config['MGT_PORT'])))
-    log.info(text('go-to-panel', ('0.0.0.0', config['MGT_PORT'])))
+    log.info(text('go-to-panel', (local_ip, mgt_port)))
+    log.info(text('go-to-panel', ('0.0.0.0', mgt_port)))
+
+def reset_admin():
+    log.info(text('reset-admin'))
+    while True:
+        p = exec_command('docker', 'inspect','--format=\'{{.State.Health.Status}}\'', 'safeline-mgt')
+        if p[0] == 0 and p[1].strip().replace("'",'') == 'healthy':
+            break
+        elif p[0] != 0:
+            log.debug("get safeline-mgt status error: "+str(p[2]))
+        log.info("wait safeline-mgt healthy, sleep 5s")
+        time.sleep(5)
+    proc = exec_command('docker exec safeline-mgt /app/mgt-cli reset-admin --once',shell=True)
+    if proc[0] != 0:
+        log.warning(proc[2])
+    elif proc[1].strip() != '':
+        log.info('\n'+proc[1].strip())
 
 def install():
+    global INSTALL
+    INSTALL = True
     log.info(text('prepare-to-install'))
 
     if not precheck():
@@ -539,55 +811,147 @@ def install():
         return
     log.info(text('precheck-passed'))
 
-    config = {}
-
     while True:
-        config['SAFELINE_DIR'] = ui_read(text('input-target-path'), '/data/safeline')
-        if not config['SAFELINE_DIR'].startswith('/'):
-            log.warning(text('invalid-path', config['SAFELINE_DIR']))
+        safeline_path = ui_read(text('input-target-path'), '/data/safeline')
+        if not safeline_path.startswith('/'):
+            log.warning(text('invalid-path', safeline_path))
             continue
-        if os.path.exists(config['SAFELINE_DIR']):
-            log.warning(text('path-exists', config['SAFELINE_DIR']))
+        if os.path.exists(safeline_path):
+            log.warning(text('path-exists', safeline_path))
             continue
-        if free_space(config['SAFELINE_DIR']) < 5 * 1024 * 1024 * 1024:
+        if free_space(safeline_path) < 5 * 1024 * 1024 * 1024:
             log.warning(text('insufficient-disk-capacity'))
             continue
         break
 
     try:
-        os.makedirs(config['SAFELINE_DIR'])
+        os.makedirs(safeline_path)
     except Exception as e:
-        log.error(text('fail-to-create-dir', config['SAFELINE_DIR']) + ' ' + str(e))
+        log.error(text('fail-to-create-dir', safeline_path) + ' ' + str(e))
         return
 
-    log.info(text('remain-disk-capacity', (config['SAFELINE_DIR'], humen_size(free_space(config['SAFELINE_DIR'])))))
-
-    config['POSTGRES_PASSWORD'] = ''.join([random.choice(string.ascii_letters + string.digits) for i in range(20)])
-    config['SUBNET_PREFIX'] = rand_subnet()
-
-    config = get_config(config['SAFELINE_DIR'], config)
+    log.info(text('remain-disk-capacity', (safeline_path, humen_size(free_space(safeline_path)))))
 
     log.info(text('download-compose'))
-    compose_data = get_url('https://waf-ce.chaitin.cn/release/latest/compose.yaml')
-    if compose_data is None:
+    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/compose.yaml',os.path.join(safeline_path, 'docker-compose.yaml')):
         log.error(text('fail-to-download-compose'))
         return
-    
-    with open(config['SAFELINE_DIR'] + '/compose.yaml', 'w') as f:
-        f.write(compose_data)
+    if os.path.exists(os.path.join(safeline_path, 'compose.yaml')):
+        os.rename(os.path.join(safeline_path, 'compose.yaml'),os.path.join(safeline_path, 'compose.yaml.bak'))
 
-    if docker_pull(config['SAFELINE_DIR']) == False:
-        log.error(text('fail-to-pull-image'))
+    log.info(text('download-reset-tengine'))
+    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/reset_tengine.sh',safeline_path + '/reset_tengine.sh'):
+        log.error(text('fail-to-download-reset-tengine'))
         return
 
-    if docker_up(config['SAFELINE_DIR']) == False:
+    while True:
+        config = generate_config(safeline_path)
+        if docker_pull(safeline_path):
+            break
+
+        pull_failed_prefix.append(config['IMAGE_PREFIX'])
+        log.info(text('try-another-image-source'))
+
+    if not docker_up(safeline_path):
         log.error(text('fail-to-up'))
         return
     
     log.info(text('install-finish'))
-    show_address(config)
+    reset_admin()
+    show_address(config['MGT_PORT'])
+
+def get_installed_dir():
+    safeline_path = ''
+    safeline_path_proc = exec_command('docker','inspect','--format','\'{{index .Config.Labels "com.docker.compose.project.working_dir"}}\'', 'safeline-mgt')
+    if safeline_path_proc[0] == 0:
+        safeline_path = safeline_path_proc[1].strip().replace("'",'')
+    else:
+        log.debug("get installed dir error: "+ safeline_path_proc[2])
+    log.debug("find safeline installed path: " + safeline_path)
+    if safeline_path == '' or not os.path.exists(safeline_path):
+        log.warning(text('fail-to-get-installed-dir'))
+        return ui_read(text('input-target-path'),None)
+
+    return safeline_path
+
+def save_file_from_url(url, path):
+    log.debug('saving '+url+' to '+path)
+    data = get_url(url)
+    if data is None:
+        return False
+    with open(path, 'w') as f:
+        f.write(data)
+    return True
+
+def upgrade():
+    safeline_path = get_installed_dir()
+
+    log.info(text("docker-compose-version"))
+    if not precheck_docker_compose():
+        log.error(text('precheck-failed'))
+        return
+
+    log.info(text('download-compose'))
+    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/compose.yaml', os.path.join(safeline_path, 'docker-compose.yaml')):
+        log.error(text('fail-to-download-compose'))
+        return
+
+    if os.path.exists(os.path.join(safeline_path, 'compose.yaml')):
+        os.rename(os.path.join(safeline_path, 'compose.yaml'),os.path.join(safeline_path, 'compose.yaml.bak'))
+
+    log.info(text('download-reset-tengine'))
+    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/reset_tengine.sh',safeline_path + '/reset_tengine.sh'):
+        log.error(text('fail-to-download-reset-tengine'))
+        return
+
+    while True:
+        config = generate_config(safeline_path)
+        if docker_pull(safeline_path):
+            break
+
+        pull_failed_prefix.append(config['IMAGE_PREFIX'])
+        log.info(text('try-another-image-source'))
+
+    if not docker_up(safeline_path):
+        log.error(text('fail-to-up'))
+        return
+
+    if IMAGE_CLEAN:
+        image_clean()
+
+    log.info(text('upgrade-finish'))
+    reset_admin()
+    show_address(config['MGT_PORT'])
+    pass
+
+def repair():
+    pass
+
+def backup():
+    pass
+
+def init_global_config():
+    global lang
+    lang = 'zh'
+    if '--debug' in sys.argv:
+        global DEBUG
+        DEBUG = True
+
+    if '--lts' in sys.argv:
+        global LTS
+        LTS = True
+
+    if '--image-clean' in sys.argv:
+        global IMAGE_CLEAN
+        IMAGE_CLEAN = True
+
+    if '--en' in sys.argv:
+        global EN
+        EN = True
+        lang = 'en'
 
 def main():
+    init_global_config()
     banner()
 
     log.info(text('hello1'))
@@ -618,22 +982,27 @@ def main():
     action = ui_choice(text('choice-action'), [
         ('1', text('install')),
         ('2', text('upgrade')),
-        ('3', text('repair')),
-        ('4', text('backup'))
+        # ('3', text('repair')),
+        # ('4', text('backup'))
     ])
 
     if action == '1':
         install()
     elif action == '2':
         upgrade()
-    elif action == '3':
-        repair()
-    elif action == '4':
-        backup()
+    # elif action == '3':
+    #     repair()
+    # elif action == '4':
+    #     backup()
 
 if __name__ == '__main__':
     try:
         main()
+    except KeyboardInterrupt:
+        log.warning(text('keyboard-interrupt'))
+        pass
+    except Exception as e:
+        log.error(e)
     finally:
         print(color(text('talking-group') + '\n', [GREEN]))
 
