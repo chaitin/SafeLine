@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import shutil
 import sys
 import datetime
 import platform
@@ -229,6 +229,10 @@ texts = {
         'en': 'REPAIR',
         'zh': '修复'
     },
+    'uninstall': {
+        'en': 'UNINSTALL',
+        'zh': '卸载'
+    },
     'upgrade': {
         'en': 'UPDRADE',
         'zh': '升级'
@@ -296,6 +300,22 @@ texts = {
     'lts-release': {
         'en': 'LTS',
         'zh': 'LTS 版'
+    },
+    'fail-to-docker-down': {
+        'en': 'Failed to stop container',
+        'zh': '停止 docker 容器失败'
+    },
+    'fail-to-remove-dir': {
+        'en': 'Failed to remove safeline installation directory',
+        'zh': '删除雷池安装目录失败'
+    },
+    'uninstall-finish': {
+        'en': 'SafeLine WAF uninstall completed',
+        'zh': '雷池 WAF 卸载完成'
+    },
+    'docker-down': {
+        'en': 'Stopping SafeLine WAF container',
+        'zh': '正在停止雷池 WAF 容器'
     }
 }
 
@@ -324,6 +344,7 @@ LTS = False
 IMAGE_CLEAN = False
 EN = False
 INSTALL = False
+DOMAIN = 'waf-ce.chaitin.cn'
 
 def color(t, attrs=[], end=True):
     t = '\x1B[%sm%s' % (';'.join([str(i) for i in attrs]), t)
@@ -512,7 +533,7 @@ def install_docker():
     log.info(text('install-docker'))
 
     log.debug("downloading get-docker.sh")
-    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/get-docker.sh','get-docker.sh'):
+    if not save_file_from_url('https://'+DOMAIN+'/release/latest/get-docker.sh','get-docker.sh'):
         raise Exception(text('fail-to-download-docker-installation'))
 
     source = docker_source()
@@ -619,7 +640,6 @@ def precheck():
                 log.warning(text('install-docker-failed'))
                 return False
 
-    log.info(text("docker-compose-version"))
     if not precheck_docker_compose():
         return False
             
@@ -660,6 +680,14 @@ def docker_up(cwd):
                     return False
         else:
             log.error("docker up error: "+p[2])
+
+def docker_down(cwd):
+    log.info(text('docker-down'))
+    try:
+        subprocess.check_call(compose_command+' down', cwd=cwd, shell=True)
+        return True
+    except Exception:
+        return False
 
 def get_url_time(url):
     now = datetime.datetime.now()
@@ -844,14 +872,14 @@ def install():
     log.info(text('remain-disk-capacity', (safeline_path, humen_size(free_space(safeline_path)))))
 
     log.info(text('download-compose'))
-    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/compose.yaml',os.path.join(safeline_path, 'docker-compose.yaml')):
+    if not save_file_from_url('https://'+DOMAIN+'/release/latest/compose.yaml',os.path.join(safeline_path, 'docker-compose.yaml')):
         log.error(text('fail-to-download-compose'))
         return
     if os.path.exists(os.path.join(safeline_path, 'compose.yaml')):
         os.rename(os.path.join(safeline_path, 'compose.yaml'),os.path.join(safeline_path, 'compose.yaml.bak'))
 
     log.info(text('download-reset-tengine'))
-    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/reset_tengine.sh',safeline_path + '/reset_tengine.sh'):
+    if not save_file_from_url('https://'+DOMAIN+'/release/latest/reset_tengine.sh',safeline_path + '/reset_tengine.sh'):
         log.error(text('fail-to-download-reset-tengine'))
         return
 
@@ -897,13 +925,12 @@ def save_file_from_url(url, path):
 def upgrade():
     safeline_path = get_installed_dir()
 
-    log.info(text("docker-compose-version"))
     if not precheck_docker_compose():
         log.error(text('precheck-failed'))
         return
 
     log.info(text('download-compose'))
-    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/compose.yaml', os.path.join(safeline_path, 'docker-compose.yaml')):
+    if not save_file_from_url('https://'+DOMAIN+'/release/latest/compose.yaml', os.path.join(safeline_path, 'docker-compose.yaml')):
         log.error(text('fail-to-download-compose'))
         return
 
@@ -911,7 +938,7 @@ def upgrade():
         os.rename(os.path.join(safeline_path, 'compose.yaml'),os.path.join(safeline_path, 'compose.yaml.bak'))
 
     log.info(text('download-reset-tengine'))
-    if not save_file_from_url('https://waf-ce.chaitin.cn/release/latest/reset_tengine.sh',safeline_path + '/reset_tengine.sh'):
+    if not save_file_from_url('https://'+DOMAIN+'/release/latest/reset_tengine.sh',safeline_path + '/reset_tengine.sh'):
         log.error(text('fail-to-download-reset-tengine'))
         return
 
@@ -941,35 +968,52 @@ def repair():
 def backup():
     pass
 
+def uninstall():
+    safeline_path = get_installed_dir()
+
+    if not precheck_docker_compose():
+        log.error(text('precheck-failed'))
+        return
+
+    if not docker_down(safeline_path):
+        log.error(text('fail-to-docker-down'))
+        return
+
+    try:
+        shutil.rmtree(safeline_path)
+    except Exception as e:
+        log.debug("remove dir failed: "+str(e))
+        log.error(text('fail-to-remove-dir'))
+
+    log.info(text('uninstall-finish'))
+
 def init_global_config():
-    global lang
+    global lang, DEBUG, LTS, IMAGE_CLEAN, EN, DOMAIN
     lang = 'zh'
     if '--debug' in sys.argv:
-        global DEBUG
         DEBUG = True
 
     if '--lts' in sys.argv:
-        global LTS
         LTS = True
-        log.info(text('install-channel')+": "+text('lts-release'))
 
     if '--image-clean' in sys.argv:
-        global IMAGE_CLEAN
         IMAGE_CLEAN = True
 
     if '--en' in sys.argv:
-        global EN
         EN = True
         lang = 'en'
+        DOMAIN = 'waf.chaitin.com'
 
 def main():
+    init_global_config()
     banner()
 
     log.info(text('hello1'))
     log.info(text('hello2'))
     print()
 
-    init_global_config()
+    if LTS:
+        log.info(text('install-channel')+": "+text('lts-release'))
 
     if sys.version_info.major == 2 or (sys.version_info.major == 3 and sys.version_info.minor <= 5):
         log.error(text('python-version-too-low'))
@@ -995,6 +1039,7 @@ def main():
     action = ui_choice(text('choice-action'), [
         ('1', text('install')),
         ('2', text('upgrade')),
+        ('3', text('uninstall')),
         # ('3', text('repair')),
         # ('4', text('backup'))
     ])
@@ -1003,6 +1048,8 @@ def main():
         install()
     elif action == '2':
         upgrade()
+    elif action == '3':
+        uninstall()
     # elif action == '3':
     #     repair()
     # elif action == '4':
