@@ -442,7 +442,7 @@ def free_space(path):
         return None
 
 def free_memory():
-    t = filter(lambda x: 'MemFree' in x, open('/proc/meminfo', 'r').readlines())
+    t = filter(lambda x: 'MemAvailable' in x, open('/proc/meminfo', 'r').readlines())
     return int(next(t).split()[1]) * 1024
 
 def exec_command(*args,shell=False):
