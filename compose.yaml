@@ -30,7 +30,7 @@ services:
   mgt:
     container_name: safeline-mgt
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-mgt-g${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG:?image tag required}
+    image: ${IMAGE_PREFIX}/safeline-mgt${REGION}${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG:?image tag required}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${SAFELINE_DIR}/resources/mgt:/app/data
@@ -56,7 +56,7 @@ services:
   detect:
     container_name: safeline-detector
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-detector-g${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-detector${REGION}${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
     volumes:
       - ${SAFELINE_DIR}/resources/detector:/resources/detector
       - ${SAFELINE_DIR}/logs/detector:/logs/detector
@@ -69,7 +69,7 @@ services:
   tengine:
     container_name: safeline-tengine
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-tengine-g${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-tengine${REGION}${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/resolv.conf:/etc/resolv.conf:ro
@@ -84,13 +84,14 @@ services:
       - TCD_SNSERVER=${SUBNET_PREFIX}.5:8000
       # deprecated
       - SNSERVER_ADDR=${SUBNET_PREFIX}.5:8000
+      - CHALLENGE_SERVER=${SUBNET_PREFIX}.10:8080
     ulimits:
       nofile: 131072
     network_mode: host
   luigi:
     container_name: safeline-luigi
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-luigi-g${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-luigi${REGION}${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
     environment:
       - MGT_IP=${SUBNET_PREFIX}.4
       - LUIGI_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce?sslmode=disable
@@ -110,7 +111,7 @@ services:
   fvm:
     container_name: safeline-fvm
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-fvm-g${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-fvm${REGION}${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
     volumes:
       - /etc/localtime:/etc/localtime:ro
     logging:
@@ -123,7 +124,7 @@ services:
   chaos:
     container_name: safeline-chaos
     restart: always
-    image: ${IMAGE_PREFIX}/safeline-chaos-g${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
+    image: ${IMAGE_PREFIX}/safeline-chaos${REGION}${ARCH_SUFFIX}${RELEASE}:${IMAGE_TAG}
     logging:
       options:
         max-size: "100m"
