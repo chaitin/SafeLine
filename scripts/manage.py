@@ -234,7 +234,7 @@ texts = {
         'zh': '卸载'
     },
     'upgrade': {
-        'en': 'UPDRADE',
+        'en': 'UPGRADE',
         'zh': '升级'
     },
     'backup': {
