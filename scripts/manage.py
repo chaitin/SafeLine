@@ -458,7 +458,7 @@ def free_memory():
 
 def exec_command(*args,shell=False):
     try:
-        proc = subprocess.run(args, check=False, capture_output=True, universal_newlines=True,shell=shell)
+        proc = subprocess.run(args, check=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True,shell=shell)
         subprocess_output(proc.stdout.strip())
         return proc.returncode, proc.stdout, proc.stderr
     except Exception as e:
