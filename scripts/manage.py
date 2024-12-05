@@ -284,8 +284,19 @@ texts = {
     'docker-up-iptables-failed': {
         'en': 'Iptables policy error, try to restart docker',
         'zh': 'iptables 规则错误，尝试重启 docker'
+    },
+    'install-channel': {
+        'en': 'Installing',
+        'zh': '安装通道'
+    },
+    'preview-release': {
+        'en': 'Preview',
+        'zh': '预览版'
+    },
+    'lts-release': {
+        'en': 'LTS',
+        'zh': 'LTS 版'
     }
-
 }
 
 
@@ -940,6 +951,7 @@ def init_global_config():
     if '--lts' in sys.argv:
         global LTS
         LTS = True
+        log.info(text('install-channel')+": "+text('lts-release'))
 
     if '--image-clean' in sys.argv:
         global IMAGE_CLEAN
@@ -951,12 +963,13 @@ def init_global_config():
         lang = 'en'
 
 def main():
-    init_global_config()
     banner()
 
     log.info(text('hello1'))
     log.info(text('hello2'))
     print()
+
+    init_global_config()
 
     if sys.version_info.major == 2 or (sys.version_info.major == 3 and sys.version_info.minor <= 5):
         log.error(text('python-version-too-low'))
