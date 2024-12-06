@@ -205,6 +205,10 @@ texts = {
         'en': 'Failed to start Docker containers',
         'zh': '启动 Docker 容器失败'
     },
+    'fail-to-down': {
+        'en': 'Failed to stop Docker containers',
+        'zh': '停止 Docker 容器失败'
+    },
     'install-finish': {
         'en': 'SafeLine WAF installation completed',
         'zh': '雷池 WAF 安装完成'
@@ -358,12 +362,16 @@ texts = {
         'zh': '重置数据库密码失败'
     },
     'reset-postgres-password-finish': {
-        'en': 'Reset postgres password completed, please restart container manually',
-        'zh': '重置数据库密码完成, 请手动重启 docker 容器'
+        'en': 'Reset postgres password completed',
+        'zh': '重置数据库密码完成'
     },
     'reset-tengine-finish': {
         'en': 'Reset tengine finish completed',
         'zh': '重置 tengine 配置完成'
+    },
+    'if-remove-waf': {
+        'en': 'Do you want to uninstall SafeLine WAF, this operation will delete all data in the directory',
+        'zh': '是否确认卸载雷池，该操作会删除目录下所有数据'
     }
 }
 
@@ -1056,6 +1064,11 @@ def reset_tengine():
 
 def reset_postgres():
     safeline_path = get_installed_dir()
+
+    if not precheck_docker_compose():
+        log.error(text('precheck-failed'))
+        return
+
     env_file = os.path.join(safeline_path, '.env')
     if not os.path.exists(env_file):
         log.error(text('fail-to-find-env'))
@@ -1069,6 +1082,14 @@ def reset_postgres():
 
     if not docker_exec('safeline-pg','psql -U safeline-ce -c "ALTER USER \\"safeline-ce\\" WITH PASSWORD \''+config['POSTGRES_PASSWORD']+'\';"'):
         log.error(text('fail-to-reset-postgres-password'))
+        return
+
+    if not docker_down(safeline_path):
+        log.error(text('fail-to-down'))
+        return
+
+    if not docker_up(safeline_path):
+        log.error(text('fail-to-up'))
         return
 
     log.info(text('reset-postgres-password-finish'))
@@ -1089,6 +1110,14 @@ def backup():
 
 def uninstall():
     safeline_path = get_installed_dir()
+
+    action = ui_choice(text('if-remove-waf')+": "+safeline_path,[
+        ('y', text('yes')),
+        ('n', text('no')),
+    ])
+
+    if action == 'n':
+        return
 
     if not precheck_docker_compose():
         log.error(text('precheck-failed'))
