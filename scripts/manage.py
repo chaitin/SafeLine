@@ -121,6 +121,10 @@ texts = {
         'en': 'Do you want the latest version of Docker to be automatically installed for you?',
         'zh': '是否需要为你自动安装 Docker 的最新版本'
     },
+    'if-restart-docker': {
+        'en': 'Do you want to restart SafeLine WAF Docker container',
+        'zh': '是否需要重启雷池 WAF 的容器'
+    },
     'if-update-docker': {
         'en': 'Do you want to update your Docker version?',
         'zh': '是否需要为你自动更新 Docker 版本'
@@ -372,6 +376,14 @@ texts = {
     'if-remove-waf': {
         'en': 'Do you want to uninstall SafeLine WAF, this operation will delete all data in the directory',
         'zh': '是否确认卸载雷池，该操作会删除目录下所有数据'
+    },
+    'restart-docker-finish': {
+        'en': 'Restart SafeLine WAF docker container completed',
+        'zh': '重启雷池 WAF 容器完成'
+    },
+    'restart': {
+        'en': 'RESTART',
+        'zh': '重启'
     }
 }
 
@@ -1062,6 +1074,17 @@ def reset_tengine():
 
     log.info(text('reset-tengine-finish'))
 
+def docker_restart_all(cwd):
+    if not docker_down(cwd):
+        log.error(text('fail-to-down'))
+        return False
+
+    if not docker_up(cwd):
+        log.error(text('fail-to-up'))
+        return False
+
+    return True
+
 def reset_postgres():
     safeline_path = get_installed_dir()
 
@@ -1084,13 +1107,14 @@ def reset_postgres():
         log.error(text('fail-to-reset-postgres-password'))
         return
 
-    if not docker_down(safeline_path):
-        log.error(text('fail-to-down'))
-        return
+    action = ui_choice(text('if-restart-docker'), [
+        ('y', text('yes')),
+        ('n', text('no')),
+    ])
 
-    if not docker_up(safeline_path):
-        log.error(text('fail-to-up'))
-        return
+    if action.lower() == 'y':
+        if not docker_restart_all(safeline_path):
+            return
 
     log.info(text('reset-postgres-password-finish'))
 
@@ -1104,6 +1128,18 @@ def repair():
         reset_tengine()
     elif action =='2':
         reset_postgres()
+
+def restart():
+    safeline_path = get_installed_dir()
+
+    if not precheck_docker_compose():
+        log.error(text('precheck-failed'))
+        return
+
+    if not docker_restart_all(safeline_path):
+        return
+
+    log.info(text('restart-docker-finish'))
 
 def backup():
     pass
@@ -1189,6 +1225,7 @@ def main():
         ('2', text('upgrade')),
         ('3', text('uninstall')),
         ('4', text('repair')),
+        ('5', text('restart')),
         # ('4', text('backup'))
     ])
 
@@ -1200,6 +1237,8 @@ def main():
         uninstall()
     elif action == '4':
         repair()
+    elif action == '5':
+        restart()
     # elif action == '4':
     #     backup()
 
