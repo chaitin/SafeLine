@@ -165,10 +165,6 @@ texts = {
         'en': 'Failed to download docker compose script',
         'zh': '下载 docker compose 脚本失败'
     },
-    'fail-to-download-reset-tengine': {
-        'en': 'Failed to download reset_tengine script',
-        'zh': '下载 reset_tengine 脚本失败'
-    },
     'fail-to-create-dir': {
         'en': 'Unable to create the "%s" directory',
         'zh': '无法创建 "%s" 目录'
@@ -316,6 +312,58 @@ texts = {
     'docker-down': {
         'en': 'Stopping SafeLine WAF container',
         'zh': '正在停止雷池 WAF 容器'
+    },
+    'reset-tengine': {
+        'en': 'RESET TENGINE CONFIG',
+        'zh': '重置 tengine 配置',
+    },
+    'reset-postgres': {
+        'en': 'RESET DATABASE PASSWORD',
+        'zh': '重置数据库密码'
+    },
+    'fail-to-find-nginx': {
+        'en': 'Failed to find tengine config path',
+        'zh': '未找到 tengine 配置目录'
+    },
+    'nginx-backup-dir': {
+        'en': 'Tengine config backup directory',
+        'zh': 'tengine 配置备份目录'
+    },
+    'fail-to-backup-nginx': {
+        'en': 'Failed to backup tengine config',
+        'zh': '备份 tengine 目录失败'
+    },
+    'docker-restart': {
+        'en': 'Restart docker container',
+        'zh': '重启 docker 容器'
+    },
+    'docker-exec': {
+        'en': 'Executing docker command',
+        'zh': '执行 docker 命令'
+    },
+    'fail-to-recover-static': {
+        'en': 'Failed to recover tengine static config',
+        'zh': '恢复 tengine 静态站点资源失败'
+    },
+    'fail-to-find-env': {
+        'en': 'Failed to find .env file',
+        'zh': '未找到 .env 文件'
+    },
+    'fail-to-find-postgres-password': {
+        'en': 'Failed to find postgres password',
+        'zh': '未找到数据库密码'
+    },
+    'fail-to-reset-postgres-password': {
+        'en': 'Failed to reset postgres password',
+        'zh': '重置数据库密码失败'
+    },
+    'reset-postgres-password-finish': {
+        'en': 'Reset postgres password completed, please restart container manually',
+        'zh': '重置数据库密码完成, 请手动重启 docker 容器'
+    },
+    'reset-tengine-finish': {
+        'en': 'Reset tengine finish completed',
+        'zh': '重置 tengine 配置完成'
     }
 }
 
@@ -586,7 +634,7 @@ def precheck_docker_compose():
                 log.warning(text('docker-compose-not-installed'))
 
         if version_output != '':
-            t = re.findall(r'^Docker Compose version v(\d+)\.', version_output)
+            t = re.findall(r'^Docker Compose version v?(\d+)\.', version_output)
             if len(t) == 0:
                 log.warning(text('docker-compose-not-installed'))
             elif int(t[0]) < 2:
@@ -652,6 +700,24 @@ def docker_pull(cwd):
         return True
     except Exception as e:
         log.warning("docker pull error: "+str(e))
+        return False
+
+def docker_restart(container):
+    log.info(text('docker-restart')+": "+container)
+    try:
+        subprocess.check_call('docker restart '+container, shell=True)
+        return True
+    except Exception as e:
+        log.error("docker restart error: "+str(e))
+        return False
+
+def docker_exec(container, command):
+    log.info(text('docker-exec')+": ("+container+") "+command)
+    try:
+        subprocess.check_call('docker exec '+container+' '+command, shell=True)
+        return True
+    except Exception as e:
+        log.error("docker exec error: "+str(e))
         return False
 
 def image_clean():
@@ -750,6 +816,19 @@ def docker_source():
             source = v
     return source
 
+def read_config(path,config):
+    with open(path, 'r') as f:
+        for line in f.readlines():
+            if line.strip() == '':
+                continue
+            try:
+                s = line.index('=')
+                if s > 0:
+                    k = line[:s].strip()
+                    v = line[s + 1:].strip()
+                    config[k] = v
+            except ValueError:
+                continue
 
 def generate_config(path):
     log.info(text('update-config'))
@@ -758,6 +837,7 @@ def generate_config(path):
         'POSTGRES_PASSWORD': '',
         'MGT_PORT': '',
         'RELEASE': '',
+        'CHANNEL': '',
         'REGION': '',
         'IMAGE_PREFIX': '',
         'IMAGE_TAG': '',
@@ -767,13 +847,7 @@ def generate_config(path):
 
     env_path = os.path.join(path,'.env')
     if os.path.exists(env_path):
-        with open(env_path, 'r') as f:
-            for line in f.readlines():
-                s = line.index('=')
-                if s > 0:
-                    k = line[:s].strip()
-                    v = line[s + 1:].strip()
-                    config[k] = v
+        read_config(env_path,config)
 
     if config['ARCH_SUFFIX'] == '':
         if platform.machine() == 'aarch64':
@@ -787,6 +861,7 @@ def generate_config(path):
 
     if config['RELEASE'] == '' and LTS:
         config['RELEASE'] = '-lts'
+        config['CHANNEL'] = '-lts'
 
     default_try = False
     if config['MGT_PORT'] == '9443':
@@ -878,11 +953,6 @@ def install():
     if os.path.exists(os.path.join(safeline_path, 'compose.yaml')):
         os.rename(os.path.join(safeline_path, 'compose.yaml'),os.path.join(safeline_path, 'compose.yaml.bak'))
 
-    log.info(text('download-reset-tengine'))
-    if not save_file_from_url('https://'+DOMAIN+'/release/latest/reset_tengine.sh',safeline_path + '/reset_tengine.sh'):
-        log.error(text('fail-to-download-reset-tengine'))
-        return
-
     while True:
         config = generate_config(safeline_path)
         if docker_pull(safeline_path):
@@ -937,11 +1007,6 @@ def upgrade():
     if os.path.exists(os.path.join(safeline_path, 'compose.yaml')):
         os.rename(os.path.join(safeline_path, 'compose.yaml'),os.path.join(safeline_path, 'compose.yaml.bak'))
 
-    log.info(text('download-reset-tengine'))
-    if not save_file_from_url('https://'+DOMAIN+'/release/latest/reset_tengine.sh',safeline_path + '/reset_tengine.sh'):
-        log.error(text('fail-to-download-reset-tengine'))
-        return
-
     while True:
         config = generate_config(safeline_path)
         if docker_pull(safeline_path):
@@ -962,8 +1027,62 @@ def upgrade():
     show_address(config['MGT_PORT'])
     pass
 
+def reset_tengine():
+    safeline_path = get_installed_dir()
+    resources_path = os.path.join(safeline_path, 'resources')
+    nginx_path = os.path.join(resources_path,'nginx')
+    if not os.path.exists(nginx_path):
+        log.error(text('fail-to-find-nginx'))
+        return
+    backup_path = os.path.join(resources_path, 'nginx.'+str(datetime.datetime.now().timestamp()))
+    log.info(text('nginx-backup-dir') +': '+ backup_path)
+    try:
+        shutil.move(nginx_path, backup_path)
+    except Exception as e:
+        log.error(text('fail-to-backup-nginx')+': '+str(e))
+        return
+
+    if docker_restart('safeline-tengine'):
+        docker_exec('safeline-mgt', 'gentenginewebsite')
+
+    if os.path.exists(os.path.join(backup_path, 'static')):
+        try:
+            shutil.copy(os.path.join(backup_path, 'static'), os.path.join(nginx_path, 'static'))
+        except Exception as e:
+            log.error(text('fail-to-recover-static')+': '+str(e))
+            return
+
+    log.info(text('reset-tengine-finish'))
+
+def reset_postgres():
+    safeline_path = get_installed_dir()
+    env_file = os.path.join(safeline_path, '.env')
+    if not os.path.exists(env_file):
+        log.error(text('fail-to-find-env'))
+        return
+
+    config = {}
+    read_config(env_file, config)
+    if config['POSTGRES_PASSWORD'] == '':
+        log.error(text('fail-to-find-postgres-password'))
+        return
+
+    if not docker_exec('safeline-pg','psql -U safeline-ce -c "ALTER USER \\"safeline-ce\\" WITH PASSWORD \''+config['POSTGRES_PASSWORD']+'\';"'):
+        log.error(text('fail-to-reset-postgres-password'))
+        return
+
+    log.info(text('reset-postgres-password-finish'))
+
 def repair():
-    pass
+    action = ui_choice(text('choice-action'),[
+        ('1', text('reset-tengine')),
+        ('2', text('reset-postgres')),
+    ])
+
+    if action =='1':
+        reset_tengine()
+    elif action =='2':
+        reset_postgres()
 
 def backup():
     pass
@@ -1040,7 +1159,7 @@ def main():
         ('1', text('install')),
         ('2', text('upgrade')),
         ('3', text('uninstall')),
-        # ('3', text('repair')),
+        ('4', text('repair')),
         # ('4', text('backup'))
     ])
 
@@ -1050,8 +1169,8 @@ def main():
         upgrade()
     elif action == '3':
         uninstall()
-    # elif action == '3':
-    #     repair()
+    elif action == '4':
+        repair()
     # elif action == '4':
     #     backup()
 
