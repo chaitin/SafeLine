@@ -384,6 +384,10 @@ texts = {
     'restart': {
         'en': 'RESTART',
         'zh': '重启'
+    },
+    'wait-mgt-health': {
+        'en': 'Wait for safeline-mgt healthy',
+        'zh': '等待 safeline-mgt 启动'
     }
 }
 
@@ -927,7 +931,7 @@ def reset_admin():
             break
         elif p[0] != 0:
             log.debug("get safeline-mgt status error: "+str(p[2]))
-        log.info("wait safeline-mgt healthy, sleep 5s")
+        log.info(text('wait-mgt-health'))
         time.sleep(5)
     proc = exec_command('docker exec safeline-mgt /app/mgt-cli reset-admin --once',shell=True)
     if proc[0] != 0:
@@ -1162,6 +1166,8 @@ def uninstall():
     if not docker_down(safeline_path):
         log.error(text('fail-to-docker-down'))
         return
+
+    image_clean()
 
     try:
         shutil.rmtree(safeline_path)
