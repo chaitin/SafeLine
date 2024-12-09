@@ -958,7 +958,7 @@ def install():
             log.warning(text('path-exists', safeline_path))
             continue
         if free_space(safeline_path) < 5 * 1024 * 1024 * 1024:
-            log.warning(text('insufficient-disk-capacity'))
+            log.warning(text('insufficient-disk-capacity', safeline_path))
             continue
         break
 
