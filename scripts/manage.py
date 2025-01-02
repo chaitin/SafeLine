@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import ipaddress
+import json
 import shutil
 import sys
 import datetime
@@ -190,8 +192,8 @@ texts = {
         'zh': '正在更新 .env 配置文件'
     },
     'download-compose': {
-        'en': 'Downloading the compose.yaml file',
-        'zh': '正在下载 compose.yaml 文件'
+        'en': 'Downloading the docker-compose.yaml file',
+        'zh': '正在下载 docker-compose.yaml 文件'
     },
     'download-reset-tengine': {
         'en': 'Downloading the reset_tengine script',
@@ -388,6 +390,42 @@ texts = {
     'wait-mgt-health': {
         'en': 'Wait for safeline-mgt healthy',
         'zh': '等待 safeline-mgt 启动'
+    },
+    'if-remove-ipv6-scope': {
+        'en': '/etc/resolv.conf have ipv6 nameserver with scope. Do you want to remove these nameserver',
+        'zh': '/etc/resolv.conf 文件中存在 ipv6 地址包含区域 ID，是否删除包含区域 ID 的 ipv6 nameserver'
+    },
+    'input-safeline-version': {
+        'en': 'Input the %s version',
+        'zh': '请输入 %s 的版本'
+    },
+    'safeline-version-format-error': {
+        'en': 'version %s format error',
+        'zh': '版本 %s 格式错误'
+    },
+    'safeline-downgrade-error': {
+        'en': 'SafeLine WAF can not downgrade %s to %s',
+        'zh': '雷池 WAF 不支持从 %s 降级到 %s'
+    },
+    'get-version': {
+        'en': 'Getting SafeLine WAF latest version',
+        'zh': '正在获取雷池 WAF 最新版本'
+    },
+    'get-version-from-mgt': {
+        'en': 'try to get version from safeline-mgt',
+        'zh': '尝试从 safeline-mgt 获取安装版本'
+    },
+    'skip-version-compare': {
+        'en': 'skip SafeLine WAF version compare',
+        'zh': '跳过雷池 WAF 版本匹配'
+    },
+    'fail-to-get-version-from-mgt': {
+        'en': 'failed to get install version from safeline-mgt',
+        'zh': '从 safeline-mgt 获取安装版本失败'
+    },
+    'target-version': {
+        'en': 'target version: %s',
+        'zh': '目标版本：%s'
     }
 }
 
@@ -462,11 +500,11 @@ class log():
 
 def get_url(url):
     try:
-        response = urlopen(url)
+        response = urlopen(url, timeout=10)
         content = response.read()
         return content.decode('utf-8')
     except Exception as e:
-        log.error(e)
+        log.error('get url %s failed: %s' % (url, str(e)))
 
 def ui_read(question, default):
     while True:
@@ -677,6 +715,45 @@ def precheck_docker_compose():
                 log.warning(text('install-docker-failed'))
                 return False
 
+def ipv6_has_scope(addr):
+    try:
+        ip = ipaddress.ip_address(addr)
+        return ip.version == 6 and ip.scope_id is not None
+    except ValueError as e:
+        log.debug('parse nameserver %s failed: %s' % (addr, str(e)))
+        return False
+
+def precheck_dns_scope():
+    resolve_file = '/etc/resolv.conf'
+    if not os.path.exists(resolve_file):
+        return True
+
+    have_scope = False
+    raw_lines = []
+    with open(resolve_file, 'r') as f:
+        for line in f.readlines():
+            strip_line = line.strip()
+            if not strip_line.startswith('nameserver') or not ipv6_has_scope(strip_line.lstrip('nameserver').strip()):
+                raw_lines.append(line)
+                continue
+
+            have_scope = True
+
+    if not have_scope:
+        return True
+
+    action = ui_choice(text('if-remove-ipv6-scope'),[
+        ('y', text('yes')),
+        ('n', text('no')),
+    ])
+    if action.lower() != 'y':
+        return False
+
+    with open(resolve_file, 'w') as f:
+        for line in raw_lines:
+            f.write(line)
+
+    return True
 
 def precheck():
     if platform.machine() in ('x86_64', 'AMD64') and 'ssse3' not in open('/proc/cpuinfo', 'r').read().lower():
@@ -700,7 +777,7 @@ def precheck():
                 break
         else:
             log.warning(text('docker-not-installed'))
-            
+
         action = ui_choice(text('if-install-docker'), [
             ('y', text('yes')),
             ('n', text('no')),
@@ -714,7 +791,10 @@ def precheck():
 
     if not precheck_docker_compose():
         return False
-            
+
+    if not precheck_dns_scope():
+        return False
+
     return True
 
 def docker_pull(cwd):
@@ -770,6 +850,7 @@ def docker_up(cwd):
                     return False
         else:
             log.error("docker up error: "+p[2])
+            return False
 
 def docker_down(cwd):
     log.info(text('docker-down'))
@@ -782,7 +863,7 @@ def docker_down(cwd):
 def get_url_time(url):
     now = datetime.datetime.now()
     try:
-        urlopen(url)
+        urlopen(url, timeout=10)
     except HTTPError as e:
         log.debug("get url "+url+" status: "+str(e.status))
         if e.status > 499:
@@ -909,7 +990,8 @@ def generate_config(path):
         if config['IMAGE_PREFIX'] == '':
             raise Exception(text('fail-to-connect-image-source'))
 
-    config['IMAGE_TAG'] = 'latest'
+    config['IMAGE_TAG'] = get_version(config['IMAGE_TAG'])
+    log.info(text('target-version', config['IMAGE_TAG']))
 
     with open(env_path, 'w') as f:
         for k in config:
@@ -974,24 +1056,15 @@ def install():
     if not save_file_from_url('https://'+DOMAIN+'/release/latest/compose.yaml',os.path.join(safeline_path, 'docker-compose.yaml')):
         log.error(text('fail-to-download-compose'))
         return
-    if os.path.exists(os.path.join(safeline_path, 'compose.yaml')):
-        os.rename(os.path.join(safeline_path, 'compose.yaml'),os.path.join(safeline_path, 'compose.yaml.bak'))
+    rename_file(os.path.join(safeline_path, 'compose.yaml'),os.path.join(safeline_path, 'compose.yaml.bak'))
 
-    while True:
-        config = generate_config(safeline_path)
-        if docker_pull(safeline_path):
-            break
-
-        pull_failed_prefix.append(config['IMAGE_PREFIX'])
-        log.info(text('try-another-image-source'))
-
-    if not docker_up(safeline_path):
-        log.error(text('fail-to-up'))
+    mgt_port = generate_config_and_run(safeline_path)
+    if mgt_port is None:
         return
-    
+
     log.info(text('install-finish'))
     reset_admin()
-    show_address(config['MGT_PORT'])
+    show_address(mgt_port)
 
 def get_installed_dir():
     safeline_path = ''
@@ -1016,31 +1089,60 @@ def save_file_from_url(url, path):
         f.write(data)
     return True
 
+def rename_file(src, dst):
+    if os.path.exists(src):
+        os.rename(src, dst)
+
+def remove_file(src):
+    if os.path.exists(src):
+        os.remove(src)
+
+def generate_config_and_run(safeline_path):
+    env_file = os.path.join(safeline_path, '.env')
+    env_bak_file = os.path.join(safeline_path, '.env.bak')
+    if os.path.exists(env_file):
+        shutil.copyfile(env_file, env_bak_file)
+
+    try:
+        while True:
+            config = generate_config(safeline_path)
+            if docker_pull(safeline_path):
+                break
+
+            pull_failed_prefix.append(config['IMAGE_PREFIX'])
+            log.info(text('try-another-image-source'))
+
+        if not docker_up(safeline_path):
+            log.error(text('fail-to-up'))
+            rename_file(env_bak_file, env_file)
+            return None
+    except KeyboardInterrupt:
+        log.warning(text('keyboard-interrupt'))
+        rename_file(env_bak_file, env_file)
+        return None
+    except Exception as e:
+        log.error('start SafeLine WAF failed: '+str(e))
+        rename_file(env_bak_file, env_file)
+        return None
+
+    remove_file(env_bak_file)
+    return config['MGT_PORT']
+
 def upgrade():
     safeline_path = get_installed_dir()
 
-    if not precheck_docker_compose():
+    if not precheck_docker_compose() or not precheck_dns_scope():
         log.error(text('precheck-failed'))
         return
 
     log.info(text('download-compose'))
+    rename_file(os.path.join(safeline_path, 'compose.yaml'), os.path.join(safeline_path, 'compose.yaml.bak'))
     if not save_file_from_url('https://'+DOMAIN+'/release/latest/compose.yaml', os.path.join(safeline_path, 'docker-compose.yaml')):
         log.error(text('fail-to-download-compose'))
         return
 
-    if os.path.exists(os.path.join(safeline_path, 'compose.yaml')):
-        os.rename(os.path.join(safeline_path, 'compose.yaml'),os.path.join(safeline_path, 'compose.yaml.bak'))
-
-    while True:
-        config = generate_config(safeline_path)
-        if docker_pull(safeline_path):
-            break
-
-        pull_failed_prefix.append(config['IMAGE_PREFIX'])
-        log.info(text('try-another-image-source'))
-
-    if not docker_up(safeline_path):
-        log.error(text('fail-to-up'))
+    mgt_port = generate_config_and_run(safeline_path)
+    if mgt_port is None:
         return
 
     if IMAGE_CLEAN:
@@ -1048,7 +1150,7 @@ def upgrade():
 
     log.info(text('upgrade-finish'))
     reset_admin()
-    show_address(config['MGT_PORT'])
+    show_address(mgt_port)
     pass
 
 def reset_tengine():
@@ -1177,6 +1279,105 @@ def uninstall():
 
     log.info(text('uninstall-finish'))
 
+ACTION = ''
+
+def get_version_from_input(old_version):
+    while True:
+        version = ui_read(text('input-safeline-version', ACTION),None)
+        if not check_version_format(version):
+            log.warning(text('safeline-version-format-error', version))
+            continue
+        if not compare_version(old_version, version):
+            log.warning(text('safeline-downgrade-error', (old_version, version)))
+            continue
+        return version.lstrip('v')
+
+def check_version_format(version):
+    split_version = version.lstrip('v').split('.')
+    if len(split_version) != 3:
+        return False
+    try:
+        for v in split_version:
+            int(v)
+    except ValueError as e:
+        log.debug('check version %s format failed: %s' % (version, str(e)))
+        return False
+    return True
+
+def compare_version(old_version, new_version):
+    if old_version == 'latest':
+        try:
+            log.info(text('get-version-from-mgt'))
+            old_version = get_version_from_mgt()
+        except Exception as e:
+            log.debug('get version from mgt failed: '+str(e))
+            log.warning(text('fail-to-get-version-from-mgt'))
+            log.warning(text('skip-version-compare'))
+            return True
+    elif old_version == '':
+        return True
+
+    if not check_version_format(old_version):
+        log.warning(text('safeline-version-format-error', old_version))
+        log.warning(text('skip-version-compare'))
+        return True
+
+    split_old_version = old_version.lstrip('v').split('.')
+    split_new_version = new_version.lstrip('v').split('.')
+
+    for index in range(len(split_old_version)):
+        int_old_version = int(split_old_version[index])
+        int_new_version = int(split_new_version[index])
+        if int_old_version > int_new_version:
+            return False
+        elif int_old_version < int_new_version:
+            return True
+
+    return True
+
+
+def get_version_from_mgt():
+    proc = exec_command('docker exec safeline-mgt /app/mgt version',shell=True)
+    if proc[0] != 0:
+        raise Exception('stderr: ' + proc[2])
+    for line in proc[1].split('\n'):
+        strip_line = line.strip()
+        if not strip_line.startswith('version'):
+            continue
+        return strip_line.lstrip('version').strip()
+
+    raise Exception('mgt version not found')
+
+TARGET_VERSION = ''
+
+def get_version(old_version):
+    global TARGET_VERSION
+    if TARGET_VERSION != '':
+        return TARGET_VERSION
+
+    log.info(text('get-version'))
+    version_url = 'https://'+DOMAIN+'/release/latest/version.json'
+    data = get_url(version_url)
+    if data is None:
+        TARGET_VERSION = get_version_from_input(old_version)
+        return TARGET_VERSION
+    try:
+        version = json.loads(data)
+        latest_version = version['latest_version']
+        if not check_version_format(latest_version):
+            log.warning(text('safeline-version-format-error', latest_version))
+            TARGET_VERSION = get_version_from_input(old_version)
+        elif not compare_version(old_version, latest_version):
+            log.warning(text('safeline-downgrade-error', (old_version, latest_version)))
+            TARGET_VERSION = get_version_from_input(old_version)
+        else:
+            TARGET_VERSION = latest_version.lstrip('v')
+        return TARGET_VERSION
+    except Exception as e:
+        log.warning('parse url %s response failed: %s' % (version_url, str(e)))
+        TARGET_VERSION = get_version_from_input(old_version)
+        return TARGET_VERSION
+
 def init_global_config():
     global lang, DEBUG, LTS, IMAGE_CLEAN, EN, DOMAIN
     lang = 'zh'
@@ -1216,7 +1417,7 @@ def main():
     if os.geteuid() != 0:
         log.error(text('not-root'))
         return
-    
+
     if platform.system() != 'Linux':
         log.error(text('not-linux', platform.system()))
         return
@@ -1235,9 +1436,12 @@ def main():
         # ('4', text('backup'))
     ])
 
+    global ACTION
     if action == '1':
+        ACTION = text('install')
         install()
     elif action == '2':
+        ACTION = text('upgrade')
         upgrade()
     elif action == '3':
         uninstall()
@@ -1258,4 +1462,3 @@ if __name__ == '__main__':
         log.error(e)
     finally:
         print(color(text('talking-group') + '\n', [GREEN]))
-
