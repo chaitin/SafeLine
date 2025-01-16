@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+import argparse
+import base64
 import ipaddress
 import json
 import shutil
+import ssl
 import sys
 import datetime
 import platform
@@ -52,12 +55,12 @@ texts = {
               '微信扫描上方二维码加入雷池项目讨论组'
     },
     'input-target-path': {
-        'en': 'Input the path to install SafeLine WAF',
-        'zh': '请输入雷池 WAF 的安装目录'
+        'en': 'Input the path to install %s',
+        'zh': '请输入%s 的安装目录'
     },
     'input-mgt-port': {
-        'en': 'Input the mgt port',
-        'zh': '请输入雷池 WAF 的管理端口'
+        'en': 'Input the %s mgt port',
+        'zh': '请输入%s 的管理端口'
     },
     'python-version-too-low': {
         'en': 'The Python version is too low, Python 3.5 above is required',
@@ -72,16 +75,16 @@ texts = {
         'zh': '需要 root 权限才能运行'
     },
     'not-linux': {
-        'en': 'SafeLine WAF does not support %s OS yet',
-        'zh': '雷池 WAF 暂时不支持 %s 操作系统'
+        'en': '%s does not support %s OS yet',
+        'zh': '%s 暂时不支持 %s 操作系统'
     },
     'unsupported-arch': {
-        'en': 'SafeLine WAF does not support %s processor yet',
-        'zh': '雷池 WAF 暂时不支持 %s 处理器'
+        'en': '%s does not support %s processor yet',
+        'zh': '%s 暂时不支持 %s 处理器'
     },
     'prepare-to-install': {
-        'en': 'Will be going to installing SafeLine WAF for you.',
-        'zh': '即将为您安装雷池 WAF'
+        'en': 'Will be going to installing %s for you.',
+        'zh': '即将为您安装%s'
     },
     'choice-action': {
         'en': 'Choice what do you want to do',
@@ -96,8 +99,8 @@ texts = {
         'zh': '当前 CPU 未启用 SSSE3 指令集'
     },
     'precheck-failed': {
-        'en': 'The environment does not meet the installation conditions of SafeLine WAF',
-        'zh': '当前环境不符合雷池 WAF 的安装条件'
+        'en': 'The environment does not meet the installation conditions of %s',
+        'zh': '当前环境不符合%s 的安装条件'
     },
     'precheck-passed': {
         'en': 'Installation environment check passed',
@@ -108,32 +111,32 @@ texts = {
         'zh': '剩余内存不足 1 GB'
     },
     'docker-not-installed': {
-        'en': 'Running SafeLine WAF requires Docker, but Docker is not installed',
-        'zh': '运行雷池 WAF 依赖 Docker, 但是 Docker 没安装'
+        'en': 'Running %s requires Docker, but Docker is not installed',
+        'zh': '运行%s 依赖 Docker, 但是 Docker 没安装'
     },
     'docker-compose-not-installed': {
-        'en': 'Running SafeLine WAF requires Docker Compose, but Docker Compose is not installed',
-        'zh': '运行雷池 WAF 依赖 Docker Compose, 但是 Docker Compose 没安装'
+        'en': 'Running %s requires Docker Compose, but Docker Compose is not installed',
+        'zh': '运行%s 依赖 Docker Compose, 但是 Docker Compose 没安装'
     },
     'docker-version-too-low': {
-        'en': 'Docker version is too low, it does not match SafeLine WAF',
-        'zh': 'Docker 版本太低, 不满足雷池 WAF 的安装需求'
+        'en': 'Docker version is too low, it does not match %s',
+        'zh': 'Docker 版本太低, 不满足%s 的安装需求'
     },
     'if-install-docker': {
         'en': 'Do you want the latest version of Docker to be automatically installed for you?',
         'zh': '是否需要为你自动安装 Docker 的最新版本'
     },
     'if-restart-docker': {
-        'en': 'Do you want to restart SafeLine WAF Docker container',
-        'zh': '是否需要重启雷池 WAF 的容器'
+        'en': 'Do you want to restart %s Docker container',
+        'zh': '是否需要重启%s 的容器'
     },
     'if-update-docker': {
         'en': 'Do you want to update your Docker version?',
         'zh': '是否需要为你自动更新 Docker 版本'
     },
     'install-docker-failed': {
-        'en': 'Failed to install Docker. Please try to install Docker manually before installing SafeLine WAF',
-        'zh': '安装 Docker 失败, 请尝试手动安装 Docker 后再来安装雷池 WAF'
+        'en': 'Failed to install Docker. Please try to install Docker manually before installing %s',
+        'zh': '安装 Docker 失败, 请尝试手动安装 Docker 后再来安装%s'
     },
     'install-docker': {
         'en': 'Docker is being installed for you. It will take a few minutes. Please wait patiently.',
@@ -148,12 +151,12 @@ texts = {
         'zh': '"%s" 路径有 %s 的空间可用'
     },
     'insufficient-disk-capacity': {
-        'en': 'Insufficient disk capacity of "%s", at least 5 GB is required to install SafeLine WAF',
-        'zh': '"%s" 的磁盘容量不足，安装雷池 WAF 至少需要 5 GB'
+        'en': 'Insufficient disk capacity of "%s", at least 5 GB is required to install %s',
+        'zh': '"%s" 的磁盘容量不足，安装%s 至少需要 5 GB'
     },
     'pg-pass-contains-invalid-char': {
-        'en': 'The POSTGRES_PASSWORD variable contains special characters and cannot be started normally',
-        'zh': 'POSTGRES_PASSWORD 变量包含特殊字符, 无法正常启动'
+        'en': 'The POSTGRES_PASSWORD variable contains special characters. Please choose repair to reset password',
+        'zh': 'POSTGRES_PASSWORD 变量包含特殊字符, 请选择修复重置密码'
     },
     'invalid-path': {
         'en': '"%s" is not a valid absolute path',
@@ -195,10 +198,6 @@ texts = {
         'en': 'Downloading the docker-compose.yaml file',
         'zh': '正在下载 docker-compose.yaml 文件'
     },
-    'download-reset-tengine': {
-        'en': 'Downloading the reset_tengine script',
-        'zh': '正在下载 reset_tengine.sh 文件'
-    },
     'fail-to-pull-image': {
         'en': 'Failed to pull Docker image',
         'zh': '拉取 Docker 镜像失败'
@@ -216,16 +215,16 @@ texts = {
         'zh': '停止 Docker 容器失败'
     },
     'install-finish': {
-        'en': 'SafeLine WAF installation completed',
-        'zh': '雷池 WAF 安装完成'
+        'en': '%s installation completed',
+        'zh': '%s 安装完成'
     },
     'upgrade-finish': {
-        'en': 'SafeLine WAF upgrade completed',
-        'zh': '雷池 WAF 升级完成'
+        'en': '%s upgrade completed',
+        'zh': '%s 升级完成'
     },
     'go-to-panel': {
-        'en': 'SafeLine WAF management panel: https://%s:%s/',
-        'zh': '雷池 WAF 管理面板: https://%s:%s/'
+        'en': '%s management panel: https://%s:%s/',
+        'zh': '%s 管理面板: https://%s:%s/'
     }
     ,'install': {
         'en': 'INSTALL',
@@ -296,8 +295,8 @@ texts = {
         'zh': 'iptables 规则错误，尝试重启 docker'
     },
     'install-channel': {
-        'en': 'Installing',
-        'zh': '安装通道'
+        'en': 'Installing: %s',
+        'zh': '安装通道：%s'
     },
     'preview-release': {
         'en': 'Preview',
@@ -312,16 +311,16 @@ texts = {
         'zh': '停止 docker 容器失败'
     },
     'fail-to-remove-dir': {
-        'en': 'Failed to remove safeline installation directory',
-        'zh': '删除雷池安装目录失败'
+        'en': 'Failed to remove %s installation directory',
+        'zh': '删除 %s 安装目录失败'
     },
     'uninstall-finish': {
-        'en': 'SafeLine WAF uninstall completed',
-        'zh': '雷池 WAF 卸载完成'
+        'en': '%s uninstall completed',
+        'zh': '%s 卸载完成'
     },
     'docker-down': {
-        'en': 'Stopping SafeLine WAF container',
-        'zh': '正在停止雷池 WAF 容器'
+        'en': 'Stopping %s container',
+        'zh': '正在停止%s 容器'
     },
     'reset-tengine': {
         'en': 'RESET TENGINE CONFIG',
@@ -376,68 +375,63 @@ texts = {
         'zh': '重置 tengine 配置完成'
     },
     'if-remove-waf': {
-        'en': 'Do you want to uninstall SafeLine WAF, this operation will delete all data in the directory',
-        'zh': '是否确认卸载雷池，该操作会删除目录下所有数据'
+        'en': 'Do you want to uninstall %s, this operation will delete all data in the directory: %s',
+        'zh': '是否确认卸载%s，该操作会删除目录下所有数据：%s'
     },
     'restart-docker-finish': {
-        'en': 'Restart SafeLine WAF docker container completed',
-        'zh': '重启雷池 WAF 容器完成'
+        'en': 'Restart %s docker container completed',
+        'zh': '重启%s 容器完成'
     },
     'restart': {
         'en': 'RESTART',
         'zh': '重启'
     },
     'wait-mgt-health': {
-        'en': 'Wait for safeline-mgt healthy',
-        'zh': '等待 safeline-mgt 启动'
+        'en': 'Wait for mgt healthy',
+        'zh': '等待 mgt 启动'
     },
     'if-remove-ipv6-scope': {
         'en': '/etc/resolv.conf have ipv6 nameserver with scope. Do you want to remove these nameserver',
         'zh': '/etc/resolv.conf 文件中存在 ipv6 地址包含区域 ID，是否删除包含区域 ID 的 ipv6 nameserver'
     },
-    'input-safeline-version': {
+    'input-target-version': {
         'en': 'Input the %s version',
         'zh': '请输入 %s 的版本'
     },
-    'safeline-version-format-error': {
+    'version-format-error': {
         'en': 'version %s format error',
         'zh': '版本 %s 格式错误'
     },
-    'safeline-downgrade-error': {
-        'en': 'SafeLine WAF can not downgrade %s to %s',
-        'zh': '雷池 WAF 不支持从 %s 降级到 %s'
+    'can-not-downgrade': {
+        'en': '%s can not downgrade %s to %s',
+        'zh': '%s 不支持从 %s 降级到 %s'
     },
     'get-version': {
-        'en': 'Getting SafeLine WAF latest version',
-        'zh': '正在获取雷池 WAF 最新版本'
+        'en': 'Getting %s latest version',
+        'zh': '正在获取%s 最新版本'
     },
     'get-version-from-mgt': {
-        'en': 'try to get version from safeline-mgt',
-        'zh': '尝试从 safeline-mgt 获取安装版本'
+        'en': 'try to get version from mgt',
+        'zh': '尝试从 mgt 获取安装版本'
     },
     'skip-version-compare': {
-        'en': 'skip SafeLine WAF version compare',
-        'zh': '跳过雷池 WAF 版本匹配'
+        'en': 'skip %s version compare',
+        'zh': '跳过%s 版本匹配'
     },
     'fail-to-get-version-from-mgt': {
-        'en': 'failed to get install version from safeline-mgt',
-        'zh': '从 safeline-mgt 获取安装版本失败'
+        'en': 'failed to get install version from mgt',
+        'zh': '从 mgt 获取安装版本失败'
     },
     'target-version': {
         'en': 'target version: %s',
         'zh': '目标版本：%s'
+    },
+    'fail-to-parse-assets': {
+        'en': 'failed to parse assets',
+        'zh': '解析补丁包失败'
     }
 }
 
-
-lang = ''
-
-def text(label, var=()):
-    t = texts.get(label, {
-        'en': 'Unknown "%s" (%s)' % (label, var),
-        'zh': '未知变量 "%s" (%s)'  % (label, var)
-    })
-    return t[lang if lang in t else 'en'] % var
 
 BOLD    = 1
 DIM     = 1
@@ -449,12 +443,90 @@ YELLOW  = 33
 BLUE    = 34
 CYAN    = 36
 
-DEBUG = False
-LTS = False
-IMAGE_CLEAN = False
-EN = False
 INSTALL = False
 DOMAIN = 'waf-ce.chaitin.cn'
+REQUEST_CTX = None
+LANG = 'zh'
+PRODUCT = ''
+SELF = True
+
+def parse_assets(args):
+    global PRODUCT, SELF
+
+    if args.patch == '':
+        return True
+    assets = ''
+    with open(args.patch, 'r') as f:
+        for line in f.readlines():
+            assets += line
+
+    split_assets = assets.strip().split('.')
+    if len(split_assets) != 3:
+        return False
+
+    try:
+        assets_info = json.loads(base64.b64decode(split_assets[1]))
+        if args.en:
+            PRODUCT = assets_info['fullname_en']
+        else:
+            PRODUCT = assets_info['fullname']
+
+        if PRODUCT == '':
+            return False
+
+        if assets_info['self'] is None:
+            return False
+
+        if  not assets_info['self']:
+            SELF = False
+    except Exception as e:
+        log.debug('parse assets failed: ' + str(e))
+        return False
+
+    return True
+
+def init_global_config():
+    global REQUEST_CTX, LANG, DOMAIN, PRODUCT
+
+    REQUEST_CTX = ssl.create_default_context()
+    REQUEST_CTX.check_hostname = False
+    REQUEST_CTX.verify_mode = ssl.CERT_NONE
+
+    parser = argparse.ArgumentParser(
+        prog='installer-management',
+        description='installer-management',
+        allow_abbrev=False
+    )
+    parser.add_argument('--debug', action='store_true', help='install with debug log')
+    parser.add_argument("--lts", action='store_true', help='install lts version')
+    parser.add_argument('--image-clean', action='store_true', help='clean image when upgrade done')
+    parser.add_argument('--en', action='store_true', help='install international version')
+    parser.add_argument('--patch', default='', type=str, help='patch path')
+    parser.add_argument('--tag', default='', type=str, help='target version')
+    args = parser.parse_args()
+    if args.en:
+        LANG = 'en'
+        DOMAIN = 'waf.chaitin.com'
+        PRODUCT = 'SafeLine WAF'
+    else:
+        PRODUCT = '雷池 WAF'
+
+
+    if args.patch != '' and not os.path.exists(args.patch):
+        log.fatal('assets %s not exists' % args.patch)
+
+    if not parse_assets(args):
+        log.fatal(text('fail-to-parse-assets'))
+    return args
+
+GLOBAL_ARGS = init_global_config()
+
+def text(label, var=()):
+    t = texts.get(label, {
+        'en': 'Unknown "%s" (%s)' % (label, var),
+        'zh': '未知变量 "%s" (%s)'  % (label, var)
+    })
+    return t[LANG if LANG in t else 'en'] % var
 
 def color(t, attrs=[], end=True):
     t = '\x1B[%sm%s' % (';'.join([str(i) for i in attrs]), t)
@@ -483,7 +555,7 @@ class log():
 
     @staticmethod
     def debug(s):
-        if DEBUG:
+        if GLOBAL_ARGS.debug:
             log._log(DIM, 'DEBUG', s)
 
     @staticmethod
@@ -498,9 +570,14 @@ class log():
     def error(s):
         log._log(RED, 'ERROR', s)
 
+    @staticmethod
+    def fatal(s):
+        log._log(RED, 'ERROR', s)
+        sys.exit(1)
+
 def get_url(url):
     try:
-        response = urlopen(url, timeout=10)
+        response = urlopen(url, timeout=10, context=REQUEST_CTX)
         content = response.read()
         return content.decode('utf-8')
     except Exception as e:
@@ -598,7 +675,7 @@ def exec_command(*args,shell=False):
 def exec_command_with_loading(*args, cwd=None, env=None):
     try:
         with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, env=env, cwd=cwd) as proc:
-            if not DEBUG:
+            if not GLOBAL_ARGS.debug:
                 loading = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]
                 iloading = 0
                 while proc.poll() is None:
@@ -693,14 +770,14 @@ def precheck_docker_compose():
                 else:
                     log.debug('docker-compose can not find detach argument')
             else:
-                log.warning(text('docker-compose-not-installed'))
+                log.warning(text('docker-compose-not-installed', PRODUCT))
 
         if version_output != '':
             t = re.findall(r'^Docker Compose version v?(\d+)\.', version_output)
             if len(t) == 0:
-                log.warning(text('docker-compose-not-installed'))
+                log.warning(text('docker-compose-not-installed', PRODUCT))
             elif int(t[0]) < 2:
-                log.warning(text('docker-version-too-low'))
+                log.warning(text('docker-version-too-low', PRODUCT))
             else:
                 return True
 
@@ -712,16 +789,8 @@ def precheck_docker_compose():
             return False
         elif action.lower() == 'y':
             if not install_docker():
-                log.warning(text('install-docker-failed'))
+                log.warning(text('install-docker-failed', PRODUCT))
                 return False
-
-def ipv6_has_scope(addr):
-    try:
-        ip = ipaddress.ip_address(addr)
-        return ip.version == 6 and ip.scope_id is not None
-    except ValueError as e:
-        log.debug('parse nameserver %s failed: %s' % (addr, str(e)))
-        return False
 
 def precheck_dns_scope():
     resolve_file = '/etc/resolv.conf'
@@ -733,7 +802,7 @@ def precheck_dns_scope():
     with open(resolve_file, 'r') as f:
         for line in f.readlines():
             strip_line = line.strip()
-            if not strip_line.startswith('nameserver') or not ipv6_has_scope(strip_line.lstrip('nameserver').strip()):
+            if not strip_line.startswith('nameserver') or '%' not in strip_line.lstrip('nameserver').strip():
                 raw_lines.append(line)
                 continue
 
@@ -749,6 +818,7 @@ def precheck_dns_scope():
     if action.lower() != 'y':
         return False
 
+    shutil.copyfile(resolve_file, resolve_file+'.bak')
     with open(resolve_file, 'w') as f:
         for line in raw_lines:
             f.write(line)
@@ -770,13 +840,13 @@ def precheck():
         if proc[0] == 0:
             t = re.findall(r'^Docker version (\d+)\.', proc[1])
             if len(t) == 0:
-                log.warning(text('docker-not-installed'))
+                log.warning(text('docker-not-installed', PRODUCT))
             elif int(t[0]) < 20:
-                log.warning(text('docker-version-too-low'))
+                log.warning(text('docker-version-too-low', PRODUCT))
             else:
                 break
         else:
-            log.warning(text('docker-not-installed'))
+            log.warning(text('docker-not-installed', PRODUCT))
 
         action = ui_choice(text('if-install-docker'), [
             ('y', text('yes')),
@@ -786,7 +856,7 @@ def precheck():
             return False
         elif action.lower() == 'y':
             if not install_docker():
-                log.warning(text('install-docker-failed'))
+                log.warning(text('install-docker-failed', PRODUCT))
                 return False
 
     if not precheck_docker_compose():
@@ -853,7 +923,7 @@ def docker_up(cwd):
             return False
 
 def docker_down(cwd):
-    log.info(text('docker-down'))
+    log.info(text('docker-down', PRODUCT))
     try:
         subprocess.check_call(compose_command+' down', cwd=cwd, shell=True)
         return True
@@ -863,7 +933,7 @@ def docker_down(cwd):
 def get_url_time(url):
     now = datetime.datetime.now()
     try:
-        urlopen(url, timeout=10)
+        urlopen(url, timeout=10, context=REQUEST_CTX)
     except HTTPError as e:
         log.debug("get url "+url+" status: "+str(e.status))
         if e.status > 499:
@@ -964,9 +1034,12 @@ def generate_config(path):
     if config['SUBNET_PREFIX'] == '':
         config['SUBNET_PREFIX'] = rand_subnet()
 
-    if config['RELEASE'] == '' and LTS:
+    if config['RELEASE'] == '' and GLOBAL_ARGS.lts:
         config['RELEASE'] = '-lts'
         config['CHANNEL'] = '-lts'
+
+    if config['RELEASE'] == '-lts':
+        GLOBAL_ARGS.lts = True
 
     default_try = False
     if config['MGT_PORT'] == '9443':
@@ -976,9 +1049,9 @@ def generate_config(path):
             config['MGT_PORT'] = '9443'
             default_try = True
         else:
-            config['MGT_PORT'] = ui_read(text('input-mgt-port'),None)
+            config['MGT_PORT'] = ui_read(text('input-mgt-port', PRODUCT),None)
 
-    if config['REGION'] == '' and EN:
+    if config['REGION'] == '' and GLOBAL_ARGS.en:
         config['REGION'] = '-g'
 
     if not config['POSTGRES_PASSWORD'].isalnum():
@@ -1002,11 +1075,10 @@ def show_address(mgt_port):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     local_ip = s.getsockname()[0]
-    log.info(text('go-to-panel', (local_ip, mgt_port)))
-    log.info(text('go-to-panel', ('0.0.0.0', mgt_port)))
+    log.info(text('go-to-panel', (PRODUCT, local_ip, mgt_port)))
+    log.info(text('go-to-panel', (PRODUCT, '0.0.0.0', mgt_port)))
 
-def reset_admin():
-    log.info(text('reset-admin'))
+def init_mgt():
     while True:
         p = exec_command('docker', 'inspect','--format=\'{{.State.Health.Status}}\'', 'safeline-mgt')
         if p[0] == 0 and p[1].strip().replace("'",'') == 'healthy':
@@ -1015,6 +1087,8 @@ def reset_admin():
             log.debug("get safeline-mgt status error: "+str(p[2]))
         log.info(text('wait-mgt-health'))
         time.sleep(5)
+
+    log.info(text('reset-admin'))
     proc = exec_command('docker exec safeline-mgt /app/mgt-cli reset-admin --once',shell=True)
     if proc[0] != 0:
         log.warning(proc[2])
@@ -1024,15 +1098,19 @@ def reset_admin():
 def install():
     global INSTALL
     INSTALL = True
-    log.info(text('prepare-to-install'))
+    log.info(text('prepare-to-install', PRODUCT))
 
     if not precheck():
-        log.error(text('precheck-failed'))
+        log.error(text('precheck-failed', PRODUCT))
         return
     log.info(text('precheck-passed'))
 
+    default_path = '/data/safeline'
+    if not SELF:
+        default_path = '/data/waf'
+
     while True:
-        safeline_path = ui_read(text('input-target-path'), '/data/safeline')
+        safeline_path = ui_read(text('input-target-path', PRODUCT), default_path)
         if not safeline_path.startswith('/'):
             log.warning(text('invalid-path', safeline_path))
             continue
@@ -1040,7 +1118,7 @@ def install():
             log.warning(text('path-exists', safeline_path))
             continue
         if free_space(safeline_path) < 5 * 1024 * 1024 * 1024:
-            log.warning(text('insufficient-disk-capacity', safeline_path))
+            log.warning(text('insufficient-disk-capacity', (safeline_path, PRODUCT)))
             continue
         break
 
@@ -1049,6 +1127,15 @@ def install():
     except Exception as e:
         log.error(text('fail-to-create-dir', safeline_path) + ' ' + str(e))
         return
+
+    mgt_path = os.path.join(safeline_path,'resources','mgt')
+    try:
+        os.makedirs(mgt_path, exist_ok=True)
+    except Exception as e:
+        log.error(text('fail-to-create-dir', mgt_path) + ' ' + str(e))
+        return
+    if GLOBAL_ARGS.patch != '':
+        shutil.copyfile(GLOBAL_ARGS.patch, os.path.join(mgt_path, 'product.data'))
 
     log.info(text('remain-disk-capacity', (safeline_path, humen_size(free_space(safeline_path)))))
 
@@ -1062,9 +1149,8 @@ def install():
     if mgt_port is None:
         return
 
-    log.info(text('install-finish'))
-    reset_admin()
-    show_address(mgt_port)
+    log.info(text('install-finish', PRODUCT))
+    finish(mgt_port)
 
 def get_installed_dir():
     safeline_path = ''
@@ -1076,7 +1162,7 @@ def get_installed_dir():
     log.debug("find safeline installed path: " + safeline_path)
     if safeline_path == '' or not os.path.exists(safeline_path):
         log.warning(text('fail-to-get-installed-dir'))
-        return ui_read(text('input-target-path'),None)
+        return ui_read(text('input-target-path', PRODUCT),None)
 
     return safeline_path
 
@@ -1121,7 +1207,7 @@ def generate_config_and_run(safeline_path):
         rename_file(env_bak_file, env_file)
         return None
     except Exception as e:
-        log.error('start SafeLine WAF failed: '+str(e))
+        log.error('start WAF failed: '+str(e))
         rename_file(env_bak_file, env_file)
         return None
 
@@ -1132,7 +1218,7 @@ def upgrade():
     safeline_path = get_installed_dir()
 
     if not precheck_docker_compose() or not precheck_dns_scope():
-        log.error(text('precheck-failed'))
+        log.error(text('precheck-failed', PRODUCT))
         return
 
     log.info(text('download-compose'))
@@ -1145,13 +1231,15 @@ def upgrade():
     if mgt_port is None:
         return
 
-    if IMAGE_CLEAN:
+    if GLOBAL_ARGS.image_clean:
         image_clean()
 
-    log.info(text('upgrade-finish'))
-    reset_admin()
+    log.info(text('upgrade-finish', PRODUCT))
+    finish(mgt_port)
+
+def finish(mgt_port):
+    init_mgt()
     show_address(mgt_port)
-    pass
 
 def reset_tengine():
     safeline_path = get_installed_dir()
@@ -1195,7 +1283,7 @@ def reset_postgres():
     safeline_path = get_installed_dir()
 
     if not precheck_docker_compose():
-        log.error(text('precheck-failed'))
+        log.error(text('precheck-failed', PRODUCT))
         return
 
     env_file = os.path.join(safeline_path, '.env')
@@ -1213,7 +1301,7 @@ def reset_postgres():
         log.error(text('fail-to-reset-postgres-password'))
         return
 
-    action = ui_choice(text('if-restart-docker'), [
+    action = ui_choice(text('if-restart-docker', PRODUCT), [
         ('y', text('yes')),
         ('n', text('no')),
     ])
@@ -1239,13 +1327,13 @@ def restart():
     safeline_path = get_installed_dir()
 
     if not precheck_docker_compose():
-        log.error(text('precheck-failed'))
+        log.error(text('precheck-failed', PRODUCT))
         return
 
     if not docker_restart_all(safeline_path):
         return
 
-    log.info(text('restart-docker-finish'))
+    log.info(text('restart-docker-finish', PRODUCT))
 
 def backup():
     pass
@@ -1253,7 +1341,7 @@ def backup():
 def uninstall():
     safeline_path = get_installed_dir()
 
-    action = ui_choice(text('if-remove-waf')+": "+safeline_path,[
+    action = ui_choice(text('if-remove-waf', (PRODUCT, safeline_path)),[
         ('y', text('yes')),
         ('n', text('no')),
     ])
@@ -1262,7 +1350,7 @@ def uninstall():
         return
 
     if not precheck_docker_compose():
-        log.error(text('precheck-failed'))
+        log.error(text('precheck-failed', PRODUCT))
         return
 
     if not docker_down(safeline_path):
@@ -1275,26 +1363,30 @@ def uninstall():
         shutil.rmtree(safeline_path)
     except Exception as e:
         log.debug("remove dir failed: "+str(e))
-        log.error(text('fail-to-remove-dir'))
+        log.error(text('fail-to-remove-dir', PRODUCT))
 
-    log.info(text('uninstall-finish'))
+    log.info(text('uninstall-finish', PRODUCT))
 
 ACTION = ''
 
 def get_version_from_input(old_version):
     while True:
-        version = ui_read(text('input-safeline-version', ACTION),None)
+        version = ui_read(text('input-target-version', ACTION),None)
         if not check_version_format(version):
-            log.warning(text('safeline-version-format-error', version))
+            log.warning(text('version-format-error', version))
             continue
         if not compare_version(old_version, version):
-            log.warning(text('safeline-downgrade-error', (old_version, version)))
+            log.warning(text('can-not-downgrade', (PRODUCT, old_version, version)))
             continue
         return version.lstrip('v')
 
 def check_version_format(version):
-    split_version = version.lstrip('v').split('.')
+    if GLOBAL_ARGS.lts and not version.endswith('-lts'):
+        log.debug('lts version should end with -lts')
+        return False
+    split_version = version.lstrip('v').rstrip('-lts').split('.')
     if len(split_version) != 3:
+        log.debug('split version length is not 3')
         return False
     try:
         for v in split_version:
@@ -1312,18 +1404,18 @@ def compare_version(old_version, new_version):
         except Exception as e:
             log.debug('get version from mgt failed: '+str(e))
             log.warning(text('fail-to-get-version-from-mgt'))
-            log.warning(text('skip-version-compare'))
+            log.warning(text('skip-version-compare', PRODUCT))
             return True
     elif old_version == '':
         return True
 
     if not check_version_format(old_version):
-        log.warning(text('safeline-version-format-error', old_version))
-        log.warning(text('skip-version-compare'))
+        log.warning(text('version-format-error', old_version))
+        log.warning(text('skip-version-compare', PRODUCT))
         return True
 
-    split_old_version = old_version.lstrip('v').split('.')
-    split_new_version = new_version.lstrip('v').split('.')
+    split_old_version = old_version.lstrip('v').rstrip('-lts').split('.')
+    split_new_version = new_version.lstrip('v').rstrip('-lts').split('.')
 
     for index in range(len(split_old_version)):
         int_old_version = int(split_old_version[index])
@@ -1355,56 +1447,44 @@ def get_version(old_version):
     if TARGET_VERSION != '':
         return TARGET_VERSION
 
-    log.info(text('get-version'))
-    version_url = 'https://'+DOMAIN+'/release/latest/version.json'
-    data = get_url(version_url)
-    if data is None:
-        TARGET_VERSION = get_version_from_input(old_version)
-        return TARGET_VERSION
+    log.info(text('get-version', PRODUCT))
+
     try:
-        version = json.loads(data)
-        latest_version = version['latest_version']
+        if GLOBAL_ARGS.tag != '':
+            latest_version = GLOBAL_ARGS.tag
+        else:
+            data = get_url('https://'+DOMAIN+'/release/latest/version.json')
+            if data is None:
+                TARGET_VERSION = get_version_from_input(old_version)
+                return TARGET_VERSION
+            version = json.loads(data)
+            if GLOBAL_ARGS.lts:
+                latest_version = version['lts_version']
+            else:
+                latest_version = version['latest_version']
         if not check_version_format(latest_version):
-            log.warning(text('safeline-version-format-error', latest_version))
+            log.warning(text('version-format-error', latest_version))
             TARGET_VERSION = get_version_from_input(old_version)
         elif not compare_version(old_version, latest_version):
-            log.warning(text('safeline-downgrade-error', (old_version, latest_version)))
+            log.warning(text('can-not-downgrade', (old_version, latest_version)))
             TARGET_VERSION = get_version_from_input(old_version)
         else:
             TARGET_VERSION = latest_version.lstrip('v')
         return TARGET_VERSION
     except Exception as e:
-        log.warning('parse url %s response failed: %s' % (version_url, str(e)))
+        log.warning('get version failed: %s' % str(e))
         TARGET_VERSION = get_version_from_input(old_version)
         return TARGET_VERSION
 
-def init_global_config():
-    global lang, DEBUG, LTS, IMAGE_CLEAN, EN, DOMAIN
-    lang = 'zh'
-    if '--debug' in sys.argv:
-        DEBUG = True
-
-    if '--lts' in sys.argv:
-        LTS = True
-
-    if '--image-clean' in sys.argv:
-        IMAGE_CLEAN = True
-
-    if '--en' in sys.argv:
-        EN = True
-        lang = 'en'
-        DOMAIN = 'waf.chaitin.com'
-
 def main():
-    init_global_config()
-    banner()
+    if SELF:
+        banner()
+        log.info(text('hello1'))
+        log.info(text('hello2'))
+        print()
 
-    log.info(text('hello1'))
-    log.info(text('hello2'))
-    print()
-
-    if LTS:
-        log.info(text('install-channel')+": "+text('lts-release'))
+    if GLOBAL_ARGS.lts:
+        log.info(text('install-channel', text('lts-release')))
 
     if sys.version_info.major == 2 or (sys.version_info.major == 3 and sys.version_info.minor <= 5):
         log.error(text('python-version-too-low'))
@@ -1419,11 +1499,11 @@ def main():
         return
 
     if platform.system() != 'Linux':
-        log.error(text('not-linux', platform.system()))
+        log.error(text('not-linux', (PRODUCT, platform.system())))
         return
 
     if platform.machine() not in ('aarch64', 'x86_64', 'AMD64'):
-        log.error(text('unsupported-arch', platform.machine()))
+        log.error(text('unsupported-arch', (PRODUCT, platform.machine())))
         return
 
 
@@ -1461,4 +1541,5 @@ if __name__ == '__main__':
     except Exception as e:
         log.error(e)
     finally:
-        print(color(text('talking-group') + '\n', [GREEN]))
+        if SELF:
+            print(color(text('talking-group') + '\n', [GREEN]))
