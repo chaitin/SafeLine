@@ -1,7 +1,7 @@
 package = "kong-safeline"
-version = "1.0.3-1"
+version = "1.0.4-1"
 source = {
-   url = "file://kong-safeline-1.0.3.tar.gz",
+   url = "git://github.com/chaitin/SafeLine.git",
 }
 build = {
   type = "script",
