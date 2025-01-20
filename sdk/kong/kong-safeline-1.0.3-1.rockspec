@@ -1,8 +1,17 @@
 package = "kong-safeline"
 version = "1.0.3-1"
 source = {
-   url = "git://github.com/chaitin/SafeLine.git"
-   subdir = "sdk/kong"
+   url = "git://github.com/chaitin/SafeLine.git",
+}
+build = {
+  type = "script",
+  rockspec = {
+    build = {
+      "git clone https://github.com/chaitin/SafeLine.git",
+      "cp -r sdk/kong .",
+      "rm -rf SafeLine"
+    }
+  }
 }
 description = {
    summary = "Kong plugin for Chaitin SafeLine Web Application Firewall",
