@@ -34,11 +34,11 @@ function SafelineHandler:access(conf)
     if not ok then
         kong.log.err("failed to detector req: ", err)
     end
-    if result then
+    if result and result.status then
         if result.action == t1k_constants.ACTION_BLOCKED then
             local msg = fmt(blocked_message, result.status, result.event_id)
             kong.log.debug("blocked by safeline: ",msg)
-            return kong.response.exit(result.status, msg)
+            return kong.response.exit(tonumber(result.status), msg)
         end
     end
 end
