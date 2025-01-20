@@ -1,11 +1,11 @@
 package = "kong-safeline"
 version = "1.0.3-1"
 source = {
-   url = "git://github.com/xbingW/kong-safeline.git"
+   url = "git://github.com/chaitin/SafeLine/tree/main/sdk/kong"
 }
 description = {
    summary = "Kong plugin for Chaitin SafeLine Web Application Firewall",
-   homepage = "https://github.com/xbingW/kong-safeline",
+   homepage = "https://github.com/chaitin/SafeLine",
    license = "Apache License 2.0",
    maintainer = "Xiaobing Wang <xiaobing.wang@chaitin.com>"
 }
