@@ -3,3 +3,6 @@
 	url = https://github.com/chaitin/blazehttp
 
 
+[submodule "sdk/traefik-safeline"]
+	path = sdk/traefik-safeline
+	url = https://github.com/chaitin/traefik-safeline
