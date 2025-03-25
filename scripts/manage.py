@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import argparse
 import base64
-import ipaddress
 import json
 import shutil
 import ssl
@@ -429,6 +428,14 @@ texts = {
     'fail-to-parse-assets': {
         'en': 'failed to parse assets',
         'zh': '解析补丁包失败'
+    },
+    'snap-docker-should-use-home-path': {
+        'en': 'Docker installed via snap can only be configured to set the installation directory under the user\'s home directory(%s)',
+        'zh': 'snap 安装的 docker 只能设置安装目录在用户的主目录(%s)下'
+    },
+    'fail-to-get-docker-path': {
+        'en': 'find docker binary path failed',
+        'zh': '获取 docker 二进制目录失败'
     }
 }
 
@@ -448,6 +455,7 @@ DOMAIN = 'waf-ce.chaitin.cn'
 REQUEST_CTX = None
 LANG = 'zh'
 PRODUCT = ''
+DEBUG = False
 SELF = True
 
 def parse_assets(args):
@@ -465,7 +473,7 @@ def parse_assets(args):
         return False
 
     try:
-        assets_info = json.loads(base64.b64decode(split_assets[1]))
+        assets_info = json.loads(base64.b64decode(split_assets[1].replace('_','/').replace('-','+') + '=' * ((4 - len(split_assets[1]) % 4) % 4)))
         if args.en:
             PRODUCT = assets_info['fullname_en']
         else:
@@ -486,7 +494,7 @@ def parse_assets(args):
     return True
 
 def init_global_config():
-    global REQUEST_CTX, LANG, DOMAIN, PRODUCT
+    global REQUEST_CTX, LANG, DOMAIN, PRODUCT, DEBUG
 
     REQUEST_CTX = ssl.create_default_context()
     REQUEST_CTX.check_hostname = False
@@ -502,7 +510,6 @@ def init_global_config():
     parser.add_argument('--image-clean', action='store_true', help='clean image when upgrade done')
     parser.add_argument('--en', action='store_true', help='install international version')
     parser.add_argument('--patch', default='', type=str, help='patch path')
-    parser.add_argument('--tag', default='', type=str, help='target version')
     args = parser.parse_args()
     if args.en:
         LANG = 'en'
@@ -511,6 +518,8 @@ def init_global_config():
     else:
         PRODUCT = '雷池 WAF'
 
+    if args.debug:
+        DEBUG = True
 
     if args.patch != '' and not os.path.exists(args.patch):
         log.fatal('assets %s not exists' % args.patch)
@@ -518,34 +527,6 @@ def init_global_config():
     if not parse_assets(args):
         log.fatal(text('fail-to-parse-assets'))
     return args
-
-GLOBAL_ARGS = init_global_config()
-
-def text(label, var=()):
-    t = texts.get(label, {
-        'en': 'Unknown "%s" (%s)' % (label, var),
-        'zh': '未知变量 "%s" (%s)'  % (label, var)
-    })
-    return t[LANG if LANG in t else 'en'] % var
-
-def color(t, attrs=[], end=True):
-    t = '\x1B[%sm%s' % (';'.join([str(i) for i in attrs]), t)
-    if end:
-        t = t + '\x1B[m'
-    return t
-
-
-def banner():
-    t = r'''
-  ______               ___           _____       _                        ____      ____       _        ________
-.' ____ \            .' ..]         |_   _|     (_)                      |_  _|    |_  _|     / \      |_   __  |
-| (___ \_|  ,--.    _| |_    .---.    | |       __    _ .--.    .---.      \ \  /\  / /      / _ \       | |_ \_|
- _.____`.  `'_\ :  '-| |-'  / /__\\   | |   _  [  |  [ `.-. |  / /__\\      \ \/  \/ /      / ___ \      |  _|
-| \____) | // | |,   | |    | \__.,  _| |__/ |  | |   | | | |  | \__.,       \  /\  /     _/ /   \ \_   _| |_
- \______.' \'-;__/  [___]    '.__.' |________| [___] [___||__]  '.__.'        \/  \/     |____| |____| |_____|
-
-'''.strip('\n')
-    print(color(t + '\n', [GREEN, BLINK]))
 
 class log():
     @staticmethod
@@ -555,7 +536,7 @@ class log():
 
     @staticmethod
     def debug(s):
-        if GLOBAL_ARGS.debug:
+        if DEBUG:
             log._log(DIM, 'DEBUG', s)
 
     @staticmethod
@@ -574,6 +555,33 @@ class log():
     def fatal(s):
         log._log(RED, 'ERROR', s)
         sys.exit(1)
+
+def text(label, var=()):
+    t = texts.get(label, {
+        'en': 'Unknown "%s" (%s)' % (label, var),
+        'zh': '未知变量 "%s" (%s)'  % (label, var)
+    })
+    return t[LANG if LANG in t else 'en'] % var
+
+def color(t, attrs=[], end=True):
+    t = '\x1B[%sm%s' % (';'.join([str(i) for i in attrs]), t)
+    if end:
+        t = t + '\x1B[m'
+    return t
+
+GLOBAL_ARGS = init_global_config()
+
+def banner():
+    t = r'''
+  ______               ___           _____       _                        ____      ____       _        ________
+.' ____ \            .' ..]         |_   _|     (_)                      |_  _|    |_  _|     / \      |_   __  |
+| (___ \_|  ,--.    _| |_    .---.    | |       __    _ .--.    .---.      \ \  /\  / /      / _ \       | |_ \_|
+ _.____`.  `'_\ :  '-| |-'  / /__\\   | |   _  [  |  [ `.-. |  / /__\\      \ \/  \/ /      / ___ \      |  _|
+| \____) | // | |,   | |    | \__.,  _| |__/ |  | |   | | | |  | \__.,       \  /\  /     _/ /   \ \_   _| |_
+ \______.' \'-;__/  [___]    '.__.' |________| [___] [___||__]  '.__.'        \/  \/     |____| |____| |_____|
+
+'''.strip('\n')
+    print(color(t + '\n', [GREEN, BLINK]))
 
 def get_url(url):
     try:
@@ -675,7 +683,7 @@ def exec_command(*args,shell=False):
 def exec_command_with_loading(*args, cwd=None, env=None):
     try:
         with subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True, env=env, cwd=cwd) as proc:
-            if not GLOBAL_ARGS.debug:
+            if not DEBUG:
                 loading = ["⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"]
                 iloading = 0
                 while proc.poll() is None:
@@ -756,7 +764,7 @@ def precheck_docker_compose():
         if proc[0] == 0:
             help_proc = exec_command('docker', 'compose', 'up', '--help')
             if help_proc[0] == 0 and '--detach' in help_proc[1]:
-                compose_command = 'docker compose'
+                compose_command = 'docker compose -f docker-compose.yaml'
                 version_output = proc[1].strip()
             else:
                 log.debug('docker compose can not find detach argument')
@@ -765,7 +773,7 @@ def precheck_docker_compose():
             if compose_proc[0] == 0:
                 help_proc = exec_command('docker-compose', 'up', '--help')
                 if help_proc[0] == 0 and '--detach' in help_proc[1]:
-                    compose_command = 'docker-compose'
+                    compose_command = 'docker-compose -f docker-compose.yaml'
                     version_output = compose_proc[1].strip()
                 else:
                     log.debug('docker-compose can not find detach argument')
@@ -1005,6 +1013,11 @@ def read_config(path,config):
             except ValueError:
                 continue
 
+def write_config(path,config):
+    with open(path, 'w') as f:
+        for k in config:
+            f.write('%s=%s\n' % (k, config[k]))
+
 def generate_config(path):
     log.info(text('update-config'))
     config = {
@@ -1066,9 +1079,7 @@ def generate_config(path):
     config['IMAGE_TAG'] = get_version(config['IMAGE_TAG'])
     log.info(text('target-version', config['IMAGE_TAG']))
 
-    with open(env_path, 'w') as f:
-        for k in config:
-            f.write('%s=%s\n' % (k, config[k]))
+    write_config(env_path, config)
     return config
 
 def show_address(mgt_port):
@@ -1095,6 +1106,21 @@ def init_mgt():
     elif proc[1].strip() != '':
         log.info('\n'+proc[1].strip())
 
+def check_install_path(safeline_path):
+    if not safeline_path.startswith('/'):
+        return False
+    proc = exec_command('which', 'docker')
+    if proc[0] != 0:
+        log.debug('get docker path failed: '+proc[2])
+        raise Exception(text('fail-to-get-docker-path'))
+    if not proc[1].startswith('/snap'):
+        return True
+    home_path = os.path.expanduser('~')
+    if not safeline_path.startswith(home_path):
+        log.warning(text('snap-docker-should-use-home-path', home_path))
+        return False
+    return True
+
 def install():
     global INSTALL
     INSTALL = True
@@ -1111,7 +1137,7 @@ def install():
 
     while True:
         safeline_path = ui_read(text('input-target-path', PRODUCT), default_path)
-        if not safeline_path.startswith('/'):
+        if not check_install_path(safeline_path):
             log.warning(text('invalid-path', safeline_path))
             continue
         if os.path.exists(safeline_path):
@@ -1282,10 +1308,6 @@ def docker_restart_all(cwd):
 def reset_postgres():
     safeline_path = get_installed_dir()
 
-    if not precheck_docker_compose():
-        log.error(text('precheck-failed', PRODUCT))
-        return
-
     env_file = os.path.join(safeline_path, '.env')
     if not os.path.exists(env_file):
         log.error(text('fail-to-find-env'))
@@ -1293,9 +1315,8 @@ def reset_postgres():
 
     config = {}
     read_config(env_file, config)
-    if config['POSTGRES_PASSWORD'] == '':
-        log.error(text('fail-to-find-postgres-password'))
-        return
+    config['POSTGRES_PASSWORD'] = ''.join([random.choice(string.ascii_letters + string.digits) for i in range(20)])
+    write_config(env_file, config)
 
     if not docker_exec('safeline-pg','psql -U safeline-ce -c "ALTER USER \\"safeline-ce\\" WITH PASSWORD \''+config['POSTGRES_PASSWORD']+'\';"'):
         log.error(text('fail-to-reset-postgres-password'))
@@ -1307,6 +1328,10 @@ def reset_postgres():
     ])
 
     if action.lower() == 'y':
+        if not precheck_docker_compose():
+            log.error(text('precheck-failed', PRODUCT))
+            return
+
         if not docker_restart_all(safeline_path):
             return
 
@@ -1450,18 +1475,15 @@ def get_version(old_version):
     log.info(text('get-version', PRODUCT))
 
     try:
-        if GLOBAL_ARGS.tag != '':
-            latest_version = GLOBAL_ARGS.tag
+        data = get_url('https://'+DOMAIN+'/release/latest/version.json')
+        if data is None:
+            TARGET_VERSION = get_version_from_input(old_version)
+            return TARGET_VERSION
+        version = json.loads(data)
+        if GLOBAL_ARGS.lts:
+            latest_version = version['lts_version']
         else:
-            data = get_url('https://'+DOMAIN+'/release/latest/version.json')
-            if data is None:
-                TARGET_VERSION = get_version_from_input(old_version)
-                return TARGET_VERSION
-            version = json.loads(data)
-            if GLOBAL_ARGS.lts:
-                latest_version = version['lts_version']
-            else:
-                latest_version = version['latest_version']
+            latest_version = version['latest_version']
         if not check_version_format(latest_version):
             log.warning(text('version-format-error', latest_version))
             TARGET_VERSION = get_version_from_input(old_version)
