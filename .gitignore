@@ -5,3 +5,4 @@
 *.tar.gz
 build.sh
 compose.yml
+__pycache__
