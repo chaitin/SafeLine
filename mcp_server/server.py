@@ -8,15 +8,16 @@ import uvicorn
 from starlette.responses import PlainTextResponse
 import tools
 from config import GLOBAL_CONFIG
+
 # Create an MCP server
-slmcp = Server("SafeLine WAF mcp server")
+mcp_server = Server("SafeLine WAF mcp server")
 sse = mcp.server.sse.SseServerTransport("/messages/")
 
-@slmcp.list_tools()
+@mcp_server.list_tools()
 async def list_tools() -> list[Tool]:
     return tools.ALL_TOOLS
 
-@slmcp.call_tool()
+@mcp_server.call_tool()
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
     result = await tools.run(name, arguments)
     
@@ -28,14 +29,14 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
 
 
 async def handle_sse(request: Request) -> None:
-    if GLOBAL_CONFIG.SECRET != "" and request.headers.get("Secret") != GLOBAL_CONFIG.SECRET:
+    if GLOBAL_CONFIG.SECRET and GLOBAL_CONFIG.SECRET != "" and request.headers.get("Secret") != GLOBAL_CONFIG.SECRET:
         return PlainTextResponse("Unauthorized", status_code=401)
 
     async with sse.connect_sse(
         request.scope, request.receive, request._send
     ) as [read_stream, write_stream]:
-        await slmcp.run(
-            read_stream, write_stream, slmcp.create_initialization_options()
+        await mcp_server.run(
+            read_stream, write_stream, mcp_server.create_initialization_options()
         )
 
 def main():

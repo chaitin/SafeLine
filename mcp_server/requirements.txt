@@ -33,7 +33,7 @@ idna==3.10
 markdown-it-py==3.0.0
     # via rich
 mcp==1.6.0
-    # via slmcp (pyproject.toml)
+    # via mcp_server (pyproject.toml)
 mdurl==0.1.2
     # via markdown-it-py
 pydantic==2.11.1
