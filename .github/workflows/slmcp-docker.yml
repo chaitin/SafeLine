@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "slmcp/**"
+    # paths:
+    #   - "slmcp/**"
     tags:
       - "v*"
   pull_request:
