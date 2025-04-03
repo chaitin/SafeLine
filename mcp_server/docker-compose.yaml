@@ -1,6 +1,6 @@
 services:
   mcp_server:
-    image: chaitin/mcp_server:0.1
+    image: chaitin/safeline-mcp:latest
     container_name: mcp_server
     ports:
       - "5678:5678"
