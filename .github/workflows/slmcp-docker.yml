@@ -24,7 +24,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERIO_USERNAME }}
-          password: ${{ secrets.DOCKERIO_TOKEN }}
+          password: ${{ secrets.DOCKERIO_PASSWORD }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
