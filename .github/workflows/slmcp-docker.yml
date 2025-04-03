@@ -4,15 +4,11 @@ on:
   push:
     branches:
       - master
-    # paths:
-    #   - "slmcp/**"
     tags:
       - "v*"
   pull_request:
     branches:
       - master
-    paths:
-      - "slmcp/**"
 
 jobs:
   build-and-push:
