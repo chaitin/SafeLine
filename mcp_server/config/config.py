@@ -9,6 +9,8 @@ class Config:
 
     def __init__(self):
         self.SAFELINE_ADDRESS = os.getenv("SAFELINE_ADDRESS")
+        if self.SAFELINE_ADDRESS:
+            self.SAFELINE_ADDRESS = self.SAFELINE_ADDRESS.removesuffix("/")
         self.SAFELINE_API_TOKEN = os.getenv("SAFELINE_API_TOKEN")
         self.SECRET = os.getenv("SAFELINE_SECRET")
         env_listen_port = os.getenv("LISTEN_PORT")
