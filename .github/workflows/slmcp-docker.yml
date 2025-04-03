@@ -7,7 +7,7 @@ on:
     tags:
       - "v*"
     paths:
-      - "slmcp/**"
+      - "mcp_server/**"
       - ".github/workflows/slmcp-docker.yml"
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ./slmcp
+          context: ./mcp_server
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
