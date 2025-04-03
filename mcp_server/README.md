@@ -21,32 +21,27 @@ This tool used to say hello to someone
 
 ```python
 from pydantic import BaseModel, Field
-from tools import register_tool, Tool
+from tools import Tool, ABCTool, tools
 
+# register to global tools
+@tools.register
 # Hello describe function paramters
-class Hello(BaseModel):
+class Hello(BaseModel, ABCTool):
+    # tools paramters
     name: str = Field(description="username to say hello")
 
-# hello is tool logic
-async def hello(arguments: dict) -> str:
-    """
-    Say hello to someone
-    """
-    return f"Hello {arguments['name']}"
+    # run is tool logic, must use classmethod
+    @classmethod
+    async def run(arguments: dict) -> str:
+        return f"Hello {arguments['name']}"
 
-# register tool to global variable
-register_tool(
-    Tool(
-        name="hello",
-        description="say hello to someone",
-        inputSchema=Hello.model_json_schema()
-    ),
-    hello
-)
-```
+    # tool description, must use classmethod
+    @classmethod
+    def tool(self) -> Tool:
+        return Tool(
+            name="hello",
+            description="say hello to someone",
+            inputSchema=self.model_json_schema()
+        )
 
-2. import this tool in `tools/__init__.py`
-
-```python
-from . import hello
 ```
