@@ -6,8 +6,10 @@ from starlette.routing import Route, Mount
 from starlette.requests import Request
 import uvicorn
 from starlette.responses import PlainTextResponse
-import tools
+from tools import tools
 from config import GLOBAL_CONFIG
+from middleware import AuthenticationMiddleware
+from starlette.middleware import Middleware
 
 # Create an MCP server
 mcp_server = Server("SafeLine WAF mcp server")
@@ -15,7 +17,7 @@ sse = mcp.server.sse.SseServerTransport("/messages/")
 
 @mcp_server.list_tools()
 async def list_tools() -> list[Tool]:
-    return tools.ALL_TOOLS
+    return tools.all()
 
 @mcp_server.call_tool()
 async def call_tool(name: str, arguments: dict) -> list[TextContent]:
@@ -29,9 +31,6 @@ async def call_tool(name: str, arguments: dict) -> list[TextContent]:
 
 
 async def handle_sse(request: Request) -> None:
-    if GLOBAL_CONFIG.SECRET and GLOBAL_CONFIG.SECRET != "" and request.headers.get("Secret") != GLOBAL_CONFIG.SECRET:
-        return PlainTextResponse("Unauthorized", status_code=401)
-
     async with sse.connect_sse(
         request.scope, request.receive, request._send
     ) as [read_stream, write_stream]:
@@ -40,9 +39,9 @@ async def handle_sse(request: Request) -> None:
         )
 
 def main():
-    starlette_app = Starlette(debug=True,routes=[
+    starlette_app = Starlette(debug=GLOBAL_CONFIG.DEBUG,routes=[
         Route("/sse", endpoint=handle_sse),
-        Mount("/messages/", app=sse.handle_post_message),
+        Mount("/messages/", app=sse.handle_post_message, middleware=[Middleware(AuthenticationMiddleware)]),
     ])
 
     uvicorn.run(starlette_app, host=GLOBAL_CONFIG.LISTEN_ADDRESS, port=GLOBAL_CONFIG.LISTEN_PORT)
