@@ -1,4 +1,4 @@
-name: Build and Push SLMCP Docker Image
+name: MCP Docker
 
 on:
   push:
