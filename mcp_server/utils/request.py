@@ -19,8 +19,11 @@ async def post_slce_api(path: str,req_body: dict) -> str:
     if not path.startswith("/"):
         path = f"/{path}"
 
-    async with AsyncClient(verify=False) as client:
-        response = await client.post(f"{GLOBAL_CONFIG.SAFELINE_ADDRESS}{path}", json=req_body, headers={
-            "X-SLCE-API-TOKEN": f"{GLOBAL_CONFIG.SAFELINE_API_TOKEN}"
-        })
-        return check_slce_response(response)
+    try:
+        async with AsyncClient(verify=False) as client:
+            response = await client.post(f"{GLOBAL_CONFIG.SAFELINE_ADDRESS}{path}", json=req_body, headers={
+                "X-SLCE-API-TOKEN": f"{GLOBAL_CONFIG.SAFELINE_API_TOKEN}"
+            })
+            return check_slce_response(response)
+    except Exception as e:
+        return str(e)

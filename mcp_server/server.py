@@ -5,7 +5,6 @@ from starlette.applications import Starlette
 from starlette.routing import Route, Mount
 from starlette.requests import Request
 import uvicorn
-from starlette.responses import PlainTextResponse
 from tools import tools
 from config import GLOBAL_CONFIG
 from middleware import AuthenticationMiddleware
