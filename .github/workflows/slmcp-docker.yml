@@ -3,12 +3,12 @@ name: Build and Push SLMCP Docker Image
 on:
   push:
     branches:
-      - master
+      - main
     tags:
       - "v*"
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build-and-push:
