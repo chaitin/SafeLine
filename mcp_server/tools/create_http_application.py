@@ -5,28 +5,26 @@ from urllib.parse import urlparse
 @tools.register
 class CreateHttpApplication(BaseModel, ABCTool):
     domain: str = Field(default="",description="application domain, if empty, match all domain")
-    port: int = Field(description="application listen port, must between 1 and 65535")
+    port: int = Field(min=1, max=65535,description="application listen port, must between 1 and 65535")
     upstream: str = Field(description="application proxy address, must be a valid url")
 
     @classmethod
     async def run(self, arguments:dict) -> str:
-        port = arguments["port"]
-        upstream = arguments["upstream"]
-        domain = arguments["domain"]
+        try:
+            req = CreateHttpApplication.model_validate(arguments)
+            parsed_upstream = urlparse(req.upstream)
+            if parsed_upstream.scheme != "https" and parsed_upstream.scheme != "http":
+                return "invalid upstream scheme"
 
-        if port is None or port < 1 or port > 65535:
-            return "invalid port"
-
-        parsed_upstream = urlparse(upstream)
-        if parsed_upstream.scheme != "https" and parsed_upstream.scheme != "http":
-            return "invalid upstream scheme"
-        if parsed_upstream.hostname == "":
-            return "invalid upstream host"
+            if parsed_upstream.hostname == "":
+                return "invalid upstream host"
+        except Exception as e:
+            return str(e)
 
         return await post_slce_api("/api/open/site",{
-                "server_names": [domain],
-                "ports": [ str(port) ],
-                "upstreams": [ upstream ],
+                "server_names": [req.domain],
+                "ports": [ str(req.port) ],
+                "upstreams": [ req.upstream ],
                 "type": 0,
                 "static_default": 1,
                 "health_check": True,
