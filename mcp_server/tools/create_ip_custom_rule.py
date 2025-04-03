@@ -1,19 +1,23 @@
 from pydantic import BaseModel, Field
 from utils.request import post_slce_api
 from tools import Tool, ABCTool, tools
+import ipaddress
 
 @tools.register
 class CreateIPCustomRule(BaseModel, ABCTool):
     ip: str = Field(description="request ip to allow or block")
-    action: int = Field(description="1: block, 0: allow")
+    action: int = Field(min=0, max=1,description="1: block, 0: allow")
 
     @classmethod
     async def run(self, arguments:dict) -> str:
-        print(arguments)
-        ip = arguments["ip"]
-        action = arguments["action"]
+        try:
+            req = CreateIPCustomRule.model_validate(arguments)
+            ipaddress.ip_address(req.ip)
+        except Exception as e:
+            return str(e)
+
         name = ""
-        match action:
+        match req.action:
             case 0:
                 name += "allow "
             case 1:
@@ -21,10 +25,10 @@ class CreateIPCustomRule(BaseModel, ABCTool):
             case _:
                 return "invalid action"
 
-        if not ip or ip == "":
+        if not req.ip or req.ip == "":
             return "ip is required"
 
-        name += f"ip: {ip}"
+        name += f"ip: {req.ip}"
 
         return await post_slce_api("/api/open/policy",{
             "name": name,
@@ -34,12 +38,12 @@ class CreateIPCustomRule(BaseModel, ABCTool):
                     {
                         "k": "src_ip",
                         "op": "eq",
-                        "v": [ip],
+                        "v": [req.ip],
                         "sub_k": ""
                     },
                 ]
             ],
-            "action": action
+            "action": req.action
         })
     
     @classmethod

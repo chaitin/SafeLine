@@ -33,7 +33,8 @@ class Hello(BaseModel, ABCTool):
     # run is tool logic, must use classmethod
     @classmethod
     async def run(arguments: dict) -> str:
-        return f"Hello {arguments['name']}"
+        req = Hello.model_validate(arguments)
+        return f"Hello {req.name}"
 
     # tool description, must use classmethod
     @classmethod

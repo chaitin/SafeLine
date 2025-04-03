@@ -5,14 +5,17 @@ from tools import Tool, ABCTool, tools
 @tools.register
 class CreatePathCustomRule(BaseModel, ABCTool):
     path: str = Field(description="request path to block or allow")
-    action: int = Field(description="1: block, 0: allow")
+    action: int = Field(min=0, max=1,description="1: block, 0: allow")
 
     @classmethod
     async def run(self, arguments:dict) -> str:
-        path = arguments["path"]
-        action = arguments["action"]
+        try:
+            req = CreatePathCustomRule.model_validate(arguments)
+        except Exception as e:
+            return str(e)
+
         name = ""
-        match action:
+        match req.action:
             case 0:
                 name += "allow "
             case 1:
@@ -20,10 +23,10 @@ class CreatePathCustomRule(BaseModel, ABCTool):
             case _:
                 return "invalid action"
 
-        if not path or path == "":
+        if not req.path or req.path == "":
             return "path is required"
 
-        name += f"path: {path}"
+        name += f"path: {req.path}"
 
         return await post_slce_api("/api/open/policy",{
             "name": name,
@@ -33,12 +36,12 @@ class CreatePathCustomRule(BaseModel, ABCTool):
                     {
                         "k": "uri_no_query",
                         "op": "eq",
-                        "v": [path],
+                        "v": [req.path],
                         "sub_k": ""
                     },
                 ]
             ],
-            "action": action
+            "action": req.action
         })
     
     @classmethod
