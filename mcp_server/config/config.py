@@ -53,4 +53,4 @@ def set_log_level():
             case "critical":
                 level = logging.CRITICAL
 
-    logging.basicConfig(level=level)
+    logging.basicConfig(level=level, format="%(asctime)s - %(levelname)s - %(message)s")
