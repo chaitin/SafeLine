@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from utils.request import post_slce_api
 from tools import Tool, ABCTool, tools
 from urllib.parse import urlparse
+
 @tools.register
 class CreateHttpApplication(BaseModel, ABCTool):
     domain: str = Field(default="",description="application domain, if empty, match all domain")
