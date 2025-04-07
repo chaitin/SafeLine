@@ -18,7 +18,6 @@ class ABCTool(ABC):
 class ToolRegister:
     _dict: dict[str, ABCTool] = {}
     
-    @classmethod
     def register(self, tool: ABCTool) -> ABCTool:
         tool_name = tool.tool().name
         logging.info(f"Registering tool: {tool_name}")
