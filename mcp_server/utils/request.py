@@ -21,7 +21,7 @@ async def get_slce_api(path: str) -> str:
 
     try:
         async with AsyncClient(verify=False) as client:
-            response = await client.get(f"{GLOBAL_CONFIG.SAFELINE_ADDRESS}{path}", json=req_body, headers={
+            response = await client.get(f"{GLOBAL_CONFIG.SAFELINE_ADDRESS}{path}", headers={
                 "X-SLCE-API-TOKEN": f"{GLOBAL_CONFIG.SAFELINE_API_TOKEN}"
             })
             return check_slce_response(response)
