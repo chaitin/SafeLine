@@ -49,7 +49,7 @@ class CreateIPCustomRule(BaseModel, ABCTool):
     @classmethod
     def tool(self) -> Tool:
         return Tool(
-            name="create_ip_custom_rule",
-            description="在雷池 WAF 上创建一个 ip 的自定义黑名单或者自定义白名单",
+            name="waf_create_ip_custom_rule",
+            description="以 客户端 IP 地址为条件，在雷池 WAF 上创建一个黑/白名单",
             inputSchema=self.model_json_schema()
         )

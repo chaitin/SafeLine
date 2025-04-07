@@ -36,7 +36,7 @@ class CreateHttpApplication(BaseModel, ABCTool):
     @classmethod
     def tool(self) -> Tool:
         return Tool(
-            name="create_http_application",
+            name="waf_ create_http_application",
             description="在雷池 WAF 上创建一个站点应用",
             inputSchema=self.model_json_schema()
         )

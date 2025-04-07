@@ -47,7 +47,7 @@ class CreatePathCustomRule(BaseModel, ABCTool):
     @classmethod
     def tool(self) -> Tool:
         return Tool(
-            name="create_path_custom_rule",
-            description="在雷池 WAF 上创建一个 url 路径的自定义黑名单或者自定义白名单",
+            name="waf_create_path_custom_rule",
+            description="以 URL Path 为条件，在雷池 WAF 上创建一个黑/白名单",
             inputSchema=self.model_json_schema()
         )
