@@ -5,7 +5,7 @@ import json
 
 def get_response_data(response: httpx.Response) -> dict:
     if response.status_code != 200:
-        return f"response status code: {response.status_code}"
+        raise Exception(f"response status code: {response.status_code}")
     
     data = response.json()
     if data["msg"] is not None and data["msg"] != "":
