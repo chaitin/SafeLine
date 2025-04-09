@@ -5,6 +5,7 @@ import (
 
 	"github.com/chaitin/SafeLine/mcp_server/internal/api"
 	"github.com/chaitin/SafeLine/mcp_server/internal/api/rule"
+	"github.com/chaitin/SafeLine/mcp_server/pkg/logger"
 )
 
 type CreateWhitelistRule struct{}
@@ -46,5 +47,6 @@ func (t *CreateWhitelistRule) Execute(ctx context.Context, params CreateWhitelis
 	if err != nil {
 		return 0, err
 	}
+	logger.With("id", id).Info("create whitelist rule success")
 	return id, nil
 }
