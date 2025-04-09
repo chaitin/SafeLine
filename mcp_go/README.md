@@ -95,7 +95,7 @@ cp config.yaml.example config.yaml
 go run main.go
 ```
 
-## API Toolkit
+## Tools
 
 ### Application Management
 
