@@ -1,5 +1,13 @@
 package api
 
+type PolicyRuleAction int
+
+const (
+	PolicyRuleActionAllow PolicyRuleAction = iota
+	PolicyRuleActionDeny
+	PolicyRuleActionMax
+)
+
 type Key = string
 
 const (

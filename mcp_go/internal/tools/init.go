@@ -1,8 +1,11 @@
 package tools
 
-import "github.com/chaitin/SafeLine/mcp_server/internal/tools/app"
+import (
+	"github.com/chaitin/SafeLine/mcp_server/internal/tools/app"
+	"github.com/chaitin/SafeLine/mcp_server/internal/tools/rule"
+)
 
 func init() {
-	AppendTool(&CalculateSum{})
 	AppendTool(&app.CreateApp{})
+	AppendTool(&rule.CreateBlacklistRule{})
 }

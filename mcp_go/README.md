@@ -202,6 +202,19 @@ func APIName(ctx context.Context, req *RequestType) (ResultType, error) {
     return resp.Data, nil
 }
 ```
+5. **Tool Registration (init.go)**
+
+The tool registration file `internal/tools/init.go` is used to centrally manage all tool registrations
+  - Register all tools uniformly in the `init()` function
+  - Use the `AppendTool()` method for registration
+  - Example:
+    ```go
+    // Register create application tool
+    AppendTool(&app.CreateApp{})
+    
+    // Register create blacklist rule tool
+    AppendTool(&rule.CreateBlacklistRule{})
+    ```
 
 ### Development Standards
 

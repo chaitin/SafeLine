@@ -32,6 +32,7 @@ func (t *CreateBlacklistRule) Execute(ctx context.Context, params CreateBlacklis
 		Name:      params.Name,
 		IP:        params.IP,
 		IsEnabled: true,
+		Action:    int(api.PolicyRuleActionDeny),
 		Pattern: [][]api.Pattern{
 			{
 				{
