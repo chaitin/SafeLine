@@ -19,9 +19,9 @@ logger:
 # API Configuration
 api:
   # Can be overridden by environment variable SAFELINE_ADDRESS
-  base_url: "https://master.safeline-ce.staging.dev.in.chaitin.net:9443" # API service address
+  base_url: "" # API service address
   # Can be overridden by environment variable SAFELINE_API_TOKEN
-  token: "pjOhuOkYA1ombn9DNrNeZBSRCToO8kHO" # Authentication token
+  token: "" # Authentication token
   timeout: 30 # Timeout in seconds
   debug: false # Whether to enable debug mode
   insecure_skip_verify: true # Whether to skip certificate verification

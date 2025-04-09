@@ -28,9 +28,6 @@ func (t *CreateApp) Validate(params CreateAppParams) error {
 }
 
 func (t *CreateApp) Execute(ctx context.Context, params CreateAppParams) (int64, error) {
-	if err := t.Validate(params); err != nil {
-		return 0, err
-	}
 	id, err := app.CreateApp(ctx, &app.CreateAppRequest{
 		ServerNames: params.ServerNames,
 		Ports:       params.Ports,
