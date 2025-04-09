@@ -8,10 +8,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/chaitin/SafeLine/mcp_server/pkg/errors"
+	"github.com/chaitin/SafeLine/mcp_server/pkg/logger"
 )
 
 // Client API client
@@ -80,10 +80,7 @@ func NewClient(opts ...ClientOption) *Client {
 
 // Request Send request
 func (c *Client) Request(ctx context.Context, method, path string, body interface{}, result interface{}) error {
-	reqURL, err := url.JoinPath(c.baseURL, path)
-	if err != nil {
-		return errors.Wrap(err, "invalid URL path")
-	}
+	reqURL := fmt.Sprintf("%s%s", c.baseURL, path)
 
 	var bodyReader io.Reader
 	if body != nil {
@@ -93,7 +90,7 @@ func (c *Client) Request(ctx context.Context, method, path string, body interfac
 		}
 		bodyReader = bytes.NewReader(bodyBytes)
 	}
-
+	logger.With("url", reqURL).Debug("request url")
 	req, err := http.NewRequestWithContext(ctx, method, reqURL, bodyReader)
 	if err != nil {
 		return errors.Wrap(err, "create request failed")

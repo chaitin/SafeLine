@@ -23,6 +23,24 @@ func TestSchemaToOptions(t *testing.T) {
 			),
 		},
 		{
+			name: "test number default",
+			args: struct {
+				A int `json:"a" desc:"number a" required:"true" default:"10"`
+			}{},
+			want: mcp.NewTool("test number default",
+				mcp.WithNumber("a", mcp.Required(), mcp.Description("number a"), mcp.DefaultNumber(10)),
+			),
+		},
+		{
+			name: "test number min max",
+			args: struct {
+				A int `json:"a" desc:"number a" required:"true" min:"10" max:"20"`
+			}{},
+			want: mcp.NewTool("test number min max",
+				mcp.WithNumber("a", mcp.Required(), mcp.Description("number a"), mcp.Min(10), mcp.Max(20)),
+			),
+		},
+		{
 			name: "test number optional",
 			args: struct {
 				A int `json:"a" desc:"number a"`
@@ -47,6 +65,15 @@ func TestSchemaToOptions(t *testing.T) {
 			}{},
 			want: mcp.NewTool("test string",
 				mcp.WithString("a", mcp.Required(), mcp.Description("string a")),
+			),
+		},
+		{
+			name: "test string default",
+			args: struct {
+				A string `json:"a" desc:"string a" required:"true" default:"hello"`
+			}{},
+			want: mcp.NewTool("test string default",
+				mcp.WithString("a", mcp.Required(), mcp.Description("string a"), mcp.DefaultString("hello")),
 			),
 		},
 		{

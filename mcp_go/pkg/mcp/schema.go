@@ -3,6 +3,7 @@ package mcp
 import (
 	"encoding/json"
 	"reflect"
+	"strconv"
 	"strings"
 
 	"github.com/mark3labs/mcp-go/mcp"
@@ -26,6 +27,9 @@ func SchemaToOptions(schema any) ([]mcp.ToolOption, error) {
 		desc := field.Tag.Get("desc")
 		required := field.Tag.Get("required") == "true"
 		enumTag := field.Tag.Get("enum")
+		defaultTag := field.Tag.Get("default")
+		minTag := field.Tag.Get("min")
+		maxTag := field.Tag.Get("max")
 		opts := []mcp.PropertyOption{}
 
 		if desc != "" {
@@ -41,10 +45,33 @@ func SchemaToOptions(schema any) ([]mcp.ToolOption, error) {
 
 		switch field.Type.Kind() {
 		case reflect.Int:
+			if defaultTag != "" {
+				if defaultValue, err := strconv.Atoi(defaultTag); err == nil {
+					opts = append(opts, mcp.DefaultNumber(float64(defaultValue)))
+				}
+			}
+			if minTag != "" {
+				if minValue, err := strconv.Atoi(minTag); err == nil {
+					opts = append(opts, mcp.Min(float64(minValue)))
+				}
+			}
+			if maxTag != "" {
+				if maxValue, err := strconv.Atoi(maxTag); err == nil {
+					opts = append(opts, mcp.Max(float64(maxValue)))
+				}
+			}
 			options = append(options, mcp.WithNumber(jsonTag, opts...))
 		case reflect.Bool:
+			if defaultTag != "" {
+				if defaultValue, err := strconv.ParseBool(defaultTag); err == nil {
+					opts = append(opts, mcp.DefaultBool(defaultValue))
+				}
+			}
 			options = append(options, mcp.WithBoolean(jsonTag, opts...))
 		case reflect.String:
+			if defaultTag != "" {
+				opts = append(opts, mcp.DefaultString(defaultTag))
+			}
 			options = append(options, mcp.WithString(jsonTag, opts...))
 		case reflect.Struct:
 			subSchema := reflect.New(field.Type).Interface()
