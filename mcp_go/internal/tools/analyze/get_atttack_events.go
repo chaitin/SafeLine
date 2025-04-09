@@ -11,8 +11,8 @@ type GetAttackEventsParams struct {
 	IP       string `json:"ip" desc:"ip" required:"false"`
 	Page     int    `json:"page" desc:"page" required:"false" default:"1"`
 	PageSize int    `json:"page_size" desc:"page size" required:"false" default:"10"`
-	Start    int64  `json:"start" desc:"start unix timestamp" required:"false"`
-	End      int64  `json:"end" desc:"end unix timestamp" required:"false"`
+	Start    int64  `json:"start" desc:"start unix timestamp in milliseconds" required:"false"`
+	End      int64  `json:"end" desc:"end unix timestamp in milliseconds" required:"false"`
 }
 
 type GetAttackEvents struct{}
