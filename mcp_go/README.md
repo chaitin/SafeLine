@@ -211,7 +211,7 @@ func APIName(ctx context.Context, req *RequestType) (ResultType, error) {
    - API implementation files should have the same name as tool files
 
 2. **Directory Organization**
-   - Divide directories by functional modules (e.g., app, waf, etc.)
+   - Divide directories by functional modules (e.g., app, rule, etc.)
    - Maintain consistent structure between tools and api directories
    - Keep related functionality in the same directory
 
