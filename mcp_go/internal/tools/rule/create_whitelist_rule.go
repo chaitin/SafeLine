@@ -5,34 +5,33 @@ import (
 
 	"github.com/chaitin/SafeLine/mcp_server/internal/api"
 	"github.com/chaitin/SafeLine/mcp_server/internal/api/rule"
-	"github.com/chaitin/SafeLine/mcp_server/pkg/logger"
 )
 
-type CreateBlacklistRule struct{}
+type CreateWhitelistRule struct{}
 
-type CreateBlacklistRuleParams struct {
+type CreateWhitelistRuleParams struct {
 	Name string   `json:"name" desc:"name" required:"true"`
 	IP   []string `json:"ip" desc:"ip" required:"false"`
 }
 
-func (t *CreateBlacklistRule) Name() string {
-	return "create_blacklist_rule"
+func (t *CreateWhitelistRule) Name() string {
+	return "create_whitelist_rule"
 }
 
-func (t *CreateBlacklistRule) Description() string {
-	return "create a new blacklist rule"
+func (t *CreateWhitelistRule) Description() string {
+	return "create a new whitelist rule"
 }
 
-func (t *CreateBlacklistRule) Validate(params CreateBlacklistRuleParams) error {
+func (t *CreateWhitelistRule) Validate(params CreateWhitelistRuleParams) error {
 	return nil
 }
 
-func (t *CreateBlacklistRule) Execute(ctx context.Context, params CreateBlacklistRuleParams) (int64, error) {
+func (t *CreateWhitelistRule) Execute(ctx context.Context, params CreateWhitelistRuleParams) (int64, error) {
 	id, err := rule.CreateRule(ctx, &rule.CreateRuleRequest{
 		Name:      params.Name,
 		IP:        params.IP,
 		IsEnabled: true,
-		Action:    int(api.PolicyRuleActionDeny),
+		Action:    int(api.PolicyRuleActionAllow),
 		Pattern: [][]api.Pattern{
 			{
 				{
@@ -47,6 +46,5 @@ func (t *CreateBlacklistRule) Execute(ctx context.Context, params CreateBlacklis
 	if err != nil {
 		return 0, err
 	}
-	logger.With("id", id).Info("create blacklist rule success")
 	return id, nil
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/chaitin/SafeLine/mcp_server/pkg/errors"
 )
 
-type CreateBlacklistRuleRequest struct {
+type CreateRuleRequest struct {
 	Name      string          `json:"name"`
 	IP        []string        `json:"ip"`
 	IsEnabled bool            `json:"is_enabled"`
@@ -15,8 +15,8 @@ type CreateBlacklistRuleRequest struct {
 	Action    int             `json:"action"`
 }
 
-// CreateBlacklistRule Create new blacklist rule
-func CreateBlacklistRule(ctx context.Context, req *CreateBlacklistRuleRequest) (int64, error) {
+// CreateRule Create new rule
+func CreateRule(ctx context.Context, req *CreateRuleRequest) (int64, error) {
 	if req == nil {
 		return 0, errors.New("request is required")
 	}
@@ -24,7 +24,7 @@ func CreateBlacklistRule(ctx context.Context, req *CreateBlacklistRuleRequest) (
 	var resp api.Response[int64]
 	err := api.Service().Post(ctx, "/api/open/policy", req, &resp)
 	if err != nil {
-		return 0, errors.Wrap(err, "failed to create blacklist rule")
+		return 0, errors.Wrap(err, "failed to create policy rule")
 	}
 
 	if resp.Err != nil {

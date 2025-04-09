@@ -99,10 +99,11 @@ go run main.go
 
 ### Application Management
 
-- **create_application** - Create protection application
-  - `domain`: Application domain (string, required)
-  - `port`: Listening port (number, required)
-  - `upstream`: Upstream address (string, required)
+- **create_application**
+
+### Rule Management
+- **create_blacklist_rule**
+- **create_whitelist_rule**
 
 For more API details, please refer to the [API Documentation](https://master.safeline-ce.staging.dev.in.chaitin.net:9443/swagger/index.html#).
 
@@ -169,12 +170,14 @@ func (t *ToolName) Execute(ctx context.Context, params ToolParams) (result ToolR
 }
 ```
 
-3. **Create API Implementation**
+3. **[Optional]Create API Implementation**
+
+If you need to use some APIs that have not been implemented yet, you need to create corresponding files in the api directory for implementation
    - Create same directory structure under `internal/api`
-   - File name should match tool file
+   - File name should match tool func
    - Example: `internal/api/app/create_application.go`
 
-4. **API Implementation Template**
+**API Implementation Template**
 ```go
 package app
 
@@ -202,7 +205,7 @@ func APIName(ctx context.Context, req *RequestType) (ResultType, error) {
     return resp.Data, nil
 }
 ```
-5. **Tool Registration (init.go)**
+4. **Tool Registration (init.go)**
 
 The tool registration file `internal/tools/init.go` is used to centrally manage all tool registrations
   - Register all tools uniformly in the `init()` function
@@ -221,7 +224,6 @@ The tool registration file `internal/tools/init.go` is used to centrally manage 
 1. **Naming Conventions**
    - Use lowercase letters and underscores for tool names
    - File names should match tool names
-   - API implementation files should have the same name as tool files
 
 2. **Directory Organization**
    - Divide directories by functional modules (e.g., app, rule, etc.)

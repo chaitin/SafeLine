@@ -8,4 +8,5 @@ import (
 func init() {
 	AppendTool(&app.CreateApp{})
 	AppendTool(&rule.CreateBlacklistRule{})
+	AppendTool(&rule.CreateWhitelistRule{})
 }
