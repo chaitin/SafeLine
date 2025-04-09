@@ -146,6 +146,10 @@ type ToolParams struct {
     Param2 int    `json:"param2" desc:"parameter description" required:"false"`
 }
 
+type ToolResult struct {
+    Field1 string `json:"field1"`
+}
+
 func (t *ToolName) Name() string {
     return "tool_name"
 }
@@ -159,7 +163,7 @@ func (t *ToolName) Validate(params ToolParams) error {
     return nil
 }
 
-func (t *ToolName) Execute(ctx context.Context, params ToolParams) (interface{}, error) {
+func (t *ToolName) Execute(ctx context.Context, params ToolParams) (result ToolResult, err error) {
     // Tool execution logic
     return result, nil
 }
