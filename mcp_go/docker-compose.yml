@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  mcp_server:
+    image: chaitin/safeline-mcp:latest
+    container_name: mcp_server
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - SAFELINE_SECRET=your_secret_key # optional, if you want to use secret key to authenticate
+      - SAFELINE_ADDRESS=https://your_safeline_ip:9443 # required, your SafeLine WAF address
+      - SAFELINE_API_TOKEN=your_safeline_api_token # required, your SafeLine WAF api token  
+      - LISTEN_PORT=5678 # optional, default is 5678
+      - LISTEN_ADDRESS=0.0.0.0 # optional, default is 0.0.0.0 
