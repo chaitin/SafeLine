@@ -10,7 +10,7 @@ server:
   secret: "" # Secret for SSE server
 # Logger Configuration
 logger:
-  level: "debug" # Log level: debug, info, warn, error
+  level: "info" # Log level: debug, info, warn, error
   file_path: "" # Log file path
   console: true # Whether to output to console
   caller: false # Whether to record caller information
