@@ -44,7 +44,7 @@ func SchemaToOptions(schema any) ([]mcp.ToolOption, error) {
 		}
 
 		switch field.Type.Kind() {
-		case reflect.Int:
+		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Float32, reflect.Float64:
 			if defaultTag != "" {
 				if defaultValue, err := strconv.Atoi(defaultTag); err == nil {
 					opts = append(opts, mcp.DefaultNumber(float64(defaultValue)))
@@ -112,7 +112,7 @@ func SchemaToOptions(schema any) ([]mcp.ToolOption, error) {
 			var items map[string]any
 
 			switch elemType.Kind() {
-			case reflect.Int:
+			case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Float32, reflect.Float64:
 				items = map[string]any{
 					"type": "number",
 				}

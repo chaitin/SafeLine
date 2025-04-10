@@ -23,6 +23,24 @@ func TestSchemaToOptions(t *testing.T) {
 			),
 		},
 		{
+			name: "test number int64",
+			args: struct {
+				A int64 `json:"a" desc:"number a" required:"true"`
+			}{},
+			want: mcp.NewTool("test number int64",
+				mcp.WithNumber("a", mcp.Required(), mcp.Description("number a")),
+			),
+		},
+		{
+			name: "test number float64",
+			args: struct {
+				A float64 `json:"a" desc:"number a" required:"true"`
+			}{},
+			want: mcp.NewTool("test number float64",
+				mcp.WithNumber("a", mcp.Required(), mcp.Description("number a")),
+			),
+		},
+		{
 			name: "test number default",
 			args: struct {
 				A int `json:"a" desc:"number a" required:"true" default:"10"`

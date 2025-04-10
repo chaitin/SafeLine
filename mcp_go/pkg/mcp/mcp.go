@@ -125,7 +125,6 @@ func RegisterTool[T any, R any](s *MCPServer, tool Tool[T, R]) error {
 	if err != nil {
 		return err
 	}
-
 	t := mcp.NewTool(tool.Name(),
 		opts...,
 	)

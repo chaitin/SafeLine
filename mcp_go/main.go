@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/chaitin/SafeLine/mcp_server/internal/api"
@@ -11,7 +12,10 @@ import (
 )
 
 func main() {
-	if err := config.Load("config.yaml"); err != nil {
+	configPath := flag.String("config", "config.yaml", "path to config file")
+	flag.Parse()
+
+	if err := config.Load(*configPath); err != nil {
 		panic(fmt.Errorf("failed to load config: %v", err))
 	}
 
