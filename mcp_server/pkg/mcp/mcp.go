@@ -11,6 +11,7 @@ import (
 	"github.com/chaitin/SafeLine/mcp_server/pkg/logger"
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
+	"github.com/mcuadros/go-defaults"
 )
 
 type Tool[T any, R any] interface {
@@ -86,6 +87,7 @@ func handleToolCall[T any, R any](ctx context.Context, request mcp.CallToolReque
 		return nil, errors.Wrap(err, "marshal arguments failed")
 	}
 	var params T
+	defaults.SetDefaults(&params)
 	if err = json.Unmarshal(raw, &params); err != nil {
 		return nil, errors.Wrap(err, "unmarshal parameters failed")
 	}
