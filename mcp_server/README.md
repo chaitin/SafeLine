@@ -24,20 +24,6 @@ SafeLine MCP Server is an implementation of the [Model Context Protocol (MCP)](h
 - Docker containerization support
 - Secure API communication
 
-## Tools
-
-### Application Management
-
-- **create_application**
-
-### Rule Management
-- **create_blacklist_rule**
-- **create_whitelist_rule**
-
-### Analyze
-- **get_attack_events**
-
-
 ## Quick Start
 
 ### Environment Variables
@@ -110,6 +96,19 @@ go run main.go
 ```
 
 For more API details, please refer to the [API Documentation](https://master.safeline-ce.staging.dev.in.chaitin.net:9443/swagger/index.html#).
+
+## Tools
+
+### Application Management
+
+- **create_application**
+
+### Rule Management
+- **create_blacklist_rule**
+- **create_whitelist_rule**
+
+### Analyze
+- **get_attack_events**
 
 ## Development Guide
 
