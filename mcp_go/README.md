@@ -74,14 +74,14 @@ cd safeline-mcp
 #       - LISTEN_ADDRESS=0.0.0.0
 
 # 3. Start service
-docker compose up -f docker-compose.yml -d
+docker compose -f docker-compose.yml up -d
 ```
 
 #### Method 3: Using Go
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/chaitin/safeline-mcp.git
+git clone https://github.com/chaitin/SafeLine.git
 cd safeline-mcp
 
 # 2. Install dependencies
