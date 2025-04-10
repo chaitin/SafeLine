@@ -1,11 +1,28 @@
-FROM ghcr.io/astral-sh/uv:python3.13-alpine
-
-COPY requirements.txt /app/requirements.txt
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
-RUN uv pip sync requirements.txt --system -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN apk add --no-cache git
 
-COPY . /app
+COPY go.mod go.sum ./
 
-CMD ["python", "__main__.py"]
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 go build -o mcp-server .
+
+FROM alpine:latest
+
+WORKDIR /app
+
+RUN apk add --no-cache ca-certificates tzdata
+
+COPY --from=builder /app/mcp-server .
+COPY --from=builder /app/config.yaml .
+
+ENV TZ=Asia/Shanghai
+
+EXPOSE 5678
+
+CMD ["./mcp-server"] 

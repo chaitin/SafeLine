@@ -1,9 +1,0 @@
-[project]
-name = "mcp_server"
-version = "0.1.0"
-description = "SafeLine WAF mcp server"
-readme = "README.md"
-requires-python = ">=3.13"
-dependencies = [
-    "mcp[cli]>=1.6.0",
-]
