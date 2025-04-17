@@ -77,11 +77,11 @@ List of the main features as follows:
 
 #### 📦 Installing
 
-Information on how to install SafeLine can be found in the [Install Guide](https://docs.waf.chaitin.com/en/tutorials/install)
+Information on how to install SafeLine can be found in the [Install Guide](https://docs.waf.chaitin.com/en/GetStarted/Deploy)
 
 #### ⚙️ Protecting Web Apps
 
-to see [Configuration](https://docs.waf.chaitin.com/en/tutorials/Configuration)
+to see [Configuration](https://docs.waf.chaitin.com/en/GetStarted/AddApplication)
 
 ## 📋 More Informations
 
