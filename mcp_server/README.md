@@ -95,7 +95,7 @@ cp config.yaml.example config.yaml
 go run main.go
 ```
 
-For more API details, please refer to the [API Documentation](https://master.safeline-ce.staging.dev.in.chaitin.net:9443/swagger/index.html#).
+For more API details, please refer to the [API Documentation](https://demo.waf.chaitin.com:9443/swagger/index.html).
 
 ## Tools
 
