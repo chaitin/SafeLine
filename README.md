@@ -11,7 +11,8 @@
   <a target="_blank" href="https://ly.safepoint.cloud/w2AeHhb">📖 Docs</a> &nbsp; | &nbsp;
   <a target="_blank" href="https://ly.safepoint.cloud/hSMd4SH">🔍 Live Demo</a> &nbsp; | &nbsp;
   <a target="_blank" href="https://discord.gg/SVnZGzHFvn">🙋‍♂️ Discord</a> &nbsp; | &nbsp;
-  <a target="_blank" href="/README_CN.md">中文版</a>
+  <a target="_blank" href="/README_CN.md">中文版</a> &nbsp; | &nbsp;
+  <a target="_blank" href="/README_JA.md">日本語</a>
 </p>
 
 ## 👋 INTRODUCTION
