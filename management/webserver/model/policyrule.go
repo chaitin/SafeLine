@@ -17,9 +17,10 @@ type PolicyRulePattern struct {
 }
 
 const (
-	KeySrcIP = "src_ip"
-	KeyURI   = "uri"
-	KeyHost  = "host"
+	KeySrcIP  = "src_ip"
+	KeyURI    = "uri"
+	KeyHost   = "host"
+	KeyMethod = "method" // HTTP request method (GET/POST/...)
 
 	OpEq     = "eq"     // 完全相等
 	OpMatch  = "match"  // 模糊匹配

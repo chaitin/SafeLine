@@ -177,6 +177,8 @@ func PolicyRuleTable(db *gorm.DB) (prFSL string, err error) {
 				key = "@uri_decoded::STRING"
 			case model.KeyHost:
 				key = "http.host"
+			case model.KeyMethod:
+				key = "http.method"
 			default:
 				return "", errors.New("wrong Key")
 			}
