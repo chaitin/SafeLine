@@ -14,6 +14,24 @@
   <a target="_blank" href="https://github.com/chaitin/SafeLine">国际版</a>
 </p>
 
+<h3 align="center">🏆 项目荣誉</h3>
+
+<p align="center">
+  <a href="https://trendshift.io/repositories/30?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-30" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/repositories/30" alt="chaitin/SafeLine — GitHub Trending 第一名" width="250" height="55" />
+  </a>
+  <a href="https://trendshift.io/repositories/30?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-30" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/30/daily?language=Go" alt="chaitin/SafeLine — Go 项目日榜第一名" width="250" height="55" />
+  </a>
+  <br /><br />
+  <a href="https://trendshift.io/repositories/30?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-30" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/30/weekly?language=Go" alt="chaitin/SafeLine — Go 项目周榜第一名" width="250" height="55" />
+  </a>
+  <a href="https://trendshift.io/repositories/30?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-30" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/30/monthly?language=Go" alt="chaitin/SafeLine — Go 项目月榜第九名" width="250" height="55" />
+  </a>
+</p>
+
 ## 👋 项目介绍
 
 SafeLine，中文名 "雷池"，是一款简单好用, 效果突出的 **`Web 应用防火墙(WAF)`**，可以保护 Web 服务不受黑客攻击。
@@ -94,9 +112,21 @@ SafeLine，中文名 "雷池"，是一款简单好用, 效果突出的 **`Web �
 
 是的，已经有不少用户将雷池投入生产使用，截至目前
 
-- 全球累计装机量已超过 18 万台
+- [全球累计装机量已超过 40 万台](https://cyberpress.org/safeline-waf-reaches-400000-global-deployments/)
 - 防护的网站数量超过 100 万个
 - 每天清洗 HTTP 请求超过 300 亿次
+
+#### 🌟 社区认可
+
+- 获得 [HelloGitHub](https://hellogithub.com/en/repository/0d07cfe266af4c25ba3eadf2c3d06f50) **10.0/10** 评分
+- 被 [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted-data/blob/master/software/safeline.yml) 收录
+- 被 [Cyber Press](https://cyberpress.org/safeline-waf-reaches-400000-global-deployments/) 评为 GitHub 上最受欢迎的开源 Web 应用防火墙
+
+#### 🔌 生态集成
+
+- [SafeLine MCP Server](./mcp_server/README.md)：支持通过 AI 辅助管理和控制雷池
+- [Ingress-NGINX](./sdk/ingress-nginx/README.md)：保护 Kubernetes Ingress 流量
+- [Kong Gateway](./sdk/kong/Readme.md)：保护经过 Kong 的 API 和服务
 
 #### 🙋‍♂️ 用户社区
 
@@ -112,4 +142,4 @@ SafeLine，中文名 "雷池"，是一款简单好用, 效果突出的 **`Web �
 
 #### 💪 专业版
 
-查看 [社区版 vs 专业版](https://waf-ce.chaitin.cn/version)
+雷池专业版现已发布！查看 [社区版 vs 专业版](https://waf-ce.chaitin.cn/version)，选择适合你的版本。

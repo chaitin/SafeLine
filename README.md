@@ -14,6 +14,24 @@
   <a target="_blank" href="/README_CN.md">中文版</a>
 </p>
 
+<h3 align="center">🏆 Achievements</h3>
+
+<p align="center">
+  <a href="https://trendshift.io/repositories/30?utm_source=repository-badge&amp;utm_medium=badge&amp;utm_campaign=badge-repository-30" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/repositories/30" alt="chaitin/SafeLine — #1 GitHub Trending Repository" width="250" height="55" />
+  </a>
+  <a href="https://trendshift.io/repositories/30?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-30" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/30/daily?language=Go" alt="chaitin/SafeLine — #1 Go Repository of the Day" width="250" height="55" />
+  </a>
+  <br /><br />
+  <a href="https://trendshift.io/repositories/30?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-30" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/30/weekly?language=Go" alt="chaitin/SafeLine — #1 Go Repository of the Week" width="250" height="55" />
+  </a>
+  <a href="https://trendshift.io/repositories/30?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-30" target="_blank" rel="noopener noreferrer">
+    <img src="https://trendshift.io/api/badge/trendshift/repositories/30/monthly?language=Go" alt="chaitin/SafeLine — #9 Go Repository of the Month" width="250" height="55" />
+  </a>
+</p>
+
 ## 👋 INTRODUCTION
 
 SafeLine is a self-hosted **`WAF(Web Application Firewall)`** to protect your web apps from attacks and exploits.
@@ -99,9 +117,22 @@ to see [Configuration](https://docs.waf.chaitin.com/en/GetStarted/AddApplication
 
 Yes, SafeLine is production-ready.
 
-- Over 180,000 installations worldwide
+- Over [400,000 installations worldwide](https://cyberpress.org/safeline-waf-reaches-400000-global-deployments/)
 - Protecting over 1,000,000 Websites
 - Handling over 30,000,000,000 HTTP Requests Daily
+
+#### 🌟 Community Recognition
+
+- Rated **10.0/10** by [HelloGitHub](https://hellogithub.com/en/repository/0d07cfe266af4c25ba3eadf2c3d06f50)
+- Listed in [awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted-data/blob/master/software/safeline.yml)
+- Featured on [Product Hunt](https://www.producthunt.com/products/safeline-waf/launches/safeline-waf)
+- Recognized by [Cyber Press](https://cyberpress.org/safeline-waf-reaches-400000-global-deployments/) as the most popular open-source web firewall on GitHub
+
+#### 🔌 Ecosystem Integrations
+
+- [SafeLine MCP Server](./mcp_server/README.md) for AI-assisted management and control
+- [Ingress-NGINX](./sdk/ingress-nginx/README.md) plugin for protecting Kubernetes ingress traffic
+- [Kong Gateway](./sdk/kong/Readme.md) plugin for protecting APIs and services
 
 #### 🙋‍♂️ Community
 
@@ -121,7 +152,7 @@ Several contact options exist for our community, the primary one being Discord. 
 
 #### 💪 PRO Edition
 
-Coming soon!
+SafeLine PRO is now available! [Explore plans and pricing](https://cyberserval.tech/landing/safeline#safeline-price) or [start a 7-day trial](https://safeline.app.cyberserval.tech/).
 
 #### 📝 License
 
