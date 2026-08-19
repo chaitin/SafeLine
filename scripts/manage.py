@@ -497,8 +497,6 @@ def init_global_config():
     global REQUEST_CTX, LANG, DOMAIN, PRODUCT, DEBUG
 
     REQUEST_CTX = ssl.create_default_context()
-    REQUEST_CTX.check_hostname = False
-    REQUEST_CTX.verify_mode = ssl.CERT_NONE
 
     parser = argparse.ArgumentParser(
         prog='installer-management',
