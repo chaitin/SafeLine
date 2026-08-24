@@ -11,6 +11,7 @@ import (
 // Each Tool is wrapped in a toolWrapper that knows its concrete type,
 // allowing correct passing of generic parameters during registration.
 type ToolWrapper interface {
+	Name() string
 	Register(s *mcp.MCPServer) error
 }
 
@@ -30,6 +31,10 @@ func Tools() []ToolWrapper {
 
 type toolWrapper[T any, R any] struct {
 	tool mcp.Tool[T, R]
+}
+
+func (w *toolWrapper[T, R]) Name() string {
+	return w.tool.Name()
 }
 
 func (w *toolWrapper[T, R]) Register(s *mcp.MCPServer) error {

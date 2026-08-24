@@ -2,20 +2,32 @@ package analyze
 
 import (
 	"context"
-	"fmt"
+	"net/url"
+	"strconv"
 
 	"github.com/chaitin/SafeLine/mcp_server/internal/api"
 )
 
 type GetEventListRequest struct {
-	Page     int    `json:"page"`
-	PageSize int    `json:"page_size"`
-	IP       string `json:"ip"`
-	Start    int64  `json:"start"`
-	End      int64  `json:"end"`
+	InstanceID string `json:"instance_id"`
+	Page       int    `json:"page"`
+	PageSize   int    `json:"page_size"`
+	IP         string `json:"ip"`
+	Host       string `json:"host"`
+	Port       int    `json:"port"`
+	Start      int64  `json:"start"`
+	End        int64  `json:"end"`
 }
 
 type GetEventListResponse struct {
+	Source   api.InstanceSource `json:"source"`
+	Page     int                `json:"page"`
+	PageSize int                `json:"page_size"`
+	Nodes    []Event            `json:"nodes"`
+	Total    int64              `json:"total"`
+}
+
+type eventListData struct {
 	Nodes []Event `json:"nodes"`
 	Total int64   `json:"total"`
 }
@@ -38,10 +50,42 @@ type Event struct {
 }
 
 func GetEventList(ctx context.Context, req *GetEventListRequest) (*GetEventListResponse, error) {
-	var resp api.Response[GetEventListResponse]
-	err := api.Service().Get(ctx, fmt.Sprintf("/api/open/events?page=%d&page_size=%d&ip=%s&start=%d&end=%d", req.Page, req.PageSize, req.IP, req.Start, req.End), &resp)
+	client, err := api.ClientFor(req.InstanceID)
 	if err != nil {
 		return nil, err
 	}
-	return &resp.Data, nil
+
+	query := make(url.Values)
+	query.Set("page", strconv.Itoa(req.Page))
+	query.Set("page_size", strconv.Itoa(req.PageSize))
+	if req.IP != "" {
+		query.Set("ip", req.IP)
+	}
+	if req.Host != "" {
+		query.Set("host", req.Host)
+	}
+	if req.Port != 0 {
+		query.Set("port", strconv.Itoa(req.Port))
+	}
+	if req.Start != 0 {
+		query.Set("start", strconv.FormatInt(req.Start, 10))
+	}
+	if req.End != 0 {
+		query.Set("end", strconv.FormatInt(req.End, 10))
+	}
+
+	var resp api.Response[eventListData]
+	if err := client.GetAttackEvents(ctx, query, &resp); err != nil {
+		return nil, err
+	}
+	if err := resp.Validate(); err != nil {
+		return nil, err
+	}
+	return &GetEventListResponse{
+		Source:   client.Source(),
+		Page:     req.Page,
+		PageSize: req.PageSize,
+		Nodes:    resp.Data.Nodes,
+		Total:    resp.Data.Total,
+	}, nil
 }

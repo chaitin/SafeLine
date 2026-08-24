@@ -2,16 +2,19 @@ package mcp
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
+	"time"
 
-	"github.com/chaitin/SafeLine/mcp_server/pkg/errors"
 	"github.com/chaitin/SafeLine/mcp_server/pkg/logger"
-	"github.com/mark3labs/mcp-go/mcp"
+	markmcp "github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 	"github.com/mcuadros/go-defaults"
+)
+
+const (
+	EndpointPath       = "/mcp"
+	maxRequestBodySize = 1 << 20
 )
 
 type Tool[T any, R any] interface {
@@ -24,125 +27,113 @@ type Tool[T any, R any] interface {
 	Validate(params T) error
 }
 
-type SSEServer struct {
-	sse    *server.SSEServer
-	secret string
+// InputSchemaProvider lets a tool declare constraints that cannot be inferred
+// from Go types alone, such as numeric ranges and documented defaults.
+type InputSchemaProvider interface {
+	InputSchemaOptions() []markmcp.ToolOption
 }
 
-func (s *SSEServer) Start(addr string) error {
+type Middleware func(http.Handler) http.Handler
+
+type MCPServer struct {
+	server    *server.MCPServer
+	transport *server.StreamableHTTPServer
+}
+
+func NewMCPServer(name, version string) *MCPServer {
+	s := server.NewMCPServer(
+		name,
+		version,
+		server.WithToolCapabilities(false),
+		server.WithInputSchemaValidation(),
+		server.WithStrictInputSchemaDefault(),
+		server.WithOutputSchemaValidation(),
+	)
+	transport := server.NewStreamableHTTPServer(
+		s,
+		server.WithEndpointPath(EndpointPath),
+		server.WithStateLess(true),
+	)
+	return &MCPServer{server: s, transport: transport}
+}
+
+// Handler exposes exactly one Streamable HTTP endpoint. Legacy /sse and
+// /message routes are intentionally not mounted.
+func (s *MCPServer) Handler() http.Handler {
+	mux := http.NewServeMux()
+	mux.Handle(EndpointPath, http.MaxBytesHandler(s.transport, maxRequestBodySize))
+	return mux
+}
+
+func (s *MCPServer) Start(addr string, middleware ...Middleware) error {
+	var handler http.Handler = s.Handler()
+	for i := len(middleware) - 1; i >= 0; i-- {
+		handler = middleware[i](handler)
+	}
+
 	srv := &http.Server{
-		Addr:    addr,
-		Handler: s,
+		Addr:              addr,
+		Handler:           handler,
+		ReadHeaderTimeout: 10 * time.Second,
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      60 * time.Second,
+		IdleTimeout:       60 * time.Second,
 	}
 	return srv.ListenAndServe()
 }
 
-func (s *SSEServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if s.secret == "" {
-		s.sse.ServeHTTP(w, r)
-		return
-	}
-	messagePath := s.sse.CompleteMessagePath()
-	if messagePath != "" && r.URL.Path == messagePath {
-		secret := r.Header.Get("Secret")
-		if secret != s.secret {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
-			return
-		}
-	}
-	s.sse.ServeHTTP(w, r)
-}
-
-type MCPServer struct {
-	server *server.MCPServer
-	sse    *SSEServer
-}
-
-func NewMCPServer(name, version string, secret string) *MCPServer {
-	s := server.NewMCPServer(
-		name,
-		version,
-		server.WithLogging(),
-	)
-	return &MCPServer{
-		server: s,
-		sse:    &SSEServer{sse: server.NewSSEServer(s), secret: secret},
-	}
-}
-
-func (s *MCPServer) Start(addr string) error {
-	return s.sse.Start(addr)
-}
-
-func handleToolCall[T any, R any](ctx context.Context, request mcp.CallToolRequest, tool Tool[T, R]) (result *mcp.CallToolResult, err error) {
+func handleToolCall[T any, R any](ctx context.Context, request markmcp.CallToolRequest, tool Tool[T, R]) (result *markmcp.CallToolResult, err error) {
 	defer func() {
-		if r := recover(); r != nil {
-			err = fmt.Errorf("panic recovered: %v", r)
+		if recovered := recover(); recovered != nil {
+			logger.With("tool", tool.Name()).Error("tool execution panicked")
+			result = markmcp.NewToolResultError("tool execution failed")
+			err = nil
 		}
 	}()
 
-	var raw []byte
-	raw, err = json.Marshal(request.Params.Arguments)
-	if err != nil {
-		return nil, errors.Wrap(err, "marshal arguments failed")
-	}
 	var params T
 	defaults.SetDefaults(&params)
-	if err = json.Unmarshal(raw, &params); err != nil {
-		return nil, errors.Wrap(err, "unmarshal parameters failed")
+	if err := request.BindArguments(&params); err != nil {
+		return markmcp.NewToolResultError(fmt.Sprintf("invalid arguments: %v", err)), nil
+	}
+	if err := tool.Validate(params); err != nil {
+		return markmcp.NewToolResultError(fmt.Sprintf("invalid arguments: %v", err)), nil
 	}
 
-	if err = tool.Validate(params); err != nil {
-		return nil, err
-	}
-
-	var execResult R
-	execResult, err = tool.Execute(ctx, params)
+	execResult, err := tool.Execute(ctx, params)
 	if err != nil {
-		return nil, err
+		logger.With("tool", tool.Name()).With("error", err).Error("tool execution failed")
+		return markmcp.NewToolResultError(err.Error()), nil
 	}
 
-	v := any(execResult)
-	switch v := v.(type) {
-	case string:
-		return mcp.NewToolResultText(v), nil
-	case []byte:
-		return mcp.NewToolResultText(string(v)), nil
-	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
-		return mcp.NewToolResultText(json.Number(fmt.Sprint(v)).String()), nil
-	case bool:
-		return mcp.NewToolResultText(strconv.FormatBool(v)), nil
-	default:
-		bytes, err := json.Marshal(v)
-		if err != nil {
-			return nil, errors.New("invalid result type")
-		}
-		return mcp.NewToolResultText(string(bytes)), nil
+	result, err = markmcp.NewToolResultJSON(execResult)
+	if err != nil {
+		logger.With("tool", tool.Name()).With("error", err).Error("tool result serialization failed")
+		return markmcp.NewToolResultError("tool result serialization failed"), nil
 	}
+	return result, nil
 }
 
 func RegisterTool[T any, R any](s *MCPServer, tool Tool[T, R]) error {
-	var v T
-	opts, err := SchemaToOptions(v)
-	if err != nil {
-		return err
+	options := []markmcp.ToolOption{
+		markmcp.WithDescription(tool.Description()),
 	}
-	opts = append(opts, mcp.WithDescription(tool.Description()))
-	t := mcp.NewTool(tool.Name(),
-		opts...,
+	if provider, ok := any(tool).(InputSchemaProvider); ok {
+		options = append(options, provider.InputSchemaOptions()...)
+	} else {
+		options = append(options, markmcp.WithInputSchema[T]())
+	}
+	options = append(options,
+		markmcp.WithOutputSchema[R](),
+		markmcp.WithReadOnlyHintAnnotation(true),
+		markmcp.WithDestructiveHintAnnotation(false),
+		markmcp.WithIdempotentHintAnnotation(true),
+		markmcp.WithOpenWorldHintAnnotation(true),
 	)
+	t := markmcp.NewTool(tool.Name(), options...)
 
-	s.server.AddTool(t, func(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-		result, err := handleToolCall(ctx, request, tool)
-		if err != nil {
-			logger.With("error", err).Error("handle tool call failed")
-			if wrapped, ok := err.(*errors.Error); ok {
-				return nil, wrapped.Unwrap()
-			}
-			return nil, err
-		}
-		return result, nil
+	s.server.AddTool(t, func(ctx context.Context, request markmcp.CallToolRequest) (*markmcp.CallToolResult, error) {
+		return handleToolCall(ctx, request, tool)
 	})
-
 	return nil
 }

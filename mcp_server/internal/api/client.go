@@ -1,106 +1,76 @@
 package api
 
 import (
-	"bytes"
 	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/chaitin/SafeLine/mcp_server/pkg/errors"
 	"github.com/chaitin/SafeLine/mcp_server/pkg/logger"
 )
 
-// Client API client
+const (
+	maxErrorBodySize    = 4 << 10
+	maxResponseBodySize = 4 << 20
+)
+
+// Client is the transport used by a single SafeLine instance. Its request
+// method is intentionally unexported; APIClient exposes only approved read-only
+// operations.
 type Client struct {
-	baseURL    string
+	baseURL    *url.URL
 	httpClient *http.Client
-	headers    map[string]string
+	headers    http.Header
 }
 
-// ClientOption Client configuration options
-type ClientOption func(*Client)
-
-// WithTimeout Set timeout duration
-func WithTimeout(timeout time.Duration) ClientOption {
-	return func(c *Client) {
-		c.httpClient.Timeout = timeout
+func newClient(baseURL string, timeout time.Duration, insecureSkipVerify bool, token string) (*Client, error) {
+	parsedURL, err := url.Parse(strings.TrimSpace(baseURL))
+	if err != nil {
+		return nil, errors.Wrap(err, "parse base_url failed")
 	}
-}
-
-// WithHeader Set request header
-func WithHeader(key, value string) ClientOption {
-	return func(c *Client) {
-		c.headers[key] = value
+	if (parsedURL.Scheme != "http" && parsedURL.Scheme != "https") || parsedURL.Host == "" {
+		return nil, errors.New("base_url must be an absolute http or https URL")
 	}
-}
-
-// WithBaseURL Set base URL
-func WithBaseURL(baseURL string) ClientOption {
-	return func(c *Client) {
-		c.baseURL = baseURL
+	if parsedURL.RawQuery != "" || parsedURL.Fragment != "" {
+		return nil, errors.New("base_url must not contain a query or fragment")
 	}
-}
+	parsedURL.Path = strings.TrimRight(parsedURL.Path, "/")
 
-// WithInsecureSkipVerify Set whether to skip certificate verification
-func WithInsecureSkipVerify(skip bool) ClientOption {
-	return func(c *Client) {
-		if transport, ok := c.httpClient.Transport.(*http.Transport); ok {
-			if transport.TLSClientConfig == nil {
-				transport.TLSClientConfig = &tls.Config{}
-			}
-			transport.TLSClientConfig.InsecureSkipVerify = skip
-		}
-	}
-}
-
-// NewClient Create new API client
-func NewClient(opts ...ClientOption) *Client {
 	transport := &http.Transport{
-		TLSClientConfig: &tls.Config{},
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify}, // #nosec G402 -- deployment-controlled compatibility setting
 	}
-
-	c := &Client{
+	client := &Client{
+		baseURL: parsedURL,
 		httpClient: &http.Client{
-			Timeout:   30 * time.Second,
+			Timeout:   timeout,
 			Transport: transport,
 		},
-		headers: make(map[string]string),
+		headers: make(http.Header),
 	}
-
-	for _, opt := range opts {
-		opt(c)
-	}
-
-	return c
+	client.headers.Set("Accept", "application/json")
+	client.headers.Set("User-Agent", "SafeLine-MCP/1.0")
+	client.headers.Set("X-SLCE-API-TOKEN", token)
+	return client, nil
 }
 
-// Request Send request
-func (c *Client) Request(ctx context.Context, method, path string, body interface{}, result interface{}) error {
-	reqURL := fmt.Sprintf("%s%s", c.baseURL, path)
+func (c *Client) get(ctx context.Context, path string, query url.Values, result any) error {
+	endpoint := *c.baseURL
+	endpoint.Path = strings.TrimRight(endpoint.Path, "/") + path
+	endpoint.RawPath = ""
+	endpoint.RawQuery = query.Encode()
 
-	var bodyReader io.Reader
-	if body != nil {
-		bodyBytes, err := json.Marshal(body)
-		if err != nil {
-			return errors.Wrap(err, "marshal request body failed")
-		}
-		bodyReader = bytes.NewReader(bodyBytes)
-	}
-	logger.With("url", reqURL).Debug("request url")
-	req, err := http.NewRequestWithContext(ctx, method, reqURL, bodyReader)
+	logger.With("url", endpoint.String()).Debug("request url")
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint.String(), nil)
 	if err != nil {
 		return errors.Wrap(err, "create request failed")
 	}
-
-	// Set common headers
-	req.Header.Set("Content-Type", "application/json")
-	for k, v := range c.headers {
-		req.Header.Set(k, v)
-	}
+	req.Header = c.headers.Clone()
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
@@ -108,50 +78,38 @@ func (c *Client) Request(ctx context.Context, method, path string, body interfac
 	}
 	defer resp.Body.Close()
 
-	// Read response body
-	respBody, err := io.ReadAll(resp.Body)
+	respBody, err := io.ReadAll(io.LimitReader(resp.Body, maxResponseBodySize+1))
 	if err != nil {
 		return errors.Wrap(err, "read response body failed")
 	}
-
-	// Check status code
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return errors.New(fmt.Sprintf("request failed with status %d: %s", resp.StatusCode, string(respBody)))
+	if len(respBody) > maxResponseBodySize {
+		return errors.New("SafeLine response body exceeds the 4 MiB limit")
 	}
 
-	// Parse response
-	if result != nil {
-		if err := json.Unmarshal(respBody, result); err == nil {
-			return nil
-		}
-		var respData map[string]interface{}
-		if err := json.Unmarshal(respBody, &respData); err != nil {
-			return errors.Wrap(err, "unmarshal response failed")
-		}
-		if respData["err"] != nil || respData["msg"] != nil {
-			return errors.New(respData["msg"].(string))
+	var envelope struct {
+		Err any    `json:"err"`
+		Msg string `json:"msg"`
+	}
+	envelopeDecoded := json.Unmarshal(respBody, &envelope) == nil
+	if envelopeDecoded {
+		if err := responseError(envelope.Err, envelope.Msg); err != nil {
+			return err
 		}
 	}
 
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
+		body := strings.TrimSpace(string(respBody))
+		if len(body) > maxErrorBodySize {
+			body = body[:maxErrorBodySize] + "..."
+		}
+		return errors.New(fmt.Sprintf("SafeLine request failed with status %d: %s", resp.StatusCode, body))
+	}
+
+	if result == nil {
+		return nil
+	}
+	if err := json.Unmarshal(respBody, result); err != nil {
+		return errors.Wrap(err, "unmarshal response failed")
+	}
 	return nil
-}
-
-// Get Send GET request
-func (c *Client) Get(ctx context.Context, path string, result interface{}) error {
-	return c.Request(ctx, http.MethodGet, path, nil, result)
-}
-
-// Post Send POST request
-func (c *Client) Post(ctx context.Context, path string, body interface{}, result interface{}) error {
-	return c.Request(ctx, http.MethodPost, path, body, result)
-}
-
-// Put Send PUT request
-func (c *Client) Put(ctx context.Context, path string, body interface{}, result interface{}) error {
-	return c.Request(ctx, http.MethodPut, path, body, result)
-}
-
-// Delete Send DELETE request
-func (c *Client) Delete(ctx context.Context, path string, result interface{}) error {
-	return c.Request(ctx, http.MethodDelete, path, nil, result)
 }
