@@ -1,6 +1,6 @@
 module github.com/chaitin/SafeLine/mcp_server
 
-go 1.25.5
+go 1.25.14
 
 require (
 	github.com/mark3labs/mcp-go v1.0.0-beta.1

@@ -11,7 +11,7 @@ The original site-creation, blacklist, and whitelist Tools have been removed. Th
 ## Protocol
 
 - MCP SDK: `mcp-go v1.0.0-beta.1`
-- Go: `1.25.5` or newer
+- Go: `1.25.14` or newer
 - Transport: Streamable HTTP
 - Endpoint: `POST /mcp`
 - Latest supported MCP revision: `2026-07-28`

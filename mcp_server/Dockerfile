@@ -1,4 +1,6 @@
-FROM golang:1.25.5-alpine AS builder
+FROM golang:1.25.14-alpine3.23 AS builder
+
+ARG GOPROXY
 
 WORKDIR /src
 
