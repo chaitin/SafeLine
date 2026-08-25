@@ -40,10 +40,11 @@ type MCPServer struct {
 	transport *server.StreamableHTTPServer
 }
 
-func NewMCPServer(name, version string) *MCPServer {
+func NewMCPServer(name, version, instructions string) *MCPServer {
 	s := server.NewMCPServer(
 		name,
 		version,
+		server.WithInstructions(instructions),
 		server.WithToolCapabilities(false),
 		server.WithInputSchemaValidation(),
 		server.WithStrictInputSchemaDefault(),

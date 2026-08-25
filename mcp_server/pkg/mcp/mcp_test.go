@@ -43,7 +43,8 @@ func TestModernStreamableHTTPAndToolErrorSemantics(t *testing.T) {
 	if err := logger.Init(&logger.Config{Level: "error"}); err != nil {
 		t.Fatal(err)
 	}
-	s := NewMCPServer("test", "1.0.0")
+	const instructions = "Use the configured display-name to instance-ID mappings."
+	s := NewMCPServer("test", "1.0.0", instructions)
 	if err := RegisterTool[probeParams, probeResult](s, probeTool{}); err != nil {
 		t.Fatal(err)
 	}
@@ -52,6 +53,9 @@ func TestModernStreamableHTTPAndToolErrorSemantics(t *testing.T) {
 
 	discover := postModern(t, httpServer.URL+EndpointPath, markmcp.MethodServerDiscover, map[string]any{})
 	result := requireRPCResult(t, discover)
+	if result["instructions"] != instructions {
+		t.Fatalf("instructions = %#v, want %q", result["instructions"], instructions)
+	}
 	versions, ok := result["supportedVersions"].([]any)
 	if !ok || len(versions) == 0 || versions[0] != markmcp.ProtocolVersion20260728 {
 		t.Fatalf("supportedVersions = %#v, want %s first", result["supportedVersions"], markmcp.ProtocolVersion20260728)
@@ -101,7 +105,7 @@ func TestModernStreamableHTTPAndToolErrorSemantics(t *testing.T) {
 }
 
 func TestHandlerRejectsOversizedRequestBody(t *testing.T) {
-	s := NewMCPServer("test", "1.0.0")
+	s := NewMCPServer("test", "1.0.0", "")
 	body := strings.NewReader(strings.Repeat("x", maxRequestBodySize+1))
 	req := httptest.NewRequest(http.MethodPost, EndpointPath, body)
 	req.Header.Set("Content-Type", "application/json")
@@ -110,6 +114,62 @@ func TestHandlerRejectsOversizedRequestBody(t *testing.T) {
 	s.Handler().ServeHTTP(response, req)
 	if !strings.Contains(response.Body.String(), "request body too large") {
 		t.Fatalf("oversized response = status %d body %q", response.Code, response.Body.String())
+	}
+}
+
+func TestLegacyInitializeReturnsInstructions(t *testing.T) {
+	const instructions = "Use the configured display-name to instance-ID mappings."
+	s := NewMCPServer("test", "1.0.0", instructions)
+	httpServer := httptest.NewServer(s.Handler())
+	defer httpServer.Close()
+
+	body, err := json.Marshal(map[string]any{
+		"jsonrpc": "2.0",
+		"id":      1,
+		"method":  markmcp.MethodInitialize,
+		"params": map[string]any{
+			"protocolVersion": markmcp.ProtocolVersion20251125,
+			"clientInfo": map[string]any{
+				"name":    "safeline-mcp-legacy-test",
+				"version": "1.0.0",
+			},
+			"capabilities": map[string]any{},
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	req, err := http.NewRequestWithContext(
+		t.Context(),
+		http.MethodPost,
+		httpServer.URL+EndpointPath,
+		bytes.NewReader(body),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer response.Body.Close()
+	if response.StatusCode != http.StatusOK {
+		t.Fatalf("initialize status = %d, want 200", response.StatusCode)
+	}
+
+	var rpc map[string]any
+	if err := json.NewDecoder(response.Body).Decode(&rpc); err != nil {
+		t.Fatal(err)
+	}
+	result, ok := rpc["result"].(map[string]any)
+	if !ok {
+		t.Fatalf("initialize response = %#v, want result", rpc)
+	}
+	if result["instructions"] != instructions {
+		t.Fatalf("instructions = %#v, want %q", result["instructions"], instructions)
 	}
 }
 

@@ -152,6 +152,30 @@ func normalizeInstances(cfg *Config, configDir string) error {
 		}
 	}
 
+	for index, instance := range cfg.Instances {
+		for previousIndex := 0; previousIndex < index; previousIndex++ {
+			previous := cfg.Instances[previousIndex]
+			if strings.EqualFold(instance.DisplayName, previous.DisplayName) {
+				return errors.New(fmt.Sprintf(
+					"duplicate instance display_name %q for instances %q and %q",
+					instance.DisplayName,
+					previous.ID,
+					instance.ID,
+				))
+			}
+		}
+		for otherIndex, other := range cfg.Instances {
+			if otherIndex != index && strings.EqualFold(instance.DisplayName, other.ID) {
+				return errors.New(fmt.Sprintf(
+					"instance display_name %q for %q conflicts with instance id %q",
+					instance.DisplayName,
+					instance.ID,
+					other.ID,
+				))
+			}
+		}
+	}
+
 	return nil
 }
 

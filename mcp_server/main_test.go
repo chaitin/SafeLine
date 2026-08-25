@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/chaitin/SafeLine/mcp_server/internal/auth"
+	"github.com/chaitin/SafeLine/mcp_server/internal/config"
 )
 
 func TestAuthInitIsOneTimeAndRotateIsExplicit(t *testing.T) {
@@ -57,4 +58,41 @@ func TestAuthInitIsOneTimeAndRotateIsExplicit(t *testing.T) {
 func lastLine(output string) string {
 	lines := strings.Split(strings.TrimSpace(output), "\n")
 	return lines[len(lines)-1]
+}
+
+func TestBuildServerInstructionsIncludesFriendlyInstanceMappings(t *testing.T) {
+	instructions := buildServerInstructions([]*config.InstanceConfig{
+		{
+			ID:          "dev152",
+			DisplayName: "Development 152",
+			BaseURL:     "https://secret.internal",
+			TokenFile:   "/run/secrets/dev152.token",
+		},
+		{
+			ID:          "dev180",
+			DisplayName: "Development 180",
+			BaseURL:     "https://other.internal",
+			TokenFile:   "/run/secrets/dev180.token",
+		},
+	})
+
+	for _, expected := range []string{
+		`display_name "Development 152" -> instance_id "dev152"`,
+		`display_name "Development 180" -> instance_id "dev180"`,
+		"Never guess an instance_id",
+	} {
+		if !strings.Contains(instructions, expected) {
+			t.Errorf("instructions = %q, want substring %q", instructions, expected)
+		}
+	}
+	for _, sensitive := range []string{
+		"secret.internal",
+		"other.internal",
+		"/run/secrets/dev152.token",
+		"/run/secrets/dev180.token",
+	} {
+		if strings.Contains(instructions, sensitive) {
+			t.Fatalf("instructions exposed instance configuration %q: %q", sensitive, instructions)
+		}
+	}
 }

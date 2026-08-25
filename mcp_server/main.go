@@ -74,6 +74,21 @@ func printNewToken(output io.Writer, token string) {
 	_, _ = fmt.Fprintln(output, token)
 }
 
+func buildServerInstructions(instances []*config.InstanceConfig) string {
+	var instructions strings.Builder
+	instructions.WriteString("This server exposes read-only SafeLine data. The get_attack_events tool requires an instance_id.\n")
+	instructions.WriteString("Configured SafeLine instance mappings:\n")
+	for _, instance := range instances {
+		instructions.WriteString(fmt.Sprintf(
+			"- display_name %q -> instance_id %q\n",
+			instance.DisplayName,
+			instance.ID,
+		))
+	}
+	instructions.WriteString("When the user refers to an instance by display_name, use exactly the mapped instance_id. Never guess an instance_id or substitute another instance.")
+	return instructions.String()
+}
+
 func runServer(args []string, stderr io.Writer) error {
 	flags := flag.NewFlagSet("mcp-server", flag.ContinueOnError)
 	flags.SetOutput(stderr)
@@ -122,7 +137,7 @@ func runServer(args []string, stderr io.Writer) error {
 	logger.With("enabled", authEnabled).Info("MCP bearer authentication configured")
 
 	serverConfig := config.GetServer()
-	s := mcpserver.NewMCPServer(serverConfig.Name, serverConfig.Version)
+	s := mcpserver.NewMCPServer(serverConfig.Name, serverConfig.Version, buildServerInstructions(instances))
 	for _, tool := range tools.Tools() {
 		if err := tool.Register(s); err != nil {
 			return fmt.Errorf("register tool: %w", err)

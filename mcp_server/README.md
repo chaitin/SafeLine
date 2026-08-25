@@ -57,6 +57,8 @@ instances:
 
 `LISTEN_ADDRESS` and `LISTEN_PORT` override listener settings. There is deliberately no global `SAFELINE_API_TOKEN`: every instance uses a separate token file.
 
+Each `display_name` must be unique, ignoring letter case, and must not match another instance's `id`. During server discovery (or legacy initialization), the server publishes only the `display_name` to `instance_id` mappings as Server Instructions. This lets a user refer to a friendly name while the AI still calls `get_attack_events` with the stable, explicit `instance_id`. Instance addresses and credentials are never included in those instructions.
+
 SafeLine CE does not yet provide a dedicated read-only service credential for all required management APIs. This release therefore uses an administrator API Token per instance, while the MCP process enforces the fixed read-only API allowlist.
 
 ## AI client authentication
@@ -184,4 +186,4 @@ Unknown input fields and fractional integers are rejected by server-side JSON Sc
 - `nodes`
 - `total`
 
-SafeLine HTTP failures, HTTP-200 error envelopes, unknown instances, and input validation failures are returned as MCP Tool Execution Errors with `result.isError=true`; they are never converted into an empty successful event list.
+SafeLine HTTP failures, HTTP-200 envelopes with a non-empty `err`, unknown instances, and input validation failures are returned as MCP Tool Execution Errors with `result.isError=true`. The MCP server does not interpret human-readable `msg` content when `err` is empty or absent.

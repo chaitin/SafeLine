@@ -78,6 +78,48 @@ instances:
 	}
 }
 
+func TestLoadRejectsDuplicateDisplayNames(t *testing.T) {
+	path := writeConfigFile(t, `
+server: {name: SafeLine MCP, version: 1.0.0, host: 127.0.0.1, port: 5678}
+logger: {level: info}
+instances:
+  - id: production-a
+    display_name: Production
+    base_url: https://one.example.test
+    token_file: one_token
+  - id: production-b
+    display_name: " production "
+    base_url: https://two.example.test
+    token_file: two_token
+`)
+
+	err := Load(path)
+	if err == nil || !strings.Contains(err.Error(), "duplicate instance display_name") {
+		t.Fatalf("Load() error = %v, want duplicate instance display_name", err)
+	}
+}
+
+func TestLoadRejectsDisplayNameConflictingWithAnotherInstanceID(t *testing.T) {
+	path := writeConfigFile(t, `
+server: {name: SafeLine MCP, version: 1.0.0, host: 127.0.0.1, port: 5678}
+logger: {level: info}
+instances:
+  - id: production-a
+    display_name: PRODUCTION-B
+    base_url: https://one.example.test
+    token_file: one_token
+  - id: production-b
+    display_name: Backup Production
+    base_url: https://two.example.test
+    token_file: two_token
+`)
+
+	err := Load(path)
+	if err == nil || !strings.Contains(err.Error(), "conflicts with instance id") {
+		t.Fatalf("Load() error = %v, want display_name and instance id conflict", err)
+	}
+}
+
 func TestLoadRejectsInlineInstanceToken(t *testing.T) {
 	path := writeConfigFile(t, `
 server: {name: SafeLine MCP, version: 1.0.0, host: 127.0.0.1, port: 5678}
