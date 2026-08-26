@@ -1,27 +1,32 @@
-# Server Configuration
 server:
   name: "SafeLine MCP Server"
-  version: "1.0.0"
-  # Can be overridden by environment variable LISTEN_PORT
+  version: "2.0.0"
+  # LISTEN_ADDRESS and LISTEN_PORT can override these listener values.
+  host: "127.0.0.1"
   port: 5678
-  # Can be overridden by environment variable LISTEN_ADDRESS
-  host: "0.0.0.0"
-  # Can be overridden by environment variable SAFELINE_SECRET
-  secret: "" # Secret for SSE server
-# Logger Configuration
-logger:
-  level: "info" # Log level: debug, info, warn, error
-  file_path: "" # Log file path
-  console: true # Whether to output to console
-  caller: false # Whether to record caller information
-  development: true # Whether to use development mode
 
-# API Configuration
-api:
-  # Can be overridden by environment variable SAFELINE_ADDRESS
-  base_url: "" # API service address
-  # Can be overridden by environment variable SAFELINE_API_TOKEN
-  token: "" # Authentication token
-  timeout: 30 # Timeout in seconds
-  debug: false # Whether to enable debug mode
-  insecure_skip_verify: true # Whether to skip certificate verification
+logger:
+  level: "info"
+  file_path: ""
+  console: true
+  caller: false
+  development: false
+
+# SafeLine API Tokens remain administrator credentials in this release. Keep
+# one token file per instance; the MCP server never returns them to clients.
+instances:
+  - id: "safeline-a"
+    display_name: "SafeLine A"
+    base_url: "https://safeline-a.example:9443"
+    token_file: "/run/secrets/safeline-a.token"
+    timeout: 30
+    debug: false
+    insecure_skip_verify: true
+
+  - id: "safeline-b"
+    display_name: "SafeLine B"
+    base_url: "https://safeline-b.example:9443"
+    token_file: "/run/secrets/safeline-b.token"
+    timeout: 30
+    debug: false
+    insecure_skip_verify: true

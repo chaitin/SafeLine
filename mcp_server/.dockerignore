@@ -1,0 +1,7 @@
+.git
+.gitignore
+secrets/
+state/
+*.log
+mcp-server
+coverage.out
