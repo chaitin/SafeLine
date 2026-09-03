@@ -1,6 +1,5 @@
 name: Bug
 description: Report a bug
-# Create a report to help us improve
 title: "[Bug] "
 
 body:
@@ -8,38 +7,46 @@ body:
     attributes:
       value: |
         Please search the [open issues](https://github.com/chaitin/SafeLine/issues) and [discussion](https://github.com/chaitin/SafeLine/discussions) for duplicate issue first. 
-        The more information you share, the faster we can identify and fix the bug.
-      # Please check for duplicate issue first.
-  - type: textarea
-    id: Description
+
+  - type: input
+    id: version
     attributes:
-      label: What happened?
-      # Describe the bug
-    validations:
-      required: false
-  - type: textarea
-    id: Reproduce
-    attributes:
-      label: How we reproduce?
+      label: SafeLine version
       description: |
-        Reports cannot be reproduced will Most likely be closed.
-      # To Reproduce
+        Please provide the exact SafeLine version.
+        For nightly or custom builds, provide the image tag or commit ID.
+      placeholder: "e.g. 9.4.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug description
+      description: Please describe what happened and what you expected to happen.
+      value: |
+        What happened:
+
+        What did you expect:
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce (if available)
+      description: If you can reproduce the issue, list the minimum steps.
       value: |
         1. ...
         2. ...
         3. ...
-  - type: textarea
-    id: Expected
-    attributes:
-      label: Expected behavior
-      # placeholder: |
-      # Descript what you expected to happen.
-      # Expected behavior. Descript what you expected to happen.
-  - type: textarea
-    id: Errorlog
-    attributes:
-      label: Error log
-      placeholder: |
-        Paste the error logs if any.
-      # Expected behavior. Descript what you expected to happen.
 
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs or screenshots (optional)
+      description: |
+        Paste relevant logs or drag screenshots here.
+        Please remove sensitive information before submitting.
+      placeholder: |
+        Paste logs or screenshots here.
