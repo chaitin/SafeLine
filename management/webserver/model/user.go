@@ -23,6 +23,13 @@ type User struct {
 	// while it is still inside the validity window.
 	TFALastUsedStep int64 `gorm:"column:tfa_last_used_step;default:0"`
 
+	// TFABootstrapIP is the client address the pending TFA secret was handed to
+	// before the account ever logged in. The secret is only served again to
+	// that address, and the first login has to come from it, so a caller that
+	// reaches the API before the administrator cannot bind the account to a
+	// secret it knows.
+	TFABootstrapIP string `gorm:"column:tfa_bootstrap_ip"`
+
 	IsEnabled bool `gorm:"default:true"`
 }
 

@@ -26,8 +26,10 @@ func CompileAndSave(text string) error {
 	update := Serialize(output, false, 0, 1)
 	defer update.Release()
 
-	// save to file
-	if err = utils.EnsureWriteFile(config.GlobalConfig.Detector.FslBytecode, update.ToBytes(), 0666); err != nil {
+	// save to file. The bytecode is not secret, but nothing but the management
+	// process has a reason to write it, so it is not created group or world
+	// writable either.
+	if err = utils.EnsureWriteFile(config.GlobalConfig.Detector.FslBytecode, update.ToBytes(), 0644); err != nil {
 		return errors.Annotate(err, "failed to save bytecode")
 	}
 
@@ -44,8 +46,10 @@ func CompileAndPush(text, serverAddr string) error {
 	update := Serialize(output, false, 0, 1)
 	defer update.Release()
 
-	// save to file
-	if err = utils.EnsureWriteFile(config.GlobalConfig.Detector.FslBytecode, update.ToBytes(), 0666); err != nil {
+	// save to file. The bytecode is not secret, but nothing but the management
+	// process has a reason to write it, so it is not created group or world
+	// writable either.
+	if err = utils.EnsureWriteFile(config.GlobalConfig.Detector.FslBytecode, update.ToBytes(), 0644); err != nil {
 		return errors.Annotate(err, "failed to save bytecode")
 	}
 

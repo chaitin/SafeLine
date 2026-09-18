@@ -22,8 +22,11 @@ func SecurityHeaders(c *gin.Context) {
 	c.Header("Referrer-Policy", "no-referrer")
 
 	// The console is reached over TLS; a browser that saw this header once will
-	// refuse to fall back to plain HTTP for the following year.
-	c.Header("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+	// refuse to fall back to plain HTTP for the following year. includeSubDomains
+	// is deliberately left out: the console shares its host with whatever else
+	// the deployment serves from it, and pinning every subdomain of that name is
+	// not this service's decision to make.
+	c.Header("Strict-Transport-Security", "max-age=31536000")
 
 	c.Next()
 }

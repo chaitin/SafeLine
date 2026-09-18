@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"chaitin.cn/patronus/safeline-2/management/webserver/api/response"
+	"chaitin.cn/patronus/safeline-2/management/webserver/model"
 	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/config"
 	"chaitin.cn/patronus/safeline-2/management/webserver/utils"
 )
@@ -104,6 +105,21 @@ func PostSSLCert(c *gin.Context) {
 	if err := c.BindJSON(&params); err != nil {
 		logger.Error(err)
 		response.Error(c, response.ErrorParamNotOK, http.StatusInternalServerError)
+		return
+	}
+
+	// The host name is written into the certificate as a DNS name, and a value
+	// that is not a host name produces a certificate that stands for nothing in
+	// particular. It is checked with the same rule the front end uses for a
+	// server name before it reaches the certificate.
+	if params.Hostname == "" {
+		response.Error(c, response.JSONBody{Err: response.ErrInternalError, Msg: "The host name of the certificate is required"}, http.StatusBadRequest)
+		return
+	}
+
+	if err := model.ValidateServerName(params.Hostname); err != nil {
+		logger.Warn(err)
+		response.Error(c, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusBadRequest)
 		return
 	}
 
