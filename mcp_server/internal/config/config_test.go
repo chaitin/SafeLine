@@ -31,7 +31,7 @@ instances:
     base_url: https://dev152:9443
     token_file: secrets/dev152_token
     timeout: 12
-    insecure_skip_verify: true
+    insecure_skip_verify: false
   - id: dev180
     base_url: https://dev180:9443
     token_file: /run/secrets/dev180_token

@@ -17,6 +17,12 @@ var (
 	ErrorParamNotOK    = JSONBody{ErrInternalError, "Error occurred when extracting params", nil}
 	ErrorDataNotExist  = JSONBody{ErrDataNotExist, "Data queried does not exist", nil}
 	ErrorReadOnly      = JSONBody{ErrReadOnly, "This environment is read only", nil}
+
+	// ErrorInternal is the answer to a failed database or runtime call. The
+	// text of the underlying error stays in the server log: it can carry
+	// schema names, addresses and other details of the deployment that the
+	// caller has no use for.
+	ErrorInternal = JSONBody{ErrInternalError, "Error occurred when processing the request, please check the server log", nil}
 )
 
 func Success(c *gin.Context, data interface{}) {

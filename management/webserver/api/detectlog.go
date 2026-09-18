@@ -8,8 +8,6 @@ import (
 	"strconv"
 	"strings"
 
-	"chaitin.cn/dev/go/errors"
-
 	"chaitin.cn/patronus/safeline-2/management/webserver/pkg"
 
 	"github.com/gin-gonic/gin"
@@ -51,7 +49,7 @@ func getDetectLog(eventId string) (*model.DetectLog, error) {
 	var detectLogBasic model.DetectLogBasic
 	res := db.Where(&model.DetectLogBasic{EventId: eventId}).First(&detectLogBasic)
 	if res.RowsAffected == 0 {
-		return nil, errors.New("Data queried does not exist")
+		return nil, errDataNotExist
 	}
 
 	var detectLogDetail model.DetectLogDetail

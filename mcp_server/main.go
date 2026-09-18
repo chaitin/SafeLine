@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"net"
 	"os"
 	"strings"
 
@@ -89,6 +90,21 @@ func buildServerInstructions(instances []*config.InstanceConfig) string {
 	return instructions.String()
 }
 
+// isLoopbackHost reports whether host only accepts connections from the local
+// machine. Anything else (an interface address, 0.0.0.0, a hostname) is
+// reachable from the network.
+func isLoopbackHost(host string) bool {
+	host = strings.TrimSpace(host)
+	if host == "" {
+		return false
+	}
+	if strings.EqualFold(host, "localhost") {
+		return true
+	}
+	ip := net.ParseIP(strings.Trim(host, "[]"))
+	return ip != nil && ip.IsLoopback()
+}
+
 func runServer(args []string, stderr io.Writer) error {
 	flags := flag.NewFlagSet("mcp-server", flag.ContinueOnError)
 	flags.SetOutput(stderr)
@@ -115,16 +131,27 @@ func runServer(args []string, stderr io.Writer) error {
 		return fmt.Errorf("initialize logger: %w", err)
 	}
 
+	serverConfig := config.GetServer()
+	authEnabled, err := auth.EnabledFromEnv()
+	if err != nil {
+		return err
+	}
+	if !authEnabled && !isLoopbackHost(serverConfig.Host) {
+		// Without the bearer gate every reachable listener would proxy SafeLine
+		// attack telemetry to anyone who can open a socket, so refuse to start
+		// rather than depend on the deployer noticing.
+		return fmt.Errorf(
+			"MCP authentication is disabled but the listener is not loopback-only (host %q); keep authentication enabled or bind a loopback address",
+			serverConfig.Host,
+		)
+	}
+
 	instances := config.GetInstances()
 	logger.With("instances", len(instances)).Info("initializing SafeLine API clients")
 	if err := api.InitInstances(instances); err != nil {
 		return fmt.Errorf("initialize SafeLine API clients: %w", err)
 	}
 
-	authEnabled, err := auth.EnabledFromEnv()
-	if err != nil {
-		return err
-	}
 	var middleware []mcpserver.Middleware
 	if authEnabled {
 		stateFile := auth.StateFileFromEnv()
@@ -136,7 +163,6 @@ func runServer(args []string, stderr io.Writer) error {
 	}
 	logger.With("enabled", authEnabled).Info("MCP bearer authentication configured")
 
-	serverConfig := config.GetServer()
 	s := mcpserver.NewMCPServer(serverConfig.Name, serverConfig.Version, buildServerInstructions(instances))
 	for _, tool := range tools.Tools() {
 		if err := tool.Register(s); err != nil {

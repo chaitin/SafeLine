@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -79,9 +80,54 @@ func initSrcIPConfig() error {
 	return nil
 }
 
+// skynetConfigStr is the skynet configuration of 5.3.9. It is also the
+// source of truth for the module names the engine knows about: the keys of a
+// policy group are module names that end up in this document.
+const skynetConfigStr = "{\"decode_config\":{\"decode_methods\":[\"url decode\",\"JSON\",\"base64\",\"hex\",\"eval\",\"XML\",\"PHP deserialize\",\"utf7\"]},\"deep_detect\":false,\"modules\":{\"m_asp_code_injection\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_cmd_injection\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_csrf\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_file_include\":{\"detect_config\":{\"detect_suspicious_schema\":true},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_file_upload\":{\"detect_config\":{\"action_of_handling_custome_file\":[\"deny transmission\"],\"detect_file_content\":true,\"detect_real_file_content\":false,\"enable_module_in_detecting_file_content\":[\"java\",\"asp_code_injection\",\"php_code_injection\"],\"file_type_of_custome_action\":[],\"forbidden_extra_token\":false,\"forbidden_multiple_filename\":true,\"forbidden_suspicious_filename\":true},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_http\":{\"detect_config\":{\"warning_http_parse_failed\":false,\"warning_suspicious_http_version\":false},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"disabled\"},\"m_java\":{\"detect_config\":{\"detect_lookup\":false},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_java_unserialize\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_php_code_injection\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_php_unserialize\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_response\":{\"detect_config\":{\"detection_configure\":[\"detect_jsp_code_leak\",\"detect_php_code_leak\",\"detect_webshell\"],\"error_types\":[\"directory indexing\",\"SQL execution error\",\"server exception\"]},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"disabled\"},\"m_rule\":{\"detect_config\":{\"check_info_leak_by_rsp\":false,\"compatibility_mode\":false,\"detection_configure\":[\"detect_phpinfo\",\"detect_admin_page\",\"detect_backdoor\",\"detect_php_vuln\",\"detect_nginx\",\"detect_dedecms\",\"detect_apache\",\"detect_xml\",\"detect_struts2\",\"detect_java_vuln\",\"detect_php168\",\"detect_wordpress\",\"detect_directory_traversal\",\"detect_iis\",\"detect_gogs_gitea\",\"detect_thinkphp\",\"detect_jenkins\",\"detect_ecshop\",\"detect_nexus\",\"detect_drupal\",\"detect_ghostscript\",\"detect_atlassian\",\"detect_weblogic\",\"detect_coremail\",\"detect_phpcms\",\"detect_spring\",\"detect_southidc\",\"detect_fastjson\",\"detect_tbk_dvr\",\"detect_joomla\",\"detect_ecology_oa\",\"detect_jackson\",\"detect_xstream\",\"detect_activemq\",\"detect_solr\",\"detect_csii\",\"detect_big_ip\",\"detect_apisix\",\"detect_druid\",\"detect_log4j\"],\"info_leak_types\":[\"test file\",\"backup file\",\"code repository\",\"server sensitive file\"],\"rules_config\":{\"disable_ruleid\":[],\"enable_ruleid\":[],\"rules_status\":[]}},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_scanner\":{\"detect_config\":{\"language_types\":[\"python_scanner\",\"go_scanner\"],\"other_types\":[\"normal_scanner\"],\"spider_types\":[]},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"disabled\"},\"m_sqli\":{\"detect_config\":{\"detect_non_injection_sql\":true},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_ssrf\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_ssti\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_xss\":{\"detect_config\":{\"detect_complete_html\":true},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"}},\"timeout\":{\"threshold\":1000,\"log\":\"enabled\"}}"
+
+// SkynetModules returns the set of module names the engine knows about.
+func SkynetModules() (map[string]struct{}, error) {
+	var sc SkynetConfig
+	if err := json.Unmarshal([]byte(skynetConfigStr), &sc); err != nil {
+		return nil, err
+	}
+
+	modules := make(map[string]struct{}, len(sc.Modules))
+	for module := range sc.Modules {
+		modules[module] = struct{}{}
+	}
+
+	return modules, nil
+}
+
+// ValidatePolicyGroup checks that a policy group only names modules and modes
+// that the engine understands.
+//
+// The keys of the map are written into the skynet configuration, so an unknown
+// module would either be handed to an engine that has never heard of it or make
+// the rendering step below dereference a nil module entry.
+func ValidatePolicyGroup(pgg PolicyGroup) error {
+	modules, err := SkynetModules()
+	if err != nil {
+		return err
+	}
+
+	for module, mode := range pgg {
+		if _, ok := modules[module]; !ok {
+			return fmt.Errorf("unknown module %q", module)
+		}
+
+		switch mode {
+		case StrictMode, DefaultMode, DisableMode:
+		default:
+			return fmt.Errorf("module %q: unknown mode %q", module, mode)
+		}
+	}
+
+	return nil
+}
+
 func GetSkynetConfig(db *gorm.DB) (string, error) {
-	// skynetConfigStr skynet config in 5.3.9
-	const skynetConfigStr = "{\"decode_config\":{\"decode_methods\":[\"url decode\",\"JSON\",\"base64\",\"hex\",\"eval\",\"XML\",\"PHP deserialize\",\"utf7\"]},\"deep_detect\":false,\"modules\":{\"m_asp_code_injection\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_cmd_injection\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_csrf\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_file_include\":{\"detect_config\":{\"detect_suspicious_schema\":true},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_file_upload\":{\"detect_config\":{\"action_of_handling_custome_file\":[\"deny transmission\"],\"detect_file_content\":true,\"detect_real_file_content\":false,\"enable_module_in_detecting_file_content\":[\"java\",\"asp_code_injection\",\"php_code_injection\"],\"file_type_of_custome_action\":[],\"forbidden_extra_token\":false,\"forbidden_multiple_filename\":true,\"forbidden_suspicious_filename\":true},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_http\":{\"detect_config\":{\"warning_http_parse_failed\":false,\"warning_suspicious_http_version\":false},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"disabled\"},\"m_java\":{\"detect_config\":{\"detect_lookup\":false},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_java_unserialize\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_php_code_injection\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_php_unserialize\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_response\":{\"detect_config\":{\"detection_configure\":[\"detect_jsp_code_leak\",\"detect_php_code_leak\",\"detect_webshell\"],\"error_types\":[\"directory indexing\",\"SQL execution error\",\"server exception\"]},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"disabled\"},\"m_rule\":{\"detect_config\":{\"check_info_leak_by_rsp\":false,\"compatibility_mode\":false,\"detection_configure\":[\"detect_phpinfo\",\"detect_admin_page\",\"detect_backdoor\",\"detect_php_vuln\",\"detect_nginx\",\"detect_dedecms\",\"detect_apache\",\"detect_xml\",\"detect_struts2\",\"detect_java_vuln\",\"detect_php168\",\"detect_wordpress\",\"detect_directory_traversal\",\"detect_iis\",\"detect_gogs_gitea\",\"detect_thinkphp\",\"detect_jenkins\",\"detect_ecshop\",\"detect_nexus\",\"detect_drupal\",\"detect_ghostscript\",\"detect_atlassian\",\"detect_weblogic\",\"detect_coremail\",\"detect_phpcms\",\"detect_spring\",\"detect_southidc\",\"detect_fastjson\",\"detect_tbk_dvr\",\"detect_joomla\",\"detect_ecology_oa\",\"detect_jackson\",\"detect_xstream\",\"detect_activemq\",\"detect_solr\",\"detect_csii\",\"detect_big_ip\",\"detect_apisix\",\"detect_druid\",\"detect_log4j\"],\"info_leak_types\":[\"test file\",\"backup file\",\"code repository\",\"server sensitive file\"],\"rules_config\":{\"disable_ruleid\":[],\"enable_ruleid\":[],\"rules_status\":[]}},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_scanner\":{\"detect_config\":{\"language_types\":[\"python_scanner\",\"go_scanner\"],\"other_types\":[\"normal_scanner\"],\"spider_types\":[]},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"disabled\"},\"m_sqli\":{\"detect_config\":{\"detect_non_injection_sql\":true},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_ssrf\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_ssti\":{\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"},\"m_xss\":{\"detect_config\":{\"detect_complete_html\":true},\"high_risk_action\":\"deny\",\"high_risk_enable_log\":1,\"low_risk_action\":\"continue\",\"low_risk_enable_log\":1,\"medium_risk_action\":\"continue\",\"medium_risk_enable_log\":1,\"state\":\"enabled\"}},\"timeout\":{\"threshold\":1000,\"log\":\"enabled\"}}"
 	var sc SkynetConfig
 	err := json.Unmarshal([]byte(skynetConfigStr), &sc)
 	if err != nil {
@@ -98,28 +144,30 @@ func GetSkynetConfig(db *gorm.DB) (string, error) {
 	}
 
 	for module, mode := range pgg {
+		// The module names come from a request body, so a key that the engine
+		// does not know about must be rejected instead of being dereferenced
+		// (sc.Modules[module] is a nil pointer for an unknown module).
+		scm, ok := sc.Modules[module]
+		if !ok || scm == nil {
+			return "", fmt.Errorf("unknown module %q", module)
+		}
+
 		switch mode {
 		case StrictMode:
-			scm := sc.Modules[module]
 			scm.HighRiskAction = "deny"
 			scm.MediumRiskAction = "deny"
 			scm.LowRiskAction = "deny"
 			scm.State = "enabled"
-			sc.Modules[module] = scm
 		case DefaultMode:
-			scm := sc.Modules[module]
 			scm.HighRiskAction = "deny"
 			scm.MediumRiskAction = "continue"
 			scm.LowRiskAction = "continue"
 			scm.State = "enabled"
-			sc.Modules[module] = scm
 		case DisableMode:
-			scm := sc.Modules[module]
 			scm.HighRiskAction = "continue"
 			scm.MediumRiskAction = "continue"
 			scm.LowRiskAction = "continue"
 			scm.State = "disabled"
-			sc.Modules[module] = scm
 		default:
 			return "", errors.New("no such mode")
 		}

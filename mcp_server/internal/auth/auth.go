@@ -20,6 +20,7 @@ import (
 
 const (
 	EnabledEnv   = "MCP_AUTH_ENABLED"
+	DisabledEnv  = "MCP_AUTH_DISABLED"
 	StateFileEnv = "MCP_AUTH_STATE_FILE"
 
 	DefaultStateFile = "/var/lib/safeline-mcp/auth.json"
@@ -42,17 +43,31 @@ type Authenticator struct {
 	tokenHash [sha256.Size]byte
 }
 
+// EnabledFromEnv reports whether the MCP bearer gate must be active.
+//
+// Authentication is mandatory unless a deployment explicitly opts out: an
+// unset environment means enabled, so exposing attack telemetry by simply
+// forgetting one variable is not possible. MCP_AUTH_ENABLED=false and
+// MCP_AUTH_DISABLED=true both opt out; the server then refuses to listen on a
+// non-loopback address.
 func EnabledFromEnv() (bool, error) {
-	raw := strings.TrimSpace(os.Getenv(EnabledEnv))
-	if raw == "" {
-		return false, nil
+	if raw := strings.TrimSpace(os.Getenv(EnabledEnv)); raw != "" {
+		enabled, err := strconv.ParseBool(raw)
+		if err != nil {
+			return false, fmt.Errorf("parse %s: %w", EnabledEnv, err)
+		}
+		return enabled, nil
 	}
 
-	enabled, err := strconv.ParseBool(raw)
-	if err != nil {
-		return false, fmt.Errorf("parse %s: %w", EnabledEnv, err)
+	if raw := strings.TrimSpace(os.Getenv(DisabledEnv)); raw != "" {
+		disabled, err := strconv.ParseBool(raw)
+		if err != nil {
+			return false, fmt.Errorf("parse %s: %w", DisabledEnv, err)
+		}
+		return !disabled, nil
 	}
-	return enabled, nil
+
+	return true, nil
 }
 
 func StateFileFromEnv() string {

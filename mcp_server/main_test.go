@@ -96,3 +96,42 @@ func TestBuildServerInstructionsIncludesFriendlyInstanceMappings(t *testing.T) {
 		}
 	}
 }
+
+func TestAuthDisabledRefusesNonLoopbackListener(t *testing.T) {
+	configPath := filepath.Join(t.TempDir(), "config.yaml")
+	contents := `
+server:
+  name: SafeLine MCP
+  version: 1.0.0
+  host: 0.0.0.0
+  port: 5678
+logger:
+  level: info
+instances:
+  - id: dev152
+    base_url: https://dev152:9443
+    token_file: /run/secrets/dev152_token
+`
+	if err := os.WriteFile(configPath, []byte(contents), 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	t.Setenv(auth.DisabledEnv, "true")
+	err := run([]string{"--config", configPath}, &bytes.Buffer{}, &bytes.Buffer{})
+	if err == nil || !strings.Contains(err.Error(), "loopback") {
+		t.Fatalf("run() error = %v, want refusal of a non-loopback listener", err)
+	}
+}
+
+func TestIsLoopbackHost(t *testing.T) {
+	for _, host := range []string{"127.0.0.1", "::1", "[::1]", "localhost", "LocalHost"} {
+		if !isLoopbackHost(host) {
+			t.Errorf("isLoopbackHost(%q) = false, want true", host)
+		}
+	}
+	for _, host := range []string{"", "0.0.0.0", "::", "10.0.0.10", "example.com"} {
+		if isLoopbackHost(host) {
+			t.Errorf("isLoopbackHost(%q) = true, want false", host)
+		}
+	}
+}

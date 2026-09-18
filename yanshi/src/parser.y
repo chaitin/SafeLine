@@ -94,6 +94,9 @@ int yylex(YYSTYPE* yylval, YYLTYPE* loc, Stmt*& res, long& errors, const Locatio
   if (low > high) { \
     FAIL(yyloc, "low > high"); \
   } \
+  if (low > MAX_REPEAT || (high != LONG_MAX && high > MAX_REPEAT)) { \
+    FAIL(yyloc, "repeat count exceeds limit"); \
+  } \
   x = new RepeatExpr(inner, low, high)
 %}
 

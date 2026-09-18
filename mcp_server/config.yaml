@@ -21,7 +21,11 @@ instances:
     token_file: "/run/secrets/safeline-a.token"
     timeout: 30
     debug: false
-    insecure_skip_verify: true
+    # Leave TLS verification enabled: the SafeLine API Token is an
+    # administrator credential and disabling verification lets anyone on the
+    # path read it. Set this to true only for a lab instance with an
+    # unchangeable self-signed certificate.
+    insecure_skip_verify: false
 
   - id: "safeline-b"
     display_name: "SafeLine B"
@@ -29,4 +33,4 @@ instances:
     token_file: "/run/secrets/safeline-b.token"
     timeout: 30
     debug: false
-    insecure_skip_verify: true
+    insecure_skip_verify: false

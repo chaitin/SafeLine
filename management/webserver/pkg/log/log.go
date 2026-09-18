@@ -51,11 +51,17 @@ func InitLogger() error {
 			fileFlag = fileFlag | os.O_CREATE
 		}
 
-		if fp, err := os.OpenFile(config.GlobalConfig.Log.Output, fileFlag, os.ModePerm); err != nil {
+		// os.ModePerm (0777) let every local user rewrite the audit log. The
+		// file is created with an owner/group readable mode instead.
+		if fp, err := os.OpenFile(config.GlobalConfig.Log.Output, fileFlag, logFileMode); err != nil {
 			return fmt.Errorf("failed to open log file: %s", err.Error())
 		} else {
 			log.SetOutput(log.AllLoggers, log.NewLockOutput(fp))
 		}
+
+		// The mode above only applies when the file is created, so a log file
+		// that an older release left world writable is tightened here.
+		tightenLogFileMode(config.GlobalConfig.Log.Output)
 	}
 
 	// hook
@@ -65,6 +71,28 @@ func InitLogger() error {
 	LoadLogLevel()
 
 	return nil
+}
+
+// logFileMode is the permission the log file is created with. Logs are audit
+// material: they must not be writable by other local users.
+const logFileMode os.FileMode = 0640
+
+// looseLogFileMask matches the group and world write bits.
+const looseLogFileMask os.FileMode = 0o022
+
+// tightenLogFileMode removes the group and world write bits from an existing
+// log file, so that a log file created by an older release cannot stay
+// tamperable by other local users.
+func tightenLogFileMode(path string) {
+	info, err := os.Stat(path)
+	if err != nil || info.Mode().Perm()&looseLogFileMask == 0 {
+		return
+	}
+
+	log.Warnf("Log file %s is writable by other users, setting mode to %#o", path, logFileMode)
+	if err := os.Chmod(path, logFileMode); err != nil {
+		log.Warnf("Cannot tighten the mode of log file %s: %s", path, err)
+	}
 }
 
 type RuntimeHook struct{}

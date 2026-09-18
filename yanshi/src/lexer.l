@@ -5,6 +5,7 @@
 #include "syntax.hh"
 
 #include <limits.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string>
 #include <string.h>
@@ -26,6 +27,20 @@ static long invalid_escape(YYSTYPE* yylval, const char* text)
 {
   yylval->errmsg = aprintf("invalid \\-escape: %s", text);
   return INVALID_CHARACTER;
+}
+
+// atol() cannot report an overflow, so a count beyond LONG_MAX silently
+// saturated and could drive an unbounded repeat expansion. Convert with
+// strtoll() and saturate explicitly; the parser then rejects the value
+// through gen_repeat()'s MAX_REPEAT check.
+static long parse_integer_token(const char* text)
+{
+  errno = 0;
+  char* end = NULL;
+  long long value = strtoll(text, &end, 10);
+  if (errno == ERANGE || value < 0 || value > (long long)LONG_MAX)
+    return LONG_MAX;
+  return (long)value;
 }
 
 static int invalid_escape_octonary(YYSTYPE* yylval, const char* text)
@@ -116,7 +131,7 @@ L			[a-zA-Z_\x80-\xff]
 "semicolon" semicolon = true;
 "nosemicolon" semicolon = false;
 {L}({L}|{D})* yylval->str = new string(yytext); return IDENT;
-{D}+ yylval->integer = atol(yytext); return INTEGER;
+{D}+ yylval->integer = parse_integer_token(yytext); return INTEGER;
 "#define" return PREPROCESS_DEFINE;
 
 "#" yy_push_state(IN_LINE_COMMENT, yyscanner);

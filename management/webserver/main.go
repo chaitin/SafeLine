@@ -136,6 +136,7 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+	r.Use(middleware.SecurityHeaders)
 
 	var option model.Options
 	database.GetDB().Where(&model.Options{Key: constants.SecretKey}).First(&option)
@@ -145,7 +146,6 @@ func main() {
 	publicRouters := r.Group("/api")
 	publicRouters.POST(api.Login, api.PostLogin)
 	publicRouters.POST(api.Logout, api.PostLogout)
-	publicRouters.POST(api.Behaviour, api.PostBehaviour)
 	publicRouters.GET(api.OTPUrl, api.GetOTPUrl)
 	publicRouters.GET(api.Version, api.GetVersion)
 	publicRouters.GET(api.UpgradeTips, api.GetUpgradeTips)
@@ -168,6 +168,8 @@ func main() {
 	}
 
 	limitedRouters.GET(api.User, api.GetUser)
+
+	limitedRouters.POST(api.Behaviour, api.PostBehaviour)
 
 	limitedRouters.GET(api.DetectLogList, api.GetDetectLogList)
 	limitedRouters.GET(api.DetectLogDetail, api.GetDetectLogDetail)

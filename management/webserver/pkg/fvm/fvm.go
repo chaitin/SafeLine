@@ -19,9 +19,6 @@ import (
 	"C" //nolint:typecheck
 )
 import (
-	"fmt"
-	"io"
-	"net/http"
 	"net/url"
 	"unsafe"
 
@@ -185,82 +182,22 @@ func (f *FVM) PushFsl(server string, update *FVMUpdate) error {
 	log.Infof("Push FSL to %s", server)
 
 	var length = uint32(update.update.buf.length)
-	var p = uintptr(unsafe.Pointer(update.update.buf.ptr))
+	ptr := unsafe.Pointer(update.update.buf.ptr)
 
 	log.Infof("Get update length %d, %d", length, C.int(update.update.buf.length))
 
-	u := &upload{
-		Length: length,
-		P:      p,
-	}
+	// Copy the compiled policy out of the C buffer. The C memory can be
+	// released while the request is in flight, and the Go side needs a value
+	// it can replay for every attempt.
+	policy := C.GoBytes(ptr, C.int(length))
 
 	base, _ := url.Parse(server)
 	base.Path = "/update/policy"
 	snURL := base.String()
-	req, err := http.NewRequest(
-		"POST",
-		snURL,
-		u,
-	)
-	if err != nil {
-		return errors.Annotatef(err, "create request failed")
-	}
-	req.Header.Add("Content-Type", "application/octet-stream")
-	// req.Header.Set("Connection", "close")
 
 	// The compiled policy is pushed to the detector over the container network
 	// and replaces the bytecode the engine executes, so the certificate of an
 	// HTTPS detector must be verified: a man in the middle could otherwise
 	// replace the policy and silently disable the WAF.
-	httpClient := &http.Client{}
-
-	var (
-		respErr error
-		resp    *http.Response
-	)
-	for i := 0; i < 3; i++ {
-		resp, respErr = httpClient.Do(req)
-		if respErr == nil {
-			break
-		}
-	}
-	if respErr != nil {
-		return errors.Annotatef(respErr, "Get response failed")
-	}
-	if resp != nil && resp.StatusCode != 200 {
-		bodyBytes, err := io.ReadAll(resp.Body)
-		if err != nil {
-			log.Fatal(err)
-		}
-		bodyString := string(bodyBytes)
-
-		return errors.New(fmt.Sprintf("Push FSL response(%d %s)", resp.StatusCode, bodyString))
-	}
-
-	return nil
-}
-
-type upload struct {
-	Length uint32
-	off    uint32
-	P      uintptr
-}
-
-func (u *upload) Read(p []byte) (n int, err error) {
-	if u.off >= u.Length {
-		if len(p) == 0 {
-			return 0, nil
-		}
-		return 0, io.EOF
-	}
-	plen := uint32(len(p))
-	var i uint32
-	for i = 0; i < plen; i++ {
-		if i+u.off >= u.Length {
-			break
-		}
-		p[i] = *(*byte)(unsafe.Pointer(u.P + unsafe.Sizeof(p[0])*uintptr(i+u.off)))
-	}
-	u.off = i + u.off
-	return int(i), nil
+	return pushPolicy(snURL, policy)
 }

@@ -9,6 +9,7 @@ import (
 	"encoding/pem"
 	"io/ioutil"
 	"math/big"
+	"os"
 	"time"
 )
 
@@ -79,7 +80,16 @@ func WriteCertIfNotExist(certFilePath, keyFilePath string, generator func() ([]b
 		return err
 	}
 
-	if err = EnsureRenameWriteFile(keyFilePath, key, 0644); err != nil {
+	// A certificate is public, its private key is not: 0644 lets every local
+	// user read the key and impersonate the service it belongs to.
+	if err = EnsureRenameWriteFile(keyFilePath, key, 0600); err != nil {
+		return err
+	}
+
+	// The file may already have existed with the permissive mode that older
+	// releases gave it, in which case the mode passed to the write above is
+	// not applied by the kernel.
+	if err = os.Chmod(keyFilePath, 0600); err != nil {
 		return err
 	}
 

@@ -31,7 +31,19 @@ func StartGRPCSever() error {
 	if err != nil {
 		return errors.Wrap(err, "Failed to listen")
 	}
-	var opts []grpc.ServerOption
+
+	if err := InitControlToken(); err != nil {
+		// Not fatal: the console keeps working, and every subscription is
+		// refused with an explanation until the token is available.
+		logger.Errorf("Failed to init the control channel token: %s", err)
+	}
+
+	opts := []grpc.ServerOption{
+		// The control channel carries the complete site configuration of the
+		// installation and republishes it on every change, so a subscription
+		// has to prove that it is tcontrollerd.
+		grpc.StreamInterceptor(subscribeAuthInterceptor),
+	}
 	grpcServer := grpc.NewServer(opts...)
 	pb.RegisterWebsiteServer(grpcServer, GetWebsiteServer())
 	go func() {

@@ -159,7 +159,7 @@ char* readline(const char* prompt)
 static void run_command(char* line)
 {
   size_t p = 1;
-  while (line[p] && isalnum(line[p]))
+  while (line[p] && isalnum((unsigned char)line[p]))
     p++;
   Command* com = NULL;
   REP(i, LEN(commands))
@@ -172,10 +172,10 @@ static void run_command(char* line)
   else if (com == (Command*)1)
     printf("Ambiguous command '%s'\n", line);
   else {
-    while (line[p] && isspace(line[p]))
+    while (line[p] && isspace((unsigned char)line[p]))
       p++;
     size_t len = strlen(line);
-    while (len && isspace(line[len-1]))
+    while (len && isspace((unsigned char)line[len-1]))
       line[--len] = '\0';
     com->fn(line+p);
   }

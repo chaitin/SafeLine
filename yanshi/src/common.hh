@@ -44,6 +44,11 @@ extern char*** _NSGetArgv(void);
 #define CYAN "\x1b[1;36m"
 #define NORMAL_YELLOW "\x1b[33m"
 const long MAX_CODEPOINT = 0x10ffff;
+// Upper bound for a single repetition count. gen_repeat() rejects larger
+// bounds while parsing and FsaAnno::repeat() enforces the same limit as
+// defense in depth, because the automaton expansion performed per iteration
+// makes the cost of a large count grow without bound (CWE-770).
+const long MAX_REPEAT = 10000;
 extern long action_label_base, action_label, call_label_base, call_label, collapse_label_base, collapse_label;
 
 void bold(long fd = 1);
