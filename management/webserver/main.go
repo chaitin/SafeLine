@@ -139,7 +139,6 @@ func main() {
 
 	var option model.Options
 	database.GetDB().Where(&model.Options{Key: constants.SecretKey}).First(&option)
-	logger.Debugf("Secret: %s", option.Value)
 	store := cookie.NewStore([]byte(option.Value))
 	r.Use(sessions.Sessions("session", store))
 
@@ -147,7 +146,6 @@ func main() {
 	publicRouters.POST(api.Login, api.PostLogin)
 	publicRouters.POST(api.Logout, api.PostLogout)
 	publicRouters.POST(api.Behaviour, api.PostBehaviour)
-	publicRouters.POST(api.FalsePositives, api.PostFalsePositives)
 	publicRouters.GET(api.OTPUrl, api.GetOTPUrl)
 	publicRouters.GET(api.Version, api.GetVersion)
 	publicRouters.GET(api.UpgradeTips, api.GetUpgradeTips)
@@ -159,15 +157,13 @@ func main() {
 	})
 
 	limitedRouters := r.Group("/api")
-	noAuth, existed := os.LookupEnv("NO_AUTH")
-	if existed && len(noAuth) >= 0 {
-		logger.Warn("No auth")
+	if envEnabled(os.Getenv("NO_AUTH")) {
+		logger.Warn("Authentication is disabled because NO_AUTH is enabled")
 	} else {
 		limitedRouters.Use(middleware.AuthRequired)
 	}
-	readOnly, existed := os.LookupEnv("READ_ONLY")
-	if existed && len(readOnly) >= 0 {
-		logger.Warn("Read only")
+	if envEnabled(os.Getenv("READ_ONLY")) {
+		logger.Warn("Write requests are rejected because READ_ONLY is enabled")
 		limitedRouters.Use(middleware.ReadOnly)
 	}
 
@@ -175,6 +171,7 @@ func main() {
 
 	limitedRouters.GET(api.DetectLogList, api.GetDetectLogList)
 	limitedRouters.GET(api.DetectLogDetail, api.GetDetectLogDetail)
+	limitedRouters.POST(api.FalsePositives, api.PostFalsePositives)
 
 	limitedRouters.POST(api.Website, api.PostWebsite)
 	limitedRouters.PUT(api.Website, api.PutWebsite)
@@ -206,5 +203,18 @@ func main() {
 	logger.Info("Staring...")
 	if err := r.Run(config.GlobalConfig.Server.ListenAddr); err != nil {
 		logger.Fatalln("Error occurred when running web server: ", err)
+	}
+}
+
+// envEnabled reports whether an environment variable holds an explicit truthy
+// value. Switches such as NO_AUTH and READ_ONLY disable a protection, so only
+// values that actually ask for it may enable them: an empty string (or any
+// other unparsable value) must never do it.
+func envEnabled(value string) bool {
+	switch strings.ToLower(strings.TrimSpace(value)) {
+	case "1", "true", "yes", "on":
+		return true
+	default:
+		return false
 	}
 }
