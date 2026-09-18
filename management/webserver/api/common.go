@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -18,13 +19,22 @@ import (
 
 const VersionInfoEntrypoint = "/release/latest/version.json"
 
+// maxVersionInfoBytes bounds the upgrade information this server reads from
+// the platform. The body is parsed and logged on error, so a large or endless
+// answer from a misbehaving (or hostile) endpoint must not be buffered whole.
+const maxVersionInfoBytes = 1 << 20
+
 type idsRequest struct {
 	IDs []uint `json:"ids" form:"ids"`
 }
 
 type pageRequest struct {
+	// PageSize is capped at 100: the value is handed to SQL LIMIT, so an
+	// unbounded one lets a single request ask the server to load an arbitrary
+	// number of rows. 100 is the largest page the console offers and the same
+	// range the MCP tools accept.
 	Page     int `json:"page"         form:"page,default=1"         binding:"min=1"`
-	PageSize int `json:"page_size"    form:"page_size,default=10"   binding:"min=1"`
+	PageSize int `json:"page_size"    form:"page_size,default=10"   binding:"min=1,max=100"`
 }
 
 type versionInfoResponse struct {
@@ -52,7 +62,12 @@ func GetUpgradeTips(ctx *gin.Context) {
 		response.Success(ctx, gin.H{"upgrade_tips": constants.NotUpgrade})
 		return
 	}
-	body, err := ioutil.ReadAll(versionInfoRsp.Body)
+	// The response body has to be released on every path, otherwise the
+	// connection (and its file descriptor) stays around until the transport
+	// times it out.
+	defer versionInfoRsp.Body.Close()
+
+	body, err := ioutil.ReadAll(io.LimitReader(versionInfoRsp.Body, maxVersionInfoBytes))
 	if err != nil {
 		logger.Warn(err)
 		response.Success(ctx, gin.H{"upgrade_tips": constants.NotUpgrade})

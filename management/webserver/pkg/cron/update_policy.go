@@ -71,8 +71,17 @@ func CheckAndUpdatePolicy() {
 
 	statRspData := statResponseBody{}
 	statRsp, err := client.Do(statReq)
-	if err != nil || statRsp.StatusCode != http.StatusOK {
+	if err != nil {
 		logger.Warn(err)
+		return
+	}
+	// The version check below returns early on every branch that is not "an
+	// update is needed", so the body has to be released on the way out instead
+	// of only on the path that continues.
+	defer statRsp.Body.Close()
+
+	if statRsp.StatusCode != http.StatusOK {
+		logger.Warnf("%s get policy version, return %d", addr, statRsp.StatusCode)
 		return
 	}
 
@@ -92,23 +101,15 @@ func CheckAndUpdatePolicy() {
 		return
 	}
 
-	err = statRsp.Body.Close()
-	if err != nil {
-		logger.Warn(err)
-	}
-
 	logger.Info("Update fsl bytecode")
 	updateRsp, err := client.Do(updateReq)
 	if err != nil {
 		logger.Warn(err)
 		return
 	}
+	defer updateRsp.Body.Close()
 
 	if updateRsp.StatusCode != http.StatusOK {
 		logger.Warnf("%s update policy, return %d", addr, updateRsp.StatusCode)
-	}
-	err = updateRsp.Body.Close()
-	if err != nil {
-		logger.Warn(err)
 	}
 }

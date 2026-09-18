@@ -52,6 +52,11 @@ func generateNginxConfig(website *model.WebsiteConfig) (string, error) {
 		if urlInfo.Scheme == HttpsScheme && urlInfo.Port() == "" {
 			urlInfo.Host = urlInfo.Host + ":" + DefaultHttpsPort
 		}
+		// The host and the scheme are rendered into "server" and "proxy_pass",
+		// so a value carrying nginx syntax has to be rejected here.
+		if err := validateUpstream(upstream); err != nil {
+			return "", err
+		}
 		upstreamAddr = fmt.Sprintf(upstreamAddrTpl, urlInfo.Host)
 		if len(urlInfo.Scheme) > 0 {
 			scheme = urlInfo.Scheme

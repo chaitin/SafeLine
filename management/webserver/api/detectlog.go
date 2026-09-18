@@ -170,6 +170,9 @@ func PostFalsePositives(c *gin.Context) {
 		response.Success(c, nil)
 		return
 	}
+	// The caller owns the response returned by DoPostTelemetry and has to
+	// release it, otherwise every report leaks a connection.
+	defer rsp.Body.Close()
 
 	if rsp.StatusCode != http.StatusOK && rsp.StatusCode != http.StatusCreated {
 		log.Warn(fmt.Sprintf("Transfer telemetry failed, status code = %d", rsp.StatusCode), err)
