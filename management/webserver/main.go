@@ -146,6 +146,9 @@ func main() {
 		logger.Fatalln("Failed to disable trusted proxies: ", err)
 	}
 	r.Use(middleware.SecurityHeaders)
+	// Nothing in front of this server caps the request body, so it is bounded
+	// here (see middleware.BodyLimit).
+	r.Use(middleware.BodyLimit(middleware.MaxRequestBodyBytes))
 
 	var option model.Options
 	database.GetDB().Where(&model.Options{Key: constants.SecretKey}).First(&option)

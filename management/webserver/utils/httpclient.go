@@ -4,15 +4,24 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"sync"
 	"time"
 )
 
 const proxyName = "HTTPS_PROXY"
 
-var httpClient *http.Client
+var (
+	httpClientOnce sync.Once
+	httpClient     *http.Client
+)
 
+// GetHTTPClient returns the shared HTTP client.
+//
+// The client is built once: the API handlers and the cron jobs call this at the
+// same time, and the unsynchronized lazy assignment used before let two of them
+// build (and see) a client at the same time.
 func GetHTTPClient() *http.Client {
-	if httpClient == nil {
+	httpClientOnce.Do(func() {
 		// Certificates are verified: this client talks to the telemetry
 		// endpoint and to the upgrade server, both of which are remote and can
 		// be spoofed by a man in the middle when verification is disabled.
@@ -28,7 +37,7 @@ func GetHTTPClient() *http.Client {
 		}
 
 		httpClient = &http.Client{Transport: tr}
-	}
+	})
 
 	return httpClient
 }

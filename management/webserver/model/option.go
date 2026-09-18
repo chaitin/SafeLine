@@ -93,6 +93,9 @@ func NotifyInstallation(machineId string) {
 		logger.Error(err)
 		return
 	}
+	// The caller owns the response returned by DoPostTelemetry and has to
+	// release it, otherwise every report leaks a connection.
+	defer rsp.Body.Close()
 
 	if rsp.StatusCode != http.StatusOK && rsp.StatusCode != http.StatusCreated {
 		logger.Errorf("transfer telemetry %s failed, status code = %d", constants.Installation, rsp.StatusCode)

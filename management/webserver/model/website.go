@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -18,6 +19,10 @@ const (
 	// maxServerNameLength and maxLabelLength follow the DNS limits.
 	maxServerNameLength = 253
 	maxLabelLength      = 63
+
+	// defaultHttpsPort is the port tcontrollerd appends to an upstream that
+	// names https without a port.
+	defaultHttpsPort = "443"
 )
 
 var (
@@ -36,6 +41,16 @@ var (
 	// only a plain file name without a path separator, a control character or
 	// any nginx syntax may pass.
 	certFilenamePattern = regexp.MustCompile(`^[A-Za-z0-9_.-]+$`)
+
+	// upstreamSchemePattern matches the two schemes an upstream may use. The
+	// scheme is interpolated into "proxy_pass", so anything else is rejected.
+	upstreamSchemePattern = regexp.MustCompile(`^https?$`)
+
+	// upstreamHostPattern matches the host of an upstream: a host name, an IPv4
+	// address or a bracketed IPv6 address, with an optional port. The host is
+	// interpolated into the "server" directive of the site, so a value carrying
+	// nginx syntax (a space, a semicolon, a "$", a quote) must not pass.
+	upstreamHostPattern = regexp.MustCompile(`^(?:\[[0-9A-Fa-f:.]+\]|[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?\.?)(?::([0-9]{1,5}))?$`)
 )
 
 type Website struct {
@@ -80,12 +95,60 @@ func (w *Website) Validate() error {
 		}
 	}
 
+	upstreams, err := unmarshalStringList(w.Upstreams)
+	if err != nil {
+		return fmt.Errorf("invalid upstreams: %v", err)
+	}
+
+	for _, upstream := range upstreams {
+		if err = ValidateUpstream(upstream); err != nil {
+			return err
+		}
+	}
+
 	if err = ValidateCertFilename(w.CertFilename); err != nil {
 		return err
 	}
 
 	if err = ValidateCertFilename(w.KeyFilename); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+// ValidateUpstream accepts the address of a site upstream.
+//
+// The scheme and the host of this value are interpolated into the "proxy_pass"
+// and "server" directives of the site, so a value carrying nginx syntax must be
+// rejected here, before it is stored and pushed to the engine.
+func ValidateUpstream(upstream string) error {
+	parsed, err := url.Parse(upstream)
+	if err != nil {
+		return fmt.Errorf("invalid upstream %q: %v", upstream, err)
+	}
+
+	if !upstreamSchemePattern.MatchString(parsed.Scheme) {
+		return fmt.Errorf("invalid upstream %q: the scheme has to be http or https", upstream)
+	}
+
+	host := parsed.Host
+	if parsed.Scheme == "https" && parsed.Port() == "" {
+		// tcontrollerd appends the default HTTPS port to this value before it
+		// renders it, so validate the value it renders.
+		host = host + ":" + defaultHttpsPort
+	}
+
+	matches := upstreamHostPattern.FindStringSubmatch(host)
+	if matches == nil {
+		return fmt.Errorf("invalid upstream %q: %q is not a host name, an IP address or a host with a port", upstream, host)
+	}
+
+	if port := matches[1]; port != "" {
+		value, err := strconv.Atoi(port)
+		if err != nil || value < 1 || value > maxPort {
+			return fmt.Errorf("invalid upstream %q: port has to be between 1 and %d", upstream, maxPort)
+		}
 	}
 
 	return nil

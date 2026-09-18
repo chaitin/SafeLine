@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"net/url"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -33,6 +34,16 @@ var (
 	// without a path separator, a control character or any nginx syntax may
 	// pass.
 	certFilenamePattern = regexp.MustCompile(`^[A-Za-z0-9_.-]+$`)
+
+	// upstreamSchemePattern matches the two schemes an upstream may use. The
+	// scheme is rendered into "proxy_pass", so anything else is rejected.
+	upstreamSchemePattern = regexp.MustCompile(`^https?$`)
+
+	// upstreamHostPattern matches the host of an upstream: a host name, an IPv4
+	// address or a bracketed IPv6 address, with an optional port. The host is
+	// rendered into the "server" directive of the site, so a value carrying
+	// nginx syntax (a space, a semicolon, a "$", a quote) must not pass.
+	upstreamHostPattern = regexp.MustCompile(`^(?:\[[0-9A-Fa-f:.]+\]|[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?\.?)(?::([0-9]{1,5}))?$`)
 )
 
 // maxCertFilenameLength bounds a certificate file name.
@@ -74,6 +85,44 @@ func validatePort(port string) error {
 	value, err := strconv.Atoi(port)
 	if err != nil || value < 1 || value > maxPort {
 		return fmt.Errorf("invalid port %q: must be between 1 and %d", port, maxPort)
+	}
+
+	return nil
+}
+
+// validateUpstream accepts the address of a site upstream.
+//
+// The management server validates the same value before it stores it, but this
+// side cannot rely on that: the site configuration is pushed over the network,
+// and the scheme and the host of an upstream are rendered into the "proxy_pass"
+// and "server" directives of the site.
+func validateUpstream(upstream string) error {
+	parsed, err := url.Parse(upstream)
+	if err != nil {
+		return fmt.Errorf("invalid upstream %q: %v", upstream, err)
+	}
+
+	if !upstreamSchemePattern.MatchString(parsed.Scheme) {
+		return fmt.Errorf("invalid upstream %q: the scheme has to be http or https", upstream)
+	}
+
+	host := parsed.Host
+	if parsed.Scheme == HttpsScheme && parsed.Port() == "" {
+		// generateNginxConfig appends the default HTTPS port to this value
+		// before it renders it, so validate the value it renders.
+		host = host + ":" + DefaultHttpsPort
+	}
+
+	matches := upstreamHostPattern.FindStringSubmatch(host)
+	if matches == nil {
+		return fmt.Errorf("invalid upstream %q: %q is not a host name, an IP address or a host with a port", upstream, host)
+	}
+
+	if port := matches[1]; port != "" {
+		value, err := strconv.Atoi(port)
+		if err != nil || value < 1 || value > maxPort {
+			return fmt.Errorf("invalid upstream %q: port has to be between 1 and %d", upstream, maxPort)
+		}
 	}
 
 	return nil
