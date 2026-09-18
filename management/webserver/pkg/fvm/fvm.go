@@ -19,7 +19,6 @@ import (
 	"C" //nolint:typecheck
 )
 import (
-	"crypto/tls"
 	"fmt"
 	"io"
 	"net/http"
@@ -209,11 +208,11 @@ func (f *FVM) PushFsl(server string, update *FVMUpdate) error {
 	req.Header.Add("Content-Type", "application/octet-stream")
 	// req.Header.Set("Connection", "close")
 
-	httpClient := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		},
-	}
+	// The compiled policy is pushed to the detector over the container network
+	// and replaces the bytecode the engine executes, so the certificate of an
+	// HTTPS detector must be verified: a man in the middle could otherwise
+	// replace the policy and silently disable the WAF.
+	httpClient := &http.Client{}
 
 	var (
 		respErr error

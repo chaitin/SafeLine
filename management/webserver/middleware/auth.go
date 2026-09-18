@@ -8,6 +8,7 @@ import (
 
 	"chaitin.cn/patronus/safeline-2/management/webserver/api/response"
 	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/constants"
+	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/sessionopts"
 )
 
 func AuthRequired(c *gin.Context) {
@@ -21,14 +22,7 @@ func AuthRequired(c *gin.Context) {
 	}
 
 	// extend session expired time
-	session.Options(sessions.Options{
-		Path:   "/",
-		MaxAge: 3600 * 24 * 7,
-		//Domain: options.Domain,
-		//HttpOnly: true,
-		//SameSite: http.SameSiteLaxMode,
-		//Secure:   false,
-	})
+	session.Options(sessionopts.Options(c))
 
 	if err := session.Save(); err != nil {
 		response.Error(c, response.JSONBody{Err: response.ErrInternalError, Msg: "Error occurred when creating sessions"}, http.StatusInternalServerError)

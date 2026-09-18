@@ -70,6 +70,8 @@ func generateNginxConfig(website *model.WebsiteConfig) (string, error) {
 		if sn == "*" || sn == "" {
 			sn = "_"
 			addrAnyProperties = addrAnyPropertiesTpl
+		} else if err := validateServerName(sn); err != nil {
+			return "", err
 		}
 		serverName = fmt.Sprintf(serverNameTpl, sn)
 	}
@@ -77,6 +79,9 @@ func generateNginxConfig(website *model.WebsiteConfig) (string, error) {
 	// only ONE port supported in v1.0
 	var serverListen string
 	for _, port := range website.Ports {
+		if err := validatePort(port); err != nil {
+			return "", err
+		}
 		serverListen = fmt.Sprintf(serverListenTpl, port, sslFlag, addrAnyProperties)
 	}
 

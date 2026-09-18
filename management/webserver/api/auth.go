@@ -15,6 +15,7 @@ import (
 	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/constants"
 	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/database"
 	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/log"
+	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/sessionopts"
 )
 
 var logger = log.GetLogger("api")
@@ -70,14 +71,7 @@ func PostLogin(c *gin.Context) {
 	db.Save(&user)
 
 	session := sessions.Default(c)
-	session.Options(sessions.Options{
-		Path:   "/",
-		MaxAge: 3600 * 24 * 7,
-		//Domain: options.Domain,
-		//HttpOnly: true,
-		//SameSite: http.SameSiteLaxMode,
-		//Secure:   false,
-	})
+	session.Options(sessionopts.Options(c))
 	session.Set(constants.DefaultSessionUserKey, user.ID)
 	if err := session.Save(); err != nil {
 		logger.Error(err)

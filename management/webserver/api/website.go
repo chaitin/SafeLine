@@ -53,6 +53,12 @@ func PostWebsite(ctx *gin.Context) {
 		return
 	}
 
+	if err := params.Validate(); err != nil {
+		logger.Warn(err)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusBadRequest)
+		return
+	}
+
 	db := database.GetDB()
 	err := db.Transaction(func(tx *gorm.DB) error {
 		website := &model.Website{Comment: params.Comment, ServerNames: params.ServerNames, Upstreams: params.Upstreams, Ports: params.Ports,
@@ -87,6 +93,12 @@ func PutWebsite(ctx *gin.Context) {
 	if err := ctx.BindJSON(&params); err != nil {
 		logger.Error(err)
 		response.Error(ctx, response.ErrorParamNotOK, http.StatusInternalServerError)
+		return
+	}
+
+	if err := params.Validate(); err != nil {
+		logger.Warn(err)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusBadRequest)
 		return
 	}
 
