@@ -43,6 +43,11 @@ services:
       test: curl -k -f https://localhost:1443/api/open/health
     environment:
       - MGT_PG=postgres://safeline-ce:${POSTGRES_PASSWORD}@safeline-pg/safeline-ce?sslmode=disable
+      # Optional override for the control channel token that tcontrollerd has to
+      # present before it may subscribe. Leave it empty to use
+      # ${SAFELINE_DIR}/resources/sock/mgt_grpc_token, which this container
+      # creates and the tengine container reads.
+      - MGT_GRPC_TOKEN=${MGT_GRPC_TOKEN:-}
     depends_on:
       - postgres
       - fvm
@@ -83,6 +88,9 @@ services:
     environment:
       - TCD_MGT_API=https://${SUBNET_PREFIX}.4:1443/api/open/publish/server
       - TCD_SNSERVER=${SUBNET_PREFIX}.5:8000
+      # Optional override for the control channel token; empty means the token
+      # file in ${SAFELINE_DIR}/resources/sock is used.
+      - TCD_MGT_TOKEN=${MGT_GRPC_TOKEN:-}
       # deprecated
       - SNSERVER_ADDR=${SUBNET_PREFIX}.5:8000
       - CHAOS_ADDR=${SUBNET_PREFIX}.10

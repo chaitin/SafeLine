@@ -50,11 +50,39 @@ func FilesExist(paths ...string) (bool, error) {
 }
 
 func RenameWriteFile(filename string, data []byte, perm os.FileMode) error {
-	randFileName := filename + ".tmp." + RandStr(8)
-	if err := ioutil.WriteFile(randFileName, data, perm); err != nil {
+	// os.CreateTemp creates the file with O_CREATE|O_EXCL and mode 0600, so a
+	// file or symlink planted at the temporary path beforehand cannot be
+	// followed. The previous implementation guessed the name with math/rand and
+	// wrote through ioutil.WriteFile, which follows symlinks.
+	tmpFile, err := os.CreateTemp(filepath.Dir(filename), filepath.Base(filename)+".tmp.")
+	if err != nil {
 		return err
 	}
-	return os.Rename(randFileName, filename)
+	tmpName := tmpFile.Name()
+
+	renamed := false
+	defer func() {
+		if !renamed {
+			os.Remove(tmpName)
+		}
+	}()
+
+	if err = tmpFile.Chmod(perm); err != nil {
+		tmpFile.Close()
+		return err
+	}
+	if _, err = tmpFile.Write(data); err != nil {
+		tmpFile.Close()
+		return err
+	}
+	if err = tmpFile.Close(); err != nil {
+		return err
+	}
+	if err = os.Rename(tmpName, filename); err != nil {
+		return err
+	}
+	renamed = true
+	return nil
 }
 
 func EnsureRenameWriteFile(path string, data []byte, mode os.FileMode) error {

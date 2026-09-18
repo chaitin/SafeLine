@@ -3,6 +3,7 @@ package rpc
 import (
 	"encoding/json"
 	"io"
+	"sync"
 	"time"
 
 	"chaitin.cn/dev/go/errors"
@@ -12,25 +13,35 @@ import (
 )
 
 var (
-	ping       = pb.Event{Type: Ping, Msg: nil}
-	Subscriber *StreamClient // only ONE sub
+	ping = pb.Event{Type: Ping, Msg: nil}
+
+	// subscriberMu guards subscriber, which is written by the goroutine that
+	// serves the Subscribe stream and read by every request handler that
+	// publishes a configuration.
+	subscriberMu sync.RWMutex
+	subscriber   *StreamClient // only ONE sub
 )
 
 func Publish(msg []byte, eventType string) error {
-	if Subscriber == nil {
+	// The subscriber is read once and every use below goes through the local
+	// variable: a new stream may replace it at any moment, and re-reading the
+	// global pointer would let this call talk to a closing stream or to a
+	// different subscription than the one it started with.
+	sub := currentSubscriber()
+	if sub == nil {
 		return errors.New("Service is abnormal, and the nginx conf cannot be updated for the time being. Please go to the shell to check the relevant logs")
 	}
-	err := Subscriber.stream.Send(&pb.Event{
+	err := sub.stream.Send(&pb.Event{
 		Type: eventType,
 		Msg:  msg,
 	})
 	if err != nil {
 		select {
-		case <-Subscriber.stream.Context().Done():
-			err = Subscriber.stream.Context().Err() // context canceled
-			Subscriber = nil
+		case <-sub.stream.Context().Done():
+			err = sub.stream.Context().Err() // context canceled
+			clearSubscriber(sub)
 			return err
-		case Subscriber.errCh <- errors.Wrapf(err, "Send event err: %s", msg):
+		case sub.errCh <- errors.Wrapf(err, "Send event err: %s", msg):
 			return errors.Wrapf(err, "Send event err: %s", msg)
 		}
 	}
@@ -40,7 +51,7 @@ func Publish(msg []byte, eventType string) error {
 
 	for {
 		select {
-		case rsp := <-Subscriber.rspCh:
+		case rsp := <-sub.rspCh:
 			if rsp.Err {
 				return errors.New(string(rsp.Msg))
 			} else {
@@ -62,6 +73,43 @@ type StreamClient struct {
 	quit   chan struct{} // quit stream client gracefully
 }
 
+// currentSubscriber returns the active subscriber, or nil when no stream is
+// connected.
+func currentSubscriber() *StreamClient {
+	subscriberMu.RLock()
+	defer subscriberMu.RUnlock()
+
+	return subscriber
+}
+
+// setSubscriber makes sc the active subscriber.
+func setSubscriber(sc *StreamClient) {
+	subscriberMu.Lock()
+	defer subscriberMu.Unlock()
+
+	if subscriber != nil && subscriber != sc {
+		// A client that restarts reconnects while its previous stream may not
+		// have timed out yet, so a replacement is expected; it is logged
+		// because only a client that knows the control channel token can
+		// trigger it.
+		logger.Warn("A new subscriber replaces the previous one")
+	}
+
+	subscriber = sc
+}
+
+// clearSubscriber forgets the active subscriber, but only when it is still the
+// one that asks: a stream that ends after it was replaced must not disconnect
+// its successor.
+func clearSubscriber(sc *StreamClient) {
+	subscriberMu.Lock()
+	defer subscriberMu.Unlock()
+
+	if subscriber == sc {
+		subscriber = nil
+	}
+}
+
 func newStreamClient(stream pb.Website_SubscribeServer) *StreamClient {
 	return &StreamClient{
 		stream: stream,
@@ -77,7 +125,7 @@ func (sc *StreamClient) pingLoop() {
 	defer pingTicker.Stop()
 
 	for {
-		if Subscriber != nil && sc != Subscriber {
+		if current := currentSubscriber(); current != nil && current != sc {
 			// new subscriber in replace of the old one.
 			logger.Debug("New subscriber in replace of the old one")
 			return
@@ -101,7 +149,7 @@ func (sc *StreamClient) pingLoop() {
 
 func (sc *StreamClient) recvLoop() {
 	for {
-		if Subscriber != nil && sc != Subscriber {
+		if current := currentSubscriber(); current != nil && current != sc {
 			// new subscriber in replace of the old one.
 			close(sc.quit)
 			logger.Debug("New subscriber in replace of the old one")
@@ -153,11 +201,16 @@ func publishFullWebsite() error {
 
 // Subscribe is gRPC API entrypoint
 func (ws *WebsiteServer) Subscribe(stream pb.Website_SubscribeServer) error {
-	Subscriber = newStreamClient(stream)
-	defer Subscriber.timer.Stop()
+	sc := newStreamClient(stream)
+	setSubscriber(sc)
 
-	go Subscriber.pingLoop()
-	go Subscriber.recvLoop()
+	defer sc.timer.Stop()
+	// A stream that ends without being replaced leaves the channel unusable
+	// until a new client connects, so the global pointer is released here.
+	defer clearSubscriber(sc)
+
+	go sc.pingLoop()
+	go sc.recvLoop()
 
 	if err := publishFullWebsite(); err != nil {
 		// triggered when tcd starts, ignore push error messages
@@ -165,17 +218,16 @@ func (ws *WebsiteServer) Subscribe(stream pb.Website_SubscribeServer) error {
 	}
 
 	select {
-	case <-Subscriber.quit:
+	case <-sc.quit:
 		logger.Infof("Disconnected gracefully")
 		return nil
-	case <-Subscriber.timer.C:
+	case <-sc.timer.C:
 		logger.Error("Keepalive timeout")
-	case err := <-Subscriber.errCh:
+	case err := <-sc.errCh:
 		logger.WithError(err).Error()
 		return err
-	case <-Subscriber.stream.Context().Done():
-		logger.Infof("Subscribe context done: %s", Subscriber.stream.Context().Err())
-		Subscriber = nil
+	case <-sc.stream.Context().Done():
+		logger.Infof("Subscribe context done: %s", sc.stream.Context().Err())
 	}
 
 	return nil

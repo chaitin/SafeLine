@@ -160,10 +160,13 @@ func InitDetectLogSamples() {
 
 	protocolList := []int{constants.ProtocolHTTP, constants.ProtocolHTTPS}
 	portList := []uint{80, 443}
-	provinceList := []string{}
-	cityList := []string{}
-	ipList := []string{}
-	ruleIdList := []string{}
+	// These lists are indexed with randInt%len(...), so they must not be
+	// empty: a zero length makes every one of the lookups below a division by
+	// zero, which panics instead of generating sample data.
+	provinceList := []string{"Beijing", "Shanghai", "Guangdong"}
+	cityList := []string{"Beijing", "Shanghai", "Guangzhou"}
+	ipList := []string{"10.2.35.143", "192.168.1.10", "172.16.0.5"}
+	ruleIdList := []string{"10001", "20002", "30003"}
 
 	for i := 0; i < 100; i++ {
 		randInt := rand.Intn(1000)

@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <limits.h>
 #include <map>
+#include <sysexits.h>
 #include <unicode/utf8.h>
 #include <utility>
 using namespace std;
@@ -294,6 +295,12 @@ void FsaAnno::question(QuestionExpr* expr) {
 }
 
 void FsaAnno::repeat(RepeatExpr& expr) {
+  // gen_repeat() already rejects out-of-range bounds at parse time; check
+  // again here so a programmatically built RepeatExpr can never drive the
+  // unbounded copy/concat loops below (CWE-770).
+  if (expr.low < 0 || expr.low > MAX_REPEAT ||
+      expr.high < expr.low || (expr.high != LONG_MAX && expr.high > MAX_REPEAT))
+    err_exit(EX_USAGE, "repeat count exceeds limit (max %ld)", MAX_REPEAT);
   FsaAnno r = epsilon_fsa(NULL);
   REP(i, expr.low) {
     FsaAnno t = *this;

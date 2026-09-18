@@ -8,8 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"chaitin.cn/dev/go/errors"
-
 	"chaitin.cn/patronus/safeline-2/management/webserver/api/response"
 	"chaitin.cn/patronus/safeline-2/management/webserver/model"
 	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/database"
@@ -37,14 +35,14 @@ func PostPolicyRule(ctx *gin.Context) {
 		}
 
 		if err := fvm.PushFSL(tx); err != nil {
-			return errors.New("Rules compile error, please check your params.")
+			return errRulesCompile
 		}
 
 		return nil
 	})
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 
@@ -66,18 +64,18 @@ func PutSwitchPolicyRule(ctx *gin.Context) {
 			return res.Error
 		}
 		if res.RowsAffected == 0 {
-			return errors.New("Data queried does not exist")
+			return errDataNotExist
 		}
 
 		if err := fvm.PushFSL(tx); err != nil {
-			return errors.New("Rules compile error, please check your params.")
+			return errRulesCompile
 		}
 
 		return nil
 	})
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 }
@@ -98,7 +96,7 @@ func PutPolicyRule(ctx *gin.Context) {
 			return res.Error
 		}
 		if res.RowsAffected == 0 {
-			return errors.New("Data queried does not exist")
+			return errDataNotExist
 		}
 
 		policyRule.Action = params.Action
@@ -108,14 +106,14 @@ func PutPolicyRule(ctx *gin.Context) {
 		tx.Save(&policyRule)
 
 		if err := fvm.PushFSL(tx); err != nil {
-			return errors.New("Rules compile error, please check your params.")
+			return errRulesCompile
 		}
 
 		return nil
 	})
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 
@@ -137,18 +135,18 @@ func DeletePolicyRule(ctx *gin.Context) {
 			return res.Error
 		}
 		if res.RowsAffected == 0 {
-			return errors.New("Data queried does not exist")
+			return errDataNotExist
 		}
 
 		if err := fvm.PushFSL(tx); err != nil {
-			return errors.New("Rules compile error, please check your params.")
+			return errRulesCompile
 		}
 
 		return nil
 	})
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 

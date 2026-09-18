@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"chaitin.cn/dev/go/errors"
-
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
@@ -55,6 +53,8 @@ func PostWebsite(ctx *gin.Context) {
 
 	if err := params.Validate(); err != nil {
 		logger.Warn(err)
+		// The message of a validation error is written for the administrator
+		// ("invalid port ..."), so it is passed on as it is.
 		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusBadRequest)
 		return
 	}
@@ -81,7 +81,7 @@ func PostWebsite(ctx *gin.Context) {
 	})
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 
@@ -98,6 +98,8 @@ func PutWebsite(ctx *gin.Context) {
 
 	if err := params.Validate(); err != nil {
 		logger.Warn(err)
+		// The message of a validation error is written for the administrator
+		// ("invalid port ..."), so it is passed on as it is.
 		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusBadRequest)
 		return
 	}
@@ -110,7 +112,7 @@ func PutWebsite(ctx *gin.Context) {
 			return res.Error
 		}
 		if res.RowsAffected == 0 {
-			return errors.New("Data queried does not exist")
+			return errDataNotExist
 		}
 
 		website.Comment = params.Comment
@@ -135,7 +137,7 @@ func PutWebsite(ctx *gin.Context) {
 	})
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 
@@ -157,7 +159,7 @@ func DeleteWebsite(ctx *gin.Context) {
 			return res.Error
 		}
 		if res.RowsAffected == 0 {
-			return errors.New("Data queried does not exist")
+			return errDataNotExist
 		}
 
 		if config.GlobalConfig.Server.DevMode {
@@ -173,7 +175,7 @@ func DeleteWebsite(ctx *gin.Context) {
 	})
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 

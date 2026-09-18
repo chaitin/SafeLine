@@ -9,7 +9,10 @@ services:
     environment:
       LISTEN_ADDRESS: "0.0.0.0"
       LISTEN_PORT: "${LISTEN_PORT:-5678}"
-      MCP_AUTH_ENABLED: "${MCP_AUTH_ENABLED:-false}"
+      # Authentication is enabled by default. Only set MCP_AUTH_DISABLED=true
+      # for a loopback-only deployment; a non-loopback listener without a token
+      # is refused at startup.
+      MCP_AUTH_DISABLED: "${MCP_AUTH_DISABLED:-}"
       MCP_AUTH_STATE_FILE: "/var/lib/safeline-mcp/auth.json"
     read_only: true
     security_opt:

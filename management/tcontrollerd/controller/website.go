@@ -30,6 +30,10 @@ const (
 	nginxBackupFilePrefix = "BAK_IF_backend_"
 	nginxFileMode         = 0644
 
+	// nginxCertsPath is the directory the ssl_certificate templates below point
+	// at; certificate file names have to stay inside it.
+	nginxCertsPath = "/etc/nginx/certs"
+
 	HttpsScheme      = "https"
 	DefaultHttpsPort = "443"
 )
@@ -58,6 +62,19 @@ func generateNginxConfig(website *model.WebsiteConfig) (string, error) {
 	sslCertFilename := ""
 	sslCertKeyFilename := ""
 	if website.KeyFilename != "" && website.CertFilename != "" {
+		for _, filename := range []string{website.CertFilename, website.KeyFilename} {
+			if err := validateCertFilename(filename); err != nil {
+				return "", err
+			}
+
+			// The template renders the name into an absolute path, so an
+			// explicit check backs up the name validation above: the resolved
+			// path has to stay inside the certificate directory.
+			if filepath.Dir(filepath.Join(nginxCertsPath, filename)) != nginxCertsPath {
+				return "", fmt.Errorf("invalid certificate file name %q: it leaves %s", filename, nginxCertsPath)
+			}
+		}
+
 		sslFlag = " ssl" // with a blank ahead
 		sslCertFilename = fmt.Sprintf(certTpl, website.CertFilename)
 		sslCertKeyFilename = fmt.Sprintf(certKeyTpl, website.KeyFilename)
@@ -110,11 +127,28 @@ func generateFullConfigAndReload(msg []byte) error {
 		return err
 	}
 
+	if err := utils.EnsureDir(nginxConfigPath); err != nil {
+		return err
+	}
+
 	configFilename := make(map[string]struct{})
 	for _, website := range websites {
 		configFilename[fmt.Sprintf("%s%d", nginxFilePrefix, website.Id)] = struct{}{}
 	}
-	filepath.Walk(nginxConfigPath, func(path string, info fs.FileInfo, err error) error {
+
+	if err := filepath.Walk(nginxConfigPath, func(path string, info fs.FileInfo, err error) error {
+		// filepath.Walk reports the entries it could not read through err and
+		// leaves info nil in that case: touching info before this check is a
+		// nil pointer dereference that takes the whole daemon down.
+		if err != nil {
+			logger.Warnf("Skip %s: %v", path, err)
+			return nil
+		}
+
+		if info == nil || info.IsDir() {
+			return nil
+		}
+
 		_, ok := configFilename[info.Name()]
 		if !ok && strings.HasPrefix(info.Name(), nginxFilePrefix) {
 			if err := os.Remove(path); err != nil {
@@ -124,7 +158,9 @@ func generateFullConfigAndReload(msg []byte) error {
 		}
 
 		return nil
-	})
+	}); err != nil {
+		return err
+	}
 
 	for _, website := range websites {
 		if err := generateConfigAndReload(&website); err != nil {
@@ -231,8 +267,8 @@ func sendResponse(stream pb.Website_SubscribeClient, eventType string, errMsg []
 	})
 }
 
-func websiteHandler(wc pb.WebsiteClient) error {
-	stream, err := wc.Subscribe(context.Background())
+func websiteHandler(ctx context.Context, wc pb.WebsiteClient) error {
+	stream, err := wc.Subscribe(ctx)
 	if err != nil {
 		logger.Errorf("Subscribe failed: %v", err)
 		return err

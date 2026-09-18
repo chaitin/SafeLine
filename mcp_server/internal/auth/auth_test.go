@@ -246,8 +246,17 @@ func TestMiddlewareRequiresBearerToken(t *testing.T) {
 }
 
 func TestEnabledFromEnv(t *testing.T) {
-	t.Setenv(EnabledEnv, "true")
+	// Authentication must be mandatory when the deployment says nothing at all,
+	// otherwise forgetting one variable would expose attack telemetry.
+	t.Setenv(EnabledEnv, "")
+	t.Setenv(DisabledEnv, "")
 	enabled, err := EnabledFromEnv()
+	if err != nil || !enabled {
+		t.Fatalf("EnabledFromEnv() with unset environment = (%v, %v), want true", enabled, err)
+	}
+
+	t.Setenv(EnabledEnv, "true")
+	enabled, err = EnabledFromEnv()
 	if err != nil || !enabled {
 		t.Fatalf("EnabledFromEnv() = (%v, %v), want true", enabled, err)
 	}
@@ -255,5 +264,23 @@ func TestEnabledFromEnv(t *testing.T) {
 	t.Setenv(EnabledEnv, "not-a-bool")
 	if _, err := EnabledFromEnv(); err == nil {
 		t.Fatal("EnabledFromEnv() accepted an invalid boolean")
+	}
+
+	t.Setenv(EnabledEnv, "")
+	t.Setenv(DisabledEnv, "true")
+	if enabled, err := EnabledFromEnv(); err != nil || enabled {
+		t.Fatalf("EnabledFromEnv() with %s=true = (%v, %v), want false", DisabledEnv, enabled, err)
+	}
+
+	t.Setenv(EnabledEnv, "false")
+	t.Setenv(DisabledEnv, "")
+	if enabled, err := EnabledFromEnv(); err != nil || enabled {
+		t.Fatalf("EnabledFromEnv() with %s=false = (%v, %v), want false", EnabledEnv, enabled, err)
+	}
+
+	t.Setenv(EnabledEnv, "")
+	t.Setenv(DisabledEnv, "not-a-bool")
+	if _, err := EnabledFromEnv(); err == nil {
+		t.Fatal("EnabledFromEnv() accepted an invalid disable boolean")
 	}
 }

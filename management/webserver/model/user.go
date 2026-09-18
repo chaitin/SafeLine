@@ -16,7 +16,14 @@ type User struct {
 	TFAEnabled    bool   `gorm:"column:tfa_enabled;default:true"`
 	TFASecret     string `gorm:"column:tfa_secret"`
 	LastLoginTime int64  `gorm:"default:0"`
-	IsEnabled     bool   `gorm:"default:true"`
+
+	// TFALastUsedStep is the time step (unix time divided by the TOTP period)
+	// of the passcode that was accepted last. A passcode is only accepted when
+	// it belongs to a later step, so a captured passcode cannot be replayed
+	// while it is still inside the validity window.
+	TFALastUsedStep int64 `gorm:"column:tfa_last_used_step;default:0"`
+
+	IsEnabled bool `gorm:"default:true"`
 }
 
 func initAdminUser() error {

@@ -3,6 +3,7 @@ package model
 import (
 	"encoding/json"
 	"fmt"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -28,6 +29,13 @@ var (
 	// nginx "server_name" directive, so anything that could terminate the
 	// directive (or start another one) must not pass.
 	serverNameLabelPattern = regexp.MustCompile(`^[A-Za-z0-9_]([A-Za-z0-9_-]*[A-Za-z0-9_])?$`)
+
+	// certFilenamePattern matches the file name of an uploaded certificate or
+	// key. The name is interpolated into "ssl_certificate" and
+	// "ssl_certificate_key", and it is joined to the certificate directory, so
+	// only a plain file name without a path separator, a control character or
+	// any nginx syntax may pass.
+	certFilenamePattern = regexp.MustCompile(`^[A-Za-z0-9_.-]+$`)
 )
 
 type Website struct {
@@ -70,6 +78,44 @@ func (w *Website) Validate() error {
 		if err = ValidatePort(port); err != nil {
 			return err
 		}
+	}
+
+	if err = ValidateCertFilename(w.CertFilename); err != nil {
+		return err
+	}
+
+	if err = ValidateCertFilename(w.KeyFilename); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// maxCertFilenameLength bounds a certificate file name.
+const maxCertFilenameLength = 255
+
+// ValidateCertFilename accepts the name of a file in the certificate directory.
+//
+// The console stores uploaded certificates under a generated name, so a value
+// that is not a plain file name is either a mistake or an attempt to inject
+// nginx directives (through the rendered ssl_certificate directives) or to
+// address a file outside the certificate directory.
+func ValidateCertFilename(name string) error {
+	// An empty name means "this site is served over plain HTTP".
+	if name == "" {
+		return nil
+	}
+
+	if len(name) > maxCertFilenameLength {
+		return fmt.Errorf("invalid certificate file name %q: longer than %d characters", name, maxCertFilenameLength)
+	}
+
+	if name != filepath.Base(name) || name == "." || name == ".." {
+		return fmt.Errorf("invalid certificate file name %q: only a file name without a directory is allowed", name)
+	}
+
+	if !certFilenamePattern.MatchString(name) {
+		return fmt.Errorf("invalid certificate file name %q: only letters, digits, dot, dash and underscore are allowed", name)
 	}
 
 	return nil

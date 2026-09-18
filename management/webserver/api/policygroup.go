@@ -7,8 +7,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	"chaitin.cn/dev/go/errors"
-
 	"chaitin.cn/patronus/safeline-2/management/webserver/api/response"
 	"chaitin.cn/patronus/safeline-2/management/webserver/model"
 	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/constants"
@@ -24,6 +22,15 @@ func PutPolicyGroupGlobal(ctx *gin.Context) {
 		return
 	}
 
+	// Reject unknown modules and modes before anything is persisted: the map
+	// keys are rendered into the skynet configuration, so a bad key has to be
+	// reported to the caller instead of reaching the engine or the renderer.
+	if err := model.ValidatePolicyGroup(params); err != nil {
+		logger.Error(err)
+		response.Error(ctx, response.JSONBody{Err: response.ErrorParamNotOK.Err, Msg: err.Error()}, http.StatusBadRequest)
+		return
+	}
+
 	db := database.GetDB()
 	err := db.Transaction(func(tx *gorm.DB) error {
 		var pggOption model.Options
@@ -32,13 +39,13 @@ func PutPolicyGroupGlobal(ctx *gin.Context) {
 			return res.Error
 		}
 		if res.RowsAffected == 0 {
-			return errors.New("Data queried does not exist")
+			return errDataNotExist
 		}
 
 		pggStr, err := json.Marshal(params)
 		if err != nil {
 			logger.Error(err)
-			response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+			response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 			return err
 		}
 
@@ -46,14 +53,14 @@ func PutPolicyGroupGlobal(ctx *gin.Context) {
 		tx.Save(&pggOption)
 
 		if err := fvm.PushFSL(tx); err != nil {
-			return errors.New("Rules compile error, please check your params.")
+			return errRulesCompile
 		}
 
 		return nil
 	})
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 
@@ -68,7 +75,7 @@ func GetPolicyGroupGlobal(ctx *gin.Context) {
 	err := json.Unmarshal([]byte(pggOption.Value), &pgg)
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 
@@ -91,13 +98,13 @@ func PutSrcIPConfig(ctx *gin.Context) {
 			return res.Error
 		}
 		if res.RowsAffected == 0 {
-			return errors.New("Data queried does not exist")
+			return errDataNotExist
 		}
 
 		scStr, err := json.Marshal(params)
 		if err != nil {
 			logger.Error(err)
-			response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+			response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 			return err
 		}
 
@@ -105,14 +112,14 @@ func PutSrcIPConfig(ctx *gin.Context) {
 		tx.Save(&scOption)
 
 		if err := fvm.PushFSL(tx); err != nil {
-			return errors.New("Rules compile error, please check your params.")
+			return errRulesCompile
 		}
 
 		return nil
 	})
 	if err != nil {
 		logger.Error(err)
-		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusInternalServerError)
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: responseMessage(err)}, http.StatusInternalServerError)
 		return
 	}
 

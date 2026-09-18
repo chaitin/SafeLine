@@ -44,7 +44,7 @@ instances:
     token_file: "/run/secrets/production-a.token"
     timeout: 30
     debug: false
-    insecure_skip_verify: true
+    insecure_skip_verify: false
 
   - id: "production-b"
     display_name: "Production B"
@@ -52,10 +52,15 @@ instances:
     token_file: "/run/secrets/production-b.token"
     timeout: 30
     debug: false
-    insecure_skip_verify: true
+    insecure_skip_verify: false
 ```
 
 `LISTEN_ADDRESS` and `LISTEN_PORT` override listener settings. There is deliberately no global `SAFELINE_API_TOKEN`: every instance uses a separate token file.
+
+`insecure_skip_verify` disables TLS verification for the SafeLine API. The API
+Token is an administrator credential that is sent on every request, so leave the
+setting at `false` and give the instance a certificate the server trusts. Enable
+it only for a lab instance whose certificate cannot be replaced.
 
 Each `display_name` must be unique, ignoring letter case, and must not match another instance's `id`. During server discovery (or legacy initialization), the server publishes only the `display_name` to `instance_id` mappings as Server Instructions. This lets a user refer to a friendly name while the AI still calls `get_attack_events` with the stable, explicit `instance_id`. Instance addresses and credentials are never included in those instructions.
 
@@ -65,20 +70,15 @@ SafeLine CE does not yet provide a dedicated read-only service credential for al
 
 MCP client authentication is independent from the downstream SafeLine API Tokens.
 
-### Authentication disabled
+Authentication is on by default: the server always installs the bearer gate
+unless a deployment explicitly opts out, and it refuses to start without a token
+on any non-loopback listener.
 
-```text
-MCP_AUTH_ENABLED=false
-```
-
-No MCP client token is generated or required.
-
-### Authentication enabled
+### Initialization
 
 Generate the MCP client Bearer Token once during deployment initialization:
 
 ```bash
-export MCP_AUTH_ENABLED=true
 docker compose run --rm mcp_server auth init
 ```
 
@@ -97,7 +97,9 @@ trusted HTTPS-terminating gateway or keep it on an equivalently protected
 private transport. Do not set `MCP_PUBLISH_ADDRESS=0.0.0.0` on an untrusted
 network without TLS termination.
 
-If authentication is enabled but state has not been initialized, the server refuses to start. Explicit rotation is available locally:
+The server refuses to start while this state is missing, so a deployment cannot
+serve any request before the token exists. Explicit rotation is available
+locally:
 
 ```bash
 docker compose run --rm mcp_server auth rotate
@@ -108,6 +110,16 @@ static Bearer gate is intended for self-hosted deployment; it is not presented
 as a complete MCP OAuth 2.1 implementation.
 Run `auth rotate` as a single serialized deployment operation; concurrent
 rotation commands are not supported.
+
+### Disabling authentication
+
+`MCP_AUTH_DISABLED=true` (or `MCP_AUTH_ENABLED=false`) removes the gate. The
+server then refuses to start unless the listener is loopback-only, so a disabled
+gate cannot silently publish attack telemetry to the network:
+
+```text
+MCP_AUTH_DISABLED=true
+```
 
 ## Docker deployment
 
@@ -135,7 +147,8 @@ rotation commands are not supported.
 
 3. Edit `config.yaml` so each `token_file` matches its file under `/run/secrets`.
 
-4. If MCP authentication is enabled, run the one-time `auth init` command and save the displayed token.
+4. Run the one-time `auth init` command and save the displayed token. The
+   service refuses to start until this state exists.
 
 5. Start the service:
 
@@ -151,16 +164,15 @@ loopback-only unless `MCP_PUBLISH_ADDRESS` is explicitly changed.
 ```bash
 go test ./...
 go build -o mcp-server .
-MCP_AUTH_ENABLED=false ./mcp-server --config ./config.yaml
+./mcp-server auth init --state-file "$PWD/state/auth.json"
+./mcp-server --config ./config.yaml
 ```
 
-For an authenticated local deployment, choose a persistent state file before initialization:
+The default configuration listens on `127.0.0.1`, which is the only address the
+server accepts while authentication is disabled:
 
 ```bash
-export MCP_AUTH_ENABLED=true
-export MCP_AUTH_STATE_FILE="$PWD/state/auth.json"
-./mcp-server auth init
-./mcp-server --config ./config.yaml
+MCP_AUTH_DISABLED=true ./mcp-server --config ./config.yaml
 ```
 
 ## Tool contract
