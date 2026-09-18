@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 )
@@ -50,9 +51,19 @@ func newLoginGuard() *loginGuard {
 	}
 }
 
+// accountKeyPrefix marks the throttle key that every caller of an account
+// shares, as opposed to the keys that belong to a single client address.
+const accountKeyPrefix = "account:"
+
+// isAccountKey reports whether a throttle key protects an account rather than a
+// single client address.
+func isAccountKey(key string) bool {
+	return strings.HasPrefix(key, accountKeyPrefix)
+}
+
 // loginKeys returns the throttle keys of a login attempt.
 func loginKeys(clientIP, username string) []string {
-	keys := []string{fmt.Sprintf("account:%s", username)}
+	keys := []string{accountKeyPrefix + username}
 	if clientIP != "" {
 		keys = append(keys, fmt.Sprintf("ip:%s", clientIP))
 	}
@@ -125,12 +136,18 @@ func (g *loginGuard) prune(now time.Time) {
 		}
 	}
 
-	// Dropping keys that are still active only weakens the throttle of callers
-	// that stopped trying; keeping the map bounded matters more, because a
-	// client can invent client addresses faster than the failures expire.
+	// The map has to stay bounded, because a client can invent client addresses
+	// faster than the failures expire. Dropping an address key only weakens the
+	// throttle of a caller that stopped trying, but an account key is never
+	// dropped: it is the one that keeps the passcode out of reach, and being
+	// able to reset it by filling the map with invented addresses would make
+	// the whole throttle useless.
 	for key := range g.attempts {
 		if len(g.attempts) <= loginMaxEntries {
 			break
+		}
+		if isAccountKey(key) {
+			continue
 		}
 		delete(g.attempts, key)
 	}

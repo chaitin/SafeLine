@@ -28,11 +28,18 @@ local function get_conf(conf)
 end
 
 function SafelineHandler:access(conf)
-    -- your custom code here
     local t = get_conf(conf)
     local ok, err, result = t1k.do_access(t, false)
     if not ok then
+        -- The detector could not be asked, so nothing is known about this
+        -- request. Letting it through in block mode would turn a detector
+        -- outage into a complete bypass of the WAF, which is the one outcome an
+        -- inline protection must not have. monitor mode keeps passing traffic.
         kong.log.err("failed to detector req: ", err)
+        if conf.mode == t1k_constants.MODE_BLOCK then
+            return kong.response.exit(500, fmt(blocked_message, 500, ""))
+        end
+        return
     end
     if result and result.status then
         if result.action == t1k_constants.ACTION_BLOCKED then

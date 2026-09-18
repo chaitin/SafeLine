@@ -136,6 +136,15 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+	// gin.ClientIP() returns the first value of X-Forwarded-For as soon as the
+	// direct peer belongs to the trusted set, and the default trusted set is
+	// every address. The management port is published on the host and reached
+	// directly, so a client could otherwise pick the address it is throttled by
+	// - the login throttle and the TFA bootstrap both key on it. No proxy is
+	// trusted unless a deployment says so.
+	if err := r.SetTrustedProxies(nil); err != nil {
+		logger.Fatalln("Failed to disable trusted proxies: ", err)
+	}
 	r.Use(middleware.SecurityHeaders)
 
 	var option model.Options

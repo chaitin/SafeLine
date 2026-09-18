@@ -72,6 +72,18 @@ func PostLogin(c *gin.Context) {
 		return
 	}
 
+	// Until the first successful login the account is still bound to the address
+	// the TFA secret was handed to. Without this check a caller that reached
+	// GET /api/OTPUrl first would hold a secret the administrator is about to
+	// bind, and knowing the secret is enough to log in.
+	if user.LastLoginTime == 0 && user.TFASecret != "" && user.TFABootstrapIP != "" &&
+		user.TFABootstrapIP != c.ClientIP() {
+		loginThrottle.fail(keys)
+		logger.Warnf("Refused a login from %s before the first successful one: the pending TFA secret was issued to %s", c.ClientIP(), user.TFABootstrapIP)
+		response.Error(c, response.JSONBody{Err: response.ErrWrongPasscode, Msg: "Failed to verify your passcode"}, http.StatusUnauthorized)
+		return
+	}
+
 	usedStep, valid := verifyPasscode(user.TFASecret, params.Passcode, user.TFALastUsedStep, time.Now())
 	if !valid {
 		loginThrottle.fail(keys)
@@ -98,6 +110,9 @@ func PostLogin(c *gin.Context) {
 
 	user.LastLoginTime = time.Now().Unix()
 	user.IsEnabled = true
+	// The bootstrap is over: the secret is bound, so it is no longer pending
+	// and no longer tied to the address that fetched it.
+	user.TFABootstrapIP = ""
 	// Remember the time step of the accepted passcode so that the same one
 	// cannot be used a second time.
 	user.TFALastUsedStep = usedStep
@@ -146,11 +161,26 @@ func GetOTPUrl(c *gin.Context) {
 
 	// The console displays the QR code on the login page, before any session
 	// exists, so this endpoint is reachable while the account has never logged
-	// in. It must not hand out a fresh secret on every call: an anonymous
-	// caller that replaced a secret the administrator had already scanned would
-	// take over the account, because the passcode is the only credential.
+	// in. It must not hand out a fresh secret on every call, and the secret it
+	// does hand out belongs to the one address that asked for it: an anonymous
+	// caller that fetched a secret the administrator is about to bind would
+	// otherwise be able to log in with it, because the passcode is the only
+	// credential.
+	clientIP := c.ClientIP()
 	if user.TFASecret != "" {
-		logger.Debugf("Reusing the pending TFA secret for %s", c.ClientIP())
+		if user.TFABootstrapIP == "" {
+			// An installation that already carries a pending secret from a
+			// release that did not record the address keeps working: the first
+			// caller adopts it, exactly as it did before.
+			user.TFABootstrapIP = clientIP
+			db.Save(&user)
+		} else if user.TFABootstrapIP != clientIP {
+			logger.Warnf("Refused to hand out the pending TFA secret to %s: it was issued to %s", clientIP, user.TFABootstrapIP)
+			response.Error(c, response.JSONBody{Err: response.ErrLoginRequired, Msg: "The pending TFA secret belongs to another address, run 'mgt -reset_user <user>' to bind a new one"}, http.StatusForbidden)
+			return
+		}
+
+		logger.Debugf("Reusing the pending TFA secret for %s", clientIP)
 		response.Success(c, gin.H{"url": otpURL(user.TFASecret)})
 		return
 	}
@@ -163,8 +193,9 @@ func GetOTPUrl(c *gin.Context) {
 	}
 
 	user.TFASecret = otpKey.Secret()
+	user.TFABootstrapIP = clientIP
 	db.Save(&user)
-	logger.Warnf("Issued a new TFA secret to %s; the administrator has to bind it before the first login", c.ClientIP())
+	logger.Warnf("Issued a new TFA secret to %s; it can only be bound and used from that address until the first login", clientIP)
 	response.Success(c, gin.H{"url": otpKey.URL()})
 }
 
