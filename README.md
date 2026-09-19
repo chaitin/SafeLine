@@ -101,7 +101,7 @@ Information on how to install SafeLine can be found in the [Install Guide](https
 
 to see [Configuration](https://docs.waf.chaitin.com/en/GetStarted/AddApplication)
 
-## 📋 More Informations
+## 📋 More Information
 
 #### Effect Evaluation
 
