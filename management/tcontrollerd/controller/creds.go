@@ -15,11 +15,12 @@ import (
 
 const (
 	// TLSEnv names the environment variable that decides how the control
-	// channel is reached. "1" requires TLS and refuses to start without it,
-	// "0" reaches the server in the clear, and anything else (including an
-	// unset value) uses TLS as soon as the management server published the
-	// credentials, which it does when its container runs `mgt -gen_certs` on
-	// start.
+	// channel is reached.
+	//
+	//   - "0" / off / false / no: dial in the clear (warned).
+	//   - anything else, including unset: TLS is required. Credentials are
+	//     those published by `mgt -gen_certs`. Missing files are an error;
+	//     there is no silent fallback to plaintext.
 	TLSEnv = "TCD_MGT_TLS"
 
 	// ServerCertFile is the certificate the management server is expected to
@@ -34,11 +35,11 @@ const (
 
 // transportCreds returns the credentials of the control channel.
 //
-// A nil result means the channel is reached in the clear. The management
-// server serves it over TLS and only accepts a client certificate it issued,
-// so a deployment in which the two containers were not upgraded together keeps
-// working through the switch below, and every other deployment fails the
-// handshake rather than subscribing without a certificate.
+// A nil result means the channel is reached in the clear, and that only happens
+// when TLSEnv is an explicit off value. Unset TLSEnv still requires TLS: the
+// management side is expected to have published client credentials via
+// `mgt -gen_certs`; missing files are returned as an error instead of a
+// plaintext dial.
 func transportCreds() (credentials.TransportCredentials, error) {
 	switch strings.ToLower(strings.TrimSpace(os.Getenv(TLSEnv))) {
 	case "0", "off", "false", "no":
@@ -48,12 +49,7 @@ func transportCreds() (credentials.TransportCredentials, error) {
 
 	creds, err := loadTransportCreds()
 	if err != nil {
-		if required := strings.ToLower(strings.TrimSpace(os.Getenv(TLSEnv))); required == "1" || required == "on" || required == "true" || required == "yes" {
-			return nil, err
-		}
-
-		logger.Warnf("Reaching the control channel in the clear: %s. Set %s=1 to make this an error.", err, TLSEnv)
-		return nil, nil
+		return nil, err
 	}
 
 	return creds, nil

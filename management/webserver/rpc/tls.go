@@ -17,11 +17,13 @@ import (
 
 const (
 	// TLSEnv names the environment variable that decides how the control
-	// channel is secured. "1" requires TLS and refuses to start the channel
-	// without it, "0" serves the channel in the clear, and anything else
-	// (including an unset value) secures it as soon as the credentials of the
-	// installation are there, which is the case of every deployment whose
-	// container runs `mgt -gen_certs` on start.
+	// channel is secured.
+	//
+	//   - "0" / off / false / no: serve in the clear (warned).
+	//   - anything else, including unset: TLS is required. Credentials come
+	//     from `mgt -gen_certs`. Missing files are an error; there is no
+	//     silent fallback to plaintext (the subscription token would otherwise
+	//     travel on the same network as the containers).
 	TLSEnv = "MGT_GRPC_TLS"
 
 	// CertDirEnv names the environment variable that holds the directory of
@@ -79,11 +81,10 @@ func ClientCertDir() string {
 
 // ServerCreds returns the transport credentials of the control channel.
 //
-// A nil option means the channel is served in the clear: either the deployment
-// asked for that, or the credentials of the installation are not there, which
-// is what a management container that was started without `-gen_certs` looks
-// like. A deployment that wants to be sure it is not served in the clear sets
-// TLSEnv=1, and then a missing credential is an error instead.
+// A nil option means the channel is served in the clear, and that only happens
+// when TLSEnv is an explicit off value. Unset TLSEnv still requires TLS: the
+// deployment is expected to have run `mgt -gen_certs`; missing credentials are
+// returned as an error instead of a plaintext listener.
 func ServerCreds() (grpc.ServerOption, error) {
 	switch strings.ToLower(strings.TrimSpace(os.Getenv(TLSEnv))) {
 	case "0", "off", "false", "no":
@@ -93,12 +94,7 @@ func ServerCreds() (grpc.ServerOption, error) {
 
 	creds, err := loadServerCreds()
 	if err != nil {
-		if required := strings.ToLower(strings.TrimSpace(os.Getenv(TLSEnv))); required == "1" || required == "on" || required == "true" || required == "yes" {
-			return nil, err
-		}
-
-		logger.Warnf("Serving the control channel in the clear: %s. Set %s=1 to make this an error.", err, TLSEnv)
-		return nil, nil
+		return nil, err
 	}
 
 	logger.Infof("The control channel is served over TLS and only accepts a client certificate issued by %s", filepath.Join(CertDir(), CertAuthorityFile))

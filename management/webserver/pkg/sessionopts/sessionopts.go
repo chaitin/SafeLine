@@ -20,10 +20,14 @@ const maxAge = 3600 * 24 * 7
 // session.
 //
 // HttpOnly keeps the session cookie out of reach of JavaScript, SameSite=Lax
-// prevents browsers from attaching the cookie to cross-site requests (which
-// would otherwise turn the state changing API endpoints into CSRF targets),
-// and Secure keeps the cookie on HTTPS, which is how the console is served
-// outside of a development setup.
+// prevents browsers from attaching the cookie to cross-site POST/PUT (which
+// would otherwise turn the state-changing API into CSRF targets), and Secure
+// keeps the cookie on HTTPS outside of a development setup.
+//
+// There is no separate CSRF header by design: the console is a cookie-session
+// SPA, and Lax already drops the cookie on cross-site mutating requests.
+// Adding a token would require a frontend change; do not treat the missing
+// middleware as an accidental gap.
 func Options(c *gin.Context) sessions.Options {
 	return sessions.Options{
 		Path:     "/",

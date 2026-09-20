@@ -174,6 +174,10 @@ func main() {
 	publicRouters := r.Group("/api")
 	publicRouters.POST(api.Login, api.PostLogin)
 	publicRouters.POST(api.Logout, api.PostLogout)
+	// Public on purpose for first-boot QR on the login page. Empty
+	// MGT_BOOTSTRAP_TOKEN is the CE installer path; GetOTPUrl still
+	// binds the secret to the first IP, closes after LastLoginTime,
+	// and honours MGT_BOOTSTRAP_WINDOW. See api.GetOTPUrl.
 	publicRouters.GET(api.OTPUrl, api.GetOTPUrl)
 	publicRouters.GET(api.Version, api.GetVersion)
 	publicRouters.GET(api.UpgradeTips, api.GetUpgradeTips)

@@ -51,6 +51,7 @@ func Handle() error {
 	if creds != nil {
 		dialOptions = append(dialOptions, grpc.WithTransportCredentials(creds))
 	} else {
+		// nil creds only when TCD_MGT_TLS is an explicit off value.
 		dialOptions = append(dialOptions, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 

@@ -70,6 +70,10 @@ func newClient(baseURL string, timeout time.Duration, insecureSkipVerify bool, c
 	parsedURL.Path = strings.TrimRight(parsedURL.Path, "/")
 
 	transport := &http.Transport{
+		// Default insecureSkipVerify is false (config.yaml). Self-signed
+		// consoles should set ca_file to pin the instance CA. Turning this
+		// on is an explicit operator choice and logs a warn below; it is
+		// not the default skip-verify path.
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify}, // #nosec G402 -- deployment-controlled compatibility setting
 	}
 

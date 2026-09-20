@@ -80,6 +80,11 @@ func (s *MCPServer) Start(addr string, middleware ...Middleware) error {
 		WriteTimeout:      60 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
+	// Plain HTTP is the supported listener: this process has no
+	// certificate config path. Auth is on by default; main.go refuses
+	// to start with auth off unless the bind host is loopback. Put
+	// HTTPS in front (reverse proxy) for anything not on the machine
+	// or the operator network.
 	return srv.ListenAndServe()
 }
 

@@ -288,8 +288,11 @@ fprintf(output,
 "    u = %ld;\n"
 , u, call_addr[u].first);
       if (opt_gen_c)
+        // C ABI takes a signed length from the caller. Rejecting only the
+        // upper bound lets a negative *ret_stack_len pass, then
+        // ret_stack[(*ret_stack_len)++] writes before the array.
         fprintf(output,
-"    if (*ret_stack_len >= %ld) return -1;\n"
+"    if (*ret_stack_len < 0 || *ret_stack_len >= %ld) return -1;\n"
 "    ret_stack[(*ret_stack_len)++] = %ld;\n"
 , opt_max_return_stack, call_addr[u].second);
       else
@@ -389,7 +392,7 @@ fprintf(output,
       fprintf(output, "default:\n");
       indent(output, 3);
       fprintf(output, opt_gen_c ?
-"if (*ret_stack_len) { u = ret_stack[--*ret_stack_len]; goto again; }\n"
+"if (*ret_stack_len > 0) { u = ret_stack[--*ret_stack_len]; goto again; }\n"
 :
 "if (ret_stack.size()) { u = ret_stack.back(); ret_stack.pop_back(); goto again; }\n");
       indent(output, 3);
@@ -732,6 +735,7 @@ static void generate_cxx_export(DefineStmt* stmt)
   generate_final("", final);
   generate_final("sub_", stmt2final[stmt]);
   fprintf(output, opt_gen_c ?
+"  if (ret_stack_len < 0) return false;\n"
 "  for (long i = ret_stack_len; i; u = ret_stack[--i])\n"
 :
 "  for (auto i = ret_stack.size(); i; u = ret_stack[--i])\n"
