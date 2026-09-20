@@ -87,6 +87,26 @@ int yylex(YYSTYPE* yylval, YYLTYPE* loc, Stmt*& res, long& errors, const Locatio
   return token;
 }
 
+// The tree is walked, and freed, by code that recurses along its edges, so its
+// depth is bounded while it is built. The node that would exceed the bound is
+// reported and replaced by a leaf: the spine that was built so far is dropped
+// with it instead of being carried on, which keeps the work and the memory the
+// reduction needs proportional to the input. The report is made once per
+// parse, because every crossing of the bound would otherwise print the line
+// again.
+#define BOUND_EXPR_DEPTH(x)                                              \
+  do {                                                                   \
+    if ((x)->nest > MAX_EXPR_DEPTH) {                                    \
+      if (!expr_depth_exceeded) {                                        \
+        expr_depth_exceeded = true;                                      \
+        FAIL(yyloc, "expression nesting depth exceeds the limit");       \
+      }                                                                  \
+      delete (x);                                                        \
+      (x) = new DotExpr;                                                 \
+      (x)->loc = yyloc;                                                  \
+    }                                                                    \
+  } while (0)
+
 #define gen_repeat(x, inner, low, high) \
   if (low < 0) {                     \
     FAIL(yyloc, "negative"); \
@@ -97,7 +117,10 @@ int yylex(YYSTYPE* yylval, YYLTYPE* loc, Stmt*& res, long& errors, const Locatio
   if (low > MAX_REPEAT || (high != LONG_MAX && high > MAX_REPEAT)) { \
     FAIL(yyloc, "repeat count exceeds limit"); \
   } \
-  x = new RepeatExpr(inner, low, high)
+  x = new RepeatExpr(inner, low, high); \
+  BOUND_EXPR_DEPTH(x)
+
+bool expr_depth_exceeded = false;
 %}
 
 %%
@@ -137,28 +160,28 @@ define_stmt:
 
 union_expr:
     intersect_expr { $$ = $1; }
-  | union_expr '|' intersect_expr { $$ = new UnionExpr($1, $3); $$->loc = yyloc; }
+  | union_expr '|' intersect_expr { $$ = new UnionExpr($1, $3); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
 
 union_expr2:
     intersect_expr { $$ = $1; }
-  | union_expr2 '|' intersect_expr { $$ = new UnionExpr($1, $3); $$->loc = yyloc; }
-  | union_expr2 '\n' '|' intersect_expr { $$ = new UnionExpr($1, $4); $$->loc = yyloc; }
+  | union_expr2 '|' intersect_expr { $$ = new UnionExpr($1, $3); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
+  | union_expr2 '\n' '|' intersect_expr { $$ = new UnionExpr($1, $4); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
 
 intersect_expr:
     difference_expr { $$ = $1; }
-  | intersect_expr AMPERAMPER difference_expr { $$ = new IntersectExpr($1, $3); $$->loc = yyloc; }
+  | intersect_expr AMPERAMPER difference_expr { $$ = new IntersectExpr($1, $3); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
 
 difference_expr:
     concat_expr { $$ = $1; }
-  | difference_expr '-' concat_expr { $$ = new DifferenceExpr($1, $3); $$->loc = yyloc; }
+  | difference_expr '-' concat_expr { $$ = new DifferenceExpr($1, $3); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
 
 concat_expr:
     unop_expr { $$ = $1; }
-  | concat_expr unop_expr { $$ = new ConcatExpr($1, $2); $$->loc = yyloc; }
+  | concat_expr unop_expr { $$ = new ConcatExpr($1, $2); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
 
 unop_expr:
     factor { $$ = $1; }
-  | '~' unop_expr { $$ = new ComplementExpr($2); $$->loc = yyloc; }
+  | '~' unop_expr { $$ = new ComplementExpr($2); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
 
 factor:
     EPSILON { $$ = new EpsilonExpr; $$->loc = yyloc; }
@@ -218,9 +241,9 @@ factor:
   | factor '%' INTEGER action { $$ = $1; $$->leaving.emplace_back($4, $3); }
   | factor '$' action { $$ = $1; $$->transiting.emplace_back($3, 0L); }
   | factor '$' INTEGER action { $$ = $1; $$->transiting.emplace_back($4, $3); }
-  | factor '+' { $$ = new PlusExpr($1); $$->loc = yyloc; }
-  | factor '?' { $$ = new QuestionExpr($1); $$->loc = yyloc; }
-  | factor '*' { $$ = new StarExpr($1); $$->loc = yyloc; }
+  | factor '+' { $$ = new PlusExpr($1); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
+  | factor '?' { $$ = new QuestionExpr($1); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
+  | factor '*' { $$ = new StarExpr($1); $$->loc = yyloc; BOUND_EXPR_DEPTH($$); }
 
 repeat:
     factor '{' INTEGER ',' INTEGER '}' { gen_repeat($$, $1, $3, $5); $$->loc = yyloc; }
@@ -262,6 +285,7 @@ int parse(const LocationFile& locfile, Stmt*& res)
   raw_yylex_init_extra(0, &lexer);
   YY_BUFFER_STATE buf = raw_yy_scan_bytes(locfile.data.c_str(), locfile.data.size(), lexer);
   long errors = 0;
+  expr_depth_exceeded = false;
   yyparse(res, errors, locfile, &lexer);
   raw_yy_delete_buffer(buf, lexer);
   raw_yylex_destroy(lexer);
