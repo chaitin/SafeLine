@@ -31,23 +31,43 @@ type loginAttempt struct {
 	lastFailure time.Time
 }
 
-// loginGuard throttles the login endpoint per account and per client address.
+// loginGuard throttles an endpoint that an unauthenticated or partially
+// authenticated caller can drive per account and per client address.
 //
 // The management console has a single account and the passcode is its only
 // credential, so a caller that is allowed to try passcodes without limit can
-// simply enumerate them.
+// simply enumerate them. The same guard covers the TFA bootstrap, where the
+// only thing between a caller and the secret of the account is a token
+// comparison.
 type loginGuard struct {
 	mu       sync.Mutex
 	attempts map[string]*loginAttempt
+
+	// failureThreshold is how many failures are tolerated before the caller has
+	// to wait, failureWindow how long a failure is remembered and maxLockout
+	// caps the wait that is imposed.
+	failureThreshold int
+	failureWindow    time.Duration
+	maxLockout       time.Duration
 
 	// now is a seam for the tests.
 	now func() time.Time
 }
 
+// newLoginGuard returns the throttle of the login endpoint.
 func newLoginGuard() *loginGuard {
+	return newThrottle(loginFailureThreshold, loginFailureWindow, loginMaxLockout)
+}
+
+// newThrottle returns a throttle with its own thresholds, which lets an
+// endpoint that is cheaper to reach than the login pick stricter numbers.
+func newThrottle(threshold int, window, maxLockout time.Duration) *loginGuard {
 	return &loginGuard{
-		attempts: make(map[string]*loginAttempt),
-		now:      time.Now,
+		attempts:         make(map[string]*loginAttempt),
+		failureThreshold: threshold,
+		failureWindow:    window,
+		maxLockout:       maxLockout,
+		now:              time.Now,
 	}
 }
 
@@ -86,11 +106,11 @@ func (g *loginGuard) lockout(keys []string) (string, time.Duration) {
 
 	for _, key := range keys {
 		attempt, ok := g.attempts[key]
-		if !ok || attempt.failures < loginFailureThreshold {
+		if !ok || attempt.failures < g.failureThreshold {
 			continue
 		}
 
-		if remaining := loginBackoff(attempt.failures) - now.Sub(attempt.lastFailure); remaining > wait {
+		if remaining := g.backoff(attempt.failures) - now.Sub(attempt.lastFailure); remaining > wait {
 			blockedKey, wait = key, remaining
 		}
 	}
@@ -108,7 +128,7 @@ func (g *loginGuard) fail(keys []string) {
 
 	for _, key := range keys {
 		attempt, ok := g.attempts[key]
-		if !ok || now.Sub(attempt.lastFailure) > loginFailureWindow {
+		if !ok || now.Sub(attempt.lastFailure) > g.failureWindow {
 			attempt = &loginAttempt{}
 			g.attempts[key] = attempt
 		}
@@ -131,7 +151,7 @@ func (g *loginGuard) reset(keys []string) {
 // prune drops records that are no longer useful and keeps the map bounded.
 func (g *loginGuard) prune(now time.Time) {
 	for key, attempt := range g.attempts {
-		if now.Sub(attempt.lastFailure) > loginFailureWindow+loginMaxLockout {
+		if now.Sub(attempt.lastFailure) > g.failureWindow+g.maxLockout {
 			delete(g.attempts, key)
 		}
 	}
@@ -153,10 +173,10 @@ func (g *loginGuard) prune(now time.Time) {
 	}
 }
 
-// loginBackoff returns how long a caller that failed n times in a row has to
-// wait after its last failure. The delay doubles per failure and is capped.
-func loginBackoff(failures int) time.Duration {
-	shift := failures - loginFailureThreshold
+// backoff returns how long a caller that failed n times in a row has to wait
+// after its last failure. The delay doubles per failure and is capped.
+func (g *loginGuard) backoff(failures int) time.Duration {
+	shift := failures - g.failureThreshold
 	if shift < 0 {
 		shift = 0
 	}
@@ -165,8 +185,8 @@ func loginBackoff(failures int) time.Duration {
 	}
 
 	backoff := time.Second << uint(shift)
-	if backoff > loginMaxLockout {
-		backoff = loginMaxLockout
+	if backoff > g.maxLockout {
+		backoff = g.maxLockout
 	}
 
 	return backoff

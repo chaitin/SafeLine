@@ -1,9 +1,9 @@
 package utils
 
 import (
+	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -49,12 +49,33 @@ func FilesExist(paths ...string) (bool, error) {
 	return true, nil
 }
 
+// RenameWriteFile writes data to filename by writing a temporary file next to
+// it and renaming that file into place.
+//
+// os.CreateTemp creates the file with O_CREATE|O_EXCL and mode 0600, so a file
+// or symlink planted at the temporary path beforehand cannot be followed, and
+// the rename replaces a symlink that was left at filename instead of writing
+// through it. The previous implementation guessed the name with math/rand and
+// wrote through ioutil.WriteFile, which follows symlinks.
 func RenameWriteFile(filename string, data []byte, perm os.FileMode) error {
-	// os.CreateTemp creates the file with O_CREATE|O_EXCL and mode 0600, so a
-	// file or symlink planted at the temporary path beforehand cannot be
-	// followed. The previous implementation guessed the name with math/rand and
-	// wrote through ioutil.WriteFile, which follows symlinks.
-	tmpFile, err := os.CreateTemp(filepath.Dir(filename), filepath.Base(filename)+".tmp.")
+	return RenameCopyFromIO(bytes.NewReader(data), filename, perm)
+}
+
+// RenameCopyFromIO streams src into a temporary file created next to dstPath
+// and renames it over dstPath once the whole content has been written.
+//
+// This is the write primitive of the package: opening dstPath in place, as
+// CopyFileFromIO used to do with O_CREATE|O_WRONLY|O_TRUNC and no O_NOFOLLOW,
+// lets anyone who can create an entry in the destination directory redirect the
+// write to another file and truncate it. tcontrollerd runs as root and writes
+// the nginx configuration of every site into a path derived from the site id,
+// so the destination names are predictable and the target of such a link would
+// be overwritten with root privileges.
+//
+// The rename also makes the update atomic: a reader either sees the complete
+// old file or the complete new one, never a half written mixture.
+func RenameCopyFromIO(src io.Reader, dstPath string, perm os.FileMode) error {
+	tmpFile, err := os.CreateTemp(filepath.Dir(dstPath), filepath.Base(dstPath)+".tmp.")
 	if err != nil {
 		return err
 	}
@@ -71,16 +92,17 @@ func RenameWriteFile(filename string, data []byte, perm os.FileMode) error {
 		tmpFile.Close()
 		return err
 	}
-	if _, err = tmpFile.Write(data); err != nil {
+	if _, err = io.Copy(tmpFile, src); err != nil {
 		tmpFile.Close()
 		return err
 	}
 	if err = tmpFile.Close(); err != nil {
 		return err
 	}
-	if err = os.Rename(tmpName, filename); err != nil {
+	if err = os.Rename(tmpName, dstPath); err != nil {
 		return err
 	}
+
 	renamed = true
 	return nil
 }
@@ -94,13 +116,14 @@ func EnsureRenameWriteFile(path string, data []byte, mode os.FileMode) error {
 	return RenameWriteFile(path, data, mode)
 }
 
+// EnsureWriteFile writes a file with the given mode, creating its parent
+// directory when needed.
+//
+// It goes through RenameCopyFromIO, so the write is atomic and cannot be
+// redirected through a symlink: ioutil.WriteFile, which this used to call,
+// truncates the target of a pre-existing link at the destination path.
 func EnsureWriteFile(path string, data []byte, mode os.FileMode) error {
-	err := EnsureFileDir(path)
-	if err != nil {
-		return err
-	}
-
-	return ioutil.WriteFile(path, data, mode)
+	return EnsureRenameWriteFile(path, data, mode)
 }
 
 func CopyFile(srcPath, dstPath string) error {
@@ -123,24 +146,18 @@ func CopyFile(srcPath, dstPath string) error {
 	return CopyFileFromIO(srcFile, dstPath, fileInfo.Mode())
 }
 
+// CopyFileFromIO copies src into dstPath.
+//
+// The copy is written to a temporary file and renamed into place, so it is
+// atomic and cannot be redirected through a symlink left at dstPath. Opening
+// dstPath with O_CREATE|O_WRONLY|O_TRUNC and no O_NOFOLLOW, which this used to
+// do, truncated whatever a planted link pointed at.
 func CopyFileFromIO(src io.Reader, dstPath string, perm os.FileMode) error {
 	if err := EnsureFileDir(dstPath); err != nil {
 		return err
 	}
 
-	dstFile, err := os.OpenFile(dstPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, perm)
-	if err != nil {
-		return err
-	}
-	defer func(dstFile *os.File) {
-		err := dstFile.Close()
-		if err != nil {
-
-		}
-	}(dstFile)
-
-	_, err = io.Copy(dstFile, src)
-	return err
+	return RenameCopyFromIO(src, dstPath, perm)
 }
 
 func CopyFileIfNotExist(srcPath, dstPath string) error {

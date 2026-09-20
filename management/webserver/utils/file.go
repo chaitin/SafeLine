@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -95,11 +94,14 @@ func EnsureRenameWriteFile(path string, data []byte, mode os.FileMode) error {
 	return RenameWriteFile(path, data, mode)
 }
 
+// EnsureWriteFile writes a file with the given mode, creating its parent
+// directory when needed.
+//
+// It goes through RenameWriteFile, so the write is atomic and cannot be
+// redirected through a symlink: ioutil.WriteFile, which this used to call,
+// truncates whatever a link planted at the destination path points at. The
+// detection engine byte code is written through here, and a reader either sees
+// the complete old file or the complete new one instead of a torn mixture.
 func EnsureWriteFile(path string, data []byte, mode os.FileMode) error {
-	err := EnsureFileDir(path)
-	if err != nil {
-		return err
-	}
-
-	return ioutil.WriteFile(path, data, mode)
+	return EnsureRenameWriteFile(path, data, mode)
 }

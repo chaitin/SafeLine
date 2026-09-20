@@ -104,10 +104,36 @@ void FsaAnno::co_accessible(const vector<bool>* final, vector<long>& mapping) {
 }
 
 void FsaAnno::complement(ComplementExpr* expr) {
-  if (! deterministic)
-    fsa = fsa.determinize(NULL, [&](long, const vector<long>&){});
+  if (! deterministic) {
+    // Rebuild the association for the determinized automaton before
+    // complementing it: Fsa::determinize merges states, so the entries of
+    // assoc would otherwise keep talking about the numbering of the
+    // non-deterministic automaton. difference() and intersect() do the same.
+    decltype(assoc) new_assoc;
+    auto relate = [&](long id, const vector<long>& xs) {
+      if (id+1 > new_assoc.size())
+        new_assoc.resize(id+1);
+      auto& as = new_assoc[id];
+      for (long x: xs)
+        as.insert(as.end(), ALL(assoc[x]));
+      sort_assoc(as);
+    };
+    fsa = fsa.determinize(NULL, relate);
+    assoc = move(new_assoc);
+  }
   fsa = ~ fsa;
-  assoc.assign(fsa.n(), {});
+  // Fsa::operator~ keeps every state at its index and only appends the new
+  // accepting state, so the association survives. Replacing the vector with
+  // empty entries (assoc.assign(fsa.n(), {}), as this used to) dropped every
+  // action that was attached underneath the operator, and generate_transitions
+  // derives all action bodies from assoc: a rule like
+  //   export foo = ~([a-z] > { puts("entered"); })
+  // compiled without the handler the author wrote, silently (CWE-684). The
+  // same held for the CallExpr/CollapseExpr bookkeeping, which resolves its
+  // targets through assoc.
+  assoc.resize(fsa.n());
+  if (expr)
+    add_assoc(*expr);
   deterministic = true;
 }
 

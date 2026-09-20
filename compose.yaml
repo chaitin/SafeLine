@@ -48,6 +48,13 @@ services:
       # ${SAFELINE_DIR}/resources/sock/mgt_grpc_token, which this container
       # creates and the tengine container reads.
       - MGT_GRPC_TOKEN=${MGT_GRPC_TOKEN:-}
+      # Optional out of band token for the anonymous TFA bootstrap. As long as
+      # it is empty, GET /api/OTPUrl hands the TFA secret of the account to
+      # whoever reaches the port first, and the login is then bound to that
+      # address; the daemon warns about it at startup. Set it, and pass the
+      # same value to the request as X-Bootstrap-Token, to keep the binding for
+      # an administrator who has the token.
+      - MGT_BOOTSTRAP_TOKEN=${MGT_BOOTSTRAP_TOKEN:-}
     depends_on:
       - postgres
       - fvm

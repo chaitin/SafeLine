@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,27 @@ const VersionInfoEntrypoint = "/release/latest/version.json"
 // the platform. The body is parsed and logged on error, so a large or endless
 // answer from a misbehaving (or hostile) endpoint must not be buffered whole.
 const maxVersionInfoBytes = 1 << 20
+
+// maxLoggedBodyBytes bounds how much of an answer from another host may be put
+// into the log.
+const maxLoggedBodyBytes = 256
+
+// loggableBody renders a bounded, quoted, single line version of a response
+// body that came from another host.
+//
+// The body is remote input, and the log is read by people and by tools that
+// follow it: a verbatim body lets the other end forge log lines (or worse, if
+// the log is read in a terminal) with a carriage return or an escape sequence.
+// strconv.Quote escapes the newlines and the control characters, and the
+// truncation keeps a misbehaving endpoint from filling the disk through the
+// log file.
+func loggableBody(body []byte) string {
+	if len(body) > maxLoggedBodyBytes {
+		return fmt.Sprintf("%s... (%d bytes in total)", strconv.Quote(string(body[:maxLoggedBodyBytes])), len(body))
+	}
+
+	return strconv.Quote(string(body))
+}
 
 type idsRequest struct {
 	IDs []uint `json:"ids" form:"ids"`
@@ -77,7 +99,7 @@ func GetUpgradeTips(ctx *gin.Context) {
 	versionInfo := &versionInfoResponse{}
 	err = json.Unmarshal(body, versionInfo)
 	if err != nil {
-		logger.Warnf("err: %v, body: %s", err, body)
+		logger.Warnf("Failed to parse %s: %v, body: %s", config.GlobalConfig.PlatformAddr+VersionInfoEntrypoint, err, loggableBody(body))
 		response.Success(ctx, gin.H{"upgrade_tips": constants.NotUpgrade})
 		return
 	}
@@ -87,7 +109,7 @@ func GetUpgradeTips(ctx *gin.Context) {
 	recVersionCmp := semver.Compare(currentVersion, versionInfo.RecVersion)
 	if semver.Compare(versionInfo.LatestVersion, versionInfo.RecVersion) == -1 || latestVersionCmp == 1 {
 		logger.Warnf("The version number is invalid, current version: %s, latest version: %s, rec version: %s",
-			currentVersion, versionInfo.LatestVersion, versionInfo.RecVersion)
+			currentVersion, strconv.Quote(versionInfo.LatestVersion), strconv.Quote(versionInfo.RecVersion))
 		response.Success(ctx, gin.H{"upgrade_tips": constants.NotUpgrade})
 		return
 	}

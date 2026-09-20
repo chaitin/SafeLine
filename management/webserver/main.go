@@ -155,6 +155,16 @@ func main() {
 	store := cookie.NewStore([]byte(option.Value))
 	r.Use(sessions.Sessions("session", store))
 
+	// The bootstrap token is the only gate in front of the TFA secret of the
+	// account. It is optional so that a fresh installation can be bound from
+	// the console, but the default is worth announcing: with an empty value
+	// the first caller that reaches the API is the one the account gets bound
+	// to.
+	if os.Getenv(api.BootstrapTokenEnv) == "" {
+		logger.Warnf("%s is not set: the TFA secret of the account is handed to whoever reaches GET %s%s first. Set it to require the %s header on that request.",
+			api.BootstrapTokenEnv, "/api", api.OTPUrl, api.BootstrapTokenHeader)
+	}
+
 	publicRouters := r.Group("/api")
 	publicRouters.POST(api.Login, api.PostLogin)
 	publicRouters.POST(api.Logout, api.PostLogout)
