@@ -90,7 +90,11 @@ func loadOrCreateToken(path string) (string, error) {
 	}
 	value := hex.EncodeToString(token)
 
-	if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
+	// 0750: the directory holds the secret of the control channel, so it is not
+	// left traversable by other users. It is a shared mount point whose mode is
+	// normally set by the deployment, so this only applies when this call is the
+	// one that creates it.
+	if err := os.MkdirAll(filepath.Dir(path), 0750); err != nil {
 		return "", err
 	}
 
@@ -105,7 +109,7 @@ func loadOrCreateToken(path string) (string, error) {
 	}
 
 	if _, err = file.WriteString(value + "\n"); err != nil {
-		file.Close()
+		_ = file.Close()
 		return "", err
 	}
 

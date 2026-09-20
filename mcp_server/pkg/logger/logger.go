@@ -140,7 +140,7 @@ func Init(cfg *Config) error {
 // GetLogger 获取日志实例
 func GetLogger() *Logger {
 	if defaultLogger == nil {
-		Init(nil)
+		_ = Init(nil)
 	}
 
 	if defaultLogger == nil {

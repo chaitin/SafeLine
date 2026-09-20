@@ -84,16 +84,16 @@ func RenameCopyFromIO(src io.Reader, dstPath string, perm os.FileMode) error {
 	renamed := false
 	defer func() {
 		if !renamed {
-			os.Remove(tmpName)
+			_ = os.Remove(tmpName)
 		}
 	}()
 
 	if err = tmpFile.Chmod(perm); err != nil {
-		tmpFile.Close()
+		_ = tmpFile.Close()
 		return err
 	}
 	if _, err = io.Copy(tmpFile, src); err != nil {
-		tmpFile.Close()
+		_ = tmpFile.Close()
 		return err
 	}
 	if err = tmpFile.Close(); err != nil {
@@ -131,11 +131,8 @@ func CopyFile(srcPath, dstPath string) error {
 	if err != nil {
 		return err
 	}
-	defer func(srcFile *os.File) {
-		err := srcFile.Close()
-		if err != nil {
-
-		}
+	defer func(f *os.File) {
+		_ = f.Close()
 	}(srcFile)
 
 	fileInfo, err := srcFile.Stat()
