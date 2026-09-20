@@ -5,6 +5,7 @@
 #include <execinfo.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <sys/time.h>
 #include <sysexits.h>
 #include <time.h>
@@ -75,6 +76,57 @@ void err_msg(const char *format, ...)
 }
 #define err_msg_g(...) ({err_msg(__VA_ARGS__); goto quit;})
 
+// MAX_BACKTRACE_FRAMES bounds the addresses that are collected and resolved.
+// backtrace() writes as many entries as the stack holds, so the count handed
+// to it has to be the size of the buffer itself: asking for more than the
+// array holds writes past the end of it.
+#define MAX_BACKTRACE_FRAMES 99
+
+// run_addr2line resolves the collected addresses and writes the result to
+// stderr.
+//
+// The addresses are passed as an argument vector rather than as a shell
+// command line: the program name is argv[0], which whoever spawns this binary
+// chooses, so a value carrying shell syntax would otherwise be able to run a
+// command of its own.
+static void run_addr2line(void** bt, int nptrs)
+{
+  if (nptrs > MAX_BACKTRACE_FRAMES)
+    nptrs = MAX_BACKTRACE_FRAMES;
+
+  char addrs[MAX_BACKTRACE_FRAMES][32];
+  // three fixed entries (the program, its options and the object file), one
+  // address per frame, and the terminating NULL
+  char* argv[MAX_BACKTRACE_FRAMES + 4];
+  int n = 0;
+  argv[n++] = (char*)"addr2line";
+  argv[n++] = (char*)"-Cfipe";
+  // glibc leaves program_invocation_name empty when it cannot name the
+  // program; addr2line then falls back to its own default.
+  argv[n++] = (char*)(program_invocation_name ? program_invocation_name : "");
+  REP(i, nptrs) {
+    snprintf(addrs[i], sizeof addrs[i], "%p", bt[i]);
+    argv[n++] = addrs[i];
+  }
+  argv[n] = NULL;
+
+  pid_t pid = fork();
+  if (pid < 0)
+    return;
+
+  if (pid == 0) {
+    // the backtrace belongs next to the message that is being written
+    dup2(STDERR_FILENO, STDOUT_FILENO);
+    execvp(argv[0], argv);
+    dprintf(STDERR_FILENO, "addr2line: %s\n", strerror(errno));
+    _exit(EXIT_FAILURE);
+  }
+
+  int status;
+  while (waitpid(pid, &status, 0) < 0 && errno == EINTR)
+    ;
+}
+
 void err_exit(int exitno, const char *format, ...)
 {
   va_list ap;
@@ -84,16 +136,10 @@ void err_exit(int exitno, const char *format, ...)
   errno = saved;
   va_end(ap);
 
-  void *bt[99];
-  char buf[1024];
-  int nptrs = backtrace(bt, LEN(buf));
-  int i = sprintf(buf, "addr2line -Cfipe %s", program_invocation_name), j = 0;
-  while (j < nptrs && i+30 < sizeof buf)
-    i += sprintf(buf+i, " %p", bt[j++]);
-  strcat(buf, ">&2");
+  void *bt[MAX_BACKTRACE_FRAMES];
+  int nptrs = backtrace(bt, LEN(bt));
   fputs("\n", stderr);
-  system(buf);
-  //backtrace_symbols_fd(buf, nptrs, STDERR_FILENO);
+  run_addr2line(bt, nptrs);
   exit(exitno);
 }
 
