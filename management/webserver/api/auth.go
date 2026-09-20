@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/sessions"
@@ -36,6 +37,22 @@ const BootstrapTokenEnv = "MGT_BOOTSTRAP_TOKEN"
 // BootstrapTokenHeader is the header that carries the value of
 // BootstrapTokenEnv.
 const BootstrapTokenHeader = "X-Bootstrap-Token"
+
+// BootstrapWindowEnv names the environment variable that holds how long the
+// anonymous TFA bootstrap stays open after it was opened. It accepts a Go
+// duration, and "0" or "off" leaves it open until the first login.
+//
+// The window is what keeps an installation that nobody ever bound from being
+// claimable forever: the account can be bound without a credential while the
+// window is open, and `mgt -reset_user admin` opens it again, which is what an
+// operator does when they want to bind a console that was left alone.
+const BootstrapWindowEnv = "MGT_BOOTSTRAP_WINDOW"
+
+// DefaultBootstrapWindow is how long the anonymous TFA bootstrap stays open
+// when BootstrapWindowEnv is not set. It is long enough for the operator of an
+// installation that is being set up to scan the code, and short enough that an
+// installation which is left unbound does not stay open to the network.
+const DefaultBootstrapWindow = 30 * time.Minute
 
 const (
 	// bootstrapFailureThreshold is how many rejected bootstrap attempts a
@@ -181,6 +198,65 @@ func PostLogout(c *gin.Context) {
 	response.Success(c, nil)
 }
 
+// checkBootstrapWindow returns an error when the window in which the account
+// may be bound without a credential has closed.
+//
+// A passcode is the only credential of the account, so the secret that the
+// caller of GET /api/OTPUrl receives is the account. Leaving the endpoint open
+// until somebody happens to log in means an installation that is deployed and
+// then forgotten can be claimed by whoever reaches the console port first; the
+// window bounds that to the time around the setup, and every console that is
+// bound afterwards reaches this endpoint only to be told to run
+// `mgt -reset_user`.
+func checkBootstrapWindow() error {
+	window := BootstrapWindow()
+	if window <= 0 {
+		return nil
+	}
+
+	openedAt, ok := model.BootstrapOpenedAt()
+	if !ok {
+		// The record is written when the installation is set up, so a missing
+		// one means this database was not written by this release. The account
+		// is not left bound to nobody for that reason: the window starts being
+		// measured from the moment the account was created.
+		var user model.User
+		database.GetDB().Where(&model.User{Username: constants.SuperUser}).First(&user)
+		if openedAt, ok = user.CreatedAt, !user.CreatedAt.IsZero(); !ok {
+			openedAt = time.Now()
+		}
+
+		logger.Warnf("No record of when the TFA bootstrap was opened, measuring the window of %s from %s", window, openedAt.Format(time.RFC3339))
+	}
+
+	if elapsed := time.Since(openedAt); elapsed > window {
+		return fmt.Errorf("the anonymous TFA bootstrap closed %s after it was opened at %s", window, openedAt.Format(time.RFC3339))
+	}
+
+	return nil
+}
+
+// BootstrapWindow returns how long the anonymous TFA bootstrap stays open, and
+// zero when it stays open until the first login.
+func BootstrapWindow() time.Duration {
+	value := strings.TrimSpace(os.Getenv(BootstrapWindowEnv))
+	if value == "" {
+		return DefaultBootstrapWindow
+	}
+
+	if strings.EqualFold(value, "off") {
+		return 0
+	}
+
+	window, err := time.ParseDuration(value)
+	if err != nil || window < 0 {
+		logger.Warnf("Ignoring %s=%q: it is not a duration, keeping the window of %s", BootstrapWindowEnv, value, DefaultBootstrapWindow)
+		return DefaultBootstrapWindow
+	}
+
+	return window
+}
+
 func GetOTPUrl(c *gin.Context) {
 	db := database.GetDB()
 
@@ -223,6 +299,15 @@ func GetOTPUrl(c *gin.Context) {
 			// An installation that already carries a pending secret from a
 			// release that did not record the address keeps working: the first
 			// caller adopts it, exactly as it did before.
+			//
+			// The window applies here as well, because adopting the pending
+			// secret is the same thing as being handed one.
+			if err := checkBootstrapWindow(); err != nil {
+				logger.Warnf("Refused to hand out the pending TFA secret to %s: %s", clientIP, err)
+				response.Error(c, response.JSONBody{Err: response.ErrLoginRequired, Msg: "TFA bootstrap is not allowed for this request"}, http.StatusForbidden)
+				return
+			}
+
 			adopted, err := adoptBootstrapSecret(db, user.TFASecret, clientIP)
 			if err != nil {
 				logger.Error(err)
@@ -240,6 +325,12 @@ func GetOTPUrl(c *gin.Context) {
 
 		logger.Debugf("Reusing the pending TFA secret for %s", clientIP)
 		response.Success(c, gin.H{"url": otpURL(user.TFASecret)})
+		return
+	}
+
+	if err := checkBootstrapWindow(); err != nil {
+		logger.Warnf("Refused to issue a TFA secret to %s: %s; run 'mgt -reset_user admin' to open the bootstrap again", clientIP, err)
+		response.Error(c, response.JSONBody{Err: response.ErrLoginRequired, Msg: "The TFA bootstrap of this installation is closed, run 'mgt -reset_user admin' to bind a new authenticator"}, http.StatusForbidden)
 		return
 	}
 

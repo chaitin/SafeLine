@@ -184,7 +184,12 @@ type WebsiteServer struct {
 }
 
 func GetWebsiteServer() *WebsiteServer {
-	return &WebsiteServer{}
+	// UnimplementedWebsiteServer is embedded through a pointer, and the code
+	// that registers a service checks that the pointer is not nil: the check
+	// is there because a nil pointer would only be noticed when a method that
+	// this server does not implement is called. It has to be set here, or the
+	// registration panics as soon as the generated code carries that check.
+	return &WebsiteServer{UnimplementedWebsiteServer: &pb.UnimplementedWebsiteServer{}}
 }
 
 func publishFullWebsite() error {
