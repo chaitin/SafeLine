@@ -26,6 +26,11 @@ func AuthRequired(c *gin.Context) {
 
 	if err := session.Save(); err != nil {
 		response.Error(c, response.JSONBody{Err: response.ErrInternalError, Msg: "Error occurred when creating sessions"}, http.StatusInternalServerError)
+		// The request has to stop here. Gin runs the handlers that follow a
+		// middleware from the same loop that called this one, so returning
+		// without Abort would still let the request reach the protected handler
+		// even though the answer above already reported a failure.
+		c.Abort()
 		return
 	}
 

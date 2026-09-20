@@ -202,13 +202,15 @@ func GetWebsite(ctx *gin.Context) {
 	var statistics []model.SystemStatistics
 	var websiteIds []string
 	for _, i := range websiteList {
-		websiteIds = append(websiteIds, strconv.Itoa(int(i.ID)))
+		// FormatUint renders the identifier without narrowing it: it is a uint,
+		// and going through int would truncate it on a 32 bit build.
+		websiteIds = append(websiteIds, strconv.FormatUint(uint64(i.ID), 10))
 	}
 	db.Where("created_at >= date_trunc('day',now())").Where("website in (?)", websiteIds).Find(&statistics)
 
 	for i, website := range websiteList {
 		for _, j := range statistics {
-			if strconv.Itoa(int(website.ID)) == j.Website {
+			if strconv.FormatUint(uint64(website.ID), 10) == j.Website {
 				if j.Type == "website-req" {
 					websiteList[i].ReqValue = j.Value
 				} else if j.Type == "website-denied" {

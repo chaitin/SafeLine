@@ -62,16 +62,16 @@ func RenameWriteFile(filename string, data []byte, perm os.FileMode) error {
 	renamed := false
 	defer func() {
 		if !renamed {
-			os.Remove(tmpName)
+			_ = os.Remove(tmpName)
 		}
 	}()
 
 	if err = tmpFile.Chmod(perm); err != nil {
-		tmpFile.Close()
+		_ = tmpFile.Close()
 		return err
 	}
 	if _, err = tmpFile.Write(data); err != nil {
-		tmpFile.Close()
+		_ = tmpFile.Close()
 		return err
 	}
 	if err = tmpFile.Close(); err != nil {

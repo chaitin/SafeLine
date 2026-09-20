@@ -122,7 +122,9 @@ func saveUploadedFile(file *multipart.FileHeader, dstPath string, mode os.FileMo
 	if err != nil {
 		return err
 	}
-	defer src.Close()
+	defer func() {
+		_ = src.Close()
+	}()
 
 	dst, err := os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE|os.O_EXCL, mode)
 	if err != nil {
@@ -130,7 +132,7 @@ func saveUploadedFile(file *multipart.FileHeader, dstPath string, mode os.FileMo
 	}
 
 	if _, err = io.Copy(dst, src); err != nil {
-		dst.Close()
+		_ = dst.Close()
 		return err
 	}
 
