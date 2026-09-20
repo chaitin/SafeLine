@@ -33,9 +33,40 @@ var loginThrottle = newLoginGuard()
 // TFA bootstrap. See GetOTPUrl.
 const BootstrapTokenEnv = "MGT_BOOTSTRAP_TOKEN"
 
-// bootstrapTokenHeader is the header that carries the value of
+// BootstrapTokenHeader is the header that carries the value of
 // BootstrapTokenEnv.
-const bootstrapTokenHeader = "X-Bootstrap-Token"
+const BootstrapTokenHeader = "X-Bootstrap-Token"
+
+const (
+	// bootstrapFailureThreshold is how many rejected bootstrap attempts a
+	// client address may make before it has to wait.
+	bootstrapFailureThreshold = 3
+
+	// bootstrapFailureWindow is how long a rejected attempt is remembered.
+	bootstrapFailureWindow = 10 * time.Minute
+
+	// bootstrapMaxLockout caps the wait imposed on a caller that keeps trying.
+	bootstrapMaxLockout = 5 * time.Minute
+)
+
+// bootstrapThrottle slows down guessing of the bootstrap token.
+//
+// GET /api/OTPUrl is reachable without a session, and the token comparison is
+// the only thing between a caller and the TFA secret of the account, so a
+// caller that may try values without limit could sit on the endpoint until it
+// guesses one. The keys are per client address: a key shared by every caller
+// would hand an attacker a way to lock the administrator out of the binding
+// instead.
+var bootstrapThrottle = newThrottle(bootstrapFailureThreshold, bootstrapFailureWindow, bootstrapMaxLockout)
+
+// bootstrapKeys returns the throttle keys of a bootstrap attempt.
+func bootstrapKeys(clientIP string) []string {
+	if clientIP == "" {
+		return nil
+	}
+
+	return []string{fmt.Sprintf("bootstrap:%s", clientIP)}
+}
 
 var OtpOpts = totp.GenerateOpts{
 	Issuer:      constants.ProductName,
@@ -153,11 +184,23 @@ func GetOTPUrl(c *gin.Context) {
 		return
 	}
 
+	clientIP := c.ClientIP()
+	throttleKeys := bootstrapKeys(clientIP)
+	if key, wait := bootstrapThrottle.lockout(throttleKeys); wait > 0 {
+		logger.Warnf("TFA bootstrap throttled by %s, retry in %s", key, wait)
+		c.Header("Retry-After", strconv.FormatInt(int64(wait.Seconds())+1, 10))
+		response.Error(c, response.JSONBody{Err: response.ErrTooManyAttempts, Msg: "Too many attempts, please try again later"}, http.StatusTooManyRequests)
+		return
+	}
+
 	if err := checkBootstrapToken(c); err != nil {
-		logger.Warnf("Refused to hand out the TFA secret to %s: %s", c.ClientIP(), err)
+		bootstrapThrottle.fail(throttleKeys)
+		logger.Warnf("Refused to hand out the TFA secret to %s: %s", clientIP, err)
 		response.Error(c, response.JSONBody{Err: response.ErrLoginRequired, Msg: "TFA bootstrap is not allowed for this request"}, http.StatusUnauthorized)
 		return
 	}
+
+	bootstrapThrottle.reset(throttleKeys)
 
 	// The console displays the QR code on the login page, before any session
 	// exists, so this endpoint is reachable while the account has never logged
@@ -166,7 +209,6 @@ func GetOTPUrl(c *gin.Context) {
 	// caller that fetched a secret the administrator is about to bind would
 	// otherwise be able to log in with it, because the passcode is the only
 	// credential.
-	clientIP := c.ClientIP()
 	if user.TFASecret != "" {
 		if user.TFABootstrapIP == "" {
 			// An installation that already carries a pending secret from a
@@ -272,17 +314,23 @@ func otpURL(secret string) string {
 // Installations that do not want the account to be bindable by whoever reaches
 // the API first set MGT_BOOTSTRAP_TOKEN and deliver it to the administrator
 // through a channel of their choice (the installation output, for example).
+//
+// The empty value keeps the bootstrap open on purpose: the console that ships
+// in the management image asks this endpoint for the secret without knowing it,
+// so requiring a token here would leave a fresh installation without any way to
+// bind the account. That trade off is announced at startup (see main.go) so
+// that it is a visible choice rather than a silent default.
 func checkBootstrapToken(c *gin.Context) error {
 	expected := os.Getenv(BootstrapTokenEnv)
 	if expected == "" {
 		return nil
 	}
 
-	if subtle.ConstantTimeCompare([]byte(c.GetHeader(bootstrapTokenHeader)), []byte(expected)) == 1 {
+	if subtle.ConstantTimeCompare([]byte(c.GetHeader(BootstrapTokenHeader)), []byte(expected)) == 1 {
 		return nil
 	}
 
-	return fmt.Errorf("missing or wrong %s header", bootstrapTokenHeader)
+	return fmt.Errorf("missing or wrong %s header", BootstrapTokenHeader)
 }
 
 func GetUser(c *gin.Context) {

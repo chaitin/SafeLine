@@ -45,7 +45,11 @@ func checkAndUpdateForbiddenPage() {
 		return
 	}
 
-	err = ioutil.WriteFile(forbiddenPagePath, []byte(constants.DefaultForbiddenPage), 0644)
+	// utils.EnsureWriteFile replaces the file atomically instead of truncating
+	// it in place: the path lives in the nginx configuration tree, so a symlink
+	// planted there would otherwise make this root process overwrite its target
+	// (CWE-59).
+	err = utils.EnsureWriteFile(forbiddenPagePath, []byte(constants.DefaultForbiddenPage), 0644)
 	if err != nil {
 		logger.Error(err)
 		return

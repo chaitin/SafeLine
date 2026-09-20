@@ -28,11 +28,16 @@ type Error struct {
 }
 
 // Error Implement error interface
+//
+// The message never carries the source location: it is what the MCP client
+// receives as the text of a failed tool call, and the location is an absolute
+// path of the machine the helper runs on. WrapL puts it into the server side
+// log, where it belongs, and Location exposes it to callers that need it.
 func (e *Error) Error() string {
 	if e.msg != "" {
-		return fmt.Sprintf("%s: %v (at %s)", e.msg, e.err, e.location)
+		return fmt.Sprintf("%s: %v", e.msg, e.err)
 	}
-	return fmt.Sprintf("%v (at %s)", e.err, e.location)
+	return fmt.Sprintf("%v", e.err)
 }
 
 // Unwrap Return original error

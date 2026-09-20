@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -19,6 +21,41 @@ import (
 
 type postSSLCertRequest struct {
 	Hostname string `json:"hostname"`
+}
+
+const (
+	// certGenerationThreshold is how many key pairs a client address may ask
+	// for within certGenerationWindow before it has to wait.
+	certGenerationThreshold = 5
+
+	// certGenerationWindow is how long a generation is counted.
+	certGenerationWindow = 10 * time.Minute
+
+	// certGenerationMaxLockout caps the wait imposed on a caller that keeps
+	// asking.
+	certGenerationMaxLockout = 5 * time.Minute
+)
+
+// certGenerationThrottle bounds how often this endpoint may spend a key
+// generation.
+//
+// Every accepted request generates a fresh 4096 bit RSA key in the request
+// goroutine; the random file name prefix makes the existence check in
+// WriteCertIfNotExist a no-op, so nothing is ever reused. An authenticated
+// session that loops over this route therefore keeps the process busy with RSA
+// key generation and fills the certificate directory of the site, which is the
+// same process that compiles and pushes the detection rules. The throttle is
+// counted per client address, and one generation is counted whether it
+// succeeds or not.
+var certGenerationThrottle = newThrottle(certGenerationThreshold, certGenerationWindow, certGenerationMaxLockout)
+
+// certGenerationKeys returns the throttle keys of a certificate request.
+func certGenerationKeys(clientIP string) []string {
+	if clientIP == "" {
+		return nil
+	}
+
+	return []string{fmt.Sprintf("sslcert:%s", clientIP)}
 }
 
 // SSLCertDir is the dir of tengine conf, not mgt-api nginx certs dir defined by constants.CertsPath
@@ -122,6 +159,20 @@ func PostSSLCert(c *gin.Context) {
 		response.Error(c, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusBadRequest)
 		return
 	}
+
+	clientIP := c.ClientIP()
+	throttleKeys := certGenerationKeys(clientIP)
+	if key, wait := certGenerationThrottle.lockout(throttleKeys); wait > 0 {
+		logger.Warnf("Certificate generation throttled by %s, retry in %s", key, wait)
+		c.Header("Retry-After", strconv.FormatInt(int64(wait.Seconds())+1, 10))
+		response.Error(c, response.JSONBody{Err: response.ErrTooManyAttempts, Msg: "Too many certificate requests, please try again later"}, http.StatusTooManyRequests)
+		return
+	}
+
+	// The generation below is the expensive part of this handler, so the
+	// attempt is recorded up front: a caller that only ever produces failing
+	// requests must not get an unlimited number of key generations either.
+	certGenerationThrottle.fail(throttleKeys)
 
 	filePrefix := utils.RandStr(16)
 	certFilename := fmt.Sprintf("%s_backend.crt", filePrefix)

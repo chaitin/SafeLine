@@ -34,6 +34,11 @@ type Config struct {
 	Development bool `json:"development" yaml:"development"`
 }
 
+// logFileMode keeps the log file readable for its owner and its group only.
+// The tools that run behind this logger pass request arguments through it, and
+// those are none of the business of every other account on the host.
+const logFileMode os.FileMode = 0640
+
 // 默认配置
 var defaultConfig = Config{
 	Level:       "info",
@@ -87,8 +92,13 @@ func Init(cfg *Config) error {
 
 		// 文件输出
 		if cfg.FilePath != "" {
-			fileWriter, err := os.OpenFile(cfg.FilePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
-			if err != nil {
+			// Do not shadow err: the old code declared a new variable here, so
+			// a failure to open the log file returned a nil error and left
+			// defaultLogger unset, which turned every later log call into a nil
+			// pointer dereference.
+			fileWriter, openErr := os.OpenFile(cfg.FilePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, logFileMode)
+			if openErr != nil {
+				err = openErr
 				return
 			}
 			cores = append(cores, zapcore.NewCore(
@@ -132,6 +142,16 @@ func GetLogger() *Logger {
 	if defaultLogger == nil {
 		Init(nil)
 	}
+
+	if defaultLogger == nil {
+		// Init only runs once: when it failed (or when it was called with a
+		// configuration that could not be opened) it never installs a logger,
+		// and the call above cannot repair that. Handing out nil here crashed
+		// the caller on the next log call, so a no-op logger is returned
+		// instead.
+		return &Logger{zl: zap.NewNop()}
+	}
+
 	return defaultLogger
 }
 
