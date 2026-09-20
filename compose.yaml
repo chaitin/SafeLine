@@ -55,6 +55,14 @@ services:
       # same value to the request as X-Bootstrap-Token, to keep the binding for
       # an administrator who has the token.
       - MGT_BOOTSTRAP_TOKEN=${MGT_BOOTSTRAP_TOKEN:-}
+      # How long the account may be bound without a credential, measured from
+      # the moment the installation was set up (or from `mgt -reset_user
+      # admin`, which opens it again). Defaults to 30m; set it to 0 to leave
+      # the bootstrap open until the first login, which is what older releases
+      # did. A console that is bound after the window closed answers with an
+      # error that names the command to reopen it, and never rejects a pending
+      # secret that is already bound to the address that asks for it.
+      - MGT_BOOTSTRAP_WINDOW=${MGT_BOOTSTRAP_WINDOW:-}
     depends_on:
       - postgres
       - fvm

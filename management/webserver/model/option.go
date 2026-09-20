@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"regexp"
+	"strconv"
+	"strings"
+	"time"
 
 	"gorm.io/gorm/clause"
 
@@ -29,6 +32,14 @@ func initOptions() error {
 	// to come from a cryptographically secure source.
 	secretKey := Options{Key: constants.SecretKey, Value: utils.RandHex(32)}
 	db.Clauses(clause.OnConflict{DoNothing: true}).Create(&secretKey)
+
+	// The account exists but has never been bound, so the anonymous TFA
+	// bootstrap is open from now on: an installation that is left unbound has
+	// to stop being claimable by whoever reaches the console first, and this
+	// record is what that window is measured from.
+	if err := OpenBootstrapWindowIfMissing(); err != nil {
+		return err
+	}
 
 	machineId := Options{Key: constants.MachineID, Value: utils.RandStr(32)}
 	_ = db.Clauses(clause.OnConflict{DoNothing: true}).Create(&machineId)
@@ -67,6 +78,72 @@ func rotatePredictableSecretKey() error {
 	secretKey.Value = utils.RandHex(32)
 
 	return db.Save(&secretKey).Error
+}
+
+// OpenBootstrapWindow records now as the moment the anonymous TFA bootstrap of
+// the account was opened.
+//
+// This is deliberately not tied to the start of the process: a deployment that
+// is restarted, upgraded or power cycled would otherwise open the window again
+// on every boot, and the window is what keeps an installation that nobody ever
+// bound from being claimable forever. Only the setup of an installation and
+// `mgt -reset_user admin` move it.
+func OpenBootstrapWindow() error {
+	return setOption(constants.BootstrapOpenedAt, strconv.FormatInt(time.Now().Unix(), 10))
+}
+
+// BootstrapOpenedAt returns the moment the anonymous TFA bootstrap was opened
+// and whether a record exists.
+func BootstrapOpenedAt() (time.Time, bool) {
+	db := database.GetDB()
+
+	var option Options
+	if err := db.Where(&Options{Key: constants.BootstrapOpenedAt}).First(&option).Error; err != nil {
+		return time.Time{}, false
+	}
+
+	seconds, err := strconv.ParseInt(strings.TrimSpace(option.Value), 10, 64)
+	if err != nil {
+		return time.Time{}, false
+	}
+
+	return time.Unix(seconds, 0), true
+}
+
+// OpenBootstrapWindowIfMissing records the moment the anonymous TFA bootstrap
+// was opened, and leaves the record of an installation that already has one
+// alone. It is called when the daemon starts, which is why a restart does not
+// open the window again.
+//
+// A fresh installation has just created the account, so the window starts now.
+// An installation that is being upgraded keeps the age of its account instead:
+// a console that nobody bound in months must not become claimable again because
+// an upgrade restarted the daemon, and `mgt -reset_user admin` is what opens
+// the window when an operator does want to bind it.
+func OpenBootstrapWindowIfMissing() error {
+	db := database.GetDB()
+
+	openedAt := time.Now()
+
+	var user User
+	if err := db.Where(&User{Username: constants.SuperUser}).First(&user).Error; err == nil && !user.CreatedAt.IsZero() {
+		openedAt = user.CreatedAt
+	}
+
+	opened := Options{Key: constants.BootstrapOpenedAt, Value: strconv.FormatInt(openedAt.Unix(), 10)}
+
+	// A restart must not open the window again, so an existing record wins.
+	return db.Clauses(clause.OnConflict{DoNothing: true}).Create(&opened).Error
+}
+
+// setOption stores value under key, replacing what is there.
+func setOption(key, value string) error {
+	db := database.GetDB()
+
+	return db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "key"}},
+		DoUpdates: clause.AssignmentColumns([]string{"value"}),
+	}).Create(&Options{Key: key, Value: value}).Error
 }
 
 func NotifyInstallation(machineId string) {

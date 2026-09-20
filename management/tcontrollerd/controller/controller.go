@@ -39,9 +39,22 @@ func Handle() error {
 		return err
 	}
 
-	gRPCConn, err := grpc.Dial(config.GlobalConfig.MgtWebserver, []grpc.DialOption{
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	}...)
+	dialOptions := []grpc.DialOption{}
+
+	// The token below proves that this is tcontrollerd, and the certificate
+	// proves that the peer is the management server of this installation:
+	// reading the traffic of the deployment is not enough to take either side.
+	creds, err := transportCreds()
+	if err != nil {
+		return err
+	}
+	if creds != nil {
+		dialOptions = append(dialOptions, grpc.WithTransportCredentials(creds))
+	} else {
+		dialOptions = append(dialOptions, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	}
+
+	gRPCConn, err := grpc.Dial(config.GlobalConfig.MgtWebserver, dialOptions...)
 	if err != nil {
 		logger.Errorf("Fail to dial: %v", err)
 		return err

@@ -2,6 +2,8 @@ package config
 
 import (
 	"os"
+	"path/filepath"
+	"strings"
 
 	"chaitin.cn/dev/go/settings"
 )
@@ -15,6 +17,22 @@ var (
 // /app/sock inside the management container, which creates the file, and
 // inside the tengine container, which is where tcontrollerd runs.
 const DefaultMgtTokenFile = "/app/sock/mgt_grpc_token"
+
+// CertDirEnv names the environment variable that holds the directory of the
+// credentials the management server published for this side of the control
+// channel. The default is below the directory of the token file, which is the
+// directory the standard deployment shares between the two containers.
+const CertDirEnv = "TCD_MGT_CERT_DIR"
+
+// CertDir returns the directory the credentials of the control channel are
+// read from.
+func CertDir() string {
+	if v, ok := os.LookupEnv(CertDirEnv); ok && strings.TrimSpace(v) != "" {
+		return strings.TrimSpace(v)
+	}
+
+	return filepath.Join(filepath.Dir(GlobalConfig.MgtTokenFile), "grpc")
+}
 
 func InitConfigs(configFilePath string) error {
 	s, err := settings.New(configFilePath)

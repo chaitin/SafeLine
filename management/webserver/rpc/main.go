@@ -26,6 +26,29 @@ const (
 
 var logger = log.GetLogger("grpc")
 
+// ServerOptions returns the options the control channel is served with.
+//
+// The channel carries the complete site configuration of the installation and
+// republishes it on every change, so a subscription has to prove that it is
+// tcontrollerd: the client certificate proves that the caller holds a
+// credential of this installation, and the token is the second gate, which is
+// what keeps a caller that reaches the port without one out.
+func ServerOptions() ([]grpc.ServerOption, error) {
+	opts := []grpc.ServerOption{
+		grpc.StreamInterceptor(subscribeAuthInterceptor),
+	}
+
+	creds, err := ServerCreds()
+	if err != nil {
+		return nil, err
+	}
+	if creds != nil {
+		opts = append(opts, creds)
+	}
+
+	return opts, nil
+}
+
 func StartGRPCSever() error {
 	lis, err := net.Listen("tcp", config.GlobalConfig.GPRC.ListenAddr)
 	if err != nil {
@@ -38,12 +61,11 @@ func StartGRPCSever() error {
 		logger.Errorf("Failed to init the control channel token: %s", err)
 	}
 
-	opts := []grpc.ServerOption{
-		// The control channel carries the complete site configuration of the
-		// installation and republishes it on every change, so a subscription
-		// has to prove that it is tcontrollerd.
-		grpc.StreamInterceptor(subscribeAuthInterceptor),
+	opts, err := ServerOptions()
+	if err != nil {
+		return err
 	}
+
 	grpcServer := grpc.NewServer(opts...)
 	pb.RegisterWebsiteServer(grpcServer, GetWebsiteServer())
 	go func() {

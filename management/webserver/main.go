@@ -157,12 +157,18 @@ func main() {
 
 	// The bootstrap token is the only gate in front of the TFA secret of the
 	// account. It is optional so that a fresh installation can be bound from
-	// the console, but the default is worth announcing: with an empty value
-	// the first caller that reaches the API is the one the account gets bound
-	// to.
+	// the console, and what limits the exposure when it is empty is the window
+	// the account may be bound in: announce both.
 	if os.Getenv(api.BootstrapTokenEnv) == "" {
-		logger.Warnf("%s is not set: the TFA secret of the account is handed to whoever reaches GET %s%s first. Set it to require the %s header on that request.",
-			api.BootstrapTokenEnv, "/api", api.OTPUrl, api.BootstrapTokenHeader)
+		logger.Warnf("%s is not set: the TFA secret of the account is handed to whoever reaches GET %s%s first, for %s after the bootstrap was opened. Set it to require the %s header on that request.",
+			api.BootstrapTokenEnv, "/api", api.OTPUrl, api.BootstrapWindow(), api.BootstrapTokenHeader)
+	}
+	if window := api.BootstrapWindow(); window <= 0 {
+		logger.Warnf("%s is off: the account can be bound from the network until somebody logs in. A console that is left unbound stays claimable.",
+			api.BootstrapWindowEnv)
+	} else if openedAt, ok := model.BootstrapOpenedAt(); ok {
+		logger.Infof("The TFA bootstrap of the account is open until %s (%s after it was opened at %s); run 'mgt -reset_user admin' to open it again.",
+			openedAt.Add(window).Format(time.RFC3339), window, openedAt.Format(time.RFC3339))
 	}
 
 	publicRouters := r.Group("/api")
