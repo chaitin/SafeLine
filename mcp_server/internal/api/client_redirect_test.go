@@ -29,7 +29,7 @@ func TestClientRefusesCrossOriginRedirect(t *testing.T) {
 	}))
 	defer origin.Close()
 
-	client, err := newClient(origin.URL, 5*time.Second, false, "deployment-token")
+	client, err := newClient(origin.URL, 5*time.Second, false, "", "deployment-token")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -61,7 +61,7 @@ func TestClientFollowsSameOriginRedirect(t *testing.T) {
 	server := httptest.NewServer(mux)
 	defer server.Close()
 
-	client, err := newClient(server.URL, 5*time.Second, false, "deployment-token")
+	client, err := newClient(server.URL, 5*time.Second, false, "", "deployment-token")
 	if err != nil {
 		t.Fatal(err)
 	}

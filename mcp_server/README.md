@@ -44,6 +44,7 @@ instances:
     token_file: "/run/secrets/production-a.token"
     timeout: 30
     debug: false
+    ca_file: ""
     insecure_skip_verify: false
 
   - id: "production-b"
@@ -52,15 +53,23 @@ instances:
     token_file: "/run/secrets/production-b.token"
     timeout: 30
     debug: false
+    ca_file: ""
     insecure_skip_verify: false
 ```
 
 `LISTEN_ADDRESS` and `LISTEN_PORT` override listener settings. There is deliberately no global `SAFELINE_API_TOKEN`: every instance uses a separate token file.
 
+`ca_file` is the certificate authority that signed the certificate of the
+instance. A SafeLine console serves the certificate it generated for itself,
+which no public authority signed: point `ca_file` at that certificate (or at the
+authority that issued it) and the connection stays verified. Relative paths are
+resolved from the directory of the configuration file.
+
 `insecure_skip_verify` disables TLS verification for the SafeLine API. The API
 Token is an administrator credential that is sent on every request, so leave the
-setting at `false` and give the instance a certificate the server trusts. Enable
-it only for a lab instance whose certificate cannot be replaced.
+setting at `false` and use `ca_file` for an instance with a self-signed
+certificate. Setting it to `true` logs a warning at startup, and it cannot be
+combined with `ca_file`.
 
 Each `display_name` must be unique, ignoring letter case, and must not match another instance's `id`. During server discovery (or legacy initialization), the server publishes only the `display_name` to `instance_id` mappings as Server Instructions. This lets a user refer to a friendly name while the AI still calls `get_attack_events` with the stable, explicit `instance_id`. Instance addresses and credentials are never included in those instructions.
 

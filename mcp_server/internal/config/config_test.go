@@ -146,3 +146,64 @@ logger: {level: info}
 		t.Fatalf("Load() error = %v, want missing instance error", err)
 	}
 }
+
+func TestLoadResolvesCAFileRelativeToTheConfiguration(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "config.yaml")
+
+	contents := `
+server:
+  name: SafeLine MCP
+  version: 1.0.0
+  host: 127.0.0.1
+  port: 5678
+logger:
+  level: info
+instances:
+  - id: dev152
+    base_url: https://dev152:9443
+    token_file: secrets/dev152_token
+    ca_file: certs/instance.crt
+`
+	if err := os.WriteFile(path, []byte(contents), 0o600); err != nil {
+		t.Fatalf("write config: %v", err)
+	}
+	if err := Load(path); err != nil {
+		t.Fatalf("load: %v", err)
+	}
+
+	instances := GetInstances()
+	if len(instances) != 1 {
+		t.Fatalf("got %d instances, want 1", len(instances))
+	}
+	want := filepath.Join(dir, "certs", "instance.crt")
+	if instances[0].CAFile != want {
+		t.Fatalf("ca_file is %q, want %q", instances[0].CAFile, want)
+	}
+}
+
+func TestLoadRejectsCAFileTogetherWithSkippedVerification(t *testing.T) {
+	path := writeConfigFile(t, `
+server:
+  name: SafeLine MCP
+  version: 1.0.0
+  host: 127.0.0.1
+  port: 5678
+logger:
+  level: info
+instances:
+  - id: dev152
+    base_url: https://dev152:9443
+    token_file: /run/secrets/dev152_token
+    ca_file: /etc/safeline/instance.crt
+    insecure_skip_verify: true
+`)
+
+	err := Load(path)
+	if err == nil {
+		t.Fatal("a configuration that both trusts an authority and skips verification was accepted")
+	}
+	if !strings.Contains(err.Error(), "ca_file") {
+		t.Fatalf("the error does not name the setting: %v", err)
+	}
+}
