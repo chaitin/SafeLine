@@ -16,8 +16,14 @@ import (
 )
 
 const (
+	// tokenHeader carries the deployment token of the configured instance.
+	tokenHeader = "X-SLCE-API-TOKEN"
+
 	maxErrorBodySize    = 4 << 10
 	maxResponseBodySize = 4 << 20
+
+	// maxRedirects bounds how many redirects one request may follow.
+	maxRedirects = 10
 )
 
 // Client is the transport used by a single SafeLine instance. Its request
@@ -50,13 +56,56 @@ func newClient(baseURL string, timeout time.Duration, insecureSkipVerify bool, t
 		httpClient: &http.Client{
 			Timeout:   timeout,
 			Transport: transport,
+			// Every request carries the deployment token in X-SLCE-API-TOKEN.
+			// net/http drops the Authorization header when a redirect leaves
+			// the origin, but it knows nothing about this header, so a 3xx
+			// from the configured instance would hand the token to whatever
+			// host the Location header names. Redirects are therefore followed
+			// only while they stay on the configured origin.
+			CheckRedirect: sameOriginRedirects(parsedURL),
 		},
 		headers: make(http.Header),
 	}
 	client.headers.Set("Accept", "application/json")
 	client.headers.Set("User-Agent", "SafeLine-MCP/1.0")
-	client.headers.Set("X-SLCE-API-TOKEN", token)
+	client.headers.Set(tokenHeader, token)
 	return client, nil
+}
+
+// sameOriginRedirects returns the redirect policy of a client: a redirect is
+// followed only while it stays on the scheme, host and port of the configured
+// instance. Anything else fails the request instead of replaying the token.
+func sameOriginRedirects(base *url.URL) func(*http.Request, []*http.Request) error {
+	return func(req *http.Request, via []*http.Request) error {
+		if len(via) >= maxRedirects {
+			return fmt.Errorf("stopped after %d redirects", maxRedirects)
+		}
+		if !sameOrigin(base, req.URL) {
+			return fmt.Errorf("refused to follow a redirect to %s: it would send the instance token to another origin", req.URL.Redacted())
+		}
+
+		return nil
+	}
+}
+
+// sameOrigin reports whether target has the same scheme, host and port as base.
+func sameOrigin(base, target *url.URL) bool {
+	return strings.EqualFold(base.Scheme, target.Scheme) &&
+		strings.EqualFold(base.Hostname(), target.Hostname()) &&
+		effectivePort(base) == effectivePort(target)
+}
+
+// effectivePort returns the port a URL connects to, including the default port
+// of its scheme.
+func effectivePort(u *url.URL) string {
+	if port := u.Port(); port != "" {
+		return port
+	}
+	if strings.EqualFold(u.Scheme, "https") {
+		return "443"
+	}
+
+	return "80"
 }
 
 func (c *Client) get(ctx context.Context, path string, query url.Values, result any) error {

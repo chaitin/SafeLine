@@ -49,6 +49,13 @@ const long MAX_CODEPOINT = 0x10ffff;
 // defense in depth, because the automaton expansion performed per iteration
 // makes the cost of a large count grow without bound (CWE-770).
 const long MAX_REPEAT = 10000;
+// Upper bound for the nesting depth of an expression tree. A line of adjacent
+// concatenations is reduced one factor at a time into a left leaning chain, so
+// the depth of the tree follows the length of the line the compiler is given.
+// Every later pass over that tree recurses along its edges, and so does the
+// code that frees it, which is why the depth is bounded while the tree is built
+// (CWE-674). The bound is far above what a hand written rule reaches.
+const long MAX_EXPR_DEPTH = 4096;
 extern long action_label_base, action_label, call_label_base, call_label, collapse_label_base, collapse_label;
 
 void bold(long fd = 1);

@@ -115,7 +115,8 @@ func PostLogin(c *gin.Context) {
 		return
 	}
 
-	usedStep, valid := verifyPasscode(user.TFASecret, params.Passcode, user.TFALastUsedStep, time.Now())
+	now := time.Now()
+	usedStep, valid := verifyPasscode(user.TFASecret, params.Passcode, user.TFALastUsedStep, now)
 	if !valid {
 		loginThrottle.fail(keys)
 		logger.Warnf("Failed login attempt from %s", c.ClientIP())
@@ -137,17 +138,25 @@ func PostLogin(c *gin.Context) {
 		return
 	}
 
-	loginThrottle.reset(keys)
+	// The passcode is spent here, in one conditional update, and the session
+	// below is only created when this request is the one that spent it. A plain
+	// Save after the check would leave a window in which two requests that
+	// carry the same passcode both read the same stored time step and both
+	// accept it.
+	consumed, err := consumePasscode(db, &user, usedStep, now.Unix()/int64(OtpOpts.Period), now)
+	if err != nil {
+		logger.Error(err)
+		response.Error(c, response.JSONBody{Err: response.ErrInternalError, Msg: "Error occurred when creating sessions"}, http.StatusInternalServerError)
+		return
+	}
+	if !consumed {
+		loginThrottle.fail(keys)
+		logger.Warnf("Refused a login from %s: the passcode of time step %d was already used", c.ClientIP(), usedStep)
+		response.Error(c, response.JSONBody{Err: response.ErrWrongPasscode, Msg: "Failed to verify your passcode"}, http.StatusUnauthorized)
+		return
+	}
 
-	user.LastLoginTime = time.Now().Unix()
-	user.IsEnabled = true
-	// The bootstrap is over: the secret is bound, so it is no longer pending
-	// and no longer tied to the address that fetched it.
-	user.TFABootstrapIP = ""
-	// Remember the time step of the accepted passcode so that the same one
-	// cannot be used a second time.
-	user.TFALastUsedStep = usedStep
-	db.Save(&user)
+	loginThrottle.reset(keys)
 
 	session := sessions.Default(c)
 	session.Options(sessionopts.Options(c))
@@ -214,11 +223,18 @@ func GetOTPUrl(c *gin.Context) {
 			// An installation that already carries a pending secret from a
 			// release that did not record the address keeps working: the first
 			// caller adopts it, exactly as it did before.
-			user.TFABootstrapIP = clientIP
-			db.Save(&user)
+			adopted, err := adoptBootstrapSecret(db, user.TFASecret, clientIP)
+			if err != nil {
+				logger.Error(err)
+				response.Error(c, response.JSONBody{Err: response.ErrInternalError, Msg: "Error occurred when generating otp qrcode"}, http.StatusInternalServerError)
+				return
+			}
+			if !adopted {
+				refusePendingSecret(c, clientIP)
+				return
+			}
 		} else if user.TFABootstrapIP != clientIP {
-			logger.Warnf("Refused to hand out the pending TFA secret to %s: it was issued to %s", clientIP, user.TFABootstrapIP)
-			response.Error(c, response.JSONBody{Err: response.ErrLoginRequired, Msg: "The pending TFA secret belongs to another address, run 'mgt -reset_user <user>' to bind a new one"}, http.StatusForbidden)
+			refusePendingSecret(c, clientIP)
 			return
 		}
 
@@ -234,11 +250,107 @@ func GetOTPUrl(c *gin.Context) {
 		return
 	}
 
-	user.TFASecret = otpKey.Secret()
-	user.TFABootstrapIP = clientIP
-	db.Save(&user)
+	// The secret is installed by an update that only matches while the row
+	// still has none, so two calls that arrive together cannot both be told
+	// that the secret they generated is the one the account carries: the
+	// caller that loses reads the stored secret below and hands that one out
+	// when it belongs to the same address, which is what a console that
+	// retries produces, and is refused otherwise.
+	issued, err := claimBootstrapSecret(db, clientIP, otpKey.Secret())
+	if err != nil {
+		logger.Error(err)
+		response.Error(c, response.JSONBody{Err: response.ErrInternalError, Msg: "Error occurred when generating otp qrcode"}, http.StatusInternalServerError)
+		return
+	}
+	if !issued {
+		logger.Warnf("Lost the TFA bootstrap race to another caller, %s is served the stored secret if it is its own", clientIP)
+		var stored model.User
+		db.Where(&model.User{Username: constants.SuperUser}).First(&stored)
+		if stored.TFASecret == "" || stored.TFABootstrapIP != clientIP {
+			refusePendingSecret(c, clientIP)
+			return
+		}
+
+		response.Success(c, gin.H{"url": otpURL(stored.TFASecret)})
+		return
+	}
+
 	logger.Warnf("Issued a new TFA secret to %s; it can only be bound and used from that address until the first login", clientIP)
 	response.Success(c, gin.H{"url": otpKey.URL()})
+}
+
+// refusePendingSecret answers a caller that may not be handed the pending TFA
+// secret, because it was issued to another address.
+func refusePendingSecret(c *gin.Context, clientIP string) {
+	logger.Warnf("Refused to hand out the pending TFA secret to %s: it belongs to another address", clientIP)
+	response.Error(c, response.JSONBody{Err: response.ErrLoginRequired, Msg: "The pending TFA secret belongs to another address, run 'mgt -reset_user <user>' to bind a new one"}, http.StatusForbidden)
+}
+
+// claimBootstrapSecret installs secret as the pending TFA secret of the
+// account and reports whether this call is the one that installed it.
+//
+// The update matches only while the row carries no secret yet, which is what
+// makes the claim exclusive. Reading the row and writing it back would let two
+// callers that arrive while the account has no secret both store the one they
+// generated, so both would be told the account is bound to the secret they
+// hold, while the database keeps only the last write.
+func claimBootstrapSecret(db *database.PostgresDB, clientIP, secret string) (bool, error) {
+	result := db.Model(&model.User{}).
+		Where("username = ? AND (tfa_secret = '' OR tfa_secret IS NULL)", constants.SuperUser).
+		Updates(map[string]interface{}{
+			"tfa_secret":       secret,
+			"tfa_bootstrap_ip": clientIP,
+		})
+	if result.Error != nil {
+		return false, result.Error
+	}
+
+	return result.RowsAffected == 1, nil
+}
+
+// adoptBootstrapSecret records clientIP as the address of a pending secret
+// that was stored before the address was recorded.
+//
+// The update is restricted to the secret that was read, so a caller that lost a
+// race against the installation of a new secret adopts nothing.
+func adoptBootstrapSecret(db *database.PostgresDB, pending, clientIP string) (bool, error) {
+	result := db.Model(&model.User{}).
+		Where("username = ? AND tfa_secret = ? AND (tfa_bootstrap_ip = '' OR tfa_bootstrap_ip IS NULL)", constants.SuperUser, pending).
+		Updates(map[string]interface{}{
+			"tfa_bootstrap_ip": clientIP,
+		})
+	if result.Error != nil {
+		return false, result.Error
+	}
+
+	return result.RowsAffected == 1, nil
+}
+
+// consumePasscode records an accepted passcode together with the login it
+// belongs to, as a single conditional update.
+//
+// The update is what decides whether the time step of the passcode was already
+// spent: it only matches while the stored step is below the accepted one, so
+// the second of two concurrent requests that carry the same passcode affects no
+// row and is treated as a replay. currentStep is the step the passcode was
+// verified against; a stored step ahead of it means the clock moved backwards,
+// which this process treats as stale (see verifyPasscode) and repairs here.
+func consumePasscode(db *database.PostgresDB, user *model.User, usedStep, currentStep int64, now time.Time) (bool, error) {
+	result := db.Model(&model.User{}).
+		Where("id = ? AND (tfa_last_used_step < ? OR tfa_last_used_step > ?)", user.ID, usedStep, currentStep+1).
+		Updates(map[string]interface{}{
+			"tfa_last_used_step": usedStep,
+			// The bootstrap is over: the secret is bound, so it is no longer
+			// pending and no longer tied to the address that fetched it.
+			"tfa_bootstrap_ip": "",
+			"last_login_time":  now.Unix(),
+			"is_enabled":       true,
+		})
+	if result.Error != nil {
+		return false, result.Error
+	}
+
+	return result.RowsAffected == 1, nil
 }
 
 // verifyPasscode checks a TOTP passcode and returns the time step it belongs to.

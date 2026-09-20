@@ -120,6 +120,7 @@ struct RefAction : Visitable<Action, RefAction> {
 struct Expr : VisitableBase<Expr> {
   Location loc;
   long pre, post, depth; // set by Compiler
+  long nest = 1; // set by the parser: number of nodes on the longest path down from here
   vector<Expr*> anc; // set by Compiler
   vector<pair<Action*, long>> entering, finishing, leaving, transiting;
   DefineStmt* stmt = NULL; // set by ModuleImportDef
@@ -148,6 +149,21 @@ struct Expr : VisitableBase<Expr> {
   }
 };
 
+// nest_of is the nesting depth of a subtree; a leaf is one node deep.
+inline long nest_of(const Expr* expr)
+{
+  return expr->nest;
+}
+
+// nest_above is the depth of the node that holds the given subtrees.
+inline long nest_above(const Expr* lhs, const Expr* rhs = NULL)
+{
+  long n = nest_of(lhs);
+  if (rhs && nest_of(rhs) > n)
+    n = nest_of(rhs);
+  return n+1;
+}
+
 struct BracketExpr : Visitable<Expr, BracketExpr> {
   DisjointIntervals intervals;
   BracketExpr(DisjointIntervals* intervals) : intervals(std::move(*intervals)) { delete intervals; }
@@ -167,7 +183,7 @@ struct CollapseExpr : Visitable<Expr, CollapseExpr> {
 
 struct ComplementExpr : Visitable<Expr, ComplementExpr> {
   Expr* inner;
-  ComplementExpr(Expr* inner) : inner(inner) {}
+  ComplementExpr(Expr* inner) : inner(inner) { nest = nest_above(inner); }
   ~ComplementExpr() {
     delete inner;
   }
@@ -175,7 +191,7 @@ struct ComplementExpr : Visitable<Expr, ComplementExpr> {
 
 struct ConcatExpr : Visitable<Expr, ConcatExpr> {
   Expr *lhs, *rhs;
-  ConcatExpr(Expr* lhs, Expr* rhs) : lhs(lhs), rhs(rhs) {}
+  ConcatExpr(Expr* lhs, Expr* rhs) : lhs(lhs), rhs(rhs) { nest = nest_above(lhs, rhs); }
   ~ConcatExpr() {
     delete lhs;
     delete rhs;
@@ -184,7 +200,7 @@ struct ConcatExpr : Visitable<Expr, ConcatExpr> {
 
 struct DifferenceExpr : Visitable<Expr, DifferenceExpr> {
   Expr *lhs, *rhs;
-  DifferenceExpr(Expr* lhs, Expr* rhs) : lhs(lhs), rhs(rhs) {}
+  DifferenceExpr(Expr* lhs, Expr* rhs) : lhs(lhs), rhs(rhs) { nest = nest_above(lhs, rhs); }
   ~DifferenceExpr() {
     delete lhs;
     delete rhs;
@@ -204,7 +220,7 @@ struct EpsilonExpr : Visitable<Expr, EpsilonExpr> {};
 
 struct IntersectExpr : Visitable<Expr, IntersectExpr> {
   Expr *lhs, *rhs;
-  IntersectExpr(Expr* lhs, Expr* rhs) : lhs(lhs), rhs(rhs) {}
+  IntersectExpr(Expr* lhs, Expr* rhs) : lhs(lhs), rhs(rhs) { nest = nest_above(lhs, rhs); }
   ~IntersectExpr() {
     delete lhs;
     delete rhs;
@@ -218,7 +234,7 @@ struct LiteralExpr : Visitable<Expr, LiteralExpr> {
 
 struct PlusExpr : Visitable<Expr, PlusExpr> {
   Expr* inner;
-  PlusExpr(Expr* inner) : inner(inner) {}
+  PlusExpr(Expr* inner) : inner(inner) { nest = nest_above(inner); }
   ~PlusExpr() {
     delete inner;
   }
@@ -227,7 +243,7 @@ struct PlusExpr : Visitable<Expr, PlusExpr> {
 struct RepeatExpr : Visitable<Expr, RepeatExpr> {
   Expr* inner;
   long low, high;
-  RepeatExpr(Expr* inner, long low, long high) : inner(inner), low(low), high(high) {}
+  RepeatExpr(Expr* inner, long low, long high) : inner(inner), low(low), high(high) { nest = nest_above(inner); }
   ~RepeatExpr() {
     delete inner;
   }
@@ -235,7 +251,7 @@ struct RepeatExpr : Visitable<Expr, RepeatExpr> {
 
 struct QuestionExpr : Visitable<Expr, QuestionExpr> {
   Expr* inner;
-  QuestionExpr(Expr* inner) : inner(inner) {}
+  QuestionExpr(Expr* inner) : inner(inner) { nest = nest_above(inner); }
   ~QuestionExpr() {
     delete inner;
   }
@@ -243,7 +259,7 @@ struct QuestionExpr : Visitable<Expr, QuestionExpr> {
 
 struct StarExpr : Visitable<Expr, StarExpr> {
   Expr* inner;
-  StarExpr(Expr* inner) : inner(inner) {}
+  StarExpr(Expr* inner) : inner(inner) { nest = nest_above(inner); }
   ~StarExpr() {
     delete inner;
   }
@@ -251,7 +267,7 @@ struct StarExpr : Visitable<Expr, StarExpr> {
 
 struct UnionExpr : Visitable<Expr, UnionExpr> {
   Expr *lhs, *rhs;
-  UnionExpr(Expr* lhs, Expr* rhs) : lhs(lhs), rhs(rhs) {}
+  UnionExpr(Expr* lhs, Expr* rhs) : lhs(lhs), rhs(rhs) { nest = nest_above(lhs, rhs); }
   ~UnionExpr() {
     delete lhs;
     delete rhs;

@@ -59,8 +59,18 @@ func (u *FVMUpdate) ToBytes() []byte {
 	return C.GoBytes(unsafe.Pointer(u.update.buf.ptr), C.int(u.update.buf.length))
 }
 
+// FromBytes builds an update from the serialized byte code, as it is stored in
+// the database.
+//
+// An empty buffer is rejected before the address of its first byte is taken:
+// &out[0] panics on a zero length slice, and fvm_update_create would have to
+// read the buffer that the length describes.
 func (u *FVMUpdate) FromBytes(out []byte) error {
-	ptr := C.build_update(unsafe.Pointer(&out[0]), C.ulong(len(out)))
+	if len(out) == 0 {
+		return errors.New("refuse to create an update from an empty buffer")
+	}
+
+	ptr := C.build_update(maybePointer(out), C.ulong(len(out)))
 	if ptr == nil {
 		return errors.New("failed to create update from db")
 	}
