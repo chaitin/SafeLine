@@ -137,9 +137,10 @@ func runServer(args []string, stderr io.Writer) error {
 		return err
 	}
 	if !authEnabled && !isLoopbackHost(serverConfig.Host) {
-		// Without the bearer gate every reachable listener would proxy SafeLine
-		// attack telemetry to anyone who can open a socket, so refuse to start
-		// rather than depend on the deployer noticing.
+		// Bearer auth is on by default. Combined with ListenAndServe (plain
+		// HTTP, no cert config on this binary), a non-loopback bind with
+		// auth off would expose SafeLine telemetry to anyone who can open
+		// a socket. Refuse to start rather than depend on the deployer noticing.
 		return fmt.Errorf(
 			"MCP authentication is disabled but the listener is not loopback-only (host %q); keep authentication enabled or bind a loopback address",
 			serverConfig.Host,

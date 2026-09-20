@@ -257,6 +257,16 @@ func BootstrapWindow() time.Duration {
 	return window
 }
 
+// GetOTPUrl hands the TFA secret to the first installer. It stays on the
+// public /api group so the stock console login page can show a QR code without
+// a session; requiring MGT_BOOTSTRAP_TOKEN by default would leave that page
+// unable to bind a fresh CE install.
+//
+// Existing gates, not a missing auth middleware:
+//   - LastLoginTime > 0: no more secret after the first successful login
+//   - secret is bound to the first ClientIP (TFABootstrapIP); other IPs are refused
+//   - MGT_BOOTSTRAP_WINDOW, bootstrapThrottle, claimBootstrapSecret / adoptBootstrapSecret
+// Public management ports should still set MGT_BOOTSTRAP_TOKEN.
 func GetOTPUrl(c *gin.Context) {
 	db := database.GetDB()
 
