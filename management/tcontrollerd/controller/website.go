@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"chaitin.cn/dev/go/errors"
 	"chaitin.cn/patronus/safeline-2/management/tcontrollerd/model"
 	"chaitin.cn/patronus/safeline-2/management/tcontrollerd/pkg/ngcmd"
 	pb "chaitin.cn/patronus/safeline-2/management/tcontrollerd/proto/website"
@@ -130,6 +131,16 @@ func generateFullConfigAndReload(msg []byte) error {
 	var websites []model.WebsiteConfig
 	if err := json.Unmarshal(msg, &websites); err != nil {
 		return err
+	}
+
+	// "null" is what a query that returned nothing looks like on the wire, and
+	// a full push that carries it would delete every configuration of the
+	// installation. The management server always sends an array, so a payload
+	// that is not a list is refused and the current configuration is kept: an
+	// installation that really has no site sends an empty array, which is
+	// applied.
+	if websites == nil {
+		return errors.New("the full push does not carry a list of sites, keeping the current configuration")
 	}
 
 	if err := utils.EnsureDir(nginxConfigPath); err != nil {

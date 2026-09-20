@@ -21,6 +21,11 @@ instances:
     token_file: "/run/secrets/safeline-a.token"
     timeout: 30
     debug: false
+    # ca_file is the certificate authority that signed the certificate of the
+    # instance. A SafeLine console serves the certificate it generated for
+    # itself, which no public authority signed: point this at that certificate
+    # (or at its CA) instead of switching the check off.
+    ca_file: ""
     # Leave TLS verification enabled: the SafeLine API Token is an
     # administrator credential and disabling verification lets anyone on the
     # path read it. Set this to true only for a lab instance with an
@@ -33,4 +38,5 @@ instances:
     token_file: "/run/secrets/safeline-b.token"
     timeout: 30
     debug: false
+    ca_file: ""
     insecure_skip_verify: false

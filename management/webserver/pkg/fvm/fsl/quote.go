@@ -28,7 +28,11 @@ func appendEscapedByte(buf []byte, b byte) []byte {
 	case '\\':
 		return append(buf, `\\`...)
 	default:
-		return append(buf, fmt.Sprintf("\\x%x", b)...)
+		// The escape has to be two digits wide: "\x5" followed by a literal
+		// "a" is read by the lexer as "\x5a" ("Z"), so a rule whose comment or
+		// header value ends with a control byte would silently change the
+		// source that is handed to the compiler.
+		return append(buf, fmt.Sprintf("\\x%02x", b)...)
 	}
 }
 

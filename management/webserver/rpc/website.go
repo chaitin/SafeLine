@@ -31,6 +31,20 @@ func Publish(msg []byte, eventType string) error {
 	if sub == nil {
 		return errors.New("Service is abnormal, and the nginx conf cannot be updated for the time being. Please go to the shell to check the relevant logs")
 	}
+
+	// Only one exchange may be outstanding on the stream. The response carries
+	// no request id, so two overlapping callers that share the single slot below
+	// would each read the answer of the other: one would commit a database
+	// change that tcontrollerd refused, the other would roll back one it
+	// applied. The generated client does not allow concurrent sends on one
+	// stream either.
+	sub.exchangeMu.Lock()
+	defer sub.exchangeMu.Unlock()
+
+	// A response whose own request already gave up is still in the slot, and
+	// this call would read it as its own answer.
+	discardPendingResponses(sub)
+
 	err := sub.stream.Send(&pb.Event{
 		Type: eventType,
 		Msg:  msg,
@@ -59,7 +73,33 @@ func Publish(msg []byte, eventType string) error {
 				return nil
 			}
 		case <-rspTimeoutTicker.C:
+			// The device did not answer, so what it applied is unknown: an
+			// answer that arrives later would be read by the next request as
+			// if it belonged to it. The stream is dropped instead, which
+			// leaves the slot this call abandons unreachable and makes
+			// tcontrollerd reconnect and synchronise with a full push.
+			clearSubscriber(sub)
+			select {
+			case sub.errCh <- errors.New("Wait timeout for updating result"):
+			default:
+			}
+
 			return errors.New("Wait timeout for updating result")
+		}
+	}
+}
+
+// discardPendingResponses drops the responses that are sitting in the slot.
+//
+// It is called while the exchange of the caller is held, so nothing in the slot
+// can belong to a request that is still waiting.
+func discardPendingResponses(sc *StreamClient) {
+	for {
+		select {
+		case rsp := <-sc.rspCh:
+			logger.Warnf("Discarding an unclaimed control channel response of type %s", rsp.GetType())
+		default:
+			return
 		}
 	}
 }
@@ -71,6 +111,11 @@ type StreamClient struct {
 	errCh  chan error
 	rspCh  chan *pb.Response
 	quit   chan struct{} // quit stream client gracefully
+
+	// exchangeMu serialises the send-and-wait of Publish. The response of a
+	// request is not labelled with the request it answers, so at most one
+	// request may be in flight at a time.
+	exchangeMu sync.Mutex
 }
 
 // currentSubscriber returns the active subscriber, or nil when no stream is
@@ -171,7 +216,18 @@ func (sc *StreamClient) recvLoop() {
 		if rsp.Type != Pong {
 			// receive response
 			logger.Infof("Recv updating website rsp: err(%t), msg(%s)", rsp.GetErr(), rsp.GetMsg())
-			sc.rspCh <- rsp
+
+			// This loop is also the goroutine that reads the keepalive pongs
+			// and resets the timer, so it must not block on a full slot: it
+			// would disconnect a stream whose peer is perfectly healthy. Only
+			// one exchange is outstanding at a time (see Publish) and it
+			// empties the slot before it sends, so a slot that is already full
+			// holds a response nobody is waiting for.
+			select {
+			case sc.rspCh <- rsp:
+			default:
+				logger.Warn("Discarding a control channel response that no request is waiting for")
+			}
 			continue
 		}
 		sc.timer.Reset(KeepaliveTimeout)
@@ -195,7 +251,21 @@ func GetWebsiteServer() *WebsiteServer {
 func publishFullWebsite() error {
 	var websites []model.Website
 	db := database.GetDB().DB
-	db.Model(&model.Website{}).Find(&websites)
+
+	// A failed query leaves the slice empty, and an empty list means "this
+	// installation has no sites" to tcontrollerd: it would delete every nginx
+	// configuration it manages. The error has to stop the push instead.
+	if err := db.Model(&model.Website{}).Find(&websites).Error; err != nil {
+		return errors.Wrap(err, "load websites")
+	}
+
+	if websites == nil {
+		// A nil slice marshals to "null", which tcontrollerd reads as a
+		// malformed push. An installation that really has no site sends an
+		// empty list.
+		websites = []model.Website{}
+	}
+
 	byteWebsites, err := json.Marshal(&websites)
 	if err != nil {
 		return err

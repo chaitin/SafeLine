@@ -27,6 +27,7 @@ type InstanceConfig struct {
 	DisplayName        string `yaml:"display_name"`
 	BaseURL            string `yaml:"base_url"`
 	TokenFile          string `yaml:"token_file"`
+	CAFile             string `yaml:"ca_file"`
 	Timeout            int    `yaml:"timeout"`
 	Debug              bool   `yaml:"debug"`
 	InsecureSkipVerify bool   `yaml:"insecure_skip_verify"`
@@ -130,6 +131,7 @@ func normalizeInstances(cfg *Config, configDir string) error {
 		instance.DisplayName = strings.TrimSpace(instance.DisplayName)
 		instance.BaseURL = strings.TrimSpace(instance.BaseURL)
 		instance.TokenFile = strings.TrimSpace(instance.TokenFile)
+		instance.CAFile = strings.TrimSpace(instance.CAFile)
 		if instance.ID == "" {
 			return errors.New(fmt.Sprintf("instances[%d].id is required", index))
 		}
@@ -149,6 +151,19 @@ func normalizeInstances(cfg *Config, configDir string) error {
 		}
 		if instance.TokenFile != "" && !filepath.IsAbs(instance.TokenFile) {
 			instance.TokenFile = filepath.Clean(filepath.Join(configDir, instance.TokenFile))
+		}
+		if instance.CAFile != "" && !filepath.IsAbs(instance.CAFile) {
+			instance.CAFile = filepath.Clean(filepath.Join(configDir, instance.CAFile))
+		}
+
+		// Both settings decide how the certificate of the instance is checked,
+		// and one of them switches the check off: accepting them together would
+		// make it impossible to tell which one the operator meant.
+		if instance.InsecureSkipVerify && instance.CAFile != "" {
+			return errors.New(fmt.Sprintf(
+				"instances[%d] sets both ca_file and insecure_skip_verify; use ca_file to trust the certificate of the instance and remove insecure_skip_verify",
+				index,
+			))
 		}
 	}
 

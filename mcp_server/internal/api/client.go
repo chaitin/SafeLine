@@ -3,11 +3,13 @@ package api
 import (
 	"context"
 	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 
@@ -26,6 +28,25 @@ const (
 	maxRedirects = 10
 )
 
+// loadRootCAs reads the certificate authority the instance is issued by.
+//
+// It is a file rather than the system pool because the installation that the
+// MCP server talks to usually carries the certificate it generated for itself,
+// which no system pool knows about.
+func loadRootCAs(path string) (*x509.CertPool, error) {
+	content, err := os.ReadFile(path)
+	if err != nil {
+		return nil, errors.Wrap(err, "read ca_file failed")
+	}
+
+	roots := x509.NewCertPool()
+	if !roots.AppendCertsFromPEM(content) {
+		return nil, errors.New("ca_file does not contain a PEM encoded certificate")
+	}
+
+	return roots, nil
+}
+
 // Client is the transport used by a single SafeLine instance. Its request
 // method is intentionally unexported; APIClient exposes only approved read-only
 // operations.
@@ -35,7 +56,7 @@ type Client struct {
 	headers    http.Header
 }
 
-func newClient(baseURL string, timeout time.Duration, insecureSkipVerify bool, token string) (*Client, error) {
+func newClient(baseURL string, timeout time.Duration, insecureSkipVerify bool, caFile, token string) (*Client, error) {
 	parsedURL, err := url.Parse(strings.TrimSpace(baseURL))
 	if err != nil {
 		return nil, errors.Wrap(err, "parse base_url failed")
@@ -51,6 +72,27 @@ func newClient(baseURL string, timeout time.Duration, insecureSkipVerify bool, t
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify}, // #nosec G402 -- deployment-controlled compatibility setting
 	}
+
+	if caFile != "" {
+		// The console of a SafeLine installation serves a certificate that no
+		// public authority signed, so the choice used to be between switching
+		// verification off and failing every request. Pinning the authority of
+		// the instance keeps it on, which is what keeps the deployment token in
+		// the request header out of the hands of anything on the path.
+		roots, err := loadRootCAs(caFile)
+		if err != nil {
+			return nil, err
+		}
+		transport.TLSClientConfig.RootCAs = roots
+	}
+
+	if insecureSkipVerify {
+		logger.With("base_url", parsedURL.Redacted()).Warn(
+			"insecure_skip_verify is set: the certificate of this instance is not checked, " +
+				"so anything on the path can read the API token of the deployment. " +
+				"Set ca_file to the certificate authority of the instance instead.")
+	}
+
 	client := &Client{
 		baseURL: parsedURL,
 		httpClient: &http.Client{
