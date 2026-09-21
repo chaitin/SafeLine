@@ -137,12 +137,19 @@ func runServer(args []string, stderr io.Writer) error {
 		return err
 	}
 	if !authEnabled && !isLoopbackHost(serverConfig.Host) {
-		// Bearer auth is on by default. Combined with ListenAndServe (plain
-		// HTTP, no cert config on this binary), a non-loopback bind with
-		// auth off would expose SafeLine telemetry to anyone who can open
-		// a socket. Refuse to start rather than depend on the deployer noticing.
 		return fmt.Errorf(
 			"MCP authentication is disabled but the listener is not loopback-only (host %q); keep authentication enabled or bind a loopback address",
+			serverConfig.Host,
+		)
+	}
+	certFile := strings.TrimSpace(serverConfig.TLSCertFile)
+	keyFile := strings.TrimSpace(serverConfig.TLSKeyFile)
+	if (certFile == "") != (keyFile == "") {
+		return fmt.Errorf("MCP_TLS_CERT and MCP_TLS_KEY (or tls_cert_file and tls_key_file) must be set together")
+	}
+	if !isLoopbackHost(serverConfig.Host) && certFile == "" {
+		return fmt.Errorf(
+			"non-loopback MCP listener %q requires TLS; set MCP_TLS_CERT and MCP_TLS_KEY",
 			serverConfig.Host,
 		)
 	}
@@ -173,5 +180,8 @@ func runServer(args []string, stderr io.Writer) error {
 
 	addr := fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port)
 	logger.With("addr", addr).With("endpoint", mcpserver.EndpointPath).Info("starting MCP server")
+	if certFile != "" {
+		return s.StartTLS(addr, certFile, keyFile, middleware...)
+	}
 	return s.Start(addr, middleware...)
 }

@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 
 	"chaitin.cn/dev/go/errors"
@@ -48,12 +47,7 @@ func Handle() error {
 	if err != nil {
 		return err
 	}
-	if creds != nil {
-		dialOptions = append(dialOptions, grpc.WithTransportCredentials(creds))
-	} else {
-		// nil creds only when TCD_MGT_TLS is an explicit off value.
-		dialOptions = append(dialOptions, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	}
+	dialOptions = append(dialOptions, grpc.WithTransportCredentials(creds))
 
 	gRPCConn, err := grpc.Dial(config.GlobalConfig.MgtWebserver, dialOptions...)
 	if err != nil {

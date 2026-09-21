@@ -26,7 +26,7 @@ func TestClientUsesTheAuthorityOfTheInstance(t *testing.T) {
 
 	// The certificate is not known without the authority, and the request is
 	// refused rather than sent in the clear or unverified.
-	untrusted, err := newClient(server.URL, 5*time.Second, false, "", "deployment-token")
+	untrusted, err := newClient(server.URL, 5*time.Second, "", "deployment-token")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -47,7 +47,7 @@ func TestClientUsesTheAuthorityOfTheInstance(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	trusted, err := newClient(server.URL, 5*time.Second, false, caPath, "deployment-token")
+	trusted, err := newClient(server.URL, 5*time.Second, caPath, "deployment-token")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -66,14 +66,30 @@ func TestClientRefusesACAFileWithoutACertificate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if _, err := newClient("https://instance.example:9443", 5*time.Second, false, caPath, "token"); err == nil {
+	if _, err := newClient("https://instance.example:9443", 5*time.Second, caPath, "token"); err == nil {
 		t.Fatal("a ca_file without a certificate was accepted")
 	}
 }
 
 func TestClientReportsAMissingCAFile(t *testing.T) {
 	missing := filepath.Join(t.TempDir(), "missing.crt")
-	if _, err := newClient("https://instance.example:9443", 5*time.Second, false, missing, "token"); err == nil {
+	if _, err := newClient("https://instance.example:9443", 5*time.Second, missing, "token"); err == nil {
 		t.Fatal("a missing ca_file was accepted")
+	}
+}
+
+func TestClientRejectsNonLoopbackHTTP(t *testing.T) {
+	_, err := newClient("http://example.com:9443", 5*time.Second, "", "token")
+	if err == nil || err.Error() != "deployment token must not be sent over non-loopback HTTP" {
+		t.Fatalf("error = %v", err)
+	}
+}
+
+func TestClientAllowsLoopbackHTTP(t *testing.T) {
+	if _, err := newClient("http://127.0.0.1:9443", 5*time.Second, "", "token"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := newClient("http://localhost:9443", 5*time.Second, "", "token"); err != nil {
+		t.Fatal(err)
 	}
 }

@@ -155,13 +155,16 @@ func main() {
 	store := cookie.NewStore([]byte(option.Value))
 	r.Use(sessions.Sessions("session", store))
 
-	// The bootstrap token is the only gate in front of the TFA secret of the
-	// account. It is optional so that a fresh installation can be bound from
-	// the console, and what limits the exposure when it is empty is the window
-	// the account may be bound in: announce both.
-	if os.Getenv(api.BootstrapTokenEnv) == "" {
-		logger.Warnf("%s is not set: the TFA secret of the account is handed to whoever reaches GET %s%s first, for %s after the bootstrap was opened. Set it to require the %s header on that request.",
-			api.BootstrapTokenEnv, "/api", api.OTPUrl, api.BootstrapWindow(), api.BootstrapTokenHeader)
+	created, tokenPath, err := api.EnsureBootstrapToken()
+	if err != nil {
+		logger.Fatalln("Failed to initialize the TFA bootstrap token: ", err)
+	}
+	if os.Getenv(api.BootstrapTokenEnv) != "" {
+		logger.Infof("GET /api%s requires the %s header from %s.", api.OTPUrl, api.BootstrapTokenHeader, api.BootstrapTokenEnv)
+	} else if created {
+		logger.Infof("Wrote the TFA bootstrap token to %s (mode 0600). GET /api%s requires the %s header. The stock console must send it; until then bind with curl.", tokenPath, api.OTPUrl, api.BootstrapTokenHeader)
+	} else {
+		logger.Infof("GET /api%s requires the %s header; token loaded from %s.", api.OTPUrl, api.BootstrapTokenHeader, tokenPath)
 	}
 	if window := api.BootstrapWindow(); window <= 0 {
 		logger.Warnf("%s is off: the account can be bound from the network until somebody logs in. A console that is left unbound stays claimable.",
@@ -172,12 +175,10 @@ func main() {
 	}
 
 	publicRouters := r.Group("/api")
+	publicRouters.Use(middleware.SameOrigin)
 	publicRouters.POST(api.Login, api.PostLogin)
 	publicRouters.POST(api.Logout, api.PostLogout)
-	// Public on purpose for first-boot QR on the login page. Empty
-	// MGT_BOOTSTRAP_TOKEN is the CE installer path; GetOTPUrl still
-	// binds the secret to the first IP, closes after LastLoginTime,
-	// and honours MGT_BOOTSTRAP_WINDOW. See api.GetOTPUrl.
+	// First-boot QR still has no session, but requires X-Bootstrap-Token.
 	publicRouters.GET(api.OTPUrl, api.GetOTPUrl)
 	publicRouters.GET(api.Version, api.GetVersion)
 	publicRouters.GET(api.UpgradeTips, api.GetUpgradeTips)
@@ -189,6 +190,7 @@ func main() {
 	})
 
 	limitedRouters := r.Group("/api")
+	limitedRouters.Use(middleware.SameOrigin)
 	if envEnabled(os.Getenv("NO_AUTH")) {
 		logger.Warn("Authentication is disabled because NO_AUTH is enabled")
 	} else {

@@ -42,10 +42,7 @@ func ServerOptions() ([]grpc.ServerOption, error) {
 	if err != nil {
 		return nil, err
 	}
-	if creds != nil {
-		opts = append(opts, creds)
-	}
-
+	opts = append(opts, creds)
 	return opts, nil
 }
 

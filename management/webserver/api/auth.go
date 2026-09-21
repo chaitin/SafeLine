@@ -257,16 +257,15 @@ func BootstrapWindow() time.Duration {
 	return window
 }
 
-// GetOTPUrl hands the TFA secret to the first installer. It stays on the
-// public /api group so the stock console login page can show a QR code without
-// a session; requiring MGT_BOOTSTRAP_TOKEN by default would leave that page
-// unable to bind a fresh CE install.
+// GetOTPUrl hands the TFA secret during first-boot binding.
 //
-// Existing gates, not a missing auth middleware:
+// The request must carry X-Bootstrap-Token. Remaining gates:
 //   - LastLoginTime > 0: no more secret after the first successful login
-//   - secret is bound to the first ClientIP (TFABootstrapIP); other IPs are refused
+//   - secret is bound to the first ClientIP (TFABootstrapIP)
 //   - MGT_BOOTSTRAP_WINDOW, bootstrapThrottle, claimBootstrapSecret / adoptBootstrapSecret
-// Public management ports should still set MGT_BOOTSTRAP_TOKEN.
+//
+// The stock console must send the header. Until that image is updated, bind
+// with curl using the token written at startup.
 func GetOTPUrl(c *gin.Context) {
 	db := database.GetDB()
 
@@ -521,22 +520,12 @@ func otpURL(secret string) string {
 	return bootstrapURL.String()
 }
 
-// checkBootstrapToken enforces the optional out of band token of the anonymous
-// TFA bootstrap.
-//
-// Installations that do not want the account to be bindable by whoever reaches
-// the API first set MGT_BOOTSTRAP_TOKEN and deliver it to the administrator
-// through a channel of their choice (the installation output, for example).
-//
-// The empty value keeps the bootstrap open on purpose: the console that ships
-// in the management image asks this endpoint for the secret without knowing it,
-// so requiring a token here would leave a fresh installation without any way to
-// bind the account. That trade off is announced at startup (see main.go) so
-// that it is a visible choice rather than a silent default.
+// checkBootstrapToken requires X-Bootstrap-Token to match the configured
+// bootstrap token. An empty expected value is a server misconfiguration.
 func checkBootstrapToken(c *gin.Context) error {
-	expected := os.Getenv(BootstrapTokenEnv)
+	expected := bootstrapToken
 	if expected == "" {
-		return nil
+		return fmt.Errorf("bootstrap token is not configured")
 	}
 
 	if subtle.ConstantTimeCompare([]byte(c.GetHeader(BootstrapTokenHeader)), []byte(expected)) == 1 {

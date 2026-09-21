@@ -135,3 +135,37 @@ func TestIsLoopbackHost(t *testing.T) {
 		}
 	}
 }
+
+func TestNonLoopbackListenerRequiresTLS(t *testing.T) {
+	dir := t.TempDir()
+	stateDir := filepath.Join(dir, "state")
+	if err := os.Mkdir(stateDir, 0o700); err != nil {
+		t.Fatal(err)
+	}
+	configPath := filepath.Join(dir, "config.yaml")
+	contents := `
+server:
+  name: SafeLine MCP
+  version: 1.0.0
+  host: 0.0.0.0
+  port: 5678
+logger:
+  level: info
+instances:
+  - id: dev152
+    base_url: https://dev152:9443
+    token_file: /run/secrets/dev152_token
+`
+	if err := os.WriteFile(configPath, []byte(contents), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	stateFile := filepath.Join(stateDir, "auth.json")
+	if _, _, err := auth.Initialize(stateFile); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv(auth.StateFileEnv, stateFile)
+	err := run([]string{"--config", configPath}, &bytes.Buffer{}, &bytes.Buffer{})
+	if err == nil || !strings.Contains(err.Error(), "requires TLS") {
+		t.Fatalf("run() error = %v, want TLS requirement", err)
+	}
+}

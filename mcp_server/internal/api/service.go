@@ -137,7 +137,7 @@ func newAPIClient(cfg *config.InstanceConfig) (*APIClient, error) {
 	if cfg.Timeout > 0 {
 		timeout = cfg.Timeout
 	}
-	client, err := newClient(cfg.BaseURL, time.Duration(timeout)*time.Second, cfg.InsecureSkipVerify, cfg.CAFile, token)
+	client, err := newClient(cfg.BaseURL, time.Duration(timeout)*time.Second, cfg.CAFile, token)
 	if err != nil {
 		return nil, err
 	}

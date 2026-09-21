@@ -14,13 +14,9 @@ import (
 )
 
 const (
-	// TLSEnv names the environment variable that decides how the control
-	// channel is reached.
-	//
-	//   - "0" / off / false / no: dial in the clear (warned).
-	//   - anything else, including unset: TLS is required. Credentials are
-	//     those published by `mgt -gen_certs`. Missing files are an error;
-	//     there is no silent fallback to plaintext.
+	// TLSEnv names the environment variable that used to allow a plaintext
+	// control channel. Plaintext is no longer supported: a value of "0" /
+	// off / false / no is an error.
 	TLSEnv = "TCD_MGT_TLS"
 
 	// ServerCertFile is the certificate the management server is expected to
@@ -35,24 +31,15 @@ const (
 
 // transportCreds returns the credentials of the control channel.
 //
-// A nil result means the channel is reached in the clear, and that only happens
-// when TLSEnv is an explicit off value. Unset TLSEnv still requires TLS: the
-// management side is expected to have published client credentials via
-// `mgt -gen_certs`; missing files are returned as an error instead of a
-// plaintext dial.
+// The channel is always reached over TLS. Missing credentials or an explicit
+// request for plaintext are errors.
 func transportCreds() (credentials.TransportCredentials, error) {
 	switch strings.ToLower(strings.TrimSpace(os.Getenv(TLSEnv))) {
 	case "0", "off", "false", "no":
-		logger.Warnf("%s is disabled: the control channel is reached in the clear, and the subscription token is readable by anything that shares the network of this container.", TLSEnv)
-		return nil, nil
+		return nil, errors.New("plaintext is not supported: unset " + TLSEnv + " and use credentials published by mgt -gen_certs")
 	}
 
-	creds, err := loadTransportCreds()
-	if err != nil {
-		return nil, err
-	}
-
-	return creds, nil
+	return loadTransportCreds()
 }
 
 // loadTransportCreds reads the credentials the management server published for

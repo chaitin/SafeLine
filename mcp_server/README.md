@@ -45,7 +45,6 @@ instances:
     timeout: 30
     debug: false
     ca_file: ""
-    insecure_skip_verify: false
 
   - id: "production-b"
     display_name: "Production B"
@@ -54,7 +53,6 @@ instances:
     timeout: 30
     debug: false
     ca_file: ""
-    insecure_skip_verify: false
 ```
 
 `LISTEN_ADDRESS` and `LISTEN_PORT` override listener settings. There is deliberately no global `SAFELINE_API_TOKEN`: every instance uses a separate token file.
@@ -65,11 +63,9 @@ which no public authority signed: point `ca_file` at that certificate (or at the
 authority that issued it) and the connection stays verified. Relative paths are
 resolved from the directory of the configuration file.
 
-`insecure_skip_verify` disables TLS verification for the SafeLine API. The API
-Token is an administrator credential that is sent on every request, so leave the
-setting at `false` and use `ca_file` for an instance with a self-signed
-certificate. Setting it to `true` logs a warning at startup, and it cannot be
-combined with `ca_file`.
+`insecure_skip_verify` is rejected at startup. Use `ca_file` for a self-signed
+instance certificate. `base_url` must be `https`, or `http` only when the host
+is loopback (`127.0.0.1`, `localhost`, `::1`).
 
 Each `display_name` must be unique, ignoring letter case, and must not match another instance's `id`. During server discovery (or legacy initialization), the server publishes only the `display_name` to `instance_id` mappings as Server Instructions. This lets a user refer to a friendly name while the AI still calls `get_attack_events` with the stable, explicit `instance_id`. Instance addresses and credentials are never included in those instructions.
 
@@ -99,12 +95,10 @@ Clients send the generated token on every MCP request:
 Authorization: Bearer slmcp_...
 ```
 
-The built-in listener is plain HTTP. Docker Compose publishes it on
-`127.0.0.1` by default so the reusable Bearer Token does not cross a network
-in cleartext. For access from another machine, put the endpoint behind a
-trusted HTTPS-terminating gateway or keep it on an equivalently protected
-private transport. Do not set `MCP_PUBLISH_ADDRESS=0.0.0.0` on an untrusted
-network without TLS termination.
+Loopback (`127.0.0.1` / `localhost` / `::1`) may listen on plain HTTP.
+A non-loopback bind, including Docker `LISTEN_ADDRESS=0.0.0.0`, requires
+`MCP_TLS_CERT` and `MCP_TLS_KEY` (or `tls_cert_file` / `tls_key_file`).
+The process refuses to start without them.
 
 The server refuses to start while this state is missing, so a deployment cannot
 serve any request before the token exists. Explicit rotation is available

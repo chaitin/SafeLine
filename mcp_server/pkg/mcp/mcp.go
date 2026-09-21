@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/chaitin/SafeLine/mcp_server/pkg/logger"
@@ -67,6 +68,18 @@ func (s *MCPServer) Handler() http.Handler {
 }
 
 func (s *MCPServer) Start(addr string, middleware ...Middleware) error {
+	return s.listen(addr, "", "", middleware...)
+}
+
+// StartTLS serves the same handler over HTTPS.
+func (s *MCPServer) StartTLS(addr, certFile, keyFile string, middleware ...Middleware) error {
+	if strings.TrimSpace(certFile) == "" || strings.TrimSpace(keyFile) == "" {
+		return fmt.Errorf("tls cert and key are required")
+	}
+	return s.listen(addr, certFile, keyFile, middleware...)
+}
+
+func (s *MCPServer) listen(addr, certFile, keyFile string, middleware ...Middleware) error {
 	var handler http.Handler = s.Handler()
 	for i := len(middleware) - 1; i >= 0; i-- {
 		handler = middleware[i](handler)
@@ -80,11 +93,9 @@ func (s *MCPServer) Start(addr string, middleware ...Middleware) error {
 		WriteTimeout:      60 * time.Second,
 		IdleTimeout:       60 * time.Second,
 	}
-	// Plain HTTP is the supported listener: this process has no
-	// certificate config path. Auth is on by default; main.go refuses
-	// to start with auth off unless the bind host is loopback. Put
-	// HTTPS in front (reverse proxy) for anything not on the machine
-	// or the operator network.
+	if certFile != "" {
+		return srv.ListenAndServeTLS(certFile, keyFile)
+	}
 	return srv.ListenAndServe()
 }
 

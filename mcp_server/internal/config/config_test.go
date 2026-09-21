@@ -207,3 +207,78 @@ instances:
 		t.Fatalf("the error does not name the setting: %v", err)
 	}
 }
+
+func TestLoadRejectsInsecureSkipVerify(t *testing.T) {
+	path := writeConfigFile(t, `
+server:
+  name: SafeLine MCP
+  version: 1.0.0
+  host: 127.0.0.1
+  port: 5678
+logger:
+  level: info
+instances:
+  - id: dev152
+    base_url: https://dev152:9443
+    token_file: /run/secrets/dev152_token
+    insecure_skip_verify: true
+`)
+	err := Load(path)
+	if err == nil || !strings.Contains(err.Error(), "insecure_skip_verify is not supported") {
+		t.Fatalf("Load() error = %v", err)
+	}
+}
+
+func TestLoadTLSCertFromEnv(t *testing.T) {
+	path := writeConfigFile(t, `
+server:
+  name: SafeLine MCP
+  version: 1.0.0
+  host: 127.0.0.1
+  port: 5678
+  tls_cert_file: /yaml/cert.pem
+  tls_key_file: /yaml/key.pem
+logger:
+  level: info
+instances:
+  - id: dev152
+    base_url: https://dev152:9443
+    token_file: /run/secrets/dev152_token
+`)
+	t.Setenv("MCP_TLS_CERT", "/env/cert.pem")
+	t.Setenv("MCP_TLS_KEY", "/env/key.pem")
+	if err := Load(path); err != nil {
+		t.Fatal(err)
+	}
+	server := GetServer()
+	if server.TLSCertFile != "/env/cert.pem" || server.TLSKeyFile != "/env/key.pem" {
+		t.Fatalf("tls paths = %q %q", server.TLSCertFile, server.TLSKeyFile)
+	}
+}
+
+func TestLoadEmptyTLSEnvDoesNotWipeYAML(t *testing.T) {
+	path := writeConfigFile(t, `
+server:
+  name: SafeLine MCP
+  version: 1.0.0
+  host: 127.0.0.1
+  port: 5678
+  tls_cert_file: /yaml/cert.pem
+  tls_key_file: /yaml/key.pem
+logger:
+  level: info
+instances:
+  - id: dev152
+    base_url: https://dev152:9443
+    token_file: /run/secrets/dev152_token
+`)
+	t.Setenv("MCP_TLS_CERT", "")
+	t.Setenv("MCP_TLS_KEY", "")
+	if err := Load(path); err != nil {
+		t.Fatal(err)
+	}
+	server := GetServer()
+	if server.TLSCertFile != "/yaml/cert.pem" || server.TLSKeyFile != "/yaml/key.pem" {
+		t.Fatalf("tls paths = %q %q", server.TLSCertFile, server.TLSKeyFile)
+	}
+}
