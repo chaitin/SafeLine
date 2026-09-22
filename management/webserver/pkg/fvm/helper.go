@@ -24,6 +24,9 @@ func CompileAndSave(text string) error {
 	defer ReleaseOutput(output)
 
 	update := Serialize(output, false, 0, 1)
+	if update == nil {
+		return errors.New("failed to serialize rules")
+	}
 	defer update.Release()
 
 	// save to file. The bytecode is not secret, but nothing but the management
@@ -44,6 +47,9 @@ func CompileAndPush(text, serverAddr string) error {
 	defer ReleaseOutput(output)
 
 	update := Serialize(output, false, 0, 1)
+	if update == nil {
+		return errors.New("failed to serialize rules")
+	}
 	defer update.Release()
 
 	// save to file. The bytecode is not secret, but nothing but the management

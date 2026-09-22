@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"syscall"
 
 	"github.com/sirupsen/logrus"
 
@@ -43,7 +44,7 @@ func InitLogger() error {
 			return err
 		}
 
-		fileFlag := os.O_WRONLY | os.O_APPEND | os.O_SYNC
+		fileFlag := os.O_WRONLY | os.O_APPEND | os.O_SYNC | syscall.O_NOFOLLOW
 		if !exist {
 			if err := utils.EnsureFileDir(config.GlobalConfig.Log.Output); err != nil {
 				return err

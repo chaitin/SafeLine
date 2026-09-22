@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <errno.h>
 #include <functional>
+#include <limits.h>
 #include <stdio.h>
 #include <stack>
 #include <string.h>
@@ -223,7 +224,11 @@ struct ModuleUse : PrePostActionExprStmtVisitor {
       // enlarge alphabet
       expr.define_stmt = NULL;
       expr.macro_value = d->value;
-      AB = max(AB, d->value+1);
+      if (d->value == LONG_MAX) {
+        n_errors++;
+        mo.locfile.error(expr.loc, "macro value %ld cannot be used as a label", d->value);
+      } else
+        AB = max(AB, d->value+1);
     } else if (auto d = dynamic_cast<DefineStmt*>(r)) {
       depended_by[d].push_back(stmt);
       used_as_embed[d].push_back(&expr);
@@ -317,7 +322,12 @@ static vector<DefineStmt*> topo_define_stmts(long& n_errors)
   vector<DefineStmt*> st;
   unordered_map<DefineStmt*, i8> vis; // 0: unvisited; 1: in stack; 2: visited; 3: in a cycle
   unordered_map<DefineStmt*, long> cnt;
-  function<bool(DefineStmt*)> dfs = [&](DefineStmt* u) {
+  function<bool(DefineStmt*, long)> dfs = [&](DefineStmt* u, long depth) {
+    if (depth > MAX_EXPR_DEPTH) {
+      u->module->locfile.error_context(u->loc, "'%s': embed graph deeper than %ld", u->lhs.c_str(), MAX_EXPR_DEPTH);
+      n_errors++;
+      return true;
+    }
     if (vis[u] == 2)
       return false;
     if (vis[u] == 3)
@@ -341,7 +351,7 @@ static vector<DefineStmt*> topo_define_stmts(long& n_errors)
     st.push_back(u);
     bool cycle = false;
     for (auto v: depended_by[u])
-      if (dfs(v))
+      if (dfs(v, depth+1))
         cycle = true;
       else
         cnt[u] += cnt[v];
@@ -351,7 +361,7 @@ static vector<DefineStmt*> topo_define_stmts(long& n_errors)
     return cycle;
   };
   for (auto& d: depended_by)
-    if (! vis[d.first] && dfs(d.first)) // detected cycle
+    if (! vis[d.first] && dfs(d.first, 1)) // detected cycle or an embed graph that is too deep
       n_errors++;
   reverse(ALL(topo));
   if (opt_dump_embed) {

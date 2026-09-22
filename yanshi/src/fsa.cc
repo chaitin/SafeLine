@@ -375,8 +375,13 @@ Fsa Fsa::determinize(const vector<long>* starts, function<void(long, const vecto
       }
       if (ev.second >= 0)
         live.insert(ev.second);
-      else
-        live.erase(live.find(~ ev.second));
+      else {
+        // A reversed interval (signed overflow of end = start+1) can close an
+        // event that was never opened. erase(end()) is undefined.
+        auto it = live.find(~ ev.second);
+        if (it != live.end())
+          live.erase(it);
+      }
     }
   }
   sort(ALL(r.finals));

@@ -447,6 +447,9 @@ FsaAnno FsaAnno::embed(EmbedExpr& expr) {
     r.fsa.start = 0;
     r.fsa.finals = {1};
     r.fsa.adj.resize(2);
+    // macro_value+1 overflows at LONG_MAX and inverts the interval.
+    if (expr.macro_value == LONG_MAX)
+      err_exit(EX_DATAERR, "macro value %ld cannot be used as a label", expr.macro_value);
     r.fsa.adj[0].emplace_back(make_pair(expr.macro_value, expr.macro_value+1), 1);
     r.assoc.resize(2);
     r.add_assoc(expr);

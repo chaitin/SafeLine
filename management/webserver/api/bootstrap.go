@@ -4,9 +4,11 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 )
 
 // BootstrapTokenFileEnv names the file the bootstrap token is read from when
@@ -54,10 +56,8 @@ func EnsureBootstrapToken() (created bool, path string, err error) {
 }
 
 func loadOrCreateBootstrapToken(path string) (string, bool, error) {
-	if content, err := os.ReadFile(path); err == nil {
-		if token := strings.TrimSpace(string(content)); token != "" {
-			return token, false, nil
-		}
+	if token, err := readBootstrapToken(path); err == nil && token != "" {
+		return token, false, nil
 	}
 
 	raw := make([]byte, bootstrapTokenBytes)
@@ -75,15 +75,16 @@ func loadOrCreateBootstrapToken(path string) (string, bool, error) {
 		if !os.IsExist(err) {
 			return "", false, err
 		}
-		content, readErr := os.ReadFile(path)
+		token, readErr := readBootstrapToken(path)
 		if readErr != nil {
 			return "", false, readErr
 		}
-		if token := strings.TrimSpace(string(content)); token != "" {
+		if token != "" {
 			return token, false, nil
 		}
-		// Empty leftover file: replace it. Do not truncate a non-empty secret.
-		if err := os.WriteFile(path, []byte(value+"\n"), bootstrapTokenFileMode); err != nil {
+		// Empty leftover file: replace it without following a symlink. Do not
+		// truncate a non-empty secret.
+		if err := writeBootstrapTokenNoFollow(path, value); err != nil {
 			return "", false, err
 		}
 		return value, true, nil
@@ -96,4 +97,37 @@ func loadOrCreateBootstrapToken(path string) (string, bool, error) {
 		return "", false, err
 	}
 	return value, true, nil
+}
+
+// readBootstrapToken reads the token without following a symlink. A link placed
+// on the shared volume must not be treated as the token file.
+func readBootstrapToken(path string) (string, error) {
+	file, err := os.OpenFile(path, os.O_RDONLY|syscall.O_NOFOLLOW, 0)
+	if err != nil {
+		return "", err
+	}
+	defer func() {
+		_ = file.Close()
+	}()
+	// Read the whole file. A prefix must not be treated as the token: the console
+	// sends the file contents, and a truncated value would never match.
+	content, err := io.ReadAll(file)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(string(content)), nil
+}
+
+// writeBootstrapTokenNoFollow overwrites an existing regular file. O_NOFOLLOW
+// refuses a symlink instead of writing through it.
+func writeBootstrapTokenNoFollow(path, value string) error {
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_TRUNC|syscall.O_NOFOLLOW, bootstrapTokenFileMode)
+	if err != nil {
+		return err
+	}
+	if _, err = file.WriteString(value + "\n"); err != nil {
+		_ = file.Close()
+		return err
+	}
+	return file.Close()
 }

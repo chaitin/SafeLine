@@ -34,6 +34,10 @@ const (
 	// certGenerationMaxLockout caps the wait imposed on a caller that keeps
 	// asking.
 	certGenerationMaxLockout = 5 * time.Minute
+
+	// maxUploadedCertBytes is the largest certificate or key this endpoint will
+	// write. A PEM certificate or key is far smaller than this.
+	maxUploadedCertBytes int64 = 1 << 20
 )
 
 // certGenerationThrottle bounds how often this endpoint may spend a key
@@ -48,6 +52,10 @@ const (
 // counted per client address, and one generation is counted whether it
 // succeeds or not.
 var certGenerationThrottle = newThrottle(certGenerationThreshold, certGenerationWindow, certGenerationMaxLockout)
+
+// certUploadThrottle bounds how often an authenticated session may write into
+// the certificate directory. Generation already has a throttle; upload did not.
+var certUploadThrottle = newThrottle(certGenerationThreshold, certGenerationWindow, certGenerationMaxLockout)
 
 // certGenerationKeys returns the throttle keys of a certificate request.
 func certGenerationKeys(clientIP string) []string {
@@ -91,6 +99,21 @@ func PostUploadSSLCert(c *gin.Context) {
 		return
 	}
 
+	if file.Size <= 0 || file.Size > maxUploadedCertBytes {
+		response.Error(c, response.JSONBody{Err: response.ErrInternalError, Msg: "Certificate file is empty or too large"}, http.StatusBadRequest)
+		return
+	}
+
+	clientIP := c.ClientIP()
+	throttleKeys := certGenerationKeys(clientIP)
+	if key, wait := certUploadThrottle.lockout(throttleKeys); wait > 0 {
+		logger.Warnf("Certificate upload throttled by %s, retry in %s", key, wait)
+		c.Header("Retry-After", strconv.FormatInt(int64(wait.Seconds())+1, 10))
+		response.Error(c, response.JSONBody{Err: response.ErrTooManyAttempts, Msg: "Too many certificate uploads, please try again later"}, http.StatusTooManyRequests)
+		return
+	}
+	certUploadThrottle.fail(throttleKeys)
+
 	var dstPath string
 	filename := fmt.Sprintf("%s_%s", utils.RandStr(16), filepath.Base(file.Filename))
 	if config.GlobalConfig.Server.DevMode {
@@ -131,7 +154,7 @@ func saveUploadedFile(file *multipart.FileHeader, dstPath string, mode os.FileMo
 		return err
 	}
 
-	if _, err = io.Copy(dst, src); err != nil {
+	if _, err = io.Copy(dst, io.LimitReader(src, maxUploadedCertBytes)); err != nil {
 		_ = dst.Close()
 		return err
 	}

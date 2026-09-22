@@ -56,6 +56,9 @@ func maybePointer(array []byte) unsafe.Pointer {
 }
 
 func (u *FVMUpdate) ToBytes() []byte {
+	if u == nil || u.update == nil {
+		return nil
+	}
 	return C.GoBytes(unsafe.Pointer(u.update.buf.ptr), C.int(u.update.buf.length))
 }
 
@@ -89,7 +92,11 @@ func (u *FVMUpdate) MergeUpdate(patch *FVMUpdate) error {
 }
 
 func (u *FVMUpdate) Release() {
+	if u == nil || u.update == nil {
+		return
+	}
 	C.fvm_update_destroy(u.update)
+	u.update = nil
 }
 
 func (r *FVMRe) ToBytes() []byte {
@@ -189,6 +196,9 @@ func ReleaseOutput(out *FVMOutput) {
 }
 
 func (f *FVM) PushFsl(server string, update *FVMUpdate) error {
+	if update == nil || update.update == nil {
+		return errors.New("refuse to push a nil policy update")
+	}
 	log.Infof("Push FSL to %s", server)
 
 	var length = uint32(update.update.buf.length)

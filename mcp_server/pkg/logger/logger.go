@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+	"syscall"
 	"time"
 
 	"go.uber.org/zap"
@@ -96,7 +97,7 @@ func Init(cfg *Config) error {
 			// a failure to open the log file returned a nil error and left
 			// defaultLogger unset, which turned every later log call into a nil
 			// pointer dereference.
-			fileWriter, openErr := os.OpenFile(cfg.FilePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, logFileMode)
+			fileWriter, openErr := os.OpenFile(cfg.FilePath, os.O_CREATE|os.O_APPEND|os.O_WRONLY|syscall.O_NOFOLLOW, logFileMode)
 			if openErr != nil {
 				err = openErr
 				return

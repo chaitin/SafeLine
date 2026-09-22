@@ -430,9 +430,13 @@ bool compile_export(DefineStmt* stmt)
   unordered_map<long, DefineStmt*> start2stmt;
   vector<long> starts;
   vector<bool> sub_final;
-  function<void(DefineStmt*)> allocate = [&](DefineStmt* stmt) {
+  function<void(DefineStmt*, long)> allocate = [&](DefineStmt* stmt, long depth) {
     if (stmt2offset.count(stmt))
       return;
+    // stmt2offset stops cycles. It does not stop a deep acyclic embed graph,
+    // which still recurses once per statement.
+    if (depth > MAX_EXPR_DEPTH)
+      err_exit(EX_DATAERR, "define graph deeper than %ld", MAX_EXPR_DEPTH);
     DP(4, "Allocate %ld to %s", allo, stmt->lhs.c_str());
     FsaAnno& anno = compiled[stmt];
     long base = stmt2offset[stmt] = allo;
@@ -455,10 +459,10 @@ bool compile_export(DefineStmt* stmt)
         if (has_start(aa.second)) {
           if (auto* e = dynamic_cast<CallExpr*>(aa.first)) {
             DefineStmt* v = e->define_stmt;
-            allocate(v);
+            allocate(v, depth+1);
           } else if (auto* e = dynamic_cast<CollapseExpr*>(aa.first)) {
             DefineStmt* v = e->define_stmt;
-            allocate(v);
+            allocate(v, depth+1);
             // (i@{CollapseExpr,...}, special, _) -> ({CollapseExpr,...}, epsilon, CollapseExpr.define_stmt.start)
             sorted_emplace(adj[i], epsilon, stmt2offset[v]+compiled[v].fsa.start);
           }
@@ -474,7 +478,7 @@ bool compile_export(DefineStmt* stmt)
         for (auto aa: assoc[v])
           if (has_final(aa.second) && (e = dynamic_cast<CollapseExpr*>(aa.first))) {
             DefineStmt* w = e->define_stmt;
-            allocate(w);
+            allocate(w, depth+1);
             // (_, special, v@{CollapseExpr,...}) -> (CollapseExpr.define_stmt.final, epsilon, v)
             for (long f: compiled[w].fsa.finals) {
               long g = stmt2offset[w]+f;
@@ -488,7 +492,7 @@ bool compile_export(DefineStmt* stmt)
       adj[i].resize(j);
     }
   };
-  allocate(stmt);
+  allocate(stmt, 1);
   anno.fsa.adj = move(adj);
   anno.assoc = move(assoc);
   anno.deterministic = false;
