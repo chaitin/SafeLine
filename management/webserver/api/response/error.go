@@ -9,4 +9,5 @@ const (
 	ErrWrongFileType   = "wrong-filetype"
 	ErrReadOnly        = "read-only"
 	ErrTooManyAttempts = "too-many-attempts"
+	ErrForbidden       = "forbidden"
 )

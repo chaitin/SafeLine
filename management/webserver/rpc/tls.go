@@ -16,14 +16,9 @@ import (
 )
 
 const (
-	// TLSEnv names the environment variable that decides how the control
-	// channel is secured.
-	//
-	//   - "0" / off / false / no: serve in the clear (warned).
-	//   - anything else, including unset: TLS is required. Credentials come
-	//     from `mgt -gen_certs`. Missing files are an error; there is no
-	//     silent fallback to plaintext (the subscription token would otherwise
-	//     travel on the same network as the containers).
+	// TLSEnv names the environment variable that used to allow a plaintext
+	// control channel. Plaintext is no longer supported: a value of "0" /
+	// off / false / no is an error. Unset it and run `mgt -gen_certs`.
 	TLSEnv = "MGT_GRPC_TLS"
 
 	// CertDirEnv names the environment variable that holds the directory of
@@ -81,15 +76,13 @@ func ClientCertDir() string {
 
 // ServerCreds returns the transport credentials of the control channel.
 //
-// A nil option means the channel is served in the clear, and that only happens
-// when TLSEnv is an explicit off value. Unset TLSEnv still requires TLS: the
-// deployment is expected to have run `mgt -gen_certs`; missing credentials are
-// returned as an error instead of a plaintext listener.
+// The channel is always served over TLS. Missing credentials or an explicit
+// request for plaintext are errors: the subscription token would otherwise
+// travel on the same network as the containers.
 func ServerCreds() (grpc.ServerOption, error) {
 	switch strings.ToLower(strings.TrimSpace(os.Getenv(TLSEnv))) {
 	case "0", "off", "false", "no":
-		logger.Warnf("%s is disabled: the control channel is served in the clear, and the subscription token is the only gate in front of it. Anything that shares the network of this container can read it.", TLSEnv)
-		return nil, nil
+		return nil, errors.New("plaintext is not supported: unset " + TLSEnv + " and run mgt -gen_certs")
 	}
 
 	creds, err := loadServerCreds()

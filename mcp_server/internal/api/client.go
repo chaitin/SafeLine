@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
@@ -56,7 +57,23 @@ type Client struct {
 	headers    http.Header
 }
 
-func newClient(baseURL string, timeout time.Duration, insecureSkipVerify bool, caFile, token string) (*Client, error) {
+func loopbackURLHost(host string) bool {
+	host = strings.TrimSpace(host)
+	if host == "" {
+		return false
+	}
+	if h, _, err := net.SplitHostPort(host); err == nil {
+		host = h
+	}
+	host = strings.Trim(host, "[]")
+	if strings.EqualFold(host, "localhost") {
+		return true
+	}
+	ip := net.ParseIP(host)
+	return ip != nil && ip.IsLoopback()
+}
+
+func newClient(baseURL string, timeout time.Duration, caFile, token string) (*Client, error) {
 	parsedURL, err := url.Parse(strings.TrimSpace(baseURL))
 	if err != nil {
 		return nil, errors.Wrap(err, "parse base_url failed")
@@ -64,38 +81,28 @@ func newClient(baseURL string, timeout time.Duration, insecureSkipVerify bool, c
 	if (parsedURL.Scheme != "http" && parsedURL.Scheme != "https") || parsedURL.Host == "" {
 		return nil, errors.New("base_url must be an absolute http or https URL")
 	}
+	if parsedURL.Scheme == "http" && !loopbackURLHost(parsedURL.Host) {
+		return nil, errors.New("deployment token must not be sent over non-loopback HTTP")
+	}
 	if parsedURL.RawQuery != "" || parsedURL.Fragment != "" {
 		return nil, errors.New("base_url must not contain a query or fragment")
 	}
 	parsedURL.Path = strings.TrimRight(parsedURL.Path, "/")
 
-	transport := &http.Transport{
-		// Default insecureSkipVerify is false (config.yaml). Self-signed
-		// consoles should set ca_file to pin the instance CA. Turning this
-		// on is an explicit operator choice and logs a warn below; it is
-		// not the default skip-verify path.
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: insecureSkipVerify}, // #nosec G402 -- deployment-controlled compatibility setting
-	}
-
+	tlsConfig := &tls.Config{MinVersion: tls.VersionTLS12}
 	if caFile != "" {
 		// The console of a SafeLine installation serves a certificate that no
-		// public authority signed, so the choice used to be between switching
-		// verification off and failing every request. Pinning the authority of
-		// the instance keeps it on, which is what keeps the deployment token in
-		// the request header out of the hands of anything on the path.
+		// public authority signed. Pinning the authority of the instance keeps
+		// verification on, which is what keeps the deployment token in the
+		// request header out of the hands of anything on the path.
 		roots, err := loadRootCAs(caFile)
 		if err != nil {
 			return nil, err
 		}
-		transport.TLSClientConfig.RootCAs = roots
+		tlsConfig.RootCAs = roots
 	}
 
-	if insecureSkipVerify {
-		logger.With("base_url", parsedURL.Redacted()).Warn(
-			"insecure_skip_verify is set: the certificate of this instance is not checked, " +
-				"so anything on the path can read the API token of the deployment. " +
-				"Set ca_file to the certificate authority of the instance instead.")
-	}
+	transport := &http.Transport{TLSClientConfig: tlsConfig}
 
 	client := &Client{
 		baseURL: parsedURL,

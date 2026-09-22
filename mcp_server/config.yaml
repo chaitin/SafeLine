@@ -4,6 +4,9 @@ server:
   # LISTEN_ADDRESS and LISTEN_PORT can override these listener values.
   host: "127.0.0.1"
   port: 5678
+  # Required when host is not loopback. MCP_TLS_CERT / MCP_TLS_KEY override these.
+  tls_cert_file: ""
+  tls_key_file: ""
 
 logger:
   level: "info"
@@ -26,12 +29,6 @@ instances:
     # itself, which no public authority signed: point this at that certificate
     # (or at its CA) instead of switching the check off.
     ca_file: ""
-    # Leave TLS verification enabled: the SafeLine API Token is an
-    # administrator credential and disabling verification lets anyone on the
-    # path read it. Set this to true only for a lab instance with an
-    # unchangeable self-signed certificate.
-    insecure_skip_verify: false
-
   - id: "safeline-b"
     display_name: "SafeLine B"
     base_url: "https://safeline-b.example:9443"
@@ -39,4 +36,3 @@ instances:
     timeout: 30
     debug: false
     ca_file: ""
-    insecure_skip_verify: false

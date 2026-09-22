@@ -48,12 +48,10 @@ services:
       # ${SAFELINE_DIR}/resources/sock/mgt_grpc_token, which this container
       # creates and the tengine container reads.
       - MGT_GRPC_TOKEN=${MGT_GRPC_TOKEN:-}
-      # Optional out of band token for the anonymous TFA bootstrap. As long as
-      # it is empty, GET /api/OTPUrl hands the TFA secret of the account to
-      # whoever reaches the port first, and the login is then bound to that
-      # address; the daemon warns about it at startup. Set it, and pass the
-      # same value to the request as X-Bootstrap-Token, to keep the binding for
-      # an administrator who has the token.
+      # Token required on GET /api/OTPUrl as X-Bootstrap-Token. Leave empty
+      # to let the process generate one into
+      # ${SAFELINE_DIR}/resources/sock/tfa_bootstrap_token (0600) and log the
+      # path. The console must send that value; until it does, bind with curl.
       - MGT_BOOTSTRAP_TOKEN=${MGT_BOOTSTRAP_TOKEN:-}
       # How long the account may be bound without a credential, measured from
       # the moment the installation was set up (or from `mgt -reset_user

@@ -9,6 +9,9 @@ services:
     environment:
       LISTEN_ADDRESS: "0.0.0.0"
       LISTEN_PORT: "${LISTEN_PORT:-5678}"
+      # Required because LISTEN_ADDRESS is not loopback.
+      MCP_TLS_CERT: "${MCP_TLS_CERT:-}"
+      MCP_TLS_KEY: "${MCP_TLS_KEY:-}"
       # Authentication is enabled by default. Only set MCP_AUTH_DISABLED=true
       # for a loopback-only deployment; a non-loopback listener without a token
       # is refused at startup.

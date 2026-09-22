@@ -35,10 +35,12 @@ type InstanceConfig struct {
 
 // ServerConfig is the MCP server listener configuration.
 type ServerConfig struct {
-	Name    string `yaml:"name"`
-	Version string `yaml:"version"`
-	Port    int    `yaml:"port"`
-	Host    string `yaml:"host"`
+	Name        string `yaml:"name"`
+	Version     string `yaml:"version"`
+	Port        int    `yaml:"port"`
+	Host        string `yaml:"host"`
+	TLSCertFile string `yaml:"tls_cert_file"`
+	TLSKeyFile  string `yaml:"tls_key_file"`
 }
 
 // LoggerConfig is the logging configuration.
@@ -87,6 +89,17 @@ func Load(path string) error {
 	if next.Server != nil {
 		next.Server.Host = getEnvString("LISTEN_ADDRESS", next.Server.Host)
 		next.Server.Port = getEnvInt("LISTEN_PORT", next.Server.Port)
+		// Empty compose values must not wipe yaml paths.
+		if cert := strings.TrimSpace(os.Getenv("MCP_TLS_CERT")); cert != "" {
+			next.Server.TLSCertFile = cert
+		} else {
+			next.Server.TLSCertFile = strings.TrimSpace(next.Server.TLSCertFile)
+		}
+		if key := strings.TrimSpace(os.Getenv("MCP_TLS_KEY")); key != "" {
+			next.Server.TLSKeyFile = key
+		} else {
+			next.Server.TLSKeyFile = strings.TrimSpace(next.Server.TLSKeyFile)
+		}
 	}
 
 	if next.Server == nil {
@@ -156,12 +169,9 @@ func normalizeInstances(cfg *Config, configDir string) error {
 			instance.CAFile = filepath.Clean(filepath.Join(configDir, instance.CAFile))
 		}
 
-		// Both settings decide how the certificate of the instance is checked,
-		// and one of them switches the check off: accepting them together would
-		// make it impossible to tell which one the operator meant.
-		if instance.InsecureSkipVerify && instance.CAFile != "" {
+		if instance.InsecureSkipVerify {
 			return errors.New(fmt.Sprintf(
-				"instances[%d] sets both ca_file and insecure_skip_verify; use ca_file to trust the certificate of the instance and remove insecure_skip_verify",
+				"instances[%d].insecure_skip_verify is not supported; set ca_file to trust a self-signed instance certificate",
 				index,
 			))
 		}

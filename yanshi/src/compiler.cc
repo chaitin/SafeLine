@@ -278,7 +278,11 @@ void generate_transitions(DefineStmt* stmt)
 fprintf(output,
 ")\n"
 "{\n"
-"  long v = -1;\n"
+"  long v = -1;\n");
+  if (opt_gen_c)
+    fprintf(output,
+"  if (!ret_stack || !ret_stack_len) return -1;\n");
+  fprintf(output,
 "again:\n"
 "  switch (u) {\n");
   REP(u, anno.fsa.n()) {
@@ -736,6 +740,7 @@ static void generate_cxx_export(DefineStmt* stmt)
   generate_final("sub_", stmt2final[stmt]);
   fprintf(output, opt_gen_c ?
 "  if (ret_stack_len < 0) return false;\n"
+"  if (ret_stack_len > 0 && !ret_stack) return false;\n"
 "  for (long i = ret_stack_len; i; u = ret_stack[--i])\n"
 :
 "  for (auto i = ret_stack.size(); i; u = ret_stack[--i])\n"
@@ -815,6 +820,7 @@ void generate_cxx(Module* mo)
 "    utf8 = argv[1];\n"
 "  else {\n"
 "    FILE* f = argc == 1 ? stdin : fopen(argv[1], \"r\");\n"
+"    if (!f) return 1;\n"
 "    while ((c = fgetc(f)) != EOF)\n"
 "      utf8 += c;\n"
 "    fclose(f);\n"
