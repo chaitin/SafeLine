@@ -135,6 +135,10 @@ int main(int argc, char *argv[])
     case 1005: opt_dump_tree = true; break;
     case 1006:
       opt_max_return_stack = get_long(optarg);
+      // The value is the bound of a generated C array. Reject non-positive and
+      // absurd sizes before they are written into the output.
+      if (opt_max_return_stack <= 0 || opt_max_return_stack > 1000000)
+        err_exit(EX_USAGE, "--max-return-stack must be in (0, 1000000]");
       break;
     case 1007: opt_gen_extern_c = true; break;
     case '?':

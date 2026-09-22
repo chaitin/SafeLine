@@ -205,6 +205,13 @@ func PolicyRuleTable(db *gorm.DB) (prFSL string, err error) {
 			}
 		}
 
+		// An empty pattern list would compile to a selector with no WHERE, which
+		// matches every request. Skip it instead of emitting an unconditional
+		// DROP or ACCEPT.
+		if len(wheres) == 0 {
+			continue
+		}
+
 		// save log only when deny and dry_run
 		logOption := "1"
 		attackType := "-3"

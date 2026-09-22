@@ -11,8 +11,9 @@ import (
 // response.ErrorInternal: its text describes the inside of the deployment and
 // belongs in the server log, where the operator can read it.
 var (
-	errDataNotExist = errors.New("Data queried does not exist")
-	errRulesCompile = errors.New("Rules compile error, please check your params.")
+	errDataNotExist    = errors.New("Data queried does not exist")
+	errRulesCompile    = errors.New("Rules compile error, please check your params.")
+	errPolicyRuleEmpty = errors.New("Policy rule must contain at least one pattern")
 )
 
 // responseMessage returns the text that may be sent to the caller.
@@ -22,6 +23,8 @@ func responseMessage(err error) string {
 		return errDataNotExist.Error()
 	case errRulesCompile:
 		return errRulesCompile.Error()
+	case errPolicyRuleEmpty:
+		return errPolicyRuleEmpty.Error()
 	default:
 		return response.ErrorInternal.Msg
 	}

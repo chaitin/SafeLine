@@ -1,11 +1,13 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"chaitin.cn/patronus/safeline-2/management/webserver/pkg/fvm"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/datatypes"
 	"gorm.io/gorm"
 
 	"chaitin.cn/patronus/safeline-2/management/webserver/api/response"
@@ -23,6 +25,11 @@ func PostPolicyRule(ctx *gin.Context) {
 	if err := ctx.BindJSON(&params); err != nil {
 		logger.Error(err)
 		response.Error(ctx, response.ErrorParamNotOK, http.StatusInternalServerError)
+		return
+	}
+
+	if err := validatePolicyRulePatterns(params.Pattern); err != nil {
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusBadRequest)
 		return
 	}
 
@@ -59,7 +66,11 @@ func PutSwitchPolicyRule(ctx *gin.Context) {
 
 	db := database.GetDB()
 	err := db.Transaction(func(tx *gorm.DB) error {
-		res := tx.Model(&model.PolicyRule{}).Where(params.IDs).Updates(model.PolicyRule{IsEnabled: params.IsEnabled})
+		// IsEnabled=false is the Go zero value. GORM skips zero-value fields in
+		// Updates(struct), so a disable request would leave the row enabled.
+		res := tx.Model(&model.PolicyRule{}).Where(params.IDs).
+			Select("is_enabled").
+			Updates(model.PolicyRule{IsEnabled: params.IsEnabled})
 		if res.Error != nil {
 			return res.Error
 		}
@@ -85,6 +96,11 @@ func PutPolicyRule(ctx *gin.Context) {
 	if err := ctx.BindJSON(&params); err != nil {
 		logger.Error(err)
 		response.Error(ctx, response.ErrorParamNotOK, http.StatusInternalServerError)
+		return
+	}
+
+	if err := validatePolicyRulePatterns(params.Pattern); err != nil {
+		response.Error(ctx, response.JSONBody{Err: response.ErrInternalError, Msg: err.Error()}, http.StatusBadRequest)
 		return
 	}
 
@@ -151,6 +167,19 @@ func DeletePolicyRule(ctx *gin.Context) {
 	}
 
 	response.Success(ctx, nil)
+}
+
+// validatePolicyRulePatterns rejects a rule that would compile to a selector
+// with no WHERE. An empty pattern list matches every request.
+func validatePolicyRulePatterns(raw datatypes.JSON) error {
+	if len(raw) == 0 {
+		return errPolicyRuleEmpty
+	}
+	var patterns []model.PolicyRulePattern
+	if err := json.Unmarshal(raw, &patterns); err != nil || len(patterns) == 0 {
+		return errPolicyRuleEmpty
+	}
+	return nil
 }
 
 func GetPolicyRule(ctx *gin.Context) {

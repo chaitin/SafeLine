@@ -122,13 +122,17 @@ func PutWebsite(ctx *gin.Context) {
 		website.CertFilename = params.CertFilename
 		website.KeyFilename = params.KeyFilename
 		website.IsEnabled = true
-		tx.Save(&website)
+		if err := tx.Save(&website).Error; err != nil {
+			return err
+		}
 
 		if config.GlobalConfig.Server.DevMode {
 			return nil
 		}
 
-		err := publishWebsiteConfig(&params)
+		// Publish the row that was just saved, not the request body. The saved
+		// record forces IsEnabled and may differ from params.
+		err := publishWebsiteConfig(&website)
 		if err != nil {
 			return err
 		}

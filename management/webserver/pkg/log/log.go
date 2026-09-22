@@ -5,6 +5,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"syscall"
 
 	"github.com/sirupsen/logrus"
 
@@ -43,7 +44,9 @@ func InitLogger() error {
 			return err
 		}
 
-		fileFlag := os.O_WRONLY | os.O_APPEND | os.O_SYNC
+		// O_NOFOLLOW closes the window between Stat and OpenFile: a symlink swapped
+		// in for the log path is refused instead of followed.
+		fileFlag := os.O_WRONLY | os.O_APPEND | os.O_SYNC | syscall.O_NOFOLLOW
 		if !exist {
 			if err := utils.EnsureFileDir(config.GlobalConfig.Log.Output); err != nil {
 				return err
