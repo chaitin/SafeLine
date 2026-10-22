@@ -117,9 +117,9 @@ to see [Configuration](https://docs.waf.chaitin.com/en/GetStarted/AddApplication
 
 Yes, SafeLine is production-ready.
 
-- Over [400,000 installations worldwide](https://cyberpress.org/safeline-waf-reaches-400000-global-deployments/)
-- Protecting over 1,000,000 Websites
-- Handling over 30,000,000,000 HTTP Requests Daily
+- Over 700,000 installations worldwide
+- Protecting over 2,000,000 Websites
+- Handling over 50,000,000,000 HTTP Requests Daily
 
 #### 🌟 Community Recognition
 
