@@ -64,6 +64,10 @@ function _M.do_access(t, handle)
     opts.send_timeout = t.send_timeout or DEFAULT_T1K_SEND_TIMEOUT
     opts.read_timeout = t.read_timeout or DEFAULT_T1K_READ_TIMEOUT
     opts.req_body_size = t.req_body_size or DEFAULT_T1K_REQ_BODY_SIZE
+    opts.overflow_action = t.overflow_action or "reject"
+    if opts.overflow_action ~= "reject" and opts.overflow_action ~= "inspect" then
+        return nil, log_fmt("invalid body overflow action: %s", opts.overflow_action), nil
+    end
     opts.keepalive_size = t.keepalive_size or DEFAULT_T1K_KEEPALIVE_SIZE
     opts.keepalive_timeout = t.keepalive_timeout or DEFAULT_T1K_KEEPALIVE_TIMEOUT
 
@@ -76,6 +80,9 @@ function _M.do_access(t, handle)
     ok, err, result = request.do_request(opts)
     if not ok then
         return ok, err, result
+    end
+    if result and result.overflow then
+        return ngx.exit(413)
     end
 
     if handle and opts.mode == consts.MODE_BLOCK then

@@ -1,12 +1,10 @@
-use Test::Nginx::Socket;
+use Test::Nginx::Socket 'no_plan';
 
 our $HttpConfig = <<'_EOC_';
     lua_package_path "lib/?.lua;/usr/local/share/lua/5.1/?.lua;;";
 _EOC_
 
 repeat_each(3);
-
-plan tests => repeat_each() * (blocks() * 3 + 14);
 
 run_tests();
 
@@ -188,7 +186,7 @@ lua-resty-t1k: successfully connected to t1k server unix:t1k.sock
 
 
 
-=== TEST 5: do_request trim request body
+=== TEST 5: do_request rejects oversized body before detector connection
 --- http_config eval: $::HttpConfig
 --- config
     location /t {
@@ -213,26 +211,21 @@ lua-resty-t1k: successfully connected to t1k server unix:t1k.sock
             end
 
             ngx.say(result["action"])
+            ngx.say(result["status"])
         }
     }
---- tcp_listen: 18000
---- tcp_reply eval
-"\xc1\x01\x00\x00\x00."
 --- request
 GET /t
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 --- response_body
-.
+?
+413
 --- no_error_log
 [error]
---- error_log
-lua-resty-t1k: request body is too long: 123 bytes, cut to 64 bytes
-lua-resty-t1k: successfully connected to t1k server 127.0.0.1:18000
---- log_level: debug
 
 
 
-=== TEST 6: do_request trim request body with unix domain socket
+=== TEST 6: do_request rejects oversized body with unix detector configured
 --- http_config eval: $::HttpConfig
 --- config
     location /t {
@@ -257,22 +250,17 @@ lua-resty-t1k: successfully connected to t1k server 127.0.0.1:18000
             end
 
             ngx.say(result["action"])
+            ngx.say(result["status"])
         }
     }
---- tcp_listen: t1k.sock
---- tcp_reply eval
-"\xc1\x01\x00\x00\x00."
 --- request
 GET /t
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 --- response_body
-.
+?
+413
 --- no_error_log
 [error]
---- error_log
-lua-resty-t1k: request body is too long: 123 bytes, cut to 64 bytes
-lua-resty-t1k: successfully connected to t1k server unix:t1k.sock
---- log_level: debug
 
 
 

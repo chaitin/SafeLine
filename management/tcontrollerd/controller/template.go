@@ -18,11 +18,13 @@ server {
     }
     location ^~ / {
         proxy_pass %s://%s;
+        proxy_request_buffering on;
         include proxy_params;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Accept-Encoding "";
         t1k_append_header SL-CE-SUID %d;
         t1k_body_size 1024k;
+        client_max_body_size 1024k;
         tx_body_size 4k;
         t1k_error_page 403 /forbidden_page;
         tx_error_page 403 /forbidden_page;
