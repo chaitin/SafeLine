@@ -15,7 +15,6 @@ local bor = bit.bor
 local byte = string.byte
 local char = string.char
 local fmt = string.format
-local sub = string.sub
 local concat = table.concat
 
 local ngx = ngx
@@ -45,7 +44,7 @@ local TAG_EXTRA_WITH_MASK_LAST = bor(consts.TAG_EXTRA, consts.MASK_LAST)
 local T1K_PROTO = "Proto:2\n"
 local T1K_PROTO_DATA = fmt("%s%s%s", char(consts.TAG_VERSION), utils.int_to_char_length(#T1K_PROTO), T1K_PROTO)
 
-local function read_request_body(opt_req_body_size)
+local function read_request_body(opt_req_body_size, inspect_full)
     local ok, err
     local req_body, req_body_size
 
@@ -54,14 +53,16 @@ local function read_request_body(opt_req_body_size)
     if content_length == 0 and not transfer_encoding then
         return true, nil, nil
     end
+    if content_length > opt_req_body_size and not inspect_full then
+        return true, nil, nil, true
+    end
 
     ngx_req.read_body()
     req_body = ngx_req.get_body_data()
     if req_body then
         req_body_size = #req_body
-        if req_body_size > opt_req_body_size then
-            nlog(debug_fmt("request body is too long: %d bytes, cut to %d bytes", req_body_size, opt_req_body_size))
-            req_body = sub(req_body, 1, opt_req_body_size)
+        if req_body_size > opt_req_body_size and not inspect_full then
+            return true, nil, nil, true
         end
 
         return true, nil, req_body
@@ -72,10 +73,14 @@ local function read_request_body(opt_req_body_size)
         return true, nil, nil
     end
 
-    ok, err, req_body = file.read(path, opt_req_body_size)
+    ok, err, req_body = file.read(path, inspect_full and math.huge or opt_req_body_size + 1)
     if not ok then
         err = fmt("failed to read temporary file %s: %s", path, err)
         return ok, err, nil
+    end
+
+    if req_body:len() > opt_req_body_size and not inspect_full then
+        return true, nil, nil, true
     end
 
     return true, nil, req_body
@@ -121,15 +126,15 @@ end
 
 local function build_body(opts)
     local ok, err
-    local body
+    local body, overflow
 
     local req_body_size = opts.req_body_size * 1024
-    ok, err, body = read_request_body(req_body_size)
+    ok, err, body, overflow = read_request_body(req_body_size, opts.overflow_action == "inspect")
     if not ok then
         return ok, err, nil
     end
 
-    return true, nil, body
+    return true, nil, body, overflow
 end
 
 local function build_extra(opts)
@@ -324,16 +329,23 @@ end
 
 function _M.do_request(opts)
     local ok, err
-    local header, body, extra, t
+    local header, body, extra, t, overflow
 
     ok, err, header = build_header(opts)
     if not ok then
         return ok, err, nil
     end
 
-    ok, err, body = build_body(opts)
+    ok, err, body, overflow = build_body(opts)
     if not ok then
         return ok, err, nil
+    end
+    if overflow then
+        return true, nil, {
+            action = consts.ACTION_BLOCKED,
+            status = 413,
+            overflow = true,
+        }
     end
 
     ok, err, extra = build_extra(opts)
