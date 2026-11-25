@@ -13,7 +13,7 @@ import re
 import subprocess
 import string
 import time
-import random
+import secrets
 import socket
 
 
@@ -1040,7 +1040,7 @@ def generate_config(path):
             config['ARCH_SUFFIX'] = '-arm'
 
     if config['POSTGRES_PASSWORD'] == '':
-        config['POSTGRES_PASSWORD'] = ''.join([random.choice(string.ascii_letters + string.digits) for i in range(20)])
+        config['POSTGRES_PASSWORD'] = ''.join([secrets.choice(string.ascii_letters + string.digits) for i in range(20)])
 
     if config['SUBNET_PREFIX'] == '':
         config['SUBNET_PREFIX'] = rand_subnet()
@@ -1313,7 +1313,7 @@ def reset_postgres():
 
     config = {}
     read_config(env_file, config)
-    config['POSTGRES_PASSWORD'] = ''.join([random.choice(string.ascii_letters + string.digits) for i in range(20)])
+    config['POSTGRES_PASSWORD'] = ''.join([secrets.choice(string.ascii_letters + string.digits) for i in range(20)])
     write_config(env_file, config)
 
     if not docker_exec('safeline-pg','psql -U safeline-ce -c "ALTER USER \\"safeline-ce\\" WITH PASSWORD \''+config['POSTGRES_PASSWORD']+'\';"'):
